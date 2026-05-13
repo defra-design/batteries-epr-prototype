@@ -13,6 +13,7 @@ import { requestLogger } from './common/helpers/logging/request-logger.js'
 import { sessionCache } from './common/helpers/session-cache.js'
 import { secureContext } from '@defra/hapi-secure-context'
 import { contentSecurityPolicy } from './common/helpers/content-security-policy.js'
+import { basicAuth } from './common/helpers/basic-auth.js'
 
 export async function createServer(plugins) {
   const pluginList = Object.keys(plugins).map((key) => plugins[key])
@@ -72,6 +73,8 @@ export async function createServer(plugins) {
     sessionCache,
     contentSecurityPolicy
   ])
+
+  server.ext('onRequest', basicAuth)
 
   server.ext('onPreResponse', catchAll)
 
