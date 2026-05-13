@@ -1,4 +1,4 @@
-# batteries-producer-frontend
+# batteries-epr-prototype
 
 > **This is a prototype.** No backend. All persistence lives in the browser via `localStorage`. Refresh the page in a different browser or incognito session and you start over. This service is for validating user journeys, copy, and the data model on screen — not for handling real producer data.
 
@@ -67,8 +67,3 @@ docker run --rm -p 3010:3010 batteries-producer-frontend
 - NPWD data migration
 - Welsh content beyond stub keys
 - Cross-browser / multi-user data sharing (localStorage is per-browser-per-origin by design)
-
-## Documentation
-
-- `CLAUDE.md` — architectural notes for working on this repo
-- `docs/` (in the parent NPWD project) — product requirements and rationale
