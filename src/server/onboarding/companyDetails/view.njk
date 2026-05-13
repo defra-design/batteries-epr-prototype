@@ -1,0 +1,86 @@
+{% extends 'onboarding/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="onboarding-form">
+    {{ govukInput({
+      label: { text: labels.companyRegistrationNoLabel },
+      hint: { text: labels.companyRegistrationNoHint },
+      id: "companyRegistrationNo",
+      name: "companyRegistrationNo",
+      classes: "govuk-input--width-10",
+      value: formValues.companyRegistrationNo,
+      errorMessage: { text: errors.companyRegistrationNo } if errors.companyRegistrationNo,
+      attributes: { "data-testid": "company-registration-no" }
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.companyNameLabel },
+      id: "companyName",
+      name: "companyName",
+      value: formValues.companyName,
+      errorMessage: { text: errors.companyName } if errors.companyName,
+      attributes: { "data-testid": "company-name" }
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.tradingNameLabel },
+      id: "tradingName",
+      name: "tradingName",
+      value: formValues.tradingName
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.webAddressLabel },
+      id: "webAddress",
+      name: "webAddress",
+      value: formValues.webAddress
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.sicCodeLabel },
+      id: "sicCode",
+      name: "sicCode",
+      classes: "govuk-input--width-10",
+      value: formValues.sicCode
+    }) }}
+
+    <h2 class="govuk-heading-m">{{ labels.registeredAddressHeading }}</h2>
+
+    {{ govukInput({
+      label: { text: labels.line1Label },
+      id: "line1",
+      name: "line1",
+      value: formValues.line1,
+      errorMessage: { text: errors.line1 } if errors.line1
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.line2Label },
+      id: "line2",
+      name: "line2",
+      value: formValues.line2
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.townLabel },
+      id: "town",
+      name: "town",
+      value: formValues.town,
+      errorMessage: { text: errors.town } if errors.town
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.postcodeLabel },
+      id: "postcode",
+      name: "postcode",
+      classes: "govuk-input--width-10",
+      value: formValues.postcode,
+      errorMessage: { text: errors.postcode } if errors.postcode
+    }) }}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "onboarding-continue" }
+    }) }}
+  </form>
+{% endblock %}

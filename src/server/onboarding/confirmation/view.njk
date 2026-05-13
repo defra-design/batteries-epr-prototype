@@ -1,0 +1,44 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukPanel({
+        titleText: heading,
+        html: '<p class="govuk-body" data-testid="confirmation-bprn-panel">Your BPRN: <span data-testid="confirmation-bprn">…</span></p>'
+      }) }}
+
+      <p class="govuk-body" data-testid="confirmation-intro">{{ intro }}</p>
+
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.bprnLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="confirmation-bprn-row">…</dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.statusLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="confirmation-status">…</dd>
+        </div>
+      </dl>
+
+      <h2 class="govuk-heading-m">{{ labels.emailNoticeHeading }}</h2>
+      <p class="govuk-body">{{ labels.emailNoticeBody }}</p>
+
+      {{ govukButton({
+        text: labels.continueAction,
+        href: dashboardUrl,
+        attributes: { "data-testid": "confirmation-continue" }
+      }) }}
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('onboardingConfirmation.js') }}"></script>
+{% endblock %}

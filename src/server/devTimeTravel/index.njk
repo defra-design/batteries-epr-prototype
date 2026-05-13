@@ -1,0 +1,43 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      <p class="govuk-body">{{ body }}</p>
+
+      {{ govukInput({
+        id: "dev-time-travel-year",
+        name: "year",
+        type: "number",
+        label: { text: yearLabel },
+        hint: { text: yearHint },
+        value: defaultYear,
+        classes: "govuk-input--width-5",
+        attributes: { "data-testid": "dev-time-travel-year", min: "1970", max: "9999" }
+      }) }}
+
+      {{ govukButton({
+        text: confirmAction,
+        attributes: { "data-testid": "dev-time-travel-confirm", type: "button" }
+      }) }}
+
+      {{ govukButton({
+        text: "Return to real time",
+        classes: "govuk-button--secondary",
+        attributes: { "data-testid": "dev-time-travel-clear", type: "button" }
+      }) }}
+
+      <p class="govuk-body" data-testid="dev-time-travel-status" aria-live="polite"></p>
+      <p class="govuk-body" data-testid="dev-time-travel-current"></p>
+    </div>
+  </div>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('devTimeTravel.js') }}"></script>
+{% endblock %}

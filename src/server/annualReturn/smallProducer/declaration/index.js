@@ -1,0 +1,17 @@
+import { paths } from '../../../../config/paths.js'
+import { declarationController } from './controller.js'
+
+export const declaration = {
+  openRoutes: [
+    {
+      method: 'GET',
+      path: paths.annualReturnSmallDeclaration,
+      ...declarationController.get
+    },
+    {
+      method: 'POST',
+      path: paths.annualReturnSmallDeclaration,
+      ...declarationController.post
+    }
+  ]
+}

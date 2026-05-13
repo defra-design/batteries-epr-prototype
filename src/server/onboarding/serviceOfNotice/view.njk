@@ -1,0 +1,54 @@
+{% extends 'onboarding/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="onboarding-form">
+    {{ govukRadios({
+      idPrefix: "sonChoice",
+      name: "sonChoice",
+      errorMessage: { text: errors.sonChoice } if errors.sonChoice,
+      items: [
+        { value: "sameAsRegistered", text: labels.sameAsRegistered, checked: formValues.sonChoice == "sameAsRegistered" },
+        { value: "differentAddress", text: labels.differentAddress, checked: formValues.sonChoice == "differentAddress" }
+      ]
+    }) }}
+
+    <div data-testid="son-different-fields" class="govuk-!-padding-left-3 govuk-!-margin-bottom-6">
+      {{ govukInput({
+        label: { text: labels.line1Label },
+        id: "sonLine1",
+        name: "sonLine1",
+        value: formValues.sonLine1,
+        errorMessage: { text: errors.sonLine1 } if errors.sonLine1
+      }) }}
+
+      {{ govukInput({
+        label: { text: labels.line2Label },
+        id: "sonLine2",
+        name: "sonLine2",
+        value: formValues.sonLine2
+      }) }}
+
+      {{ govukInput({
+        label: { text: labels.townLabel },
+        id: "sonTown",
+        name: "sonTown",
+        value: formValues.sonTown,
+        errorMessage: { text: errors.sonTown } if errors.sonTown
+      }) }}
+
+      {{ govukInput({
+        label: { text: labels.postcodeLabel },
+        id: "sonPostcode",
+        name: "sonPostcode",
+        classes: "govuk-input--width-10",
+        value: formValues.sonPostcode,
+        errorMessage: { text: errors.sonPostcode } if errors.sonPostcode
+      }) }}
+    </div>
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "onboarding-continue" }
+    }) }}
+  </form>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'onboarding/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="onboarding-form">
+    {{ govukInput({
+      label: { text: labels.firstNameLabel },
+      id: "declarationFirstName",
+      name: "declarationFirstName",
+      value: formValues.declarationFirstName,
+      errorMessage: { text: errors.declarationFirstName } if errors.declarationFirstName
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.lastNameLabel },
+      id: "declarationLastName",
+      name: "declarationLastName",
+      value: formValues.declarationLastName,
+      errorMessage: { text: errors.declarationLastName } if errors.declarationLastName
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.positionLabel },
+      id: "declarationPosition",
+      name: "declarationPosition",
+      value: formValues.declarationPosition,
+      errorMessage: { text: errors.declarationPosition } if errors.declarationPosition
+    }) }}
+
+    {{ govukCheckboxes({
+      idPrefix: "declarationConfirm",
+      name: "declarationConfirm",
+      errorMessage: { text: errors.declarationConfirm } if errors.declarationConfirm,
+      items: [
+        { value: "yes", text: labels.confirmLabel, checked: formValues.declarationConfirm == "yes", id: "declarationConfirm" }
+      ]
+    }) }}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "onboarding-continue" }
+    }) }}
+  </form>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukPanel({
+        titleText: heading
+      }) }}
+      <p class="govuk-body" data-testid="annual-return-confirmation-intro">{{ intro }}</p>
+
+      {{ govukButton({
+        text: backToDashboardAction,
+        href: dashboardUrl,
+        attributes: { "data-testid": "annual-return-back-to-dashboard" }
+      }) }}
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}

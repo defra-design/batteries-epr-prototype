@@ -1,0 +1,37 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      <p class="govuk-body">{{ intro }}</p>
+
+      <div id="ia-categories-loading" data-testid="ia-categories-loading">
+        <p class="govuk-body">{{ labels.loadingMessage }}</p>
+      </div>
+
+      <div id="ia-categories-content" data-testid="ia-categories-content" hidden>
+        <h2 class="govuk-heading-m">{{ labels.coverageHeading }}</h2>
+        <ul class="govuk-list govuk-list--bullet" data-testid="ia-categories-list">
+        </ul>
+
+        <p class="govuk-body" id="ia-categories-no-categories" data-testid="ia-categories-no-categories" hidden>{{ labels.noCategoriesNotice }}</p>
+
+        {{ govukButton({
+          text: labels.startAction,
+          href: tonnagesUrl,
+          attributes: { "data-testid": "ia-categories-start", id: "ia-categories-start" }
+        }) }}
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('annualReturnIaCategories.js') }}"></script>
+{% endblock %}

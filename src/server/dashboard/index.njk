@@ -1,0 +1,119 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% block content %}
+  <div class="govuk-!-margin-bottom-6">
+    <div id="dashboard-loading" data-testid="dashboard-loading" class="govuk-!-margin-bottom-4">
+      <p class="govuk-body">{{ loadingMessage }}</p>
+    </div>
+
+    <div id="dashboard-content" data-testid="dashboard-content" hidden>
+      <div id="dashboard-banner" data-testid="dashboard-banner" hidden></div>
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          {{ appHeading({ text: heading }) }}
+        </div>
+      </div>
+
+      <div class="govuk-grid-row app-task-cards govuk-!-margin-top-4" data-testid="dashboard-cards">
+        <div class="govuk-grid-column-one-half">
+          <div class="govuk-summary-card govuk-!-margin-bottom-4">
+            <div class="govuk-summary-card__title-wrapper">
+              <div>
+                <h2 class="govuk-summary-card__title" data-testid="card-registration-title">
+                  {{ cards.registration.title }}
+                </h2>
+                <p class="govuk-body-s govuk-!-margin-bottom-0">
+                  {{ cards.registration.description }}
+                </p>
+              </div>
+              <div class="app-task-cards__status">
+                <span data-testid="card-registration-status"></span>
+              </div>
+            </div>
+            <div class="govuk-summary-card__content">
+              <p class="govuk-body" data-testid="card-registration-bprn"></p>
+              <p class="govuk-body" data-testid="card-registration-body"></p>
+              <p class="govuk-body" data-testid="card-registration-action"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="govuk-grid-column-one-half">
+          <div class="govuk-summary-card govuk-!-margin-bottom-4">
+            <div class="govuk-summary-card__title-wrapper">
+              <div>
+                <h2 class="govuk-summary-card__title" data-testid="card-fee-title">
+                  {{ cards.fee.title }}
+                </h2>
+                <p class="govuk-body-s govuk-!-margin-bottom-0">
+                  {{ cards.fee.description }}
+                </p>
+              </div>
+              <div class="app-task-cards__status">
+                <span data-testid="card-fee-status"></span>
+              </div>
+            </div>
+            <div class="govuk-summary-card__content">
+              <p class="govuk-body" data-testid="card-fee-body"></p>
+              <p class="govuk-body" data-testid="card-fee-action"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="govuk-grid-row app-task-cards" data-testid="dashboard-cards-row-2">
+        <div class="govuk-grid-column-one-half">
+          <div class="govuk-summary-card govuk-!-margin-bottom-4">
+            <div class="govuk-summary-card__title-wrapper">
+              <div>
+                <h2 class="govuk-summary-card__title" data-testid="card-annual-return-title">
+                  {{ cards.annualReturn.title }}
+                </h2>
+                <p class="govuk-body-s govuk-!-margin-bottom-0">
+                  {{ cards.annualReturn.description }}
+                </p>
+              </div>
+              <div class="app-task-cards__status">
+                <span data-testid="card-annual-return-status"></span>
+              </div>
+            </div>
+            <div class="govuk-summary-card__content">
+              <p class="govuk-body" data-testid="card-annual-return-deadline"></p>
+              <p class="govuk-body" data-testid="card-annual-return-body"></p>
+              <p class="govuk-body" data-testid="card-annual-return-action"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="govuk-grid-column-one-half">
+          <div class="govuk-summary-card govuk-!-margin-bottom-4">
+            <div class="govuk-summary-card__title-wrapper">
+              <div>
+                <h2 class="govuk-summary-card__title" data-testid="card-activity-title">
+                  {{ cards.activity.title }}
+                </h2>
+                <p class="govuk-body-s govuk-!-margin-bottom-0">
+                  {{ cards.activity.description }}
+                </p>
+              </div>
+            </div>
+            <div class="govuk-summary-card__content">
+              <ol class="govuk-list" data-testid="card-activity-list"></ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('dashboard.js') }}"></script>
+{% endblock %}

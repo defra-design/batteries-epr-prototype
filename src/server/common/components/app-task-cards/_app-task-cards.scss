@@ -1,0 +1,36 @@
+@use "govuk-frontend" as *;
+
+.app-task-cards {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+
+  > .govuk-grid-column-one-half,
+  > .govuk-grid-column-one-third,
+  > .govuk-grid-column-two-thirds,
+  > .govuk-grid-column-full {
+    display: flex;
+    margin-bottom: govuk-spacing(4);
+
+    > .govuk-summary-card {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 0;
+    }
+  }
+
+  .govuk-summary-card__content {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .govuk-summary-card__title-wrapper {
+    align-items: flex-start;
+  }
+}
+
+.app-task-cards__status {
+  white-space: nowrap;
+}

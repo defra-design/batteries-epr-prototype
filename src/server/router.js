@@ -1,0 +1,69 @@
+import inert from '@hapi/inert'
+
+import { home } from './home/index.js'
+import { about } from './about/index.js'
+import { cookies } from './cookies/index.js'
+import { terms } from './terms/index.js'
+import { privacy } from './privacy/index.js'
+import { accessibility } from './accessibility/index.js'
+import { health } from './health/index.js'
+import { signIn } from './signIn/index.js'
+import { signOut } from './signOut/index.js'
+import { signedOut } from './signedOut/index.js'
+import { publicRegister } from './publicRegister/index.js'
+import { dashboard } from './dashboard/index.js'
+import { onboarding } from './onboarding/index.js'
+import { annualReturn } from './annualReturn/index.js'
+import { serviceCharge } from './serviceCharge/index.js'
+import { paymentDetails } from './paymentDetails/index.js'
+import { account } from './account/index.js'
+import { devReset } from './devReset/index.js'
+import { devTimeTravel } from './devTimeTravel/index.js'
+import { serveStaticFiles } from './common/helpers/serve-static-files.js'
+
+const createPlugin = (plugins, [item, routes]) => {
+  plugins.push({
+    plugin: {
+      name: item,
+      register(server) {
+        server.route(routes)
+      }
+    }
+  })
+  return plugins
+}
+
+export const router = {
+  plugin: {
+    name: 'router',
+    async register(server) {
+      await server.register([inert])
+
+      const plugins = Object.entries({
+        home: home.openRoutes,
+        about: about.openRoutes,
+        cookies: cookies.openRoutes,
+        terms: terms.openRoutes,
+        privacy: privacy.openRoutes,
+        accessibility: accessibility.openRoutes,
+        health: health.openRoutes,
+        signIn: signIn.openRoutes,
+        signOut: signOut.openRoutes,
+        signedOut: signedOut.openRoutes,
+        publicRegister: publicRegister.openRoutes,
+        dashboard: dashboard.openRoutes,
+        onboarding: onboarding.openRoutes,
+        annualReturn: annualReturn.openRoutes,
+        serviceCharge: serviceCharge.openRoutes,
+        paymentDetails: paymentDetails.openRoutes,
+        account: account.openRoutes,
+        devReset: devReset.openRoutes,
+        devTimeTravel: devTimeTravel.openRoutes
+      }).reduce((p, entry) => createPlugin(p, entry), [])
+
+      await server.register(plugins)
+
+      await server.register([serveStaticFiles])
+    }
+  }
+}

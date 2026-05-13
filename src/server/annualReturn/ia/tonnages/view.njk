@@ -1,0 +1,57 @@
+{% extends 'annualReturn/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="annual-return-form">
+    {% for category in categories %}
+      <div data-testid="ia-section-{{ category }}" data-ia-category="{{ category }}" hidden>
+        <h2 class="govuk-heading-m">{{ labels.categoryHeadings[category] }}</h2>
+        {% for activity in activities %}
+          <h3 class="govuk-heading-s">{{ labels.activityHeadings[activity] }}</h3>
+          <table class="govuk-table" data-testid="ia-table-{{ category }}-{{ activity }}">
+            <thead class="govuk-table__head">
+              <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Chemistry</th>
+                <th class="govuk-table__header govuk-table__header--numeric" scope="col">{{ labels.tonnesLabel }}</th>
+              </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+              {% for chemistry in chemistries %}
+                {% set fieldId = "t_" + category + "_" + activity + "_" + chemistry %}
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell">{{ labels.chemistries[chemistry] }}</td>
+                  <td class="govuk-table__cell govuk-table__cell--numeric">
+                    {{ govukInput({
+                      id: fieldId,
+                      name: fieldId,
+                      label: { text: labels.categoryHeadings[category] + " " + labels.activityHeadings[activity] + " " + labels.chemistries[chemistry], classes: "govuk-visually-hidden" },
+                      classes: "govuk-input--width-5",
+                      inputmode: "decimal",
+                      value: formValues[fieldId],
+                      errorMessage: { text: errors[fieldId] } if errors[fieldId],
+                      attributes: { "data-tonnage-input": "ia", "data-category": category, "data-activity": activity, "data-chemistry": chemistry }
+                    }) }}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endfor %}
+      </div>
+    {% endfor %}
+
+    <h2 class="govuk-heading-m">{{ labels.totalsHeading }}</h2>
+    <dl class="govuk-summary-list" data-testid="ia-totals">
+      {% for activity in activities %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.activityHeadings[activity] }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="ia-total-{{ activity }}">0.000 tonnes</dd>
+        </div>
+      {% endfor %}
+    </dl>
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "annual-return-continue" }
+    }) }}
+  </form>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'layouts/page.njk' %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+      <p class="govuk-body" data-testid="sign-out-message">
+        Clearing your session.
+      </p>
+      <noscript>
+        <a href="{{ signedOutUrl }}" role="button" draggable="false" class="govuk-button" data-module="govuk-button" data-testid="sign-out-fallback-link">{{ fallbackLink }}</a>
+      </noscript>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{"signedOutUrl":"{{ signedOutUrl }}"}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('signOut.js') }}"></script>
+{% endblock %}

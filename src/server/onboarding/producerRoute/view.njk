@@ -1,0 +1,30 @@
+{% extends 'onboarding/_layout.njk' %}
+
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+
+{% block stepBody %}
+  <div data-testid="forced-direct" hidden>
+    {{ govukInsetText({
+      html: "<strong>" + labels.forcedHeading + "</strong><p class=\"govuk-body\">" + labels.forcedBody + "</p>"
+    }) }}
+  </div>
+
+  <form method="post" action="{{ action }}" novalidate data-testid="onboarding-form">
+    {{ govukRadios({
+      idPrefix: "producerRoute",
+      name: "producerRoute",
+      errorMessage: { text: errors.producerRoute } if errors.producerRoute,
+      items: [
+        { value: "smallProducer", text: labels.smallProducerLabel, hint: { text: labels.smallProducerHint }, checked: formValues.producerRoute == "smallProducer", attributes: { "data-testid": "producer-route-small-radio" } },
+        { value: "directRegistrant", text: labels.directRegistrantLabel, hint: { text: labels.directRegistrantHint }, checked: formValues.producerRoute == "directRegistrant", attributes: { "data-testid": "producer-route-direct-radio" } }
+      ]
+    }) }}
+
+    <div data-testid="producer-route-small" id="producer-route-small-wrapper"></div>
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "onboarding-continue" }
+    }) }}
+  </form>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'onboarding/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="onboarding-form">
+    {{ govukInput({
+      label: { text: labels.firstNameLabel },
+      id: "firstName",
+      name: "firstName",
+      value: formValues.firstName,
+      errorMessage: { text: errors.firstName } if errors.firstName,
+      attributes: { "data-testid": "first-name" }
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.lastNameLabel },
+      id: "lastName",
+      name: "lastName",
+      value: formValues.lastName,
+      errorMessage: { text: errors.lastName } if errors.lastName
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.positionLabel },
+      id: "position",
+      name: "position",
+      value: formValues.position,
+      errorMessage: { text: errors.position } if errors.position
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.phoneLabel },
+      id: "phone",
+      name: "phone",
+      classes: "govuk-input--width-20",
+      value: formValues.phone,
+      errorMessage: { text: errors.phone } if errors.phone
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.emailLabel },
+      id: "email",
+      name: "email",
+      type: "email",
+      value: formValues.email,
+      errorMessage: { text: errors.email } if errors.email
+    }) }}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "onboarding-continue" }
+    }) }}
+  </form>
+{% endblock %}

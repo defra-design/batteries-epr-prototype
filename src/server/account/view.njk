@@ -1,0 +1,76 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% macro accountSummaryRow(key, value, testId) %}
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">{{ key }}</dt>
+    <dd class="govuk-summary-list__value" data-testid="{{ testId }}">{{ value }}</dd>
+  </div>
+{% endmacro %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      <p class="govuk-body">{{ intro }}</p>
+
+      <div id="account-loading" data-testid="account-loading">
+        <p class="govuk-body">{{ loadingMessage }}</p>
+      </div>
+
+      <div id="account-content" data-testid="account-content" hidden>
+        <h2 class="govuk-heading-m">{{ sections.company.title }}</h2>
+        <dl class="govuk-summary-list" data-testid="account-company-list"></dl>
+        <p class="govuk-body">
+          <a class="govuk-link" href="{{ editLinks.company }}" data-testid="account-edit-company">{{ sections.company.editAction }}</a>
+        </p>
+
+        <h2 class="govuk-heading-m">{{ sections.contact.title }}</h2>
+        <dl class="govuk-summary-list" data-testid="account-contact-list"></dl>
+        <p class="govuk-body">
+          <a class="govuk-link" href="{{ editLinks.contact }}" data-testid="account-edit-contact">{{ sections.contact.editAction }}</a>
+        </p>
+
+        <h2 class="govuk-heading-m">{{ sections.serviceOfNotice.title }}</h2>
+        <dl class="govuk-summary-list" data-testid="account-son-list"></dl>
+        <p class="govuk-body">
+          <a class="govuk-link" href="{{ editLinks.serviceOfNotice }}" data-testid="account-edit-son">{{ sections.serviceOfNotice.editAction }}</a>
+        </p>
+
+        <h2 class="govuk-heading-m">{{ sections.batteryTypes.title }}</h2>
+        <p class="govuk-body" data-testid="account-battery-types"></p>
+        <p class="govuk-body">
+          <a class="govuk-link" href="{{ editLinks.batteryTypes }}" data-testid="account-edit-battery-types">{{ sections.batteryTypes.editAction }}</a>
+        </p>
+
+        <h2 class="govuk-heading-m">{{ sections.brandNames.title }}</h2>
+        <ul class="govuk-list govuk-list--bullet" data-testid="account-brand-names"></ul>
+        <p class="govuk-body">
+          <a class="govuk-link" href="{{ editLinks.brandNames }}" data-testid="account-edit-brand-names">{{ sections.brandNames.editAction }}</a>
+        </p>
+
+        <h2 class="govuk-heading-m">{{ sections.submissions.title }}</h2>
+        <div data-testid="account-submissions"></div>
+
+        {% if showReset %}
+          <h2 class="govuk-heading-m">{{ sections.reset.title }}</h2>
+          <p class="govuk-body">{{ sections.reset.body }}</p>
+          {{ govukButton({
+            text: sections.reset.confirmAction,
+            classes: "govuk-button--warning",
+            attributes: { "data-testid": "account-reset-confirm", id: "account-reset-confirm", type: "button" }
+          }) }}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('account.js') }}"></script>
+{% endblock %}

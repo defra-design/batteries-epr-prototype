@@ -1,0 +1,108 @@
+{% extends "govuk/template.njk" %}
+
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
+
+{% from "heading/macro.njk" import appHeading %}
+
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% block head %}
+  <link
+    href="{{ getAssetPath('stylesheets/application.scss') }}"
+    rel="stylesheet"
+/>
+{% endblock %}
+
+{% block header %}
+  {{
+    govukHeader({
+      homepageUrl: "https://www.gov.uk/",
+      classes: "app-header",
+      containerClasses: "govuk-width-container",
+      useTudorCrown: true
+    })
+  }}
+
+  {{
+    govukServiceNavigation({
+      serviceName: serviceName,
+      serviceUrl: serviceUrl,
+      navigation: navigation,
+      classes: "govuk-!-margin-bottom-2"
+    })
+  }}
+{% endblock %}
+
+{% block pageTitle %}
+  {{ pageTitle }} | {{ serviceName }}
+{% endblock %}
+
+{% block beforeContent %}
+
+  {% set phaseHtml %}
+    This is a new service. Help us improve it and <a class="govuk-link" href="{{feedbackUrl}}" target="_blank" rel="noopener noreferrer" data-testid="feedback-link">give your feedback (opens in new tab)</a>.
+  {% endset -%}
+
+  {{
+    govukPhaseBanner({
+    tag: {
+      text: "Prototype"
+    },
+    html: phaseHtml
+    })
+  }}
+
+  {% if breadcrumbs.length > 1 %}
+    {{
+      govukBreadcrumbs({
+        items: breadcrumbs
+      })
+    }}
+  {% endif %}
+
+  {% if backLink %}
+    {{ govukBackLink({
+      text: "Back",
+      href: backLink,
+      attributes: {
+        "data-testid": "back-link"
+      }
+    }) }}
+  {% endif %}
+{% endblock %}
+
+{% block content %}{% endblock %}
+
+{% block footer %}
+  {{
+    govukFooter({
+      meta: {
+        items: [
+          {
+            href: "/privacy-notice",
+            text: "Privacy"
+          },
+          {
+            href: "/cookies",
+            text: "Cookies"
+          },
+          {
+            href: "/accessibility-statement",
+            text: "Accessibility statement"
+          },
+          {
+            href: "/terms",
+            text: "Terms"
+          }
+        ]
+      }
+    })
+  }}
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="{{ getAssetPath('timeTravelShim.js') }}"></script>
+  <script type="module" src="{{ getAssetPath('application.js') }}"></script>
+{% endblock %}

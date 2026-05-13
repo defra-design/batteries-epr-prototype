@@ -1,0 +1,92 @@
+{% extends 'annualReturn/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="annual-return-form">
+    {{ govukRadios({
+      idPrefix: "mode",
+      name: "mode",
+      fieldset: { legend: { text: labels.modeLegend, classes: "govuk-fieldset__legend--m" } },
+      errorMessage: { text: errors.mode } if errors.mode,
+      items: [
+        { value: "simple", text: labels.modeSimple, hint: { text: labels.modeSimpleHint }, checked: formValues.mode == "simple" },
+        { value: "detailed", text: labels.modeDetailed, hint: { text: labels.modeDetailedHint }, checked: formValues.mode == "detailed" }
+      ]
+    }) }}
+
+    <div data-testid="simple-fields">
+      <h2 class="govuk-heading-m">{{ labels.tonnesLabel }}</h2>
+      <table class="govuk-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Chemistry</th>
+            <th scope="col" class="govuk-table__header govuk-table__header--numeric">Tonnes placed</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          {% for chemistry in chemistries %}
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">{{ labels.chemistries[chemistry] }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">
+                {{ govukInput({
+                  id: "t_" + chemistry,
+                  name: "t_" + chemistry,
+                  label: { text: labels.chemistries[chemistry] + " tonnes placed", classes: "govuk-visually-hidden" },
+                  classes: "govuk-input--width-5",
+                  inputmode: "decimal",
+                  value: formValues["t_" + chemistry],
+                  errorMessage: { text: errors["t_" + chemistry] } if errors["t_" + chemistry],
+                  attributes: { "data-tonnage-input": "simple", "data-chemistry": chemistry }
+                }) }}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div data-testid="detailed-fields" hidden>
+      <h2 class="govuk-heading-m">{{ labels.tonnesLabel }}</h2>
+      <table class="govuk-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Sub-category</th>
+            {% for chemistry in chemistries %}
+              <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ labels.chemistries[chemistry] }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          {% for sub in subCategories %}
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">{{ labels.subCategories[sub] }}</td>
+              {% for chemistry in chemistries %}
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                  {{ govukInput({
+                    id: "t_" + chemistry + "_" + sub,
+                    name: "t_" + chemistry + "_" + sub,
+                    label: { text: labels.subCategories[sub] + " " + labels.chemistries[chemistry] + " tonnes placed", classes: "govuk-visually-hidden" },
+                    classes: "govuk-input--width-5",
+                    inputmode: "decimal",
+                    value: formValues["t_" + chemistry + "_" + sub],
+                    errorMessage: { text: errors["t_" + chemistry + "_" + sub] } if errors["t_" + chemistry + "_" + sub],
+                    attributes: { "data-tonnage-input": "detailed", "data-chemistry": chemistry, "data-sub-category": sub }
+                  }) }}
+                </td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="govuk-heading-m">{{ labels.totalsHeading }}</h2>
+    <p class="govuk-body govuk-!-font-size-19" data-testid="grand-total">
+      <strong>{{ labels.grandTotalLabel }}:</strong> <span data-testid="grand-total-value">0.000</span> tonnes
+    </p>
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "annual-return-continue" }
+    }) }}
+  </form>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukPanel({
+        titleText: heading
+      }) }}
+      <p class="govuk-body" data-testid="payment-details-intro">{{ intro }}</p>
+
+      <div id="payment-details-loading" data-testid="payment-details-loading">
+        <p class="govuk-body">{{ labels.loadingMessage }}</p>
+      </div>
+
+      <div id="payment-details-content" data-testid="payment-details-content" hidden>
+        <h2 class="govuk-heading-m">{{ labels.receiptHeading }}</h2>
+        <dl class="govuk-summary-list">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">{{ labels.organisationLabel }}</dt>
+            <dd class="govuk-summary-list__value" data-testid="payment-details-organisation"></dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">{{ labels.complianceLabel }}</dt>
+            <dd class="govuk-summary-list__value" data-testid="payment-details-period"></dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">{{ labels.feeLabel }}</dt>
+            <dd class="govuk-summary-list__value" data-testid="payment-details-amount"></dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">{{ labels.paymentIdLabel }}</dt>
+            <dd class="govuk-summary-list__value" data-testid="payment-details-id"></dd>
+          </div>
+        </dl>
+
+        {{ govukButton({
+          text: labels.backToDashboardAction,
+          href: dashboardUrl,
+          attributes: { "data-testid": "payment-details-continue" }
+        }) }}
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('paymentDetails.js') }}"></script>
+{% endblock %}

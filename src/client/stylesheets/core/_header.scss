@@ -1,0 +1,13 @@
+@use "variables/colours" as *;
+
+.app-header {
+  border-bottom-color: $app-light-grey;
+}
+
+.govuk-service-navigation__wrapper {
+  text-align: right;
+}
+
+.govuk-service-navigation__list {
+  justify-content: flex-end;
+}

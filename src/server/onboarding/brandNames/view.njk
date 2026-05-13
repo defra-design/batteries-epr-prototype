@@ -1,0 +1,20 @@
+{% extends 'onboarding/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="onboarding-form">
+    {{ govukTextarea({
+      label: { text: labels.textareaLabel },
+      hint: { text: labels.textareaHint },
+      id: "brandNamesText",
+      name: "brandNamesText",
+      rows: 5,
+      value: formValues.brandNamesText,
+      errorMessage: { text: errors.brandNamesText } if errors.brandNamesText
+    }) }}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "onboarding-continue" }
+    }) }}
+  </form>
+{% endblock %}

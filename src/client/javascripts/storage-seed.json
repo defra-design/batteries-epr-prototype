@@ -1,0 +1,990 @@
+{
+  "seedVersion": 2,
+  "producers": [
+    {
+      "id": "11111111-0001-4000-a000-000000000001",
+      "version": 0,
+      "bprn": "BPRN-EA-2026-000001",
+      "contactEmail": "ops@acme-batteries.co.uk",
+      "companyName": "Acme Batteries Ltd",
+      "tradingName": null,
+      "companyRegistrationNo": "10000001",
+      "webAddress": "https://acme-batteries.co.uk",
+      "sicCode": "27200",
+      "registeredAddress": {
+        "line1": "10 Power Way",
+        "line2": "Industrial Estate",
+        "line3": null,
+        "line4": null,
+        "town": "Manchester",
+        "postcode": "M1 4AA",
+        "countryCode": "GB"
+      },
+      "serviceOfNoticeAddress": {
+        "line1": "10 Power Way",
+        "line2": "Industrial Estate",
+        "line3": null,
+        "line4": null,
+        "town": "Manchester",
+        "postcode": "M1 4AA",
+        "countryCode": "GB"
+      },
+      "primaryContact": {
+        "firstName": "Alice",
+        "lastName": "Stone",
+        "position": "Compliance Manager",
+        "phone": "01612000001",
+        "email": "ops@acme-batteries.co.uk"
+      },
+      "brandNames": [
+        "Acme",
+        "Acme Pro"
+      ],
+      "batteryTypes": {
+        "isPortable": true,
+        "isIndustrial": false,
+        "isAutomotive": false
+      },
+      "agencyCode": "EA",
+      "status": "Approved",
+      "createdAt": "2026-01-15T10:00:00Z",
+      "updatedAt": "2026-02-01T10:00:00Z",
+      "bprnAllocatedAt": "2026-02-01T10:00:00Z"
+    },
+    {
+      "id": "11111111-0001-4000-a000-000000000002",
+      "version": 0,
+      "bprn": "BPRN-EA-2026-000002",
+      "contactEmail": "compliance@beacon-cells.com",
+      "companyName": "Beacon Cells Ltd",
+      "tradingName": null,
+      "companyRegistrationNo": "10000002",
+      "webAddress": "https://beacon-cells.com",
+      "sicCode": "27200",
+      "registeredAddress": {
+        "line1": "Unit 4, Argent Park",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Birmingham",
+        "postcode": "B33 8TH",
+        "countryCode": "GB"
+      },
+      "serviceOfNoticeAddress": {
+        "line1": "Unit 4, Argent Park",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Birmingham",
+        "postcode": "B33 8TH",
+        "countryCode": "GB"
+      },
+      "primaryContact": {
+        "firstName": "Ben",
+        "lastName": "Carter",
+        "position": "Director",
+        "phone": "01210000002",
+        "email": "compliance@beacon-cells.com"
+      },
+      "brandNames": [
+        "Beacon"
+      ],
+      "batteryTypes": {
+        "isPortable": false,
+        "isIndustrial": true,
+        "isAutomotive": false
+      },
+      "agencyCode": "EA",
+      "status": "Approved",
+      "createdAt": "2026-01-20T10:00:00Z",
+      "updatedAt": "2026-02-10T10:00:00Z",
+      "bprnAllocatedAt": "2026-02-10T10:00:00Z"
+    },
+    {
+      "id": "11111111-0001-4000-a000-000000000003",
+      "version": 0,
+      "bprn": "BPRN-EA-2026-000003",
+      "contactEmail": "ops@cinder-energy.co.uk",
+      "companyName": "Cinder Energy Storage",
+      "tradingName": "Cinder ES",
+      "companyRegistrationNo": "10000003",
+      "webAddress": "https://cinder-energy.co.uk",
+      "sicCode": "27200",
+      "registeredAddress": {
+        "line1": "Battery House",
+        "line2": "200 Long Lane",
+        "line3": null,
+        "line4": null,
+        "town": "Leeds",
+        "postcode": "LS1 4AB",
+        "countryCode": "GB"
+      },
+      "serviceOfNoticeAddress": {
+        "line1": "Battery House",
+        "line2": "200 Long Lane",
+        "line3": null,
+        "line4": null,
+        "town": "Leeds",
+        "postcode": "LS1 4AB",
+        "countryCode": "GB"
+      },
+      "primaryContact": {
+        "firstName": "Cara",
+        "lastName": "Doyle",
+        "position": "CEO",
+        "phone": "01130000003",
+        "email": "ops@cinder-energy.co.uk"
+      },
+      "brandNames": [
+        "Cinder",
+        "Cinder ES"
+      ],
+      "batteryTypes": {
+        "isPortable": false,
+        "isIndustrial": true,
+        "isAutomotive": true
+      },
+      "agencyCode": "EA",
+      "status": "Approved",
+      "createdAt": "2026-02-01T10:00:00Z",
+      "updatedAt": "2026-02-15T10:00:00Z",
+      "bprnAllocatedAt": "2026-02-15T10:00:00Z"
+    },
+    {
+      "id": "11111111-0001-4000-a000-000000000004",
+      "version": 0,
+      "bprn": "BPRN-EA-2026-000004",
+      "contactEmail": "info@dawnpower.co.uk",
+      "companyName": "Dawn Power Cells",
+      "tradingName": null,
+      "companyRegistrationNo": "10000004",
+      "webAddress": "https://dawnpower.co.uk",
+      "sicCode": "27200",
+      "registeredAddress": {
+        "line1": "Unit 12",
+        "line2": "Greenway Trading Estate",
+        "line3": null,
+        "line4": null,
+        "town": "Bristol",
+        "postcode": "BS1 1AA",
+        "countryCode": "GB"
+      },
+      "serviceOfNoticeAddress": {
+        "line1": "Unit 12",
+        "line2": "Greenway Trading Estate",
+        "line3": null,
+        "line4": null,
+        "town": "Bristol",
+        "postcode": "BS1 1AA",
+        "countryCode": "GB"
+      },
+      "primaryContact": {
+        "firstName": "Daniel",
+        "lastName": "Evans",
+        "position": "Compliance Lead",
+        "phone": "01170000004",
+        "email": "info@dawnpower.co.uk"
+      },
+      "brandNames": [
+        "Dawn",
+        "DawnGo"
+      ],
+      "batteryTypes": {
+        "isPortable": true,
+        "isIndustrial": false,
+        "isAutomotive": false
+      },
+      "agencyCode": "EA",
+      "status": "Approved",
+      "createdAt": "2026-02-05T10:00:00Z",
+      "updatedAt": "2026-02-20T10:00:00Z",
+      "bprnAllocatedAt": "2026-02-20T10:00:00Z"
+    },
+    {
+      "id": "11111111-0001-4000-a000-000000000005",
+      "version": 0,
+      "bprn": "BPRN-EA-2026-000005",
+      "contactEmail": "hello@everspark.co.uk",
+      "companyName": "Everspark Automotive Ltd",
+      "tradingName": null,
+      "companyRegistrationNo": "10000005",
+      "webAddress": "https://everspark.co.uk",
+      "sicCode": "29310",
+      "registeredAddress": {
+        "line1": "EV Park",
+        "line2": "Mill Road",
+        "line3": null,
+        "line4": null,
+        "town": "Coventry",
+        "postcode": "CV1 1AA",
+        "countryCode": "GB"
+      },
+      "serviceOfNoticeAddress": {
+        "line1": "EV Park",
+        "line2": "Mill Road",
+        "line3": null,
+        "line4": null,
+        "town": "Coventry",
+        "postcode": "CV1 1AA",
+        "countryCode": "GB"
+      },
+      "primaryContact": {
+        "firstName": "Emma",
+        "lastName": "Fisher",
+        "position": "Head of Compliance",
+        "phone": "02476000005",
+        "email": "hello@everspark.co.uk"
+      },
+      "brandNames": [
+        "Everspark"
+      ],
+      "batteryTypes": {
+        "isPortable": false,
+        "isIndustrial": false,
+        "isAutomotive": true
+      },
+      "agencyCode": "EA",
+      "status": "Approved",
+      "createdAt": "2026-02-10T10:00:00Z",
+      "updatedAt": "2026-03-01T10:00:00Z",
+      "bprnAllocatedAt": "2026-03-01T10:00:00Z"
+    },
+    {
+      "id": "11111111-0001-4000-a000-000000000006",
+      "version": 0,
+      "bprn": null,
+      "contactEmail": "register@fjordcells.co.uk",
+      "companyName": "Fjord Cells Ltd",
+      "tradingName": null,
+      "companyRegistrationNo": "10000006",
+      "webAddress": null,
+      "sicCode": "27200",
+      "registeredAddress": {
+        "line1": "20 Harbour Way",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Plymouth",
+        "postcode": "PL1 1AA",
+        "countryCode": "GB"
+      },
+      "serviceOfNoticeAddress": {
+        "line1": "20 Harbour Way",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Plymouth",
+        "postcode": "PL1 1AA",
+        "countryCode": "GB"
+      },
+      "primaryContact": {
+        "firstName": "Finn",
+        "lastName": "Gray",
+        "position": "Operations",
+        "phone": "01752000006",
+        "email": "register@fjordcells.co.uk"
+      },
+      "brandNames": [
+        "Fjord"
+      ],
+      "batteryTypes": {
+        "isPortable": true,
+        "isIndustrial": false,
+        "isAutomotive": false
+      },
+      "agencyCode": "EA",
+      "status": "Started",
+      "createdAt": "2026-04-01T10:00:00Z",
+      "updatedAt": "2026-04-01T10:00:00Z"
+    },
+    {
+      "id": "11111111-0001-4000-a000-000000000007",
+      "version": 0,
+      "bprn": "BPRN-NRW-2026-000001",
+      "contactEmail": "compliance@glanydwr.cymru",
+      "companyName": "Glan-y-Dwr Cells Cyf",
+      "tradingName": null,
+      "companyRegistrationNo": "10000007",
+      "webAddress": "https://glanydwr.cymru",
+      "sicCode": "27200",
+      "registeredAddress": {
+        "line1": "Plas Newydd",
+        "line2": "Hafan Drive",
+        "line3": null,
+        "line4": null,
+        "town": "Caerdydd",
+        "postcode": "CF10 1EP",
+        "countryCode": "GB"
+      },
+      "serviceOfNoticeAddress": {
+        "line1": "Plas Newydd",
+        "line2": "Hafan Drive",
+        "line3": null,
+        "line4": null,
+        "town": "Caerdydd",
+        "postcode": "CF10 1EP",
+        "countryCode": "GB"
+      },
+      "primaryContact": {
+        "firstName": "Gwen",
+        "lastName": "Hughes",
+        "position": "Director",
+        "phone": "02920000007",
+        "email": "compliance@glanydwr.cymru"
+      },
+      "brandNames": [
+        "Glan-y-Dwr",
+        "GD"
+      ],
+      "batteryTypes": {
+        "isPortable": true,
+        "isIndustrial": true,
+        "isAutomotive": false
+      },
+      "agencyCode": "NRW",
+      "status": "Approved",
+      "createdAt": "2026-01-25T10:00:00Z",
+      "updatedAt": "2026-02-12T10:00:00Z",
+      "bprnAllocatedAt": "2026-02-12T10:00:00Z"
+    },
+    {
+      "id": "11111111-0001-4000-a000-000000000008",
+      "version": 0,
+      "bprn": "BPRN-NRW-2026-000002",
+      "contactEmail": "info@harbourbright.co.uk",
+      "companyName": "Harbour Bright Energy",
+      "tradingName": null,
+      "companyRegistrationNo": "10000008",
+      "webAddress": "https://harbourbright.co.uk",
+      "sicCode": "27200",
+      "registeredAddress": {
+        "line1": "Quayside",
+        "line2": "Aber Road",
+        "line3": null,
+        "line4": null,
+        "town": "Swansea",
+        "postcode": "SA1 4QQ",
+        "countryCode": "GB"
+      },
+      "serviceOfNoticeAddress": {
+        "line1": "Quayside",
+        "line2": "Aber Road",
+        "line3": null,
+        "line4": null,
+        "town": "Swansea",
+        "postcode": "SA1 4QQ",
+        "countryCode": "GB"
+      },
+      "primaryContact": {
+        "firstName": "Huw",
+        "lastName": "Idris",
+        "position": "Compliance Manager",
+        "phone": "01792000008",
+        "email": "info@harbourbright.co.uk"
+      },
+      "brandNames": [
+        "Harbour Bright"
+      ],
+      "batteryTypes": {
+        "isPortable": false,
+        "isIndustrial": true,
+        "isAutomotive": false
+      },
+      "agencyCode": "NRW",
+      "status": "Approved",
+      "createdAt": "2026-02-05T10:00:00Z",
+      "updatedAt": "2026-02-25T10:00:00Z",
+      "bprnAllocatedAt": "2026-02-25T10:00:00Z"
+    },
+    {
+      "id": "11111111-0001-4000-a000-000000000009",
+      "version": 0,
+      "bprn": "BPRN-NRW-2026-000003",
+      "contactEmail": "team@iolocells.co.uk",
+      "companyName": "Iolo Cells Ltd",
+      "tradingName": null,
+      "companyRegistrationNo": "10000009",
+      "webAddress": null,
+      "sicCode": "27200",
+      "registeredAddress": {
+        "line1": "Maes Glas",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Bangor",
+        "postcode": "LL57 2DG",
+        "countryCode": "GB"
+      },
+      "serviceOfNoticeAddress": {
+        "line1": "Maes Glas",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Bangor",
+        "postcode": "LL57 2DG",
+        "countryCode": "GB"
+      },
+      "primaryContact": {
+        "firstName": "Iolo",
+        "lastName": "Jones",
+        "position": "Owner",
+        "phone": "01248000009",
+        "email": "team@iolocells.co.uk"
+      },
+      "brandNames": [
+        "Iolo"
+      ],
+      "batteryTypes": {
+        "isPortable": true,
+        "isIndustrial": false,
+        "isAutomotive": false
+      },
+      "agencyCode": "NRW",
+      "status": "Approved",
+      "createdAt": "2026-02-12T10:00:00Z",
+      "updatedAt": "2026-03-05T10:00:00Z",
+      "bprnAllocatedAt": "2026-03-05T10:00:00Z"
+    },
+    {
+      "id": "11111111-0001-4000-a000-000000000010",
+      "version": 0,
+      "bprn": null,
+      "contactEmail": "register@johnswold.cymru",
+      "companyName": "John's Wold Auto Cymru",
+      "tradingName": null,
+      "companyRegistrationNo": "10000010",
+      "webAddress": null,
+      "sicCode": "29310",
+      "registeredAddress": {
+        "line1": "Stryd y Brenin",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Casnewydd",
+        "postcode": "NP10 8XQ",
+        "countryCode": "GB"
+      },
+      "serviceOfNoticeAddress": {
+        "line1": "Stryd y Brenin",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Casnewydd",
+        "postcode": "NP10 8XQ",
+        "countryCode": "GB"
+      },
+      "primaryContact": {
+        "firstName": "John",
+        "lastName": "Kelly",
+        "position": "Director",
+        "phone": "01633000010",
+        "email": "register@johnswold.cymru"
+      },
+      "brandNames": [
+        "JW Auto"
+      ],
+      "batteryTypes": {
+        "isPortable": false,
+        "isIndustrial": false,
+        "isAutomotive": true
+      },
+      "agencyCode": "NRW",
+      "status": "Submitted",
+      "createdAt": "2026-04-10T10:00:00Z",
+      "updatedAt": "2026-04-15T10:00:00Z"
+    },
+    {
+      "id": "11111111-0001-4000-a000-000000000011",
+      "version": 0,
+      "bprn": "BPRN-SEPA-2026-000001",
+      "contactEmail": "ops@kelvinpower.co.uk",
+      "companyName": "Kelvin Power Ltd",
+      "tradingName": null,
+      "companyRegistrationNo": "10000011",
+      "webAddress": "https://kelvinpower.co.uk",
+      "sicCode": "27200",
+      "registeredAddress": {
+        "line1": "Kelvin Mills",
+        "line2": "Anchor Lane",
+        "line3": null,
+        "line4": null,
+        "town": "Glasgow",
+        "postcode": "G1 2AA",
+        "countryCode": "GB"
+      },
+      "serviceOfNoticeAddress": {
+        "line1": "Kelvin Mills",
+        "line2": "Anchor Lane",
+        "line3": null,
+        "line4": null,
+        "town": "Glasgow",
+        "postcode": "G1 2AA",
+        "countryCode": "GB"
+      },
+      "primaryContact": {
+        "firstName": "Kara",
+        "lastName": "Lennox",
+        "position": "Compliance Director",
+        "phone": "01410000011",
+        "email": "ops@kelvinpower.co.uk"
+      },
+      "brandNames": [
+        "Kelvin",
+        "Kelvin Pro"
+      ],
+      "batteryTypes": {
+        "isPortable": false,
+        "isIndustrial": true,
+        "isAutomotive": false
+      },
+      "agencyCode": "SEPA",
+      "status": "Approved",
+      "createdAt": "2026-01-30T10:00:00Z",
+      "updatedAt": "2026-02-18T10:00:00Z",
+      "bprnAllocatedAt": "2026-02-18T10:00:00Z"
+    },
+    {
+      "id": "11111111-0001-4000-a000-000000000012",
+      "version": 0,
+      "bprn": "BPRN-SEPA-2026-000002",
+      "contactEmail": "info@lochlinpower.scot",
+      "companyName": "Lochlin Power Cells",
+      "tradingName": null,
+      "companyRegistrationNo": "10000012",
+      "webAddress": "https://lochlinpower.scot",
+      "sicCode": "27200",
+      "registeredAddress": {
+        "line1": "Loch Road",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Edinburgh",
+        "postcode": "EH1 1YZ",
+        "countryCode": "GB"
+      },
+      "serviceOfNoticeAddress": {
+        "line1": "Loch Road",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Edinburgh",
+        "postcode": "EH1 1YZ",
+        "countryCode": "GB"
+      },
+      "primaryContact": {
+        "firstName": "Lara",
+        "lastName": "MacDonald",
+        "position": "Operations Manager",
+        "phone": "01310000012",
+        "email": "info@lochlinpower.scot"
+      },
+      "brandNames": [
+        "Lochlin"
+      ],
+      "batteryTypes": {
+        "isPortable": true,
+        "isIndustrial": false,
+        "isAutomotive": false
+      },
+      "agencyCode": "SEPA",
+      "status": "Approved",
+      "createdAt": "2026-02-08T10:00:00Z",
+      "updatedAt": "2026-02-28T10:00:00Z",
+      "bprnAllocatedAt": "2026-02-28T10:00:00Z"
+    },
+    {
+      "id": "11111111-0001-4000-a000-000000000013",
+      "version": 0,
+      "bprn": "BPRN-SEPA-2026-000003",
+      "contactEmail": "hello@morrowmotor.scot",
+      "companyName": "Morrow Motor Energy",
+      "tradingName": null,
+      "companyRegistrationNo": "10000013",
+      "webAddress": "https://morrowmotor.scot",
+      "sicCode": "29310",
+      "registeredAddress": {
+        "line1": "Forge Yard",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Aberdeen",
+        "postcode": "AB10 1XG",
+        "countryCode": "GB"
+      },
+      "serviceOfNoticeAddress": {
+        "line1": "Forge Yard",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Aberdeen",
+        "postcode": "AB10 1XG",
+        "countryCode": "GB"
+      },
+      "primaryContact": {
+        "firstName": "Mhairi",
+        "lastName": "Nicol",
+        "position": "Head of Compliance",
+        "phone": "01224000013",
+        "email": "hello@morrowmotor.scot"
+      },
+      "brandNames": [
+        "Morrow"
+      ],
+      "batteryTypes": {
+        "isPortable": false,
+        "isIndustrial": false,
+        "isAutomotive": true
+      },
+      "agencyCode": "SEPA",
+      "status": "Approved",
+      "createdAt": "2026-02-15T10:00:00Z",
+      "updatedAt": "2026-03-08T10:00:00Z",
+      "bprnAllocatedAt": "2026-03-08T10:00:00Z"
+    },
+    {
+      "id": "11111111-0001-4000-a000-000000000014",
+      "version": 0,
+      "bprn": null,
+      "contactEmail": "team@nessenergy.scot",
+      "companyName": "Ness Energy Ltd",
+      "tradingName": null,
+      "companyRegistrationNo": "10000014",
+      "webAddress": null,
+      "sicCode": "27200",
+      "registeredAddress": {
+        "line1": "Ness Road",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Inverness",
+        "postcode": "IV30 1AA",
+        "countryCode": "GB"
+      },
+      "serviceOfNoticeAddress": {
+        "line1": "Ness Road",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Inverness",
+        "postcode": "IV30 1AA",
+        "countryCode": "GB"
+      },
+      "primaryContact": {
+        "firstName": "Niall",
+        "lastName": "Ogilvie",
+        "position": "Owner",
+        "phone": "01463000014",
+        "email": "team@nessenergy.scot"
+      },
+      "brandNames": [
+        "Ness"
+      ],
+      "batteryTypes": {
+        "isPortable": true,
+        "isIndustrial": false,
+        "isAutomotive": false
+      },
+      "agencyCode": "SEPA",
+      "status": "Started",
+      "createdAt": "2026-04-12T10:00:00Z",
+      "updatedAt": "2026-04-12T10:00:00Z"
+    },
+    {
+      "id": "11111111-0001-4000-a000-000000000015",
+      "version": 0,
+      "bprn": "BPRN-NIEA-2026-000001",
+      "contactEmail": "ops@oldforgepower.co.uk",
+      "companyName": "Old Forge Power",
+      "tradingName": null,
+      "companyRegistrationNo": "10000015",
+      "webAddress": "https://oldforgepower.co.uk",
+      "sicCode": "27200",
+      "registeredAddress": {
+        "line1": "Old Forge",
+        "line2": "Hill Road",
+        "line3": null,
+        "line4": null,
+        "town": "Belfast",
+        "postcode": "BT1 1AA",
+        "countryCode": "GB"
+      },
+      "serviceOfNoticeAddress": {
+        "line1": "Old Forge",
+        "line2": "Hill Road",
+        "line3": null,
+        "line4": null,
+        "town": "Belfast",
+        "postcode": "BT1 1AA",
+        "countryCode": "GB"
+      },
+      "primaryContact": {
+        "firstName": "Orla",
+        "lastName": "Patton",
+        "position": "Director",
+        "phone": "02890000015",
+        "email": "ops@oldforgepower.co.uk"
+      },
+      "brandNames": [
+        "OldForge"
+      ],
+      "batteryTypes": {
+        "isPortable": true,
+        "isIndustrial": false,
+        "isAutomotive": false
+      },
+      "agencyCode": "NIEA",
+      "status": "Approved",
+      "createdAt": "2026-02-01T10:00:00Z",
+      "updatedAt": "2026-02-22T10:00:00Z",
+      "bprnAllocatedAt": "2026-02-22T10:00:00Z"
+    },
+    {
+      "id": "11111111-0001-4000-a000-000000000016",
+      "version": 0,
+      "bprn": "BPRN-NIEA-2026-000002",
+      "contactEmail": "info@portalmotion.co.uk",
+      "companyName": "Portal Motion Cells",
+      "tradingName": null,
+      "companyRegistrationNo": "10000016",
+      "webAddress": "https://portalmotion.co.uk",
+      "sicCode": "29310",
+      "registeredAddress": {
+        "line1": "Portal Lane",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Belfast",
+        "postcode": "BT7 3AZ",
+        "countryCode": "GB"
+      },
+      "serviceOfNoticeAddress": {
+        "line1": "Portal Lane",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Belfast",
+        "postcode": "BT7 3AZ",
+        "countryCode": "GB"
+      },
+      "primaryContact": {
+        "firstName": "Paddy",
+        "lastName": "Quinn",
+        "position": "Operations Lead",
+        "phone": "02890000016",
+        "email": "info@portalmotion.co.uk"
+      },
+      "brandNames": [
+        "Portal",
+        "Portal EV"
+      ],
+      "batteryTypes": {
+        "isPortable": false,
+        "isIndustrial": false,
+        "isAutomotive": true
+      },
+      "agencyCode": "NIEA",
+      "status": "Approved",
+      "createdAt": "2026-02-18T10:00:00Z",
+      "updatedAt": "2026-03-12T10:00:00Z",
+      "bprnAllocatedAt": "2026-03-12T10:00:00Z"
+    },
+    {
+      "id": "11111111-0001-4000-a000-000000000017",
+      "version": 0,
+      "bprn": "BPRN-NIEA-2026-000003",
+      "contactEmail": "register@quaystorage.co.uk",
+      "companyName": "Quay Storage Solutions",
+      "tradingName": null,
+      "companyRegistrationNo": "10000017",
+      "webAddress": "https://quaystorage.co.uk",
+      "sicCode": "27200",
+      "registeredAddress": {
+        "line1": "Dockside",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Lisburn",
+        "postcode": "BT28 1AA",
+        "countryCode": "GB"
+      },
+      "serviceOfNoticeAddress": {
+        "line1": "Dockside",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Lisburn",
+        "postcode": "BT28 1AA",
+        "countryCode": "GB"
+      },
+      "primaryContact": {
+        "firstName": "Quinn",
+        "lastName": "Reid",
+        "position": "Director",
+        "phone": "02892000017",
+        "email": "register@quaystorage.co.uk"
+      },
+      "brandNames": [
+        "QuayStore"
+      ],
+      "batteryTypes": {
+        "isPortable": false,
+        "isIndustrial": true,
+        "isAutomotive": false
+      },
+      "agencyCode": "NIEA",
+      "status": "Approved",
+      "createdAt": "2026-03-01T10:00:00Z",
+      "updatedAt": "2026-03-25T10:00:00Z",
+      "bprnAllocatedAt": "2026-03-25T10:00:00Z"
+    },
+    {
+      "id": "11111111-0001-4000-a000-000000000018",
+      "version": 0,
+      "bprn": "BPRN-EA-2026-000006",
+      "contactEmail": "ops@redwillowtech.co.uk",
+      "companyName": "Red Willow Technology",
+      "tradingName": null,
+      "companyRegistrationNo": "10000018",
+      "webAddress": "https://redwillowtech.co.uk",
+      "sicCode": "27200",
+      "registeredAddress": {
+        "line1": "Willow Yard",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "York",
+        "postcode": "YO1 7HU",
+        "countryCode": "GB"
+      },
+      "serviceOfNoticeAddress": {
+        "line1": "Willow Yard",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "York",
+        "postcode": "YO1 7HU",
+        "countryCode": "GB"
+      },
+      "primaryContact": {
+        "firstName": "Ravi",
+        "lastName": "Singh",
+        "position": "Compliance Director",
+        "phone": "01904000018",
+        "email": "ops@redwillowtech.co.uk"
+      },
+      "brandNames": [
+        "Red Willow",
+        "RW"
+      ],
+      "batteryTypes": {
+        "isPortable": true,
+        "isIndustrial": true,
+        "isAutomotive": true
+      },
+      "agencyCode": "EA",
+      "status": "Approved",
+      "createdAt": "2026-02-22T10:00:00Z",
+      "updatedAt": "2026-03-15T10:00:00Z",
+      "bprnAllocatedAt": "2026-03-15T10:00:00Z"
+    },
+    {
+      "id": "11111111-0001-4000-a000-000000000019",
+      "version": 0,
+      "bprn": "BPRN-EA-2026-000007",
+      "contactEmail": "info@silverwatts.co.uk",
+      "companyName": "Silver Watts Ltd",
+      "tradingName": null,
+      "companyRegistrationNo": "10000019",
+      "webAddress": "https://silverwatts.co.uk",
+      "sicCode": "27200",
+      "registeredAddress": {
+        "line1": "Silver Trading Estate",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Norwich",
+        "postcode": "NR1 1AA",
+        "countryCode": "GB"
+      },
+      "serviceOfNoticeAddress": {
+        "line1": "Silver Trading Estate",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Norwich",
+        "postcode": "NR1 1AA",
+        "countryCode": "GB"
+      },
+      "primaryContact": {
+        "firstName": "Sara",
+        "lastName": "Tan",
+        "position": "Owner",
+        "phone": "01603000019",
+        "email": "info@silverwatts.co.uk"
+      },
+      "brandNames": [
+        "Silver Watts"
+      ],
+      "batteryTypes": {
+        "isPortable": true,
+        "isIndustrial": false,
+        "isAutomotive": false
+      },
+      "agencyCode": "EA",
+      "status": "Approved",
+      "createdAt": "2026-03-04T10:00:00Z",
+      "updatedAt": "2026-03-20T10:00:00Z",
+      "bprnAllocatedAt": "2026-03-20T10:00:00Z"
+    },
+    {
+      "id": "11111111-0001-4000-a000-000000000020",
+      "version": 0,
+      "bprn": "BPRN-EA-2026-000008",
+      "contactEmail": "team@thamesvolt.co.uk",
+      "companyName": "Thames Volt Industries",
+      "tradingName": null,
+      "companyRegistrationNo": "10000020",
+      "webAddress": "https://thamesvolt.co.uk",
+      "sicCode": "27200",
+      "registeredAddress": {
+        "line1": "Riverside Block",
+        "line2": "Embankment Way",
+        "line3": null,
+        "line4": null,
+        "town": "Reading",
+        "postcode": "RG1 1AA",
+        "countryCode": "GB"
+      },
+      "serviceOfNoticeAddress": {
+        "line1": "Riverside Block",
+        "line2": "Embankment Way",
+        "line3": null,
+        "line4": null,
+        "town": "Reading",
+        "postcode": "RG1 1AA",
+        "countryCode": "GB"
+      },
+      "primaryContact": {
+        "firstName": "Tom",
+        "lastName": "Underwood",
+        "position": "Compliance Manager",
+        "phone": "01180000020",
+        "email": "team@thamesvolt.co.uk"
+      },
+      "brandNames": [
+        "Thames Volt",
+        "TV Industrial"
+      ],
+      "batteryTypes": {
+        "isPortable": false,
+        "isIndustrial": true,
+        "isAutomotive": false
+      },
+      "agencyCode": "EA",
+      "status": "Approved",
+      "createdAt": "2026-03-12T10:00:00Z",
+      "updatedAt": "2026-04-02T10:00:00Z",
+      "bprnAllocatedAt": "2026-04-02T10:00:00Z"
+    }
+  ]
+}

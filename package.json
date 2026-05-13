@@ -1,0 +1,130 @@
+{
+  "name": "batteries-producer-frontend",
+  "version": "0.0.0",
+  "description": "Defra Battery Producer service prototype frontend (localStorage-backed)",
+  "sideEffects": false,
+  "main": "src/index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=22.16.0"
+  },
+  "scripts": {
+    "build:frontend": "NODE_ENV=production webpack",
+    "dev": "run-p frontend:watch server:watch",
+    "dev:debug": "run-p frontend:watch server:debug",
+    "format": "prettier --write \"src/**/*.js\" \"**/*.{js,cjs,md,json,config.js,test.js}\"",
+    "format:check": "prettier --check \"src/**/*.js\" \"**/*.{js,cjs,md,json,config.js,test.js}\"",
+    "frontend:watch": "NODE_ENV=development webpack --watch",
+    "git:pre-commit-hook": "npm run format:check && npm run lint && npm run test-long-timeout",
+    "postinstall": "npm run setup:husky",
+    "lint": "run-s lint:js lint:scss",
+    "lint:js": "eslint .",
+    "lint:js:fix": "eslint . --fix",
+    "lint:scss": "stylelint \"src/**/*.scss\" --cache --cache-location .cache/stylelint --cache-strategy content --color --ignore-path .gitignore",
+    "pretest": "npm run build:frontend",
+    "test": "TZ=UTC vitest run --coverage",
+    "test-long-timeout": "TZ=UTC vitest run --coverage --hook-timeout=1000000",
+    "test:watch": "TZ=UTC vitest",
+    "server:watch": "nodemon --inspect=0.0.0.0 --ext js,json --legacy-watch ./src",
+    "server:debug": "nodemon --inspect-brk=0.0.0.0 --ext js,json --legacy-watch ./src",
+    "prestart": "npm run build:frontend",
+    "start": "NODE_ENV=production node --use-strict .",
+    "setup:husky": "node -e \"try { (await import('husky')).default() } catch (e) { if (e.code !== 'ERR_MODULE_NOT_FOUND') throw e }\" --input-type module"
+  },
+  "author": "Defra DDTS",
+  "license": "OGL-UK-3.0",
+  "dependencies": {
+    "@defra/hapi-secure-context": "0.1.3",
+    "@defra/hapi-tracing": "1.22.0",
+    "@elastic/ecs-pino-format": "1.5.0",
+    "@hapi/boom": "10.0.1",
+    "@hapi/catbox-memory": "6.0.2",
+    "@hapi/hapi": "21.4.0",
+    "@hapi/inert": "7.1.0",
+    "@hapi/scooter": "8.0.0",
+    "@hapi/vision": "7.0.3",
+    "@hapi/yar": "11.0.3",
+    "blankie": "5.0.0",
+    "convict": "6.2.5",
+    "convict-format-with-validator": "6.2.0",
+    "cssnano": "7.1.2",
+    "cssnano-preset-default": "7.0.10",
+    "date-fns": "4.1.0",
+    "govuk-frontend": "5.11.0",
+    "hapi-pino": "12.1.0",
+    "hapi-pulse": "3.0.1",
+    "joi": "18.0.2",
+    "lodash": "4.17.21",
+    "nunjucks": "3.2.4",
+    "pino": "9.7.0",
+    "pino-pretty": "13.0.0"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "7.27.2",
+    "@testing-library/dom": "10.4.1",
+    "@testing-library/jest-dom": "6.9.1",
+    "@vitest/coverage-v8": "4.0.18",
+    "autoprefixer": "10.4.21",
+    "babel-loader": "10.0.0",
+    "cheerio": "1.1.0",
+    "clean-webpack-plugin": "4.0.0",
+    "copy-webpack-plugin": "14.0.0",
+    "eslint": "9.39.3",
+    "husky": "9.1.7",
+    "jsdom": "27.4.0",
+    "neostandard": "0.13.0",
+    "nodemon": "3.1.14",
+    "npm-run-all": "4.1.5",
+    "postcss-load-config": "6.0.1",
+    "postcss-loader": "8.1.1",
+    "prettier": "3.5.3",
+    "prettier-plugin-jinja-template": "2.1.0",
+    "sass-embedded": "1.89.2",
+    "sass-loader": "16.0.7",
+    "source-map-loader": "5.0.0",
+    "stylelint": "16.21.0",
+    "stylelint-config-gds": "2.0.0",
+    "terser-webpack-plugin": "5.3.17",
+    "vitest": "4.0.18",
+    "webpack": "5.104.1",
+    "webpack-assets-manifest": "6.2.1",
+    "webpack-cli": "6.0.1"
+  },
+  "overrides": {
+    "sass-embedded": {
+      "validator": "13.15.22",
+      "immutable": "5.1.5"
+    },
+    "fast-xml-parser": "5.5.7",
+    "clean-webpack-plugin": {
+      "del": {
+        "globby": {
+          "glob": {
+            "minimatch": {
+              "brace-expansion": "5.0.5"
+            }
+          }
+        },
+        "rimraf": {
+          "glob": {
+            "minimatch": {
+              "brace-expansion": "5.0.5"
+            }
+          }
+        }
+      }
+    },
+    "npm-run-all": {
+      "minimatch": {
+        "brace-expansion": "5.0.5"
+      }
+    },
+    "neostandard": {
+      "eslint-plugin-react": {
+        "minimatch": {
+          "brace-expansion": "5.0.5"
+        }
+      }
+    }
+  }
+}

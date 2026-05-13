@@ -1,0 +1,69 @@
+{
+  "companies": [
+    {
+      "companyRegistrationNo": "12345678",
+      "companyName": "Demo Power Cells Ltd",
+      "registeredAddress": {
+        "line1": "1 Demo Way",
+        "line2": "Industrial Estate",
+        "line3": null,
+        "line4": null,
+        "town": "Manchester",
+        "postcode": "M1 4AA",
+        "countryCode": "GB"
+      }
+    },
+    {
+      "companyRegistrationNo": "23456789",
+      "companyName": "Sample Batteries (UK) Ltd",
+      "registeredAddress": {
+        "line1": "Block B",
+        "line2": "Sample Park",
+        "line3": null,
+        "line4": null,
+        "town": "Cardiff",
+        "postcode": "CF10 1EP",
+        "countryCode": "GB"
+      }
+    },
+    {
+      "companyRegistrationNo": "34567890",
+      "companyName": "Pilot Energy Storage",
+      "registeredAddress": {
+        "line1": "Pilot House",
+        "line2": "Northgate",
+        "line3": null,
+        "line4": null,
+        "town": "Edinburgh",
+        "postcode": "EH1 1YZ",
+        "countryCode": "GB"
+      }
+    },
+    {
+      "companyRegistrationNo": "45678901",
+      "companyName": "Belfast Industrial Cells",
+      "registeredAddress": {
+        "line1": "Quayside Trade Park",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Belfast",
+        "postcode": "BT1 1AA",
+        "countryCode": "GB"
+      }
+    },
+    {
+      "companyRegistrationNo": "56789012",
+      "companyName": "Westwood Automotive Power",
+      "registeredAddress": {
+        "line1": "Unit 42",
+        "line2": "Westwood Industrial Estate",
+        "line3": null,
+        "line4": null,
+        "town": "Coventry",
+        "postcode": "CV1 1AA",
+        "countryCode": "GB"
+      }
+    }
+  ]
+}
