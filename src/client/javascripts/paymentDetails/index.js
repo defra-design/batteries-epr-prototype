@@ -1,6 +1,7 @@
 import { storage } from '../storage-adapter.js'
 import { readPagePayload } from '../page-payload.js'
 import { requireAuth } from '../auth-gate.js'
+import { currentCompliancePeriod } from '../compliance-period.js'
 
 const formatPounds = (amountPence) =>
   new Intl.NumberFormat('en-GB', {
@@ -42,7 +43,7 @@ export const initPaymentDetails = (
 
   const user = storage.getCurrentUser()
   const producer = storage.getProducerByEmail(user.email)
-  const compliancePeriod = payload.compliancePeriod ?? '2026'
+  const compliancePeriod = payload.compliancePeriod ?? currentCompliancePeriod()
 
   setText(
     doc,

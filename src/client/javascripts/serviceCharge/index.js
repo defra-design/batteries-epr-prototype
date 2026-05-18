@@ -2,6 +2,7 @@ import { storage } from '../storage-adapter.js'
 import { readPagePayload } from '../page-payload.js'
 import { requireAuth } from '../auth-gate.js'
 import { feeForRoute, FEE_SCHEDULE } from '../../../config/fees.js'
+import { currentCompliancePeriod } from '../compliance-period.js'
 
 const findRegistration = (producerId, compliancePeriod) =>
   storage
@@ -40,7 +41,7 @@ export const initServiceCharge = (
     return 'redirected-to-dashboard'
   }
 
-  const compliancePeriod = payload.compliancePeriod ?? '2026'
+  const compliancePeriod = payload.compliancePeriod ?? currentCompliancePeriod()
   const registration = findRegistration(producer.id, compliancePeriod)
   if (!registration) {
     loc.assign(payload.dashboardUrl ?? '/dashboard')

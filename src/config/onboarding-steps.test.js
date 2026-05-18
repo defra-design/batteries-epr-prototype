@@ -1,7 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
 import {
-  COMPLIANCE_PERIOD,
   ONBOARDING_STEPS,
   findStep,
   nextStepPath
@@ -12,10 +11,6 @@ describe('onboarding-steps', () => {
     expect(ONBOARDING_STEPS).toHaveLength(8)
     expect(ONBOARDING_STEPS[0].id).toBe('companyDetails')
     expect(ONBOARDING_STEPS[7].id).toBe('confirmation')
-  })
-
-  test('COMPLIANCE_PERIOD is the prototype default', () => {
-    expect(COMPLIANCE_PERIOD).toBe('2026')
   })
 
   test('findStep returns the step record by id', () => {

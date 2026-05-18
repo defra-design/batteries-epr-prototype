@@ -2,11 +2,13 @@ import { storage } from '../storage-adapter.js'
 
 export const performTimeTravel = (year, loc = globalThis.location) => {
   storage.setTimeTravelToYear(year)
+  globalThis.document.cookie = `tt-year=${year}; path=/; max-age=2592000; samesite=lax`
   loc.assign('/')
 }
 
 export const performClearTimeTravel = (loc = globalThis.location) => {
   storage.clearTimeTravel()
+  globalThis.document.cookie = 'tt-year=; path=/; max-age=0; samesite=lax'
   loc.assign('/')
 }
 

@@ -11,8 +11,16 @@ import { storage, STORAGE_KEYS } from '../storage-adapter.js'
 let assignSpy
 let location
 
+const clearCookies = () => {
+  for (const part of document.cookie.split(';')) {
+    const name = part.split('=')[0].trim()
+    if (name) document.cookie = `${name}=; path=/; max-age=0`
+  }
+}
+
 beforeEach(() => {
   globalThis.localStorage.clear()
+  clearCookies()
   assignSpy = vi.fn()
   location = { assign: assignSpy }
   document.body.innerHTML = ''
@@ -20,6 +28,7 @@ beforeEach(() => {
 
 afterEach(() => {
   globalThis.localStorage.clear()
+  clearCookies()
 })
 
 const renderForm = (defaultYear = 2030, includeClear = true) => {
@@ -37,22 +46,25 @@ const renderForm = (defaultYear = 2030, includeClear = true) => {
 }
 
 describe('performTimeTravel', () => {
-  test('stores the target year and redirects home', () => {
+  test('stores the target year, sets the tt-year cookie, and redirects home', () => {
     performTimeTravel(2030, location)
     expect(globalThis.localStorage.getItem(STORAGE_KEYS.timeTravelTargetYear)).toBe(
       '2030'
     )
+    expect(document.cookie).toContain('tt-year=2030')
     expect(assignSpy).toHaveBeenCalledWith('/')
   })
 })
 
 describe('performClearTimeTravel', () => {
-  test('clears the target year and redirects home', () => {
+  test('clears the target year and cookie and redirects home', () => {
     storage.setTimeTravelToYear(2030)
+    document.cookie = 'tt-year=2030; path=/'
     performClearTimeTravel(location)
     expect(
       globalThis.localStorage.getItem(STORAGE_KEYS.timeTravelTargetYear)
     ).toBeNull()
+    expect(document.cookie).not.toContain('tt-year=2030')
     expect(assignSpy).toHaveBeenCalledWith('/')
   })
 })

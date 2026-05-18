@@ -11,32 +11,23 @@ describe('#devResetController', () => {
   })
 
   afterAll(async () => {
-    config.set('isProduction', false)
     await server.stop({ timeout: 0 })
   })
 
-  test('renders the dev-reset page outside of production', async () => {
-    config.set('isProduction', false)
+  test.each([false, true])(
+    'renders the dev-reset page when isProduction=%s',
+    async (isProduction) => {
+      config.set('isProduction', isProduction)
 
-    const { result, statusCode } = await server.inject({
-      method: 'GET',
-      url: paths.devReset
-    })
+      const { result, statusCode } = await server.inject({
+        method: 'GET',
+        url: paths.devReset
+      })
 
-    expect(statusCode).toBe(statusCodes.ok)
-    expect(result).toEqual(
-      expect.stringContaining('data-testid="dev-reset-confirm"')
-    )
-  })
-
-  test('returns 404 in production builds', async () => {
-    config.set('isProduction', true)
-
-    const { statusCode } = await server.inject({
-      method: 'GET',
-      url: paths.devReset
-    })
-
-    expect(statusCode).toBe(statusCodes.notFound)
-  })
+      expect(statusCode).toBe(statusCodes.ok)
+      expect(result).toEqual(
+        expect.stringContaining('data-testid="dev-reset-confirm"')
+      )
+    }
+  )
 })

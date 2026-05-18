@@ -1,4 +1,4 @@
-import { COMPLIANCE_PERIOD } from '../../config/onboarding-steps.js'
+import { getCompliancePeriod } from '../../config/compliance-period.js'
 
 const FLASH_KEY = (stepId) => `annualReturnErrors:${stepId}`
 const VALUES_KEY = (stepId) => `annualReturnValues:${stepId}`
@@ -49,4 +49,4 @@ export const SUB_CATEGORIES = [
 export const IA_CATEGORIES = ['industrial', 'automotive']
 export const IA_ACTIVITIES = ['placed', 'collected', 'delivered', 'exported']
 
-export { COMPLIANCE_PERIOD }
+export { getCompliancePeriod }

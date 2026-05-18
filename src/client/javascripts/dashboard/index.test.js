@@ -797,7 +797,7 @@ describe('initDashboard heading and visibility', () => {
         'a@b.com': {
           contactEmail: 'a@b.com',
           companyName: 'Acme',
-          createdAt: 'not-a-real-date'
+          createdAt: '2024-13-99'
         }
       })
     )

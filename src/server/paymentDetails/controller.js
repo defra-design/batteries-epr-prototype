@@ -1,6 +1,6 @@
 import { content } from '../../config/content.js'
 import { paths } from '../../config/paths.js'
-import { COMPLIANCE_PERIOD } from '../../config/onboarding-steps.js'
+import { getCompliancePeriod } from '../../config/compliance-period.js'
 
 export const paymentDetailsController = {
   handler(request, h) {
@@ -9,7 +9,7 @@ export const paymentDetailsController = {
     const pagePayload = {
       signInUrl: paths.signIn,
       dashboardUrl: paths.dashboard,
-      compliancePeriod: COMPLIANCE_PERIOD
+      compliancePeriod: getCompliancePeriod(request)
     }
 
     return h.view('paymentDetails/index', {

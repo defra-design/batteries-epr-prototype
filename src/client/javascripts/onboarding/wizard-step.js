@@ -2,6 +2,7 @@ import { storage } from '../storage-adapter.js'
 import { readPagePayload } from '../page-payload.js'
 import { hydrateForm } from '../hydrate-form.js'
 import { requireAuth } from '../auth-gate.js'
+import { currentCompliancePeriod } from '../compliance-period.js'
 import {
   persistProducerFields,
   persistRegistrationFields,
@@ -37,7 +38,9 @@ export const runOnboardingStep = (
   if (!requireAuth('/sign-in')) return false
 
   const user = storage.getCurrentUser()
-  const payload = readPagePayload(doc) || { compliancePeriod: '2026' }
+  const payload = readPagePayload(doc) || {
+    compliancePeriod: currentCompliancePeriod()
+  }
 
   if (payload.savedFields || payload.target === 'submit') {
     handlePersist(user, payload)

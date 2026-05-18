@@ -42,7 +42,9 @@ export const producerRouteController = {
         errorSummary: errors || [],
         errors: errorListToMap(errors),
         formValues: values || {},
-        pagePayload: buildHydrationPayload(STEP_ID, { skipHydration: !!errors })
+        pagePayload: buildHydrationPayload(request, STEP_ID, {
+          skipHydration: !!errors
+        })
       })
     }
   },
@@ -69,7 +71,12 @@ export const producerRouteController = {
         errorSummary: [],
         errors: {},
         formValues: request.payload,
-        pagePayload: buildStepPayload(STEP_ID, 'registration', savedFields)
+        pagePayload: buildStepPayload(
+          request,
+          STEP_ID,
+          'registration',
+          savedFields
+        )
       })
     }
   }

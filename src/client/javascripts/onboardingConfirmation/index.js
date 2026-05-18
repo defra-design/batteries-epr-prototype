@@ -1,6 +1,7 @@
 import { storage } from '../storage-adapter.js'
 import { requireAuth } from '../auth-gate.js'
 import { readPagePayload } from '../page-payload.js'
+import { currentCompliancePeriod } from '../compliance-period.js'
 
 const findRegistration = (producerId, compliancePeriod) =>
   storage
@@ -12,7 +13,7 @@ export const renderConfirmation = (doc = globalThis.document) => {
 
   const user = storage.getCurrentUser()
   const payload = readPagePayload(doc) ?? {}
-  const compliancePeriod = payload.compliancePeriod ?? '2026'
+  const compliancePeriod = payload.compliancePeriod ?? currentCompliancePeriod()
 
   const producer = storage.getProducerByEmail(user.email)
   const registration = producer
@@ -29,6 +30,7 @@ export const renderConfirmation = (doc = globalThis.document) => {
   setText('[data-testid="confirmation-bprn"]', bprn)
   setText('[data-testid="confirmation-bprn-row"]', bprn)
   setText('[data-testid="confirmation-status"]', status)
+  setText('[data-testid="confirmation-period"]', compliancePeriod)
 
-  return { bprn, status }
+  return { bprn, status, compliancePeriod }
 }

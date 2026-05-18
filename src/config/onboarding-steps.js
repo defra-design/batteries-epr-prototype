@@ -43,8 +43,6 @@ export const ONBOARDING_STEPS = [
   }
 ]
 
-export const COMPLIANCE_PERIOD = '2026'
-
 export const findStep = (id) => ONBOARDING_STEPS.find((s) => s.id === id)
 
 export const nextStepPath = (id) => {

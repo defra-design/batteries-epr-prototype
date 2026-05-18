@@ -1,7 +1,5 @@
-import {
-  COMPLIANCE_PERIOD,
-  nextStepPath
-} from '../../config/onboarding-steps.js'
+import { nextStepPath } from '../../config/onboarding-steps.js'
+import { getCompliancePeriod } from '../../config/compliance-period.js'
 
 const FLASH_KEY = (stepId) => `onboardingErrors:${stepId}`
 const VALUES_KEY = (stepId) => `onboardingValues:${stepId}`
@@ -21,6 +19,7 @@ export const readStepErrors = (request, stepId) => {
 }
 
 export const buildStepPayload = (
+  request,
   stepId,
   target,
   savedFields,
@@ -28,7 +27,7 @@ export const buildStepPayload = (
 ) => ({
   step: stepId,
   target,
-  compliancePeriod: COMPLIANCE_PERIOD,
+  compliancePeriod: getCompliancePeriod(request),
   savedFields,
   nextStep: nextStepOverride || nextStepPath(stepId)
 })
@@ -40,12 +39,13 @@ export const actionWithReturn = (action, returnUrl) =>
   returnUrl ? `${action}?return=${encodeURIComponent(returnUrl)}` : action
 
 export const buildHydrationPayload = (
+  request,
   stepId,
   { skipHydration = false } = {}
 ) => ({
   step: stepId,
   target: 'hydrate',
-  compliancePeriod: COMPLIANCE_PERIOD,
+  compliancePeriod: getCompliancePeriod(request),
   skipHydration
 })
 

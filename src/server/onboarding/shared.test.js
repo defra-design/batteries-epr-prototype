@@ -42,44 +42,64 @@ describe('shared onboarding helpers', () => {
     ])
   })
 
+  const currentYear = String(new Date().getUTCFullYear())
+  const stubRequest = {}
+
   test('buildHydrationPayload composes the standard hydrate payload', () => {
-    expect(buildHydrationPayload('companyDetails')).toEqual({
+    expect(buildHydrationPayload(stubRequest, 'companyDetails')).toEqual({
       step: 'companyDetails',
       target: 'hydrate',
-      compliancePeriod: '2026',
+      compliancePeriod: currentYear,
       skipHydration: false
     })
   })
 
   test('buildHydrationPayload sets skipHydration when requested', () => {
     expect(
-      buildHydrationPayload('companyDetails', { skipHydration: true })
+      buildHydrationPayload(stubRequest, 'companyDetails', {
+        skipHydration: true
+      })
     ).toEqual({
       step: 'companyDetails',
       target: 'hydrate',
-      compliancePeriod: '2026',
+      compliancePeriod: currentYear,
       skipHydration: true
     })
   })
 
+  test('buildHydrationPayload honours the tt-year cookie', () => {
+    expect(
+      buildHydrationPayload({ state: { 'tt-year': '2030' } }, 'companyDetails')
+    ).toMatchObject({ compliancePeriod: '2030' })
+  })
+
   test('buildStepPayload includes the next step path for non-terminal steps', () => {
-    expect(buildStepPayload('companyDetails', 'producer', { x: 1 })).toEqual({
+    expect(
+      buildStepPayload(stubRequest, 'companyDetails', 'producer', { x: 1 })
+    ).toEqual({
       step: 'companyDetails',
       target: 'producer',
-      compliancePeriod: '2026',
+      compliancePeriod: currentYear,
       savedFields: { x: 1 },
       nextStep: '/onboarding/contact-details'
     })
   })
 
   test('buildStepPayload yields nextStep null for the last step', () => {
-    expect(buildStepPayload('confirmation', 'none', null).nextStep).toBeNull()
+    expect(
+      buildStepPayload(stubRequest, 'confirmation', 'none', null).nextStep
+    ).toBeNull()
   })
 
   test('buildStepPayload uses the override path when provided', () => {
     expect(
-      buildStepPayload('companyDetails', 'producer', { x: 1 }, '/account')
-        .nextStep
+      buildStepPayload(
+        stubRequest,
+        'companyDetails',
+        'producer',
+        { x: 1 },
+        '/account'
+      ).nextStep
     ).toBe('/account')
   })
 

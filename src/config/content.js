@@ -242,7 +242,7 @@ export const content = {
       en: {
         title: 'Time travel',
         heading: 'Time travel',
-        body: 'Shift every stored timestamp so the prototype behaves as if today is in the target year. Relative timing between records is preserved.',
+        body: 'Set the year the prototype should pretend it is. The dashboard, compliance period and any new records you create will be tagged with this year, and the activity log will date events accordingly. Existing records keep the period they were submitted under. Clear to return to real time.',
         yearLabel: 'Target year',
         yearHint: 'Enter a four-digit year (for example, 2027).',
         confirmAction: 'Travel'
@@ -548,6 +548,7 @@ export const content = {
           'Thanks for completing onboarding. Here is the BPRN we have allocated for the compliance period.',
         bprnLabel: 'Your BPRN',
         statusLabel: 'Status',
+        periodLabel: 'Compliance period',
         emailNoticeHeading: 'What happens next',
         emailNoticeBody:
           'In a real service we would email you a confirmation. For this prototype we have simply recorded the submission in your browser.',
@@ -559,6 +560,7 @@ export const content = {
         intro: 'TODO welsh',
         bprnLabel: 'TODO welsh',
         statusLabel: 'TODO welsh',
+        periodLabel: 'TODO welsh',
         emailNoticeHeading: 'TODO welsh',
         emailNoticeBody: 'TODO welsh',
         continueAction: 'TODO welsh'

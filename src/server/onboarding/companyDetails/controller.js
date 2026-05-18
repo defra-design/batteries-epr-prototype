@@ -95,7 +95,7 @@ export const companyDetailsController = {
           errorSummary: errors || [],
           errors: errorListToMap(errors),
           formValues: values || {},
-          pagePayload: buildHydrationPayload(STEP_ID, {
+          pagePayload: buildHydrationPayload(request, STEP_ID, {
             skipHydration: !!errors
           })
         }
@@ -134,6 +134,7 @@ export const companyDetailsController = {
           errors: {},
           formValues: request.payload,
           pagePayload: buildStepPayload(
+            request,
             STEP_ID,
             'producer',
             savedFields,

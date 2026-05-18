@@ -72,7 +72,7 @@ export const batteryTypesController = {
           errorSummary: errors || [],
           errors: errorListToMap(errors),
           formValues: values || {},
-          pagePayload: buildHydrationPayload(STEP_ID, {
+          pagePayload: buildHydrationPayload(request, STEP_ID, {
             skipHydration: !!errors
           })
         }
@@ -110,6 +110,7 @@ export const batteryTypesController = {
           errors: {},
           formValues: request.payload,
           pagePayload: buildStepPayload(
+            request,
             STEP_ID,
             'producer',
             buildSavedFields(request.payload),

@@ -1,6 +1,6 @@
 import { content } from '../../../../config/content.js'
 import { paths } from '../../../../config/paths.js'
-import { COMPLIANCE_PERIOD } from '../../shared.js'
+import { getCompliancePeriod } from '../../shared.js'
 
 export const confirmationController = {
   handler(request, h) {
@@ -17,7 +17,7 @@ export const confirmationController = {
       pagePayload: {
         step: 'smallProducerConfirmation',
         target: 'hydrate',
-        compliancePeriod: COMPLIANCE_PERIOD,
+        compliancePeriod: getCompliancePeriod(request),
         registrationId
       }
     })

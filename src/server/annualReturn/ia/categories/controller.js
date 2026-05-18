@@ -1,6 +1,6 @@
 import { content } from '../../../../config/content.js'
 import { paths, pathTo } from '../../../../config/paths.js'
-import { COMPLIANCE_PERIOD } from '../../shared.js'
+import { getCompliancePeriod } from '../../shared.js'
 
 export const categoriesController = {
   handler(request, h) {
@@ -17,7 +17,7 @@ export const categoriesController = {
       pagePayload: {
         step: 'iaCategories',
         target: 'hydrate',
-        compliancePeriod: COMPLIANCE_PERIOD,
+        compliancePeriod: getCompliancePeriod(request),
         registrationId,
         signInUrl: paths.signIn,
         dashboardUrl: paths.dashboard

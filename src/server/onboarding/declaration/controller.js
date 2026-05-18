@@ -9,7 +9,10 @@ import {
   flashStepErrors,
   readStepErrors
 } from '../shared.js'
-import { COMPLIANCE_PERIOD } from '../../../config/onboarding-steps.js'
+import {
+  getCompliancePeriod,
+  getCurrentDate
+} from '../../../config/compliance-period.js'
 
 const STEP_ID = 'declaration'
 
@@ -50,7 +53,9 @@ export const declarationController = {
         errorSummary: errors || [],
         errors: errorListToMap(errors),
         formValues: values || {},
-        pagePayload: buildHydrationPayload(STEP_ID, { skipHydration: !!errors })
+        pagePayload: buildHydrationPayload(request, STEP_ID, {
+          skipHydration: !!errors
+        })
       })
     }
   },
@@ -73,7 +78,7 @@ export const declarationController = {
         firstName: request.payload.declarationFirstName,
         lastName: request.payload.declarationLastName,
         position: request.payload.declarationPosition,
-        declaredAt: new Date().toISOString()
+        declaredAt: getCurrentDate(request).toISOString()
       }
 
       return renderView(h, pageContent, {
@@ -83,7 +88,7 @@ export const declarationController = {
         pagePayload: {
           step: STEP_ID,
           target: 'registration-and-submit',
-          compliancePeriod: COMPLIANCE_PERIOD,
+          compliancePeriod: getCompliancePeriod(request),
           savedFields: { declaration },
           nextStep: paths.onboardingConfirmation
         }

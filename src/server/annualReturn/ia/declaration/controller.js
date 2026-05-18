@@ -3,12 +3,13 @@ import joi from 'joi'
 import { content } from '../../../../config/content.js'
 import { paths, pathTo } from '../../../../config/paths.js'
 import {
-  COMPLIANCE_PERIOD,
+  getCompliancePeriod,
   collectErrors,
   errorListToMap,
   flashStepErrors,
   readStepErrors
 } from '../../shared.js'
+import { getCurrentDate } from '../../../../config/compliance-period.js'
 
 const STEP_ID = 'iaDeclaration'
 
@@ -54,7 +55,7 @@ export const declarationController = {
         pagePayload: {
           step: STEP_ID,
           target: 'hydrate',
-          compliancePeriod: COMPLIANCE_PERIOD,
+          compliancePeriod: getCompliancePeriod(request),
           registrationId,
           signInUrl: paths.signIn,
           skipHydration: !!errors
@@ -88,7 +89,7 @@ export const declarationController = {
         firstName: request.payload.declarationFirstName,
         lastName: request.payload.declarationLastName,
         position: request.payload.declarationPosition,
-        declaredAt: new Date().toISOString()
+        declaredAt: getCurrentDate(request).toISOString()
       }
 
       return renderView(h, pageContent, registrationId, {
@@ -98,7 +99,7 @@ export const declarationController = {
         pagePayload: {
           step: STEP_ID,
           target: 'submission-submit',
-          compliancePeriod: COMPLIANCE_PERIOD,
+          compliancePeriod: getCompliancePeriod(request),
           registrationId,
           savedFields: { declaration, status: 'Submitted' },
           nextStep: pathTo(paths.annualReturnIaConfirmation, {

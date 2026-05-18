@@ -1,6 +1,7 @@
 import { storage } from '../storage-adapter.js'
 import { readPagePayload } from '../page-payload.js'
 import { requireAuth } from '../auth-gate.js'
+import { currentCompliancePeriod } from '../compliance-period.js'
 
 const HTML_ENTITIES = {
   '&': '&amp;',
@@ -99,7 +100,11 @@ const renderRegistrationCard = (doc, copy, registration, producer) => {
     copy.statusStarted,
     'govuk-tag--yellow'
   )
-  setText(doc, '[data-testid="card-registration-bprn"]', '')
+  setText(
+    doc,
+    '[data-testid="card-registration-bprn"]',
+    producer?.bprn ? `${copy.bprnLabel} ${producer.bprn}` : ''
+  )
   setText(doc, '[data-testid="card-registration-body"]', copy.inProgressBody)
   setLink(
     doc,
@@ -221,7 +226,7 @@ const REGISTRATION_SUBMITTED = 4
 const FEE_PAID = 5
 const RETURN_SUBMITTED = 6
 
-const buildActivityFeed = (producer, registration, submissions) => {
+const buildActivityFeed = (producer, registrations) => {
   const events = []
   if (producer?.createdAt) {
     events.push({
@@ -237,47 +242,50 @@ const buildActivityFeed = (producer, registration, submissions) => {
       text: `BPRN ${producer.bprn} allocated`
     })
   }
-  if (registration?.createdAt) {
+  for (const registration of registrations) {
     events.push({
       at: registration.createdAt,
       order: REGISTRATION_STARTED,
       text: `Registration started for ${registration.compliancePeriod}`
     })
-  }
-  if (registration?.status === 'Submitted' || registration?.submittedAt) {
-    events.push({
-      at: registration.submittedAt ?? registration.updatedAt,
-      order: REGISTRATION_SUBMITTED,
-      text: 'Registration submitted'
-    })
-  }
-  if (registration?.fee?.status === 'Success') {
-    events.push({
-      at: registration.feePaidAt ?? registration.updatedAt,
-      order: FEE_PAID,
-      text: 'Service charge paid'
-    })
-  }
-  for (const submission of submissions) {
-    if (submission.status === 'Submitted') {
+    if (registration.status === 'Submitted' || registration.submittedAt) {
       events.push({
-        at: submission.declaration?.declaredAt ?? submission.updatedAt,
-        order: RETURN_SUBMITTED,
-        text: `Annual return submitted for ${registration.compliancePeriod}`
+        at: registration.submittedAt ?? registration.updatedAt,
+        order: REGISTRATION_SUBMITTED,
+        text: `Registration submitted for ${registration.compliancePeriod}`
       })
     }
+    if (registration.fee?.status === 'Success') {
+      events.push({
+        at: registration.feePaidAt ?? registration.updatedAt,
+        order: FEE_PAID,
+        text: `Service charge paid for ${registration.compliancePeriod}`
+      })
+    }
+    for (const submission of storage.listSubmissionsForRegistration(
+      registration.id
+    )) {
+      if (submission.status === 'Submitted') {
+        events.push({
+          at: submission.declaration?.declaredAt ?? submission.updatedAt,
+          order: RETURN_SUBMITTED,
+          text: `Annual return submitted for ${registration.compliancePeriod}`
+        })
+      }
+    }
   }
-  return events.sort((a, b) => {
-    const cmp = String(b.at).localeCompare(String(a.at))
-    return cmp !== 0 ? cmp : b.order - a.order
-  })
+  const nowIso = new Date().toISOString()
+  return events
+    .filter((e) => String(e.at) <= nowIso)
+    .sort((a, b) => {
+      const cmp = String(b.at).localeCompare(String(a.at))
+      return cmp !== 0 ? cmp : b.order - a.order
+    })
 }
 
-const renderActivityCard = (doc, copy, producer, registration) => {
-  const submissions = registration
-    ? storage.listSubmissionsForRegistration(registration.id)
-    : []
-  const events = buildActivityFeed(producer, registration, submissions)
+const renderActivityCard = (doc, copy, producer) => {
+  const registrations = storage.listRegistrationsForProducer(producer.id)
+  const events = buildActivityFeed(producer, registrations)
   const list = doc.querySelector('[data-testid="card-activity-list"]')
   if (!list) return
   if (events.length === 0) {
@@ -333,7 +341,7 @@ export const initDashboard = (
     return 'redirected-to-onboarding'
   }
 
-  const compliancePeriod = payload.compliancePeriod ?? '2026'
+  const compliancePeriod = payload.compliancePeriod ?? currentCompliancePeriod()
   const registration = findRegistration(producer.id, compliancePeriod)
   const cards = payload.cards
 
@@ -347,7 +355,7 @@ export const initDashboard = (
       registration,
       compliancePeriod
     )
-    renderActivityCard(doc, cards.activity, producer, registration)
+    renderActivityCard(doc, cards.activity, producer)
   }
 
   showContent(doc)

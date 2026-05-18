@@ -544,6 +544,34 @@ describe('reset and seed', () => {
     expect(storage.getTimeTravelTargetYear()).toBeNull()
   })
 
+  test('seedDemoData skips producers that already exist in storage', () => {
+    const existing = seedData.producers[0]
+    globalThis.localStorage.setItem(
+      STORAGE_KEYS.producers,
+      JSON.stringify({
+        [existing.contactEmail]: { ...existing, companyName: 'Local edits' }
+      })
+    )
+    expect(storage.seedDemoData()).toBe(true)
+    const after = JSON.parse(
+      globalThis.localStorage.getItem(STORAGE_KEYS.producers)
+    )
+    expect(after[existing.contactEmail].companyName).toBe('Local edits')
+  })
+
+  test('highestExistingBprnSequence ignores BPRNs lower than the current max', () => {
+    globalThis.localStorage.setItem(
+      STORAGE_KEYS.producers,
+      JSON.stringify({
+        'big@x.com': { bprn: 'BPRN-EA-2026-000005' },
+        'small@x.com': { bprn: 'BPRN-EA-2026-000002' }
+      })
+    )
+    expect(
+      storage.allocateBprn({ agencyCode: 'EA', compliancePeriod: '2026' })
+    ).toBe('BPRN-EA-2026-000006')
+  })
+
   test('allocateBprn continues past the highest BPRN already in storage', () => {
     storage.seedDemoData()
 

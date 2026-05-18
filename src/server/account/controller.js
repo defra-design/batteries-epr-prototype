@@ -1,14 +1,12 @@
 import { content } from '../../config/content.js'
 import { paths } from '../../config/paths.js'
-import { config } from '../../config/config.js'
-import { COMPLIANCE_PERIOD } from '../../config/onboarding-steps.js'
+import { getCompliancePeriod } from '../../config/compliance-period.js'
 
 const RETURN_QS = `?return=${encodeURIComponent(paths.account)}`
 
 export const accountController = {
   handler(request, h) {
     const pageContent = content.account(request)
-    const showReset = !config.get('isProduction')
 
     const editLinks = {
       company: paths.onboardingCompanyDetails + RETURN_QS,
@@ -26,12 +24,12 @@ export const accountController = {
       sections: pageContent.sections,
       editLinks,
       dashboardUrl: paths.dashboard,
-      showReset,
+      showReset: true,
       pagePayload: {
         signInUrl: paths.signIn,
         dashboardUrl: paths.dashboard,
-        compliancePeriod: COMPLIANCE_PERIOD,
-        showReset,
+        compliancePeriod: getCompliancePeriod(request),
+        showReset: true,
         sections: pageContent.sections
       }
     })

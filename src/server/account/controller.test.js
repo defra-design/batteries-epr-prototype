@@ -70,35 +70,22 @@ describe('#accountController', () => {
     )
   })
 
-  test('reset section is present in development mode', async () => {
-    const original = config.get('isProduction')
-    config.set('isProduction', false)
-    try {
-      const { result } = await server.inject({
-        method: 'GET',
-        url: paths.account
-      })
-      expect(result).toEqual(
-        expect.stringContaining('data-testid="account-reset-confirm"')
-      )
-    } finally {
-      config.set('isProduction', original)
+  test.each([false, true])(
+    'reset section is present when isProduction=%s',
+    async (isProduction) => {
+      const original = config.get('isProduction')
+      config.set('isProduction', isProduction)
+      try {
+        const { result } = await server.inject({
+          method: 'GET',
+          url: paths.account
+        })
+        expect(result).toEqual(
+          expect.stringContaining('data-testid="account-reset-confirm"')
+        )
+      } finally {
+        config.set('isProduction', original)
+      }
     }
-  })
-
-  test('reset section is hidden in production mode', async () => {
-    const original = config.get('isProduction')
-    config.set('isProduction', true)
-    try {
-      const { result } = await server.inject({
-        method: 'GET',
-        url: paths.account
-      })
-      expect(result).not.toEqual(
-        expect.stringContaining('data-testid="account-reset-confirm"')
-      )
-    } finally {
-      config.set('isProduction', original)
-    }
-  })
+  )
 })

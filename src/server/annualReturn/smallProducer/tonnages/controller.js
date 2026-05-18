@@ -4,7 +4,7 @@ import { content } from '../../../../config/content.js'
 import { paths, pathTo } from '../../../../config/paths.js'
 import {
   CHEMISTRIES,
-  COMPLIANCE_PERIOD,
+  getCompliancePeriod,
   SUB_CATEGORIES,
   collectErrors,
   errorListToMap,
@@ -116,7 +116,7 @@ export const tonnagesController = {
         pagePayload: {
           step: STEP_ID,
           target: 'hydrate',
-          compliancePeriod: COMPLIANCE_PERIOD,
+          compliancePeriod: getCompliancePeriod(request),
           registrationId,
           skipHydration: !!errors
         }
@@ -158,7 +158,7 @@ export const tonnagesController = {
         pagePayload: {
           step: STEP_ID,
           target: 'submission',
-          compliancePeriod: COMPLIANCE_PERIOD,
+          compliancePeriod: getCompliancePeriod(request),
           registrationId,
           savedFields,
           nextStep: pathTo(paths.annualReturnSmallDeclaration, {

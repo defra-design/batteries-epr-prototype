@@ -42,7 +42,7 @@
 {% block beforeContent %}
 
   {% set phaseHtml %}
-    This is a new service. Help us improve it and <a class="govuk-link" href="{{feedbackUrl}}" target="_blank" rel="noopener noreferrer" data-testid="feedback-link">give your feedback (opens in new tab)</a>.
+    <span class="app-phase-banner-row"><span>This is a new service. Help us improve it and <a class="govuk-link" href="{{feedbackUrl}}" target="_blank" rel="noopener noreferrer" data-testid="feedback-link">give your feedback (opens in new tab)</a>.</span><a class="govuk-link" href="/dev/time-travel" data-testid="time-travel-link">Time travel</a></span>
   {% endset -%}
 
   {{

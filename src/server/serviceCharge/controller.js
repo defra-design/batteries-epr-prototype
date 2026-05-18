@@ -1,6 +1,6 @@
 import { content } from '../../config/content.js'
 import { paths } from '../../config/paths.js'
-import { COMPLIANCE_PERIOD } from '../../config/onboarding-steps.js'
+import { getCompliancePeriod } from '../../config/compliance-period.js'
 
 export const serviceChargeController = {
   handler(request, h) {
@@ -10,7 +10,7 @@ export const serviceChargeController = {
       signInUrl: paths.signIn,
       paymentDetailsUrl: paths.paymentDetails,
       dashboardUrl: paths.dashboard,
-      compliancePeriod: COMPLIANCE_PERIOD,
+      compliancePeriod: getCompliancePeriod(request),
       labels: {
         organisationLabel: pageContent.organisationLabel,
         feeLabel: pageContent.feeLabel,
