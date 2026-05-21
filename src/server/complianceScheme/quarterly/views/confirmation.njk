@@ -1,0 +1,15 @@
+{% extends 'complianceSchemeQuarterly/_layout.njk' %}
+
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% block stepBody %}
+  {{ govukPanel({
+    titleText: labels.heading,
+    text: labels.intro,
+    attributes: { "data-testid": "quarterly-confirmation-panel" }
+  }) }}
+
+  <p class="govuk-body">
+    <a class="govuk-link" href="{{ dashboardUrl }}" data-testid="quarterly-confirmation-dashboard-link">{{ labels.returnToDashboardAction }}</a>
+  </p>
+{% endblock %}

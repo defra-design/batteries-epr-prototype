@@ -1,0 +1,43 @@
+{% extends 'complianceSchemeIa/_layout.njk' %}
+
+{% macro row(label, testidPrefix, suffix, changeHref, changeLabel) %}
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">{{ label }}</dt>
+    <dd class="govuk-summary-list__value" data-testid="ia-check-{{ testidPrefix }}-{{ suffix }}"></dd>
+    <dd class="govuk-summary-list__actions">{% if changeHref %}<a class="govuk-link" href="{{ changeHref }}">{{ changeLabel }}</a>{% endif %}</dd>
+  </div>
+{% endmacro %}
+
+{% block stepBody %}
+  <h2 class="govuk-heading-m">{{ labels.placedHeading }}</h2>
+  <dl class="govuk-summary-list" data-testid="ia-check-placed">
+    {{ row(labels.industrialLabel, 'placed', 'industrial', placedUrl, labels.changeAction) }}
+    {{ row(labels.automotiveLabel, 'placed', 'automotive') }}
+  </dl>
+
+  <h2 class="govuk-heading-m">{{ labels.exportedHeading }}</h2>
+  <dl class="govuk-summary-list" data-testid="ia-check-exported">
+    {{ row(labels.industrialLabel, 'exported', 'industrial', exportedUrl, labels.changeAction) }}
+    {{ row(labels.automotiveLabel, 'exported', 'automotive') }}
+  </dl>
+
+  <h2 class="govuk-heading-m">{{ labels.takenBackHeading }}</h2>
+  <dl class="govuk-summary-list" data-testid="ia-check-taken-back">
+    {{ row(labels.industrialLabel, 'taken-back', 'industrial', takenBackUrl, labels.changeAction) }}
+    {{ row(labels.automotiveLabel, 'taken-back', 'automotive') }}
+  </dl>
+
+  <h2 class="govuk-heading-m">{{ labels.deliveredHeading }}</h2>
+  <dl class="govuk-summary-list" data-testid="ia-check-delivered">
+    {{ row(labels.industrialLabel, 'delivered', 'industrial', deliveredUrl, labels.changeAction) }}
+    {{ row(labels.automotiveLabel, 'delivered', 'automotive') }}
+  </dl>
+
+  <p class="govuk-body">
+    {{ govukButton({
+      text: labels.submitAction,
+      href: pagePayload.next,
+      attributes: { "data-testid": "ia-check-continue" }
+    }) }}
+  </p>
+{% endblock %}

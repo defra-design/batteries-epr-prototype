@@ -1081,5 +1081,1037 @@ export const content = {
       cy: {
         heading: 'TODO welsh'
       }
+    }),
+  complianceScheme: (request) =>
+    getContentForLanguage(request, {
+      en: {
+        title: 'Compliance scheme',
+        heading: heading('Compliance scheme', null, null),
+        introParagraph:
+          'Manage your battery compliance scheme: apply for approval, manage your members, submit quarterly and annual returns, and issue evidence.',
+        navLabel: 'Compliance scheme',
+        tiles: {
+          approval: {
+            heading: 'Application for approval',
+            statusLabel: 'Status',
+            statuses: {
+              'not-started': 'Not started',
+              'in-progress': 'In progress',
+              submitted: 'Submitted',
+              approved: 'Approved'
+            },
+            startAction: 'Start application',
+            continueAction: 'Continue application',
+            viewAction: 'View application'
+          },
+          members: {
+            heading: 'Scheme members',
+            countLabel: 'Active members',
+            manageAction: 'Manage members'
+          },
+          evidence: {
+            heading: 'Evidence and obligation',
+            acceptedLabel: 'Accepted evidence (tonnes)',
+            awaitingLabel: 'Awaiting acceptance (tonnes)',
+            obligationLabel: 'Indicative obligation (tonnes)',
+            deltaLabel: 'Outstanding (tonnes)',
+            manageAction: 'Manage evidence',
+            availabilityHeading: 'Evidence availability',
+            availabilityOn: 'Available to members',
+            availabilityOff: 'Not available to members',
+            availabilityToggleAction: 'Change availability'
+          },
+          quarterly: {
+            heading: 'Quarterly submissions',
+            disabledHint: 'Available after your scheme is approved.',
+            quarters: ['Q1', 'Q2', 'Q3', 'Q4'],
+            startAction: 'Start',
+            continueAction: 'Continue',
+            viewAction: 'View',
+            statuses: {
+              'not-started': 'Not started',
+              'in-progress': 'In progress',
+              submitted: 'Submitted'
+            }
+          },
+          ia: {
+            heading: 'Industrial and automotive annual submission',
+            disabledHint: 'Available after your scheme is approved.',
+            startAction: 'Start',
+            continueAction: 'Continue',
+            viewAction: 'View'
+          },
+          obligationBreakdown: {
+            heading: 'Obligation breakdown',
+            viewAction: 'View obligation breakdown'
+          }
+        },
+        debug: {
+          fastForwardAction: 'Mark scheme as approved (debug)',
+          fastForwardConfirmation: 'Scheme marked as approved.'
+        },
+        membersPages: {
+          list: {
+            title: 'Scheme members',
+            heading: 'Scheme members',
+            intro:
+              'Producers who are currently members of your compliance scheme.',
+            tableCaption: 'Active scheme members',
+            columns: {
+              bprn: 'BPRN',
+              companyName: 'Company name',
+              joinedOn: 'Joined',
+              actions: 'Actions'
+            },
+            emptyMessage: 'No members have joined the scheme yet.',
+            addAction: 'Add a member',
+            removeAction: 'Remove',
+            backToDashboardAction: 'Back to compliance scheme dashboard',
+            historyHeading: 'Past members',
+            historyEmpty: 'No past members.',
+            leftOnLabel: 'Left'
+          },
+          add: {
+            title: 'Add a scheme member',
+            heading: 'Add a scheme member',
+            intro:
+              'Add a producer to your scheme by entering their BPRN and company name.',
+            bprnLabel: 'Producer BPRN',
+            bprnHint:
+              'A producer BPRN is allocated by an environment agency, for example BPRN-EA-2026-000001.',
+            companyNameLabel: 'Company name',
+            continueAction: 'Add member',
+            cancelAction: 'Cancel',
+            error: {
+              bprn: 'Enter a producer BPRN',
+              bprnFormat: 'Enter a BPRN in the format BPRN-XX-YYYY-NNNNNN',
+              companyName: 'Enter the company name'
+            }
+          },
+          remove: {
+            title: 'Remove a scheme member',
+            heading: 'Are you sure you want to remove this member?',
+            intro:
+              'Removing a member records the leaving date and stops them counting towards your obligation. They remain visible in the past members list.',
+            confirmAction: 'Yes, remove this member',
+            cancelAction: 'Cancel',
+            notFound:
+              'This member could not be found. They may already have been removed.'
+          }
+        },
+        evidencePages: {
+          errorTitle: 'There is a problem',
+          continueAction: 'Continue',
+          confirmAction: 'Confirm and submit',
+          list: {
+            title: 'Evidence',
+            heading: 'Evidence',
+            intro:
+              'Evidence you have issued, are receiving acceptance for, or have transferred.',
+            issueAction: 'Issue evidence',
+            availabilityAction: 'Change evidence availability',
+            backToDashboardAction: 'Back to compliance scheme dashboard',
+            columns: {
+              recipient: 'Recipient',
+              category: 'Category',
+              tonnes: 'Tonnes',
+              status: 'Status',
+              transfer: 'Transfer',
+              actions: 'Actions'
+            },
+            statuses: {
+              'awaiting-acceptance': 'Awaiting acceptance',
+              accepted: 'Accepted',
+              'awaiting-authorisation': 'Awaiting authorisation',
+              cancelled: 'Cancelled'
+            },
+            categories: {
+              portable: 'Portable',
+              industrial: 'Industrial',
+              automotive: 'Automotive'
+            },
+            transferLabels: { XOUT: 'Transferred out', XIN: 'Transferred in' },
+            viewAction: 'View',
+            emptyMessage: 'No evidence issued for this compliance period yet.'
+          },
+          issue: {
+            steps: {
+              recipient: {
+                title: 'Choose a recipient',
+                heading: 'Choose a recipient member',
+                intro: 'Pick which member this evidence is being issued to.',
+                legend: 'Recipient',
+                continueAction: 'Continue',
+                error: { recipientBprn: 'Choose a recipient member' },
+                noMembersMessage:
+                  'You have no active members in this compliance period. Add a member first.'
+              },
+              tonnes: {
+                title: 'Category and tonnes',
+                heading: 'Category and tonnes',
+                intro: 'Tell us the category and how much evidence is being issued.',
+                categoryLegend: 'Category',
+                tonnesLabel: 'Tonnes',
+                tonnesHint: 'Enter a value up to three decimal places.',
+                portable: 'Portable',
+                industrial: 'Industrial',
+                automotive: 'Automotive',
+                continueAction: 'Continue',
+                error: {
+                  category: 'Choose a category',
+                  tonnes: 'Enter the tonnes',
+                  tonnesFormat: 'Enter tonnes as a number'
+                }
+              },
+              declaration: {
+                title: 'Issue evidence',
+                heading: 'Declaration',
+                intro:
+                  'Confirm the details below and issue the evidence note. The recipient will need to accept it.',
+                summaryHeading: 'Summary',
+                recipientLabel: 'Recipient',
+                categoryLabel: 'Category',
+                tonnesLabel: 'Tonnes',
+                declarationLabel:
+                  'I confirm the information provided is correct and issue this evidence.',
+                confirmAction: 'Issue evidence',
+                error: {
+                  declarationAccepted: 'Confirm the declaration to issue evidence'
+                }
+              },
+              confirmation: {
+                title: 'Evidence issued',
+                heading: 'Evidence issued',
+                intro: 'The evidence is awaiting acceptance by the recipient.',
+                returnToListAction: 'Return to evidence'
+              }
+            }
+          },
+          detail: {
+            title: 'Evidence',
+            heading: 'Evidence details',
+            recipientLabel: 'Recipient',
+            categoryLabel: 'Category',
+            tonnesLabel: 'Tonnes',
+            statusLabel: 'Status',
+            issuedOnLabel: 'Issued on',
+            transferLabel: 'Transfer',
+            acceptAction: 'Accept evidence',
+            rejectAction: 'Reject evidence',
+            transferAction: 'Transfer to another scheme',
+            backAction: 'Back to evidence',
+            notFoundMessage: 'This evidence could not be found.',
+            noActionsMessage: 'No actions are available for evidence in this state.'
+          },
+          transfer: {
+            title: 'Transfer evidence',
+            heading: 'Transfer evidence to another scheme',
+            intro:
+              'Transfer this evidence to another compliance scheme. The recipient will need to authorise the transfer.',
+            counterpartyLegend: 'Receiving scheme',
+            confirmAction: 'Transfer evidence',
+            cancelAction: 'Cancel',
+            error: {
+              counterpartySchemeId: 'Choose a receiving scheme',
+              noCandidates: 'No other compliance schemes are available for transfer.'
+            },
+            notFoundMessage: 'This evidence could not be found.',
+            ineligibleMessage:
+              'This evidence cannot be transferred because of its current status.'
+          },
+          availability: {
+            title: 'Evidence availability',
+            heading: 'Change evidence availability',
+            intro:
+              'Set whether your members can be issued evidence by this scheme.',
+            currentLabel: 'Current status',
+            availableLabel: 'Available to members',
+            unavailableLabel: 'Not available to members',
+            confirmAction: 'Change availability',
+            cancelAction: 'Cancel'
+          }
+        },
+        obligationPage: {
+          title: 'Obligation breakdown',
+          heading: 'Obligation breakdown',
+          intro:
+            'How your scheme\'s obligation is calculated from quarterly market data, by category.',
+          tableCaption: 'Obligation by battery category',
+          totalsLabel: 'Total',
+          backToDashboardAction: 'Back to compliance scheme dashboard',
+          methodologyHeading: 'How this is calculated',
+          methodology:
+            'For each category, the obligation is the total tonnes placed on the UK market across all four quarters multiplied by the recycling target. Accepted evidence reduces the outstanding obligation. This is a prototype calculation — production maths will be more nuanced.',
+          columns: {
+            category: 'Category',
+            placed: 'Placed on market (tonnes)',
+            target: 'Recycling target',
+            obligation: 'Obligation (tonnes)',
+            accepted: 'Accepted evidence (tonnes)',
+            outstanding: 'Outstanding (tonnes)'
+          },
+          categories: {
+            portable: 'Portable',
+            industrial: 'Industrial',
+            automotive: 'Automotive'
+          }
+        },
+        quarterlyPages: {
+          errorTitle: 'There is a problem',
+          continueAction: 'Continue',
+          confirmAction: 'Confirm and submit',
+          steps: {
+            marketData: {
+              title: 'Batteries placed on the market',
+              heading: 'Batteries placed on the market this quarter',
+              intro:
+                'Enter the tonnes of batteries your members placed on the UK market, by category.',
+              portableLabel: 'Portable batteries (tonnes)',
+              industrialLabel: 'Industrial batteries (tonnes)',
+              automotiveLabel: 'Automotive batteries (tonnes)',
+              hint: 'Enter a value in tonnes, up to three decimal places.',
+              error: {
+                portable: 'Enter portable tonnes',
+                portableFormat: 'Enter portable tonnes as a number',
+                industrial: 'Enter industrial tonnes',
+                industrialFormat: 'Enter industrial tonnes as a number',
+                automotive: 'Enter automotive tonnes',
+                automotiveFormat: 'Enter automotive tonnes as a number'
+              }
+            },
+            wasteData: {
+              title: 'Waste batteries collected',
+              heading: 'Waste batteries collected this quarter',
+              intro:
+                'Enter the tonnes of waste batteries your members collected.',
+              portableLabel: 'Portable batteries (tonnes)',
+              industrialLabel: 'Industrial batteries (tonnes)',
+              automotiveLabel: 'Automotive batteries (tonnes)',
+              hint: 'Enter a value in tonnes, up to three decimal places.',
+              error: {
+                portable: 'Enter portable tonnes',
+                portableFormat: 'Enter portable tonnes as a number',
+                industrial: 'Enter industrial tonnes',
+                industrialFormat: 'Enter industrial tonnes as a number',
+                automotive: 'Enter automotive tonnes',
+                automotiveFormat: 'Enter automotive tonnes as a number'
+              }
+            },
+            checkAnswers: {
+              title: 'Check your answers',
+              heading: 'Check your answers',
+              intro:
+                'Review the figures for this quarter before submitting.',
+              marketHeading: 'Placed on the market',
+              wasteHeading: 'Waste collected',
+              portableLabel: 'Portable (tonnes)',
+              industrialLabel: 'Industrial (tonnes)',
+              automotiveLabel: 'Automotive (tonnes)',
+              changeAction: 'Change',
+              submitAction: 'Submit return'
+            },
+            declaration: {
+              title: 'Declaration',
+              heading: 'Declaration',
+              intro:
+                'Confirm the figures are correct and submit the quarterly return.',
+              declarationLabel:
+                'I confirm the information provided is correct and submit this quarterly return.',
+              error: { declarationAccepted: 'Confirm the declaration to submit' }
+            },
+            confirmation: {
+              title: 'Quarterly return submitted',
+              heading: 'Quarterly return submitted',
+              intro:
+                'Your quarterly return has been recorded. You can review it from the dashboard.',
+              returnToDashboardAction: 'Return to dashboard'
+            }
+          }
+        },
+        iaPages: {
+          errorTitle: 'There is a problem',
+          continueAction: 'Continue',
+          confirmAction: 'Confirm and submit',
+          steps: {
+            placed: {
+              title: 'Industrial and automotive batteries placed',
+              heading: 'Batteries placed on the market this year',
+              intro:
+                'Enter the tonnes of industrial and automotive batteries placed on the UK market for this compliance period.',
+              industrialLabel: 'Industrial batteries (tonnes)',
+              automotiveLabel: 'Automotive batteries (tonnes)',
+              hint: 'Enter a value in tonnes, up to three decimal places.',
+              error: {
+                industrial: 'Enter industrial tonnes',
+                industrialFormat: 'Enter industrial tonnes as a number',
+                automotive: 'Enter automotive tonnes',
+                automotiveFormat: 'Enter automotive tonnes as a number'
+              }
+            },
+            exported: {
+              title: 'Batteries exported',
+              heading: 'Industrial and automotive batteries exported this year',
+              intro:
+                'Enter the tonnes of industrial and automotive batteries exported.',
+              industrialLabel: 'Industrial batteries (tonnes)',
+              automotiveLabel: 'Automotive batteries (tonnes)',
+              hint: 'Enter a value in tonnes, up to three decimal places.',
+              error: {
+                industrial: 'Enter industrial tonnes',
+                industrialFormat: 'Enter industrial tonnes as a number',
+                automotive: 'Enter automotive tonnes',
+                automotiveFormat: 'Enter automotive tonnes as a number'
+              }
+            },
+            takenBack: {
+              title: 'Batteries taken back',
+              heading: 'Industrial and automotive batteries taken back this year',
+              intro:
+                'Enter the tonnes of industrial and automotive batteries taken back from the market.',
+              industrialLabel: 'Industrial batteries (tonnes)',
+              automotiveLabel: 'Automotive batteries (tonnes)',
+              hint: 'Enter a value in tonnes, up to three decimal places.',
+              error: {
+                industrial: 'Enter industrial tonnes',
+                industrialFormat: 'Enter industrial tonnes as a number',
+                automotive: 'Enter automotive tonnes',
+                automotiveFormat: 'Enter automotive tonnes as a number'
+              }
+            },
+            delivered: {
+              title: 'Batteries delivered for treatment',
+              heading:
+                'Industrial and automotive batteries delivered for treatment this year',
+              intro:
+                'Enter the tonnes of industrial and automotive batteries delivered to treatment operators.',
+              industrialLabel: 'Industrial batteries (tonnes)',
+              automotiveLabel: 'Automotive batteries (tonnes)',
+              hint: 'Enter a value in tonnes, up to three decimal places.',
+              error: {
+                industrial: 'Enter industrial tonnes',
+                industrialFormat: 'Enter industrial tonnes as a number',
+                automotive: 'Enter automotive tonnes',
+                automotiveFormat: 'Enter automotive tonnes as a number'
+              }
+            },
+            checkAnswers: {
+              title: 'Check your answers',
+              heading: 'Check your answers',
+              intro:
+                'Review the figures for the industrial and automotive submission before submitting.',
+              placedHeading: 'Placed on the market',
+              exportedHeading: 'Exported',
+              takenBackHeading: 'Taken back',
+              deliveredHeading: 'Delivered for treatment',
+              industrialLabel: 'Industrial (tonnes)',
+              automotiveLabel: 'Automotive (tonnes)',
+              changeAction: 'Change',
+              submitAction: 'Submit return'
+            },
+            declaration: {
+              title: 'Declaration',
+              heading: 'Declaration',
+              intro:
+                'Confirm the figures are correct and submit the industrial and automotive return.',
+              declarationLabel:
+                'I confirm the information provided is correct and submit this return.',
+              error: { declarationAccepted: 'Confirm the declaration to submit' }
+            },
+            confirmation: {
+              title: 'Annual return submitted',
+              heading: 'Industrial and automotive return submitted',
+              intro:
+                'Your industrial and automotive return has been recorded. You can review it from the dashboard.',
+              returnToDashboardAction: 'Return to dashboard'
+            }
+          }
+        },
+        application: {
+          errorTitle: 'There is a problem',
+          continueAction: 'Continue',
+          saveAndContinueAction: 'Save and continue',
+          steps: {
+            schemeDetails: {
+              title: 'Scheme details',
+              heading: 'Scheme details',
+              intro: 'Tell us the legal name of the scheme and any trading names.',
+              nameLabel: 'Scheme name',
+              tradingNamesLabel: 'Trading names',
+              tradingNamesHint: 'Enter each trading name on a new line.',
+              error: { name: 'Enter the scheme name' }
+            },
+            registeredAddress: {
+              title: 'Registered address',
+              heading: 'Registered address',
+              intro: 'The registered office address of the scheme.',
+              line1Label: 'Address line 1',
+              line2Label: 'Address line 2 (optional)',
+              townLabel: 'Town or city',
+              postcodeLabel: 'Postcode'
+            },
+            contactAddress: {
+              title: 'Contact and service of notice address',
+              heading: 'Contact and service of notice address',
+              intro: 'Where the regulator should send formal notices.',
+              line1Label: 'Address line 1',
+              line2Label: 'Address line 2 (optional)',
+              townLabel: 'Town or city',
+              postcodeLabel: 'Postcode'
+            },
+            operationalPlan: {
+              title: 'Operational plan',
+              heading: 'Operational plan',
+              intro:
+                'Summarise how the scheme will operate, including collection and treatment routes.',
+              operationalPlanLabel: 'Operational plan',
+              operationalPlanHint:
+                'A few sentences is fine for the prototype.',
+              error: { operationalPlan: 'Enter the operational plan summary' }
+            },
+            partners: {
+              title: 'Partner organisations',
+              heading: 'Partner organisations',
+              intro:
+                'List the partner organisations involved in delivering the scheme.',
+              partnersLabel: 'Partner organisations',
+              partnersHint: 'Enter each organisation on a new line.'
+            },
+            offences: {
+              title: 'Relevant offences',
+              heading: 'Relevant offences',
+              intro:
+                'Tell us whether any directors or officers have unspent convictions for relevant environmental offences.',
+              hasOffencesLabel: 'Are there any relevant offences to declare?',
+              yesLabel: 'Yes',
+              noLabel: 'No',
+              offencesDetailLabel: 'Provide details',
+              offencesDetailHint: 'Include dates, offence types and outcomes.',
+              error: {
+                hasOffences: 'Select yes or no',
+                offencesDetail: 'Enter the offence details'
+              }
+            },
+            additionalFiles: {
+              title: 'Additional files',
+              heading: 'Additional files',
+              intro:
+                'List the supporting documents you would attach in the live service.',
+              additionalFilesLabel: 'Supporting files',
+              additionalFilesHint:
+                'Enter one filename per line (prototype only — no real upload).'
+            },
+            declaration: {
+              title: 'Declaration',
+              heading: 'Declaration',
+              intro:
+                'Confirm the information you have provided is correct and complete.',
+              declarationLabel:
+                'I confirm the information provided is correct and submit this application.',
+              error: { declarationAccepted: 'Confirm the declaration to submit' }
+            },
+            confirmation: {
+              title: 'Application submitted',
+              heading: 'Application submitted',
+              intro:
+                'Your application has been recorded. The regulator will review it and notify you of the outcome.',
+              returnToDashboardAction: 'Return to dashboard'
+            }
+          }
+        }
+      },
+      cy: {
+        title: 'Compliance scheme',
+        heading: heading('TODO welsh', null, null),
+        introParagraph: 'TODO welsh',
+        navLabel: 'TODO welsh',
+        tiles: {
+          approval: {
+            heading: 'TODO welsh',
+            statusLabel: 'TODO welsh',
+            statuses: {
+              'not-started': 'TODO welsh',
+              'in-progress': 'TODO welsh',
+              submitted: 'TODO welsh',
+              approved: 'TODO welsh'
+            },
+            startAction: 'TODO welsh',
+            continueAction: 'TODO welsh',
+            viewAction: 'TODO welsh'
+          },
+          members: {
+            heading: 'TODO welsh',
+            countLabel: 'TODO welsh',
+            manageAction: 'TODO welsh'
+          },
+          evidence: {
+            heading: 'TODO welsh',
+            acceptedLabel: 'TODO welsh',
+            awaitingLabel: 'TODO welsh',
+            obligationLabel: 'TODO welsh',
+            deltaLabel: 'TODO welsh',
+            manageAction: 'TODO welsh',
+            availabilityHeading: 'TODO welsh',
+            availabilityOn: 'TODO welsh',
+            availabilityOff: 'TODO welsh',
+            availabilityToggleAction: 'TODO welsh'
+          },
+          quarterly: {
+            heading: 'TODO welsh',
+            disabledHint: 'TODO welsh',
+            quarters: ['Q1', 'Q2', 'Q3', 'Q4'],
+            startAction: 'TODO welsh',
+            continueAction: 'TODO welsh',
+            viewAction: 'TODO welsh',
+            statuses: {
+              'not-started': 'TODO welsh',
+              'in-progress': 'TODO welsh',
+              submitted: 'TODO welsh'
+            }
+          },
+          ia: {
+            heading: 'TODO welsh',
+            disabledHint: 'TODO welsh',
+            startAction: 'TODO welsh',
+            continueAction: 'TODO welsh',
+            viewAction: 'TODO welsh'
+          },
+          obligationBreakdown: {
+            heading: 'TODO welsh',
+            viewAction: 'TODO welsh'
+          }
+        },
+        debug: {
+          fastForwardAction: 'TODO welsh',
+          fastForwardConfirmation: 'TODO welsh'
+        },
+        membersPages: {
+          list: {
+            title: 'TODO welsh',
+            heading: 'TODO welsh',
+            intro: 'TODO welsh',
+            tableCaption: 'TODO welsh',
+            columns: {
+              bprn: 'TODO welsh',
+              companyName: 'TODO welsh',
+              joinedOn: 'TODO welsh',
+              actions: 'TODO welsh'
+            },
+            emptyMessage: 'TODO welsh',
+            addAction: 'TODO welsh',
+            removeAction: 'TODO welsh',
+            backToDashboardAction: 'TODO welsh',
+            historyHeading: 'TODO welsh',
+            historyEmpty: 'TODO welsh',
+            leftOnLabel: 'TODO welsh'
+          },
+          add: {
+            title: 'TODO welsh',
+            heading: 'TODO welsh',
+            intro: 'TODO welsh',
+            bprnLabel: 'TODO welsh',
+            bprnHint: 'TODO welsh',
+            companyNameLabel: 'TODO welsh',
+            continueAction: 'TODO welsh',
+            cancelAction: 'TODO welsh',
+            error: {
+              bprn: 'TODO welsh',
+              bprnFormat: 'TODO welsh',
+              companyName: 'TODO welsh'
+            }
+          },
+          remove: {
+            title: 'TODO welsh',
+            heading: 'TODO welsh',
+            intro: 'TODO welsh',
+            confirmAction: 'TODO welsh',
+            cancelAction: 'TODO welsh',
+            notFound: 'TODO welsh'
+          }
+        },
+        evidencePages: {
+          errorTitle: 'TODO welsh',
+          continueAction: 'TODO welsh',
+          confirmAction: 'TODO welsh',
+          list: {
+            title: 'TODO welsh',
+            heading: 'TODO welsh',
+            intro: 'TODO welsh',
+            issueAction: 'TODO welsh',
+            availabilityAction: 'TODO welsh',
+            backToDashboardAction: 'TODO welsh',
+            columns: {
+              recipient: 'TODO welsh',
+              category: 'TODO welsh',
+              tonnes: 'TODO welsh',
+              status: 'TODO welsh',
+              transfer: 'TODO welsh',
+              actions: 'TODO welsh'
+            },
+            statuses: {
+              'awaiting-acceptance': 'TODO welsh',
+              accepted: 'TODO welsh',
+              'awaiting-authorisation': 'TODO welsh',
+              cancelled: 'TODO welsh'
+            },
+            categories: {
+              portable: 'TODO welsh',
+              industrial: 'TODO welsh',
+              automotive: 'TODO welsh'
+            },
+            transferLabels: { XOUT: 'TODO welsh', XIN: 'TODO welsh' },
+            viewAction: 'TODO welsh',
+            emptyMessage: 'TODO welsh'
+          },
+          issue: {
+            steps: {
+              recipient: {
+                title: 'TODO welsh',
+                heading: 'TODO welsh',
+                intro: 'TODO welsh',
+                legend: 'TODO welsh',
+                continueAction: 'TODO welsh',
+                error: { recipientBprn: 'TODO welsh' },
+                noMembersMessage: 'TODO welsh'
+              },
+              tonnes: {
+                title: 'TODO welsh',
+                heading: 'TODO welsh',
+                intro: 'TODO welsh',
+                categoryLegend: 'TODO welsh',
+                tonnesLabel: 'TODO welsh',
+                tonnesHint: 'TODO welsh',
+                portable: 'TODO welsh',
+                industrial: 'TODO welsh',
+                automotive: 'TODO welsh',
+                continueAction: 'TODO welsh',
+                error: {
+                  category: 'TODO welsh',
+                  tonnes: 'TODO welsh',
+                  tonnesFormat: 'TODO welsh'
+                }
+              },
+              declaration: {
+                title: 'TODO welsh',
+                heading: 'TODO welsh',
+                intro: 'TODO welsh',
+                summaryHeading: 'TODO welsh',
+                recipientLabel: 'TODO welsh',
+                categoryLabel: 'TODO welsh',
+                tonnesLabel: 'TODO welsh',
+                declarationLabel: 'TODO welsh',
+                confirmAction: 'TODO welsh',
+                error: { declarationAccepted: 'TODO welsh' }
+              },
+              confirmation: {
+                title: 'TODO welsh',
+                heading: 'TODO welsh',
+                intro: 'TODO welsh',
+                returnToListAction: 'TODO welsh'
+              }
+            }
+          },
+          detail: {
+            title: 'TODO welsh',
+            heading: 'TODO welsh',
+            recipientLabel: 'TODO welsh',
+            categoryLabel: 'TODO welsh',
+            tonnesLabel: 'TODO welsh',
+            statusLabel: 'TODO welsh',
+            issuedOnLabel: 'TODO welsh',
+            transferLabel: 'TODO welsh',
+            acceptAction: 'TODO welsh',
+            rejectAction: 'TODO welsh',
+            transferAction: 'TODO welsh',
+            backAction: 'TODO welsh',
+            notFoundMessage: 'TODO welsh',
+            noActionsMessage: 'TODO welsh'
+          },
+          transfer: {
+            title: 'TODO welsh',
+            heading: 'TODO welsh',
+            intro: 'TODO welsh',
+            counterpartyLegend: 'TODO welsh',
+            confirmAction: 'TODO welsh',
+            cancelAction: 'TODO welsh',
+            error: {
+              counterpartySchemeId: 'TODO welsh',
+              noCandidates: 'TODO welsh'
+            },
+            notFoundMessage: 'TODO welsh',
+            ineligibleMessage: 'TODO welsh'
+          },
+          availability: {
+            title: 'TODO welsh',
+            heading: 'TODO welsh',
+            intro: 'TODO welsh',
+            currentLabel: 'TODO welsh',
+            availableLabel: 'TODO welsh',
+            unavailableLabel: 'TODO welsh',
+            confirmAction: 'TODO welsh',
+            cancelAction: 'TODO welsh'
+          }
+        },
+        obligationPage: {
+          title: 'TODO welsh',
+          heading: 'TODO welsh',
+          intro: 'TODO welsh',
+          tableCaption: 'TODO welsh',
+          totalsLabel: 'TODO welsh',
+          backToDashboardAction: 'TODO welsh',
+          methodologyHeading: 'TODO welsh',
+          methodology: 'TODO welsh',
+          columns: {
+            category: 'TODO welsh',
+            placed: 'TODO welsh',
+            target: 'TODO welsh',
+            obligation: 'TODO welsh',
+            accepted: 'TODO welsh',
+            outstanding: 'TODO welsh'
+          },
+          categories: {
+            portable: 'TODO welsh',
+            industrial: 'TODO welsh',
+            automotive: 'TODO welsh'
+          }
+        },
+        quarterlyPages: {
+          errorTitle: 'TODO welsh',
+          continueAction: 'TODO welsh',
+          confirmAction: 'TODO welsh',
+          steps: {
+            marketData: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              portableLabel: 'TODO welsh',
+              industrialLabel: 'TODO welsh',
+              automotiveLabel: 'TODO welsh',
+              hint: 'TODO welsh',
+              error: {
+                portable: 'TODO welsh',
+                portableFormat: 'TODO welsh',
+                industrial: 'TODO welsh',
+                industrialFormat: 'TODO welsh',
+                automotive: 'TODO welsh',
+                automotiveFormat: 'TODO welsh'
+              }
+            },
+            wasteData: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              portableLabel: 'TODO welsh',
+              industrialLabel: 'TODO welsh',
+              automotiveLabel: 'TODO welsh',
+              hint: 'TODO welsh',
+              error: {
+                portable: 'TODO welsh',
+                portableFormat: 'TODO welsh',
+                industrial: 'TODO welsh',
+                industrialFormat: 'TODO welsh',
+                automotive: 'TODO welsh',
+                automotiveFormat: 'TODO welsh'
+              }
+            },
+            checkAnswers: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              marketHeading: 'TODO welsh',
+              wasteHeading: 'TODO welsh',
+              portableLabel: 'TODO welsh',
+              industrialLabel: 'TODO welsh',
+              automotiveLabel: 'TODO welsh',
+              changeAction: 'TODO welsh',
+              submitAction: 'TODO welsh'
+            },
+            declaration: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              declarationLabel: 'TODO welsh',
+              error: { declarationAccepted: 'TODO welsh' }
+            },
+            confirmation: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              returnToDashboardAction: 'TODO welsh'
+            }
+          }
+        },
+        iaPages: {
+          errorTitle: 'TODO welsh',
+          continueAction: 'TODO welsh',
+          confirmAction: 'TODO welsh',
+          steps: {
+            placed: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              industrialLabel: 'TODO welsh',
+              automotiveLabel: 'TODO welsh',
+              hint: 'TODO welsh',
+              error: {
+                industrial: 'TODO welsh',
+                industrialFormat: 'TODO welsh',
+                automotive: 'TODO welsh',
+                automotiveFormat: 'TODO welsh'
+              }
+            },
+            exported: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              industrialLabel: 'TODO welsh',
+              automotiveLabel: 'TODO welsh',
+              hint: 'TODO welsh',
+              error: {
+                industrial: 'TODO welsh',
+                industrialFormat: 'TODO welsh',
+                automotive: 'TODO welsh',
+                automotiveFormat: 'TODO welsh'
+              }
+            },
+            takenBack: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              industrialLabel: 'TODO welsh',
+              automotiveLabel: 'TODO welsh',
+              hint: 'TODO welsh',
+              error: {
+                industrial: 'TODO welsh',
+                industrialFormat: 'TODO welsh',
+                automotive: 'TODO welsh',
+                automotiveFormat: 'TODO welsh'
+              }
+            },
+            delivered: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              industrialLabel: 'TODO welsh',
+              automotiveLabel: 'TODO welsh',
+              hint: 'TODO welsh',
+              error: {
+                industrial: 'TODO welsh',
+                industrialFormat: 'TODO welsh',
+                automotive: 'TODO welsh',
+                automotiveFormat: 'TODO welsh'
+              }
+            },
+            checkAnswers: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              placedHeading: 'TODO welsh',
+              exportedHeading: 'TODO welsh',
+              takenBackHeading: 'TODO welsh',
+              deliveredHeading: 'TODO welsh',
+              industrialLabel: 'TODO welsh',
+              automotiveLabel: 'TODO welsh',
+              changeAction: 'TODO welsh',
+              submitAction: 'TODO welsh'
+            },
+            declaration: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              declarationLabel: 'TODO welsh',
+              error: { declarationAccepted: 'TODO welsh' }
+            },
+            confirmation: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              returnToDashboardAction: 'TODO welsh'
+            }
+          }
+        },
+        application: {
+          errorTitle: 'TODO welsh',
+          continueAction: 'TODO welsh',
+          saveAndContinueAction: 'TODO welsh',
+          steps: {
+            schemeDetails: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              nameLabel: 'TODO welsh',
+              tradingNamesLabel: 'TODO welsh',
+              tradingNamesHint: 'TODO welsh',
+              error: { name: 'TODO welsh' }
+            },
+            registeredAddress: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              line1Label: 'TODO welsh',
+              line2Label: 'TODO welsh',
+              townLabel: 'TODO welsh',
+              postcodeLabel: 'TODO welsh'
+            },
+            contactAddress: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              line1Label: 'TODO welsh',
+              line2Label: 'TODO welsh',
+              townLabel: 'TODO welsh',
+              postcodeLabel: 'TODO welsh'
+            },
+            operationalPlan: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              operationalPlanLabel: 'TODO welsh',
+              operationalPlanHint: 'TODO welsh',
+              error: { operationalPlan: 'TODO welsh' }
+            },
+            partners: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              partnersLabel: 'TODO welsh',
+              partnersHint: 'TODO welsh'
+            },
+            offences: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              hasOffencesLabel: 'TODO welsh',
+              yesLabel: 'TODO welsh',
+              noLabel: 'TODO welsh',
+              offencesDetailLabel: 'TODO welsh',
+              offencesDetailHint: 'TODO welsh',
+              error: {
+                hasOffences: 'TODO welsh',
+                offencesDetail: 'TODO welsh'
+              }
+            },
+            additionalFiles: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              additionalFilesLabel: 'TODO welsh',
+              additionalFilesHint: 'TODO welsh'
+            },
+            declaration: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              declarationLabel: 'TODO welsh',
+              error: { declarationAccepted: 'TODO welsh' }
+            },
+            confirmation: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              returnToDashboardAction: 'TODO welsh'
+            }
+          }
+        }
+      }
     })
 }

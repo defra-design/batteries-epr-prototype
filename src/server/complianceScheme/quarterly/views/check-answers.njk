@@ -1,0 +1,51 @@
+{% extends 'complianceSchemeQuarterly/_layout.njk' %}
+
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% block stepBody %}
+  <h2 class="govuk-heading-m" data-testid="quarterly-check-market-heading">{{ labels.marketHeading }}</h2>
+  <dl class="govuk-summary-list" data-testid="quarterly-check-market">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ labels.portableLabel }}</dt>
+      <dd class="govuk-summary-list__value" data-testid="quarterly-check-market-portable"></dd>
+      <dd class="govuk-summary-list__actions"><a class="govuk-link" href="{{ marketDataUrl }}">{{ labels.changeAction }}</a></dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ labels.industrialLabel }}</dt>
+      <dd class="govuk-summary-list__value" data-testid="quarterly-check-market-industrial"></dd>
+      <dd class="govuk-summary-list__actions"></dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ labels.automotiveLabel }}</dt>
+      <dd class="govuk-summary-list__value" data-testid="quarterly-check-market-automotive"></dd>
+      <dd class="govuk-summary-list__actions"></dd>
+    </div>
+  </dl>
+
+  <h2 class="govuk-heading-m" data-testid="quarterly-check-waste-heading">{{ labels.wasteHeading }}</h2>
+  <dl class="govuk-summary-list" data-testid="quarterly-check-waste">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ labels.portableLabel }}</dt>
+      <dd class="govuk-summary-list__value" data-testid="quarterly-check-waste-portable"></dd>
+      <dd class="govuk-summary-list__actions"><a class="govuk-link" href="{{ wasteDataUrl }}">{{ labels.changeAction }}</a></dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ labels.industrialLabel }}</dt>
+      <dd class="govuk-summary-list__value" data-testid="quarterly-check-waste-industrial"></dd>
+      <dd class="govuk-summary-list__actions"></dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ labels.automotiveLabel }}</dt>
+      <dd class="govuk-summary-list__value" data-testid="quarterly-check-waste-automotive"></dd>
+      <dd class="govuk-summary-list__actions"></dd>
+    </div>
+  </dl>
+
+  <p class="govuk-body">
+    {{ govukButton({
+      text: labels.submitAction,
+      href: pagePayload.next,
+      attributes: { "data-testid": "quarterly-check-continue" }
+    }) }}
+  </p>
+{% endblock %}

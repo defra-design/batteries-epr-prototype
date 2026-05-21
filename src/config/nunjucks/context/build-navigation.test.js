@@ -2,14 +2,22 @@ import { buildNavigation } from './build-navigation.js'
 import { paths } from '../../paths.js'
 
 describe('buildNavigation', () => {
-  test('returns four navigation items in the expected order', () => {
+  test('returns five navigation items in the expected order', () => {
     const navigation = buildNavigation()
     expect(navigation.map((item) => item.text)).toEqual([
       'Public register',
+      'Compliance scheme',
       'Sign in',
       'Manage account',
       'Sign out'
     ])
+  })
+
+  test('compliance scheme is always visible', () => {
+    const navigation = buildNavigation()
+    const item = navigation.find((i) => i.text === 'Compliance scheme')
+    expect(item.href).toBe(paths.complianceSchemeDashboard)
+    expect(item.attributes['data-auth-state']).toBe('always')
   })
 
   test('public register is always visible', () => {

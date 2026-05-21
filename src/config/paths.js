@@ -50,6 +50,22 @@ export const paths = {
 
   nextAction: '/next-action',
 
+  complianceSchemeDashboard: '/compliance-scheme',
+  complianceSchemeApplication: '/compliance-scheme/application/{step}',
+  complianceSchemeMembers: '/compliance-scheme/members',
+  complianceSchemeMembersAdd: '/compliance-scheme/members/add',
+  complianceSchemeMemberRemove: '/compliance-scheme/members/{memberId}/remove',
+  complianceSchemeQuarterly: '/compliance-scheme/quarterly/{quarter}/{step}',
+  complianceSchemeIa: '/compliance-scheme/industrial-automotive/{step}',
+  complianceSchemeEvidence: '/compliance-scheme/evidence',
+  complianceSchemeEvidenceIssue: '/compliance-scheme/evidence/issue/{step}',
+  complianceSchemeEvidenceDetail: '/compliance-scheme/evidence/{evidenceId}',
+  complianceSchemeEvidenceTransfer:
+    '/compliance-scheme/evidence/{evidenceId}/transfer',
+  complianceSchemeEvidenceAvailability:
+    '/compliance-scheme/evidence/availability',
+  complianceSchemeObligation: '/compliance-scheme/obligation',
+
   devReset: '/dev/reset',
   devTimeTravel: '/dev/time-travel'
 }

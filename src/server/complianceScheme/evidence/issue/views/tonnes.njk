@@ -1,0 +1,34 @@
+{% extends 'complianceSchemeEvidence/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="evidence-issue-form">
+    {{ govukRadios({
+      idPrefix: "category",
+      name: "category",
+      fieldset: { legend: { text: labels.categoryLegend, classes: "govuk-fieldset__legend--m" } },
+      errorMessage: { text: errors.category } if errors.category,
+      items: [
+        { value: "portable", text: labels.portable, checked: formValues.category == "portable" },
+        { value: "industrial", text: labels.industrial, checked: formValues.category == "industrial" },
+        { value: "automotive", text: labels.automotive, checked: formValues.category == "automotive" }
+      ],
+      attributes: { "data-testid": "evidence-issue-category" }
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.tonnesLabel },
+      hint: { text: labels.tonnesHint },
+      id: "tonnes",
+      name: "tonnes",
+      classes: "govuk-input--width-10",
+      value: formValues.tonnes,
+      errorMessage: { text: errors.tonnes } if errors.tonnes,
+      attributes: { "data-testid": "evidence-issue-tonnes" }
+    }) }}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "evidence-issue-continue" }
+    }) }}
+  </form>
+{% endblock %}

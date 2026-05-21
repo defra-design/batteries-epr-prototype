@@ -1,0 +1,52 @@
+{% extends 'layouts/page.njk' %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l" data-testid="obligation-heading">{{ heading }}</h1>
+      <p class="govuk-body">{{ intro }}</p>
+      <p class="govuk-body govuk-!-margin-bottom-2">
+        <strong>Compliance period:</strong> <span data-testid="obligation-period">{{ compliancePeriodYear }}</span>
+      </p>
+
+      <table class="govuk-table" data-testid="obligation-table">
+        <caption class="govuk-table__caption govuk-table__caption--m">{{ labels.tableCaption }}</caption>
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">{{ labels.columns.category }}</th>
+            <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ labels.columns.placed }}</th>
+            <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ labels.columns.target }}</th>
+            <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ labels.columns.obligation }}</th>
+            <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ labels.columns.accepted }}</th>
+            <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ labels.columns.outstanding }}</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body" data-testid="obligation-body"></tbody>
+        <tfoot data-testid="obligation-foot">
+          <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header">{{ labels.totalsLabel }}</th>
+            <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="obligation-total-placed"></td>
+            <td class="govuk-table__cell"></td>
+            <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="obligation-total-obligation"></td>
+            <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="obligation-total-accepted"></td>
+            <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="obligation-total-outstanding"></td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <h2 class="govuk-heading-s">{{ labels.methodologyHeading }}</h2>
+      <p class="govuk-body" data-testid="obligation-methodology">{{ labels.methodology }}</p>
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="{{ dashboardUrl }}" data-testid="obligation-back-link">{{ labels.backToDashboardAction }}</a>
+      </p>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('complianceSchemeObligation.js') }}"></script>
+{% endblock %}

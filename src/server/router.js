@@ -19,6 +19,13 @@ import { paymentDetails } from './paymentDetails/index.js'
 import { account } from './account/index.js'
 import { devReset } from './devReset/index.js'
 import { devTimeTravel } from './devTimeTravel/index.js'
+import { complianceSchemeDashboard } from './complianceScheme/dashboard/index.js'
+import { complianceSchemeApplication } from './complianceScheme/application/index.js'
+import { complianceSchemeMembers } from './complianceScheme/members/index.js'
+import { complianceSchemeQuarterly } from './complianceScheme/quarterly/index.js'
+import { complianceSchemeIa } from './complianceScheme/industrialAutomotive/index.js'
+import { complianceSchemeEvidence } from './complianceScheme/evidence/index.js'
+import { complianceSchemeObligation } from './complianceScheme/obligation/index.js'
 import { serveStaticFiles } from './common/helpers/serve-static-files.js'
 
 const createPlugin = (plugins, [item, routes]) => {
@@ -58,7 +65,14 @@ export const router = {
         paymentDetails: paymentDetails.openRoutes,
         account: account.openRoutes,
         devReset: devReset.openRoutes,
-        devTimeTravel: devTimeTravel.openRoutes
+        devTimeTravel: devTimeTravel.openRoutes,
+        complianceSchemeDashboard: complianceSchemeDashboard.openRoutes,
+        complianceSchemeApplication: complianceSchemeApplication.openRoutes,
+        complianceSchemeMembers: complianceSchemeMembers.openRoutes,
+        complianceSchemeQuarterly: complianceSchemeQuarterly.openRoutes,
+        complianceSchemeIa: complianceSchemeIa.openRoutes,
+        complianceSchemeEvidence: complianceSchemeEvidence.openRoutes,
+        complianceSchemeObligation: complianceSchemeObligation.openRoutes
       }).reduce((p, entry) => createPlugin(p, entry), [])
 
       await server.register(plugins)

@@ -1,0 +1,132 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "heading/macro.njk" import appHeading %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ appHeading({ text: heading }) }}
+      <p class="govuk-body" data-testid="compliance-scheme-intro">{{ introParagraph }}</p>
+      <p class="govuk-body govuk-!-margin-bottom-2">
+        <strong>Compliance period:</strong> <span data-testid="compliance-scheme-period">{{ pagePayload.compliancePeriodYear }}</span>
+      </p>
+    </div>
+  </div>
+
+  <div id="compliance-scheme-dashboard" data-testid="compliance-scheme-dashboard">
+    <div class="govuk-grid-row govuk-!-margin-top-4" data-testid="compliance-scheme-cards-row-1">
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-summary-card govuk-!-margin-bottom-4">
+          <div class="govuk-summary-card__title-wrapper">
+            <h2 class="govuk-summary-card__title" data-testid="tile-approval-title">Application for approval</h2>
+            <div class="app-task-cards__status"><span data-testid="tile-approval-status"></span></div>
+          </div>
+          <div class="govuk-summary-card__content">
+            <p class="govuk-body" data-testid="tile-approval-meta"></p>
+            <p class="govuk-body" data-testid="tile-approval-action"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-summary-card govuk-!-margin-bottom-4">
+          <div class="govuk-summary-card__title-wrapper">
+            <h2 class="govuk-summary-card__title" data-testid="tile-members-title">Scheme members</h2>
+          </div>
+          <div class="govuk-summary-card__content">
+            <p class="govuk-body" data-testid="tile-members-count"></p>
+            <p class="govuk-body" data-testid="tile-members-action"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row" data-testid="compliance-scheme-cards-row-2">
+      <div class="govuk-grid-column-full">
+        <div class="govuk-summary-card govuk-!-margin-bottom-4">
+          <div class="govuk-summary-card__title-wrapper">
+            <h2 class="govuk-summary-card__title" data-testid="tile-evidence-title">Evidence and obligation</h2>
+          </div>
+          <div class="govuk-summary-card__content">
+            <dl class="govuk-summary-list">
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Accepted evidence (tonnes)</dt>
+                <dd class="govuk-summary-list__value" data-testid="tile-evidence-accepted"></dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Awaiting acceptance (tonnes)</dt>
+                <dd class="govuk-summary-list__value" data-testid="tile-evidence-awaiting"></dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Indicative obligation (tonnes)</dt>
+                <dd class="govuk-summary-list__value" data-testid="tile-evidence-obligation"></dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Outstanding (tonnes)</dt>
+                <dd class="govuk-summary-list__value" data-testid="tile-evidence-delta"></dd>
+              </div>
+            </dl>
+            <p class="govuk-body" data-testid="tile-evidence-action"></p>
+            <p class="govuk-body" data-testid="tile-evidence-availability"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row" data-testid="compliance-scheme-cards-row-3">
+      <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-summary-card govuk-!-margin-bottom-4">
+          <div class="govuk-summary-card__title-wrapper">
+            <h2 class="govuk-summary-card__title" data-testid="tile-quarterly-title">Quarterly submissions</h2>
+          </div>
+          <div class="govuk-summary-card__content">
+            <p class="govuk-body" data-testid="tile-quarterly-hint"></p>
+            <ul class="govuk-list" data-testid="tile-quarterly-list"></ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="govuk-grid-column-one-third">
+        <div class="govuk-summary-card govuk-!-margin-bottom-4">
+          <div class="govuk-summary-card__title-wrapper">
+            <h2 class="govuk-summary-card__title" data-testid="tile-ia-title">Industrial and automotive annual submission</h2>
+            <div class="app-task-cards__status"><span data-testid="tile-ia-status"></span></div>
+          </div>
+          <div class="govuk-summary-card__content">
+            <p class="govuk-body" data-testid="tile-ia-hint"></p>
+            <p class="govuk-body" data-testid="tile-ia-action"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row" data-testid="compliance-scheme-cards-row-4">
+      <div class="govuk-grid-column-full">
+        <div class="govuk-summary-card govuk-!-margin-bottom-4">
+          <div class="govuk-summary-card__title-wrapper">
+            <h2 class="govuk-summary-card__title" data-testid="tile-obligation-title">Obligation breakdown</h2>
+          </div>
+          <div class="govuk-summary-card__content">
+            <p class="govuk-body" data-testid="tile-obligation-action"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if pagePayload.debug.fastForwardEnabled %}
+    <div class="govuk-!-margin-top-6" data-testid="compliance-scheme-debug">
+      <h2 class="govuk-heading-s">Debug</h2>
+      <button type="button" class="govuk-button govuk-button--warning" data-testid="debug-fast-forward">{{ pagePayload.debug.fastForwardLabel }}</button>
+      <p class="govuk-body" data-testid="debug-fast-forward-message" hidden>{{ pagePayload.debug.fastForwardConfirmation }}</p>
+    </div>
+  {% endif %}
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('complianceSchemeDashboard.js') }}"></script>
+{% endblock %}

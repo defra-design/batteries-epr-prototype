@@ -1,0 +1,33 @@
+{% extends 'complianceSchemeMembers/_form-layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="members-add-form">
+    {{ govukInput({
+      label: { text: labels.bprnLabel },
+      hint: { text: labels.bprnHint },
+      id: "bprn",
+      name: "bprn",
+      classes: "govuk-input--width-20",
+      value: formValues.bprn,
+      errorMessage: { text: errors.bprn } if errors.bprn,
+      attributes: { "data-testid": "members-add-bprn" }
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.companyNameLabel },
+      id: "companyName",
+      name: "companyName",
+      value: formValues.companyName,
+      errorMessage: { text: errors.companyName } if errors.companyName,
+      attributes: { "data-testid": "members-add-company-name" }
+    }) }}
+
+    <div class="govuk-button-group">
+      {{ govukButton({
+        text: labels.continueAction,
+        attributes: { "data-testid": "members-add-submit" }
+      }) }}
+      <a class="govuk-link" href="{{ cancelUrl }}" data-testid="members-add-cancel">{{ labels.cancelAction }}</a>
+    </div>
+  </form>
+{% endblock %}

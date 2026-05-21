@@ -1,0 +1,60 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l" data-testid="evidence-detail-heading">{{ heading }}</h1>
+
+      <p class="govuk-body" data-testid="evidence-detail-not-found" hidden>{{ labels.notFoundMessage }}</p>
+
+      <dl class="govuk-summary-list" data-testid="evidence-detail-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.recipientLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="evidence-detail-recipient"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.categoryLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="evidence-detail-category"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.tonnesLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="evidence-detail-tonnes"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.statusLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="evidence-detail-status"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.issuedOnLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="evidence-detail-issued"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.transferLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="evidence-detail-transfer"></dd>
+        </div>
+      </dl>
+
+      <form method="post" action="{{ action }}" data-testid="evidence-detail-actions">
+        <div class="govuk-button-group" data-testid="evidence-detail-buttons">
+          <button class="govuk-button" name="action" value="accept" type="submit" data-testid="evidence-detail-accept">{{ labels.acceptAction }}</button>
+          <button class="govuk-button govuk-button--warning" name="action" value="reject" type="submit" data-testid="evidence-detail-reject">{{ labels.rejectAction }}</button>
+          <a class="govuk-link" href="{{ transferAction }}" data-testid="evidence-detail-transfer-link">{{ labels.transferAction }}</a>
+        </div>
+        <p class="govuk-body" data-testid="evidence-detail-no-actions" hidden>{{ labels.noActionsMessage }}</p>
+      </form>
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="{{ listUrl }}" data-testid="evidence-detail-back">{{ labels.backAction }}</a>
+      </p>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('complianceSchemeEvidence.js') }}"></script>
+{% endblock %}

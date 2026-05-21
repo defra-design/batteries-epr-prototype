@@ -1,0 +1,18 @@
+{% extends 'complianceSchemeEvidence/_layout.njk' %}
+
+{% block stepBody %}
+  <p class="govuk-body">
+    <strong>{{ labels.currentLabel }}:</strong>
+    <span data-testid="evidence-availability-current"></span>
+  </p>
+
+  <form method="post" action="{{ action }}" novalidate data-testid="evidence-availability-form">
+    <div class="govuk-button-group">
+      {{ govukButton({
+        text: labels.confirmAction,
+        attributes: { "data-testid": "evidence-availability-submit" }
+      }) }}
+      <a class="govuk-link" href="{{ cancelUrl }}" data-testid="evidence-availability-cancel">{{ labels.cancelAction }}</a>
+    </div>
+  </form>
+{% endblock %}

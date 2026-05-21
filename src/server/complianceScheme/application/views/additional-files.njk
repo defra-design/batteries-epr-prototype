@@ -1,0 +1,20 @@
+{% extends 'complianceSchemeApplication/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="application-form">
+    {{ govukTextarea({
+      label: { text: labels.additionalFilesLabel },
+      hint: { text: labels.additionalFilesHint },
+      id: "additionalFiles",
+      name: "additionalFiles",
+      rows: 5,
+      value: formValues.additionalFiles,
+      attributes: { "data-testid": "additional-files" }
+    }) }}
+
+    {{ govukButton({
+      text: continueAction,
+      attributes: { "data-testid": "application-continue" }
+    }) }}
+  </form>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'complianceSchemeApplication/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="application-form">
+    {{ govukTextarea({
+      label: { text: labels.operationalPlanLabel },
+      hint: { text: labels.operationalPlanHint },
+      id: "operationalPlan",
+      name: "operationalPlan",
+      rows: 6,
+      value: formValues.operationalPlan,
+      errorMessage: { text: errors.operationalPlan } if errors.operationalPlan,
+      attributes: { "data-testid": "operational-plan" }
+    }) }}
+
+    {{ govukButton({
+      text: continueAction,
+      attributes: { "data-testid": "application-continue" }
+    }) }}
+  </form>
+{% endblock %}

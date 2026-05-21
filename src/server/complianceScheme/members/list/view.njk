@@ -1,0 +1,63 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l" data-testid="members-heading">{{ heading }}</h1>
+      <p class="govuk-body">{{ intro }}</p>
+      <p class="govuk-body govuk-!-margin-bottom-2">
+        <strong>Compliance period:</strong> <span data-testid="members-period">{{ compliancePeriodYear }}</span>
+      </p>
+
+      <p class="govuk-body">
+        {{ govukButton({
+          text: labels.addAction,
+          href: pagePayload.urls.add,
+          attributes: { "data-testid": "members-add-link" }
+        }) }}
+      </p>
+
+      <table class="govuk-table" data-testid="members-active-table">
+        <caption class="govuk-table__caption govuk-table__caption--m">{{ labels.tableCaption }}</caption>
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">{{ labels.columns.bprn }}</th>
+            <th scope="col" class="govuk-table__header">{{ labels.columns.companyName }}</th>
+            <th scope="col" class="govuk-table__header">{{ labels.columns.joinedOn }}</th>
+            <th scope="col" class="govuk-table__header">{{ labels.columns.actions }}</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body" data-testid="members-active-body"></tbody>
+      </table>
+
+      <p class="govuk-body" data-testid="members-active-empty" hidden>{{ labels.emptyMessage }}</p>
+
+      <h2 class="govuk-heading-m">{{ labels.historyHeading }}</h2>
+      <table class="govuk-table" data-testid="members-history-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">{{ labels.columns.bprn }}</th>
+            <th scope="col" class="govuk-table__header">{{ labels.columns.companyName }}</th>
+            <th scope="col" class="govuk-table__header">{{ labels.columns.joinedOn }}</th>
+            <th scope="col" class="govuk-table__header">{{ labels.leftOnLabel }}</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body" data-testid="members-history-body"></tbody>
+      </table>
+      <p class="govuk-body" data-testid="members-history-empty" hidden>{{ labels.historyEmpty }}</p>
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="{{ pagePayload.urls.dashboard }}" data-testid="members-back-link">{{ labels.backToDashboardAction }}</a>
+      </p>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('complianceSchemeMembers.js') }}"></script>
+{% endblock %}

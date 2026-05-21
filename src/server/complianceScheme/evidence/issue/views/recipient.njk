@@ -1,0 +1,24 @@
+{% extends 'complianceSchemeEvidence/_layout.njk' %}
+
+{% block stepBody %}
+  <p class="govuk-body" data-testid="evidence-issue-no-members" hidden>{{ labels.noMembersMessage }}</p>
+
+  <form method="post" action="{{ action }}" novalidate data-testid="evidence-issue-form">
+    <div class="govuk-form-group {% if errors.recipientBprn %}govuk-form-group--error{% endif %}" data-testid="evidence-issue-recipient-group">
+      <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">{{ labels.legend }}</legend>
+        {% if errors.recipientBprn %}
+          <p class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span> {{ errors.recipientBprn }}</p>
+        {% endif %}
+        <div class="govuk-radios" data-module="govuk-radios" data-testid="evidence-issue-recipient-radios">
+          <!-- Radios populated client-side from active members for the active compliance year. -->
+        </div>
+      </fieldset>
+    </div>
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "evidence-issue-continue" }
+    }) }}
+  </form>
+{% endblock %}

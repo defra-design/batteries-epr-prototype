@@ -48,7 +48,19 @@ export default {
     account: './javascripts/account/entry.js',
     devReset: './javascripts/devReset/entry.js',
     devTimeTravel: './javascripts/devTimeTravel/entry.js',
-    timeTravelShim: './javascripts/timeTravelShim/entry.js'
+    timeTravelShim: './javascripts/timeTravelShim/entry.js',
+    complianceSchemeDashboard: './javascripts/complianceScheme/entry.js',
+    complianceSchemeApplication:
+      './javascripts/complianceScheme/application/entry.js',
+    complianceSchemeMembers:
+      './javascripts/complianceScheme/members/entry.js',
+    complianceSchemeQuarterly:
+      './javascripts/complianceScheme/quarterly/entry.js',
+    complianceSchemeIa: './javascripts/complianceScheme/ia/entry.js',
+    complianceSchemeEvidence:
+      './javascripts/complianceScheme/evidence/entry.js',
+    complianceSchemeObligation:
+      './javascripts/complianceScheme/obligationPage/entry.js'
   },
   experiments: {
     outputModule: true

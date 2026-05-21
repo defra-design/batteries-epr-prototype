@@ -1,0 +1,15 @@
+{% extends 'complianceSchemeEvidence/_layout.njk' %}
+
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% block stepBody %}
+  {{ govukPanel({
+    titleText: labels.heading,
+    text: labels.intro,
+    attributes: { "data-testid": "evidence-issue-confirmation-panel" }
+  }) }}
+
+  <p class="govuk-body">
+    <a class="govuk-link" href="{{ listUrl }}" data-testid="evidence-issue-confirmation-list-link">{{ labels.returnToListAction }}</a>
+  </p>
+{% endblock %}

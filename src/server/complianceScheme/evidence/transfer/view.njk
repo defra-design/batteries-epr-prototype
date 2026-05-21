@@ -1,0 +1,27 @@
+{% extends 'complianceSchemeEvidence/_layout.njk' %}
+
+{% block stepBody %}
+  <p class="govuk-body" data-testid="evidence-transfer-not-found" hidden>{{ labels.notFoundMessage }}</p>
+  <p class="govuk-body" data-testid="evidence-transfer-ineligible" hidden>{{ labels.ineligibleMessage }}</p>
+  <p class="govuk-body" data-testid="evidence-transfer-no-candidates" hidden>{{ labels.error.noCandidates }}</p>
+
+  <form method="post" action="{{ action }}" novalidate data-testid="evidence-transfer-form">
+    <div class="govuk-form-group {% if errors.counterpartySchemeId %}govuk-form-group--error{% endif %}">
+      <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">{{ labels.counterpartyLegend }}</legend>
+        {% if errors.counterpartySchemeId %}
+          <p class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span> {{ errors.counterpartySchemeId }}</p>
+        {% endif %}
+        <div class="govuk-radios" data-module="govuk-radios" data-testid="evidence-transfer-candidates"></div>
+      </fieldset>
+    </div>
+
+    <div class="govuk-button-group">
+      {{ govukButton({
+        text: labels.confirmAction,
+        attributes: { "data-testid": "evidence-transfer-submit" }
+      }) }}
+      <a class="govuk-link" href="{{ cancelUrl }}" data-testid="evidence-transfer-cancel">{{ labels.cancelAction }}</a>
+    </div>
+  </form>
+{% endblock %}

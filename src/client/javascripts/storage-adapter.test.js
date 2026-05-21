@@ -6,6 +6,11 @@ import {
   createProducer,
   createRegistration,
   createSubmission,
+  createScheme,
+  createSchemeMember,
+  createQuarterlySubmission,
+  createIaSubmission,
+  createEvidence,
   storage
 } from './storage-adapter.js'
 import seedData from './storage-seed.json'
@@ -593,5 +598,533 @@ describe('reset and seed', () => {
       const expectedSeq = String(max + 1).padStart(6, '0')
       expect(next).toBe(`BPRN-${agencyCode}-${compliancePeriod}-${expectedSeq}`)
     }
+  })
+})
+
+describe('compliance scheme factories and storage', () => {
+  test('createScheme defaults', () => {
+    const s = createScheme()
+    expect(s.id).toMatch(/^[0-9a-f-]{36}$/)
+    expect(s.approvalStatus).toBe('not-started')
+    expect(s.tradingNames).toEqual([])
+    expect(s.partners).toEqual([])
+    expect(s.additionalFiles).toEqual([])
+    expect(s.evidenceAvailable).toBe(false)
+    expect(s.createdAt).toBeTruthy()
+  })
+
+  test('createScheme accepts overrides', () => {
+    const s = createScheme({
+      id: 's-1',
+      name: 'Acme Scheme',
+      approvalStatus: 'approved',
+      approvalNumber: 'BCS/2026/099',
+      approvedOn: '2026-01-01T00:00:00Z',
+      submittedOn: '2025-12-01T00:00:00Z',
+      registeredAddress: { line1: '1 St' },
+      contactAddress: { line1: '2 St' },
+      serviceOfNoticeAddress: { line1: '3 St' },
+      operationalPlan: 'plan',
+      partners: [{ name: 'p' }],
+      offences: 'none',
+      additionalFiles: [{ name: 'f.pdf' }],
+      evidenceAvailable: true,
+      tradingNames: ['ACME'],
+      createdAt: '2025-12-01T00:00:00Z',
+      updatedAt: '2025-12-02T00:00:00Z'
+    })
+    expect(s.id).toBe('s-1')
+    expect(s.name).toBe('Acme Scheme')
+    expect(s.evidenceAvailable).toBe(true)
+    expect(s.partners).toEqual([{ name: 'p' }])
+  })
+
+  test('createSchemeMember defaults', () => {
+    const m = createSchemeMember()
+    expect(m.id).toMatch(/^[0-9a-f-]{36}$/)
+    expect(m.leftOn).toBeNull()
+    expect(m.joinedOn).toBeTruthy()
+  })
+
+  test('createSchemeMember accepts overrides', () => {
+    const m = createSchemeMember({
+      id: 'm-1',
+      schemeId: 's-1',
+      producerBprn: 'BPRN-EA-2026-000010',
+      companyName: 'Members Ltd',
+      joinedOn: '2026-02-01T00:00:00Z',
+      leftOn: '2026-04-01T00:00:00Z',
+      createdAt: '2026-02-01T00:00:00Z',
+      updatedAt: '2026-04-01T00:00:00Z'
+    })
+    expect(m.schemeId).toBe('s-1')
+    expect(m.leftOn).toBe('2026-04-01T00:00:00Z')
+  })
+
+  test('createQuarterlySubmission and createIaSubmission defaults', () => {
+    const q = createQuarterlySubmission()
+    expect(q.status).toBe('not-started')
+    expect(q.quarter).toBeNull()
+    const i = createIaSubmission()
+    expect(i.status).toBe('not-started')
+    expect(i.placed).toBeNull()
+  })
+
+  test('createQuarterlySubmission and createIaSubmission accept overrides', () => {
+    const q = createQuarterlySubmission({
+      id: 'q-1',
+      schemeId: 's-1',
+      compliancePeriodYear: 2026,
+      quarter: 'Q1',
+      status: 'submitted',
+      marketData: { portable: '1' },
+      wasteData: { collected: '2' },
+      submittedOn: '2026-04-30T00:00:00Z',
+      createdAt: '2026-01-01T00:00:00Z',
+      updatedAt: '2026-04-30T00:00:00Z'
+    })
+    expect(q.quarter).toBe('Q1')
+    expect(q.status).toBe('submitted')
+
+    const i = createIaSubmission({
+      id: 'i-1',
+      schemeId: 's-1',
+      compliancePeriodYear: 2026,
+      status: 'in-progress',
+      placed: { industrial: '5' },
+      exported: { industrial: '1' },
+      takenBack: { industrial: '2' },
+      delivered: { industrial: '3' },
+      submittedOn: null,
+      createdAt: '2026-02-01T00:00:00Z',
+      updatedAt: '2026-02-15T00:00:00Z'
+    })
+    expect(i.placed).toEqual({ industrial: '5' })
+    expect(i.status).toBe('in-progress')
+  })
+
+  test('createEvidence defaults and tonnes coercion', () => {
+    const e = createEvidence({ tonnes: 1.25 })
+    expect(e.id).toMatch(/^[0-9a-f-]{36}$/)
+    expect(e.status).toBe('awaiting-acceptance')
+    expect(e.tonnes).toBe('1.250')
+  })
+
+  test('createEvidence accepts overrides', () => {
+    const e = createEvidence({
+      id: 'e-1',
+      schemeId: 's-1',
+      recipientBprn: 'BPRN-EA-2026-000010',
+      tonnes: '0.500',
+      category: 'portable',
+      status: 'accepted',
+      issuedOn: '2026-05-01T00:00:00Z',
+      transferDirection: 'XOUT',
+      counterpartySchemeId: 's-2',
+      createdAt: '2026-05-01T00:00:00Z',
+      updatedAt: '2026-05-02T00:00:00Z'
+    })
+    expect(e.status).toBe('accepted')
+    expect(e.transferDirection).toBe('XOUT')
+    expect(e.tonnes).toBe('0.500')
+  })
+
+  test('saveScheme and listSchemes round-trip', () => {
+    const saved = storage.saveScheme(
+      createScheme({ name: 'A', approvalStatus: 'in-progress' })
+    )
+    expect(saved.id).toBeTruthy()
+    expect(storage.listSchemes()).toHaveLength(1)
+    expect(storage.getScheme(saved.id)).toEqual(saved)
+    expect(storage.getScheme('missing')).toBeNull()
+  })
+
+  test('saveScheme increments version on update', () => {
+    const first = storage.saveScheme(createScheme({ name: 'A' }))
+    const second = storage.saveScheme({ ...first, name: 'B' })
+    expect(second.id).toBe(first.id)
+    expect(second.version).toBe(1)
+    expect(second.name).toBe('B')
+  })
+
+  test('scheme members add and filter by status', () => {
+    const scheme = storage.saveScheme(createScheme({ name: 'A' }))
+    const active = storage.saveSchemeMember(
+      createSchemeMember({ schemeId: scheme.id, producerBprn: 'BPRN-1' })
+    )
+    const left = storage.saveSchemeMember(
+      createSchemeMember({
+        schemeId: scheme.id,
+        producerBprn: 'BPRN-2',
+        leftOn: '2026-03-01T00:00:00Z'
+      })
+    )
+    expect(storage.listSchemeMembers(scheme.id)).toHaveLength(2)
+    expect(storage.listActiveSchemeMembers(scheme.id)).toHaveLength(1)
+    expect(storage.listActiveSchemeMembers(scheme.id)[0].id).toBe(active.id)
+    expect(storage.listSchemeMembers()).toHaveLength(2)
+    expect(left.leftOn).toBe('2026-03-01T00:00:00Z')
+
+    const updated = storage.saveSchemeMember({
+      ...active,
+      leftOn: '2026-04-01T00:00:00Z'
+    })
+    expect(updated.version).toBe(1)
+    expect(storage.listActiveSchemeMembers(scheme.id)).toHaveLength(0)
+  })
+
+  test('membersForYear filters by joined and left dates against the active year', () => {
+    storage.saveSchemeMember(
+      createSchemeMember({
+        schemeId: 's-tt',
+        producerBprn: 'BPRN-1',
+        joinedOn: '2026-04-01T00:00:00Z'
+      })
+    )
+    storage.saveSchemeMember(
+      createSchemeMember({
+        schemeId: 's-tt',
+        producerBprn: 'BPRN-2',
+        joinedOn: '2027-02-01T00:00:00Z'
+      })
+    )
+    storage.saveSchemeMember(
+      createSchemeMember({
+        schemeId: 's-tt',
+        producerBprn: 'BPRN-3',
+        joinedOn: '2026-02-01T00:00:00Z',
+        leftOn: '2026-12-01T00:00:00Z'
+      })
+    )
+    storage.saveSchemeMember(
+      createSchemeMember({
+        schemeId: 's-tt',
+        producerBprn: 'BPRN-4',
+        joinedOn: '2026-02-01T00:00:00Z',
+        leftOn: '2027-04-01T00:00:00Z'
+      })
+    )
+
+    const at2025 = storage.membersForYear('s-tt', '2025')
+    expect(at2025.active).toHaveLength(0)
+    expect(at2025.history).toHaveLength(0)
+
+    const at2026 = storage.membersForYear('s-tt', '2026')
+    expect(at2026.active.map((m) => m.producerBprn).sort()).toEqual([
+      'BPRN-1',
+      'BPRN-4'
+    ])
+    expect(at2026.history.map((m) => m.producerBprn)).toEqual(['BPRN-3'])
+
+    const at2027 = storage.membersForYear('s-tt', '2027')
+    expect(at2027.active.map((m) => m.producerBprn).sort()).toEqual([
+      'BPRN-1',
+      'BPRN-2'
+    ])
+    expect(at2027.history.map((m) => m.producerBprn).sort()).toEqual([
+      'BPRN-3',
+      'BPRN-4'
+    ])
+  })
+
+  test('quarterly submissions filter by scheme and year', () => {
+    const a = storage.saveQuarterlySubmission(
+      createQuarterlySubmission({
+        schemeId: 's-1',
+        compliancePeriodYear: 2026,
+        quarter: 'Q1',
+        status: 'submitted'
+      })
+    )
+    storage.saveQuarterlySubmission(
+      createQuarterlySubmission({
+        schemeId: 's-1',
+        compliancePeriodYear: 2025,
+        quarter: 'Q4',
+        status: 'submitted'
+      })
+    )
+    storage.saveQuarterlySubmission(
+      createQuarterlySubmission({
+        schemeId: 's-2',
+        compliancePeriodYear: 2026,
+        quarter: 'Q1',
+        status: 'in-progress'
+      })
+    )
+    expect(storage.listQuarterlySubmissions('s-1', 2026)).toHaveLength(1)
+    expect(storage.listQuarterlySubmissions('s-1')).toHaveLength(2)
+    expect(storage.listQuarterlySubmissions(null, 2026)).toHaveLength(2)
+    expect(storage.listQuarterlySubmissions()).toHaveLength(3)
+
+    const updated = storage.saveQuarterlySubmission({
+      ...a,
+      status: 'in-progress'
+    })
+    expect(updated.id).toBe(a.id)
+    expect(updated.status).toBe('in-progress')
+  })
+
+  test('ia submissions filter by scheme and year', () => {
+    const a = storage.saveIaSubmission(
+      createIaSubmission({
+        schemeId: 's-1',
+        compliancePeriodYear: 2026,
+        status: 'submitted'
+      })
+    )
+    storage.saveIaSubmission(
+      createIaSubmission({
+        schemeId: 's-2',
+        compliancePeriodYear: 2026,
+        status: 'in-progress'
+      })
+    )
+    expect(storage.listIaSubmissions('s-1', 2026)).toHaveLength(1)
+    expect(storage.listIaSubmissions('s-1')).toHaveLength(1)
+    expect(storage.listIaSubmissions(null, 2026)).toHaveLength(2)
+    expect(storage.listIaSubmissions()).toHaveLength(2)
+
+    const updated = storage.saveIaSubmission({ ...a, status: 'in-progress' })
+    expect(updated.status).toBe('in-progress')
+  })
+
+  test('evidence storage round-trip and filter by scheme', () => {
+    storage.saveEvidence(
+      createEvidence({ schemeId: 's-1', tonnes: 2.5, status: 'accepted' })
+    )
+    storage.saveEvidence(createEvidence({ schemeId: 's-2', tonnes: 1.5 }))
+    expect(storage.listEvidence('s-1')).toHaveLength(1)
+    expect(storage.listEvidence('s-1')[0].tonnes).toBe('2.500')
+    expect(storage.listEvidence()).toHaveLength(2)
+
+    const [item] = storage.listEvidence('s-1')
+    const updated = storage.saveEvidence({ ...item, status: 'awaiting-acceptance' })
+    expect(updated.status).toBe('awaiting-acceptance')
+    expect(updated.tonnes).toBe('2.500')
+  })
+
+  test('listEvidence filters by compliancePeriodYear', () => {
+    storage.saveEvidence(
+      createEvidence({
+        schemeId: 's-y',
+        compliancePeriodYear: '2026',
+        tonnes: '1',
+        category: 'portable',
+        status: 'accepted'
+      })
+    )
+    storage.saveEvidence(
+      createEvidence({
+        schemeId: 's-y',
+        compliancePeriodYear: '2027',
+        tonnes: '5',
+        category: 'portable',
+        status: 'accepted'
+      })
+    )
+    expect(storage.listEvidence('s-y', '2026')).toHaveLength(1)
+    expect(storage.listEvidence('s-y', '2027')).toHaveLength(1)
+    expect(storage.listEvidence(null, '2026')).toHaveLength(1)
+    expect(storage.listEvidence('s-y')).toHaveLength(2)
+  })
+
+  test('findEvidence returns the record by id or null', () => {
+    const saved = storage.saveEvidence(
+      createEvidence({ schemeId: 's-y', tonnes: '1', category: 'portable' })
+    )
+    expect(storage.findEvidence(saved.id)).toEqual(saved)
+    expect(storage.findEvidence('missing')).toBeNull()
+  })
+
+  test('updateEvidenceStatus mutates an existing record', () => {
+    const saved = storage.saveEvidence(
+      createEvidence({
+        schemeId: 's-y',
+        compliancePeriodYear: '2026',
+        tonnes: '1',
+        category: 'portable',
+        status: 'awaiting-acceptance'
+      })
+    )
+    const accepted = storage.updateEvidenceStatus(saved.id, 'accepted')
+    expect(accepted.status).toBe('accepted')
+    expect(accepted.id).toBe(saved.id)
+    expect(storage.updateEvidenceStatus('missing', 'accepted')).toBeNull()
+  })
+
+  test('transferEvidence sets XOUT and counterparty on an existing record', () => {
+    const saved = storage.saveEvidence(
+      createEvidence({
+        schemeId: 's-y',
+        compliancePeriodYear: '2026',
+        tonnes: '1',
+        category: 'portable',
+        status: 'awaiting-acceptance'
+      })
+    )
+    const transferred = storage.transferEvidence(saved.id, 'cp-1')
+    expect(transferred.transferDirection).toBe('XOUT')
+    expect(transferred.counterpartySchemeId).toBe('cp-1')
+    expect(transferred.status).toBe('awaiting-authorisation')
+    expect(storage.transferEvidence('missing', 'cp-1')).toBeNull()
+  })
+
+  test('setEvidenceAvailability flips the flag on an existing scheme', () => {
+    const scheme = storage.saveScheme(createScheme({ evidenceAvailable: true }))
+    const updated = storage.setEvidenceAvailability(scheme.id, false)
+    expect(updated.evidenceAvailable).toBe(false)
+    expect(storage.setEvidenceAvailability('missing', true)).toBeNull()
+  })
+
+  test('sumByCategory groups by portable/industrial/automotive and ignores others', () => {
+    expect(
+      storage.sumByCategory([
+        { category: 'portable', tonnes: '1.5' },
+        { category: 'portable', tonnes: '0.5' },
+        { category: 'industrial', tonnes: '3' },
+        { category: 'automotive', tonnes: '2' },
+        { category: 'other', tonnes: '999' },
+        { category: 'portable', tonnes: 'not-a-number' }
+      ])
+    ).toEqual({ portable: 2, industrial: 3, automotive: 2 })
+  })
+
+  test('seedDemoData seeds schemes once and respects existing entries', () => {
+    expect(storage.seedDemoData()).toBe(true)
+    expect(storage.listSchemes().length).toBeGreaterThanOrEqual(2)
+    expect(storage.seedDemoData()).toBe(false)
+  })
+
+  test('seedDemoData skips schemes that already exist', () => {
+    const [first] = seedData.schemes
+    globalThis.localStorage.setItem(
+      STORAGE_KEYS.schemes,
+      JSON.stringify({ [first.id]: { ...first, name: 'Renamed locally' } })
+    )
+    storage.seedDemoData()
+    const stored = storage.getScheme(first.id)
+    expect(stored.name).toBe('Renamed locally')
+  })
+
+  test('saveScheme and saveSchemeMember allocate ids when not provided', () => {
+    const scheme = storage.saveScheme({ name: 'Bare scheme' })
+    expect(scheme.id).toMatch(/^[0-9a-f-]{36}$/)
+    const member = storage.saveSchemeMember({
+      schemeId: scheme.id,
+      producerBprn: 'BPRN-9'
+    })
+    expect(member.id).toMatch(/^[0-9a-f-]{36}$/)
+  })
+
+  test('saveQuarterlySubmission and saveIaSubmission allocate ids when not provided', () => {
+    const q = storage.saveQuarterlySubmission({
+      schemeId: 's-x',
+      compliancePeriodYear: 2026,
+      quarter: 'Q1',
+      status: 'not-started'
+    })
+    expect(q.id).toMatch(/^[0-9a-f-]{36}$/)
+    const i = storage.saveIaSubmission({
+      schemeId: 's-x',
+      compliancePeriodYear: 2026,
+      status: 'not-started'
+    })
+    expect(i.id).toMatch(/^[0-9a-f-]{36}$/)
+  })
+
+  test('saveEvidence allocates an id when not provided', () => {
+    const saved = storage.saveEvidence({
+      schemeId: 's-99',
+      tonnes: '3.000',
+      status: 'awaiting-acceptance'
+    })
+    expect(saved.id).toMatch(/^[0-9a-f-]{36}$/)
+    expect(saved.tonnes).toBe('3.000')
+  })
+
+  test('STORAGE_KEYS exposes new collection keys', () => {
+    expect(STORAGE_KEYS.schemes).toBe('npwd-batteries:schemes')
+    expect(STORAGE_KEYS.schemeMembers).toBe('npwd-batteries:schemeMembers')
+    expect(STORAGE_KEYS.quarterlySubmissions).toBe(
+      'npwd-batteries:quarterlySubmissions'
+    )
+    expect(STORAGE_KEYS.iaSubmissions).toBe('npwd-batteries:iaSubmissions')
+    expect(STORAGE_KEYS.evidence).toBe('npwd-batteries:evidence')
+  })
+
+  test('findQuarterlySubmission returns the matching record or null', () => {
+    storage.saveQuarterlySubmission(
+      createQuarterlySubmission({
+        schemeId: 's-1',
+        compliancePeriodYear: '2026',
+        quarter: 'Q1',
+        status: 'submitted'
+      })
+    )
+    expect(
+      storage.findQuarterlySubmission('s-1', '2026', 'Q1').status
+    ).toBe('submitted')
+    expect(storage.findQuarterlySubmission('s-1', '2026', 'Q2')).toBeNull()
+  })
+
+  test('upsertQuarterlySubmission creates then updates the same record', () => {
+    const first = storage.upsertQuarterlySubmission('s-1', '2026', 'Q1', {
+      marketData: { portable: '1', industrial: '2', automotive: '3' }
+    })
+    expect(first.status).toBe('in-progress')
+    const second = storage.upsertQuarterlySubmission('s-1', '2026', 'Q1', {
+      wasteData: { portable: '0.5', industrial: '0', automotive: '0' }
+    })
+    expect(second.id).toBe(first.id)
+    expect(second.marketData.portable).toBe('1')
+    expect(second.wasteData.portable).toBe('0.5')
+    expect(storage.listQuarterlySubmissions('s-1', '2026')).toHaveLength(1)
+  })
+
+  test('upsertQuarterlySubmission scopes records by year', () => {
+    storage.upsertQuarterlySubmission('s-1', '2026', 'Q1', {
+      marketData: { portable: '1', industrial: '0', automotive: '0' }
+    })
+    storage.upsertQuarterlySubmission('s-1', '2027', 'Q1', {
+      marketData: { portable: '9', industrial: '0', automotive: '0' }
+    })
+    expect(
+      storage.findQuarterlySubmission('s-1', '2026', 'Q1').marketData.portable
+    ).toBe('1')
+    expect(
+      storage.findQuarterlySubmission('s-1', '2027', 'Q1').marketData.portable
+    ).toBe('9')
+  })
+
+  test('findIaSubmission returns the matching record or null', () => {
+    storage.saveIaSubmission(
+      createIaSubmission({
+        schemeId: 's-1',
+        compliancePeriodYear: '2026',
+        status: 'submitted'
+      })
+    )
+    expect(storage.findIaSubmission('s-1', '2026').status).toBe('submitted')
+    expect(storage.findIaSubmission('s-1', '2027')).toBeNull()
+  })
+
+  test('upsertIaSubmission creates then updates the same record per year', () => {
+    const first = storage.upsertIaSubmission('s-1', '2026', {
+      placed: { industrial: '1', automotive: '2' }
+    })
+    expect(first.status).toBe('in-progress')
+    const second = storage.upsertIaSubmission('s-1', '2026', {
+      exported: { industrial: '0.5', automotive: '0' }
+    })
+    expect(second.id).toBe(first.id)
+    expect(second.placed.industrial).toBe('1')
+    expect(second.exported.industrial).toBe('0.5')
+
+    storage.upsertIaSubmission('s-1', '2027', {
+      placed: { industrial: '99', automotive: '0' }
+    })
+    expect(storage.findIaSubmission('s-1', '2026').placed.industrial).toBe('1')
+    expect(storage.findIaSubmission('s-1', '2027').placed.industrial).toBe('99')
   })
 })

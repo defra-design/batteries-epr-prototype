@@ -1,0 +1,43 @@
+{% extends 'complianceSchemeApplication/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="application-form">
+    {{ govukInput({
+      label: { text: labels.line1Label },
+      id: "line1",
+      name: "line1",
+      value: formValues.line1,
+      errorMessage: { text: errors.line1 } if errors.line1,
+      attributes: { "data-testid": "address-line1" }
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.line2Label },
+      id: "line2",
+      name: "line2",
+      value: formValues.line2
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.townLabel },
+      id: "town",
+      name: "town",
+      value: formValues.town,
+      errorMessage: { text: errors.town } if errors.town
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.postcodeLabel },
+      id: "postcode",
+      name: "postcode",
+      classes: "govuk-input--width-10",
+      value: formValues.postcode,
+      errorMessage: { text: errors.postcode } if errors.postcode
+    }) }}
+
+    {{ govukButton({
+      text: continueAction,
+      attributes: { "data-testid": "application-continue" }
+    }) }}
+  </form>
+{% endblock %}

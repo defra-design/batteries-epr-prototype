@@ -1,5 +1,55 @@
 {
-  "seedVersion": 2,
+  "seedVersion": 3,
+  "schemes": [
+    {
+      "id": "22222222-0001-4000-a000-000000000001",
+      "version": 0,
+      "name": "Northern Battery Compliance Scheme",
+      "tradingNames": ["NBCS"],
+      "approvalNumber": "BCS/2026/001",
+      "approvalStatus": "approved",
+      "approvedOn": "2026-01-15T00:00:00Z",
+      "submittedOn": "2026-01-02T00:00:00Z",
+      "registeredAddress": {
+        "line1": "1 Scheme House",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Leeds",
+        "postcode": "LS1 1AA",
+        "countryCode": "GB"
+      },
+      "contactAddress": null,
+      "serviceOfNoticeAddress": null,
+      "operationalPlan": null,
+      "partners": [],
+      "offences": null,
+      "additionalFiles": [],
+      "evidenceAvailable": true,
+      "createdAt": "2026-01-02T00:00:00Z",
+      "updatedAt": "2026-01-15T00:00:00Z"
+    },
+    {
+      "id": "22222222-0001-4000-a000-000000000002",
+      "version": 0,
+      "name": "Southern Cell Compliance Scheme",
+      "tradingNames": [],
+      "approvalNumber": null,
+      "approvalStatus": "not-started",
+      "approvedOn": null,
+      "submittedOn": null,
+      "registeredAddress": null,
+      "contactAddress": null,
+      "serviceOfNoticeAddress": null,
+      "operationalPlan": null,
+      "partners": [],
+      "offences": null,
+      "additionalFiles": [],
+      "evidenceAvailable": false,
+      "createdAt": "2026-01-02T00:00:00Z",
+      "updatedAt": "2026-01-02T00:00:00Z"
+    }
+  ],
   "producers": [
     {
       "id": "11111111-0001-4000-a000-000000000001",

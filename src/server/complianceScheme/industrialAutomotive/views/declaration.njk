@@ -1,0 +1,24 @@
+{% extends 'complianceSchemeIa/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="ia-form">
+    {{ govukCheckboxes({
+      idPrefix: "declarationAccepted",
+      name: "declarationAccepted",
+      errorMessage: { text: errors.declarationAccepted } if errors.declarationAccepted,
+      items: [
+        {
+          value: "yes",
+          text: labels.declarationLabel,
+          checked: formValues.declarationAccepted == "yes"
+        }
+      ],
+      attributes: { "data-testid": "ia-declaration" }
+    }) }}
+
+    {{ govukButton({
+      text: confirmAction,
+      attributes: { "data-testid": "ia-confirm" }
+    }) }}
+  </form>
+{% endblock %}

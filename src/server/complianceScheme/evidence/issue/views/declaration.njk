@@ -1,0 +1,40 @@
+{% extends 'complianceSchemeEvidence/_layout.njk' %}
+
+{% block stepBody %}
+  <h2 class="govuk-heading-m">{{ labels.summaryHeading }}</h2>
+  <dl class="govuk-summary-list" data-testid="evidence-issue-summary">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ labels.recipientLabel }}</dt>
+      <dd class="govuk-summary-list__value" data-testid="evidence-issue-summary-recipient"></dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ labels.categoryLabel }}</dt>
+      <dd class="govuk-summary-list__value" data-testid="evidence-issue-summary-category"></dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ labels.tonnesLabel }}</dt>
+      <dd class="govuk-summary-list__value" data-testid="evidence-issue-summary-tonnes"></dd>
+    </div>
+  </dl>
+
+  <form method="post" action="{{ action }}" novalidate data-testid="evidence-issue-form">
+    {{ govukCheckboxes({
+      idPrefix: "declarationAccepted",
+      name: "declarationAccepted",
+      errorMessage: { text: errors.declarationAccepted } if errors.declarationAccepted,
+      items: [
+        {
+          value: "yes",
+          text: labels.declarationLabel,
+          checked: formValues.declarationAccepted == "yes"
+        }
+      ],
+      attributes: { "data-testid": "evidence-issue-declaration" }
+    }) }}
+
+    {{ govukButton({
+      text: labels.confirmAction,
+      attributes: { "data-testid": "evidence-issue-confirm" }
+    }) }}
+  </form>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'complianceSchemeApplication/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="application-form">
+    {{ govukInput({
+      label: { text: labels.nameLabel },
+      id: "name",
+      name: "name",
+      value: formValues.name,
+      errorMessage: { text: errors.name } if errors.name,
+      attributes: { "data-testid": "scheme-name" }
+    }) }}
+
+    {{ govukTextarea({
+      label: { text: labels.tradingNamesLabel },
+      hint: { text: labels.tradingNamesHint },
+      id: "tradingNames",
+      name: "tradingNames",
+      value: formValues.tradingNames,
+      attributes: { "data-testid": "scheme-trading-names" }
+    }) }}
+
+    {{ govukButton({
+      text: continueAction,
+      attributes: { "data-testid": "application-continue" }
+    }) }}
+  </form>
+{% endblock %}

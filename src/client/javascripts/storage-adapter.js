@@ -8,6 +8,11 @@ export const STORAGE_KEYS = {
   registrations: `${KEY_PREFIX}registrations`,
   submissions: `${KEY_PREFIX}submissions`,
   payments: `${KEY_PREFIX}payments`,
+  schemes: `${KEY_PREFIX}schemes`,
+  schemeMembers: `${KEY_PREFIX}schemeMembers`,
+  quarterlySubmissions: `${KEY_PREFIX}quarterlySubmissions`,
+  iaSubmissions: `${KEY_PREFIX}iaSubmissions`,
+  evidence: `${KEY_PREFIX}evidence`,
   seedVersion: `${KEY_PREFIX}seed-version`,
   timeTravelTargetYear: `${KEY_PREFIX}time-travel-target-year`
 }
@@ -127,6 +132,85 @@ export const createSubmission = (input = {}) => ({
     exportedTotal: '0.000'
   },
   declaration: input.declaration ?? null,
+  createdAt: input.createdAt ?? now(),
+  updatedAt: input.updatedAt ?? now()
+})
+
+export const createScheme = (input = {}) => ({
+  id: input.id ?? newId(),
+  version: 0,
+  name: input.name ?? null,
+  tradingNames: input.tradingNames ?? [],
+  approvalNumber: input.approvalNumber ?? null,
+  approvalStatus: input.approvalStatus ?? 'not-started',
+  approvedOn: input.approvedOn ?? null,
+  submittedOn: input.submittedOn ?? null,
+  registeredAddress: input.registeredAddress ?? null,
+  contactAddress: input.contactAddress ?? null,
+  serviceOfNoticeAddress: input.serviceOfNoticeAddress ?? null,
+  operationalPlan: input.operationalPlan ?? null,
+  partners: input.partners ?? [],
+  offences: input.offences ?? null,
+  additionalFiles: input.additionalFiles ?? [],
+  evidenceAvailable: input.evidenceAvailable ?? false,
+  createdAt: input.createdAt ?? now(),
+  updatedAt: input.updatedAt ?? now()
+})
+
+export const createSchemeMember = (input = {}) => ({
+  id: input.id ?? newId(),
+  version: 0,
+  schemeId: input.schemeId ?? null,
+  producerBprn: input.producerBprn ?? null,
+  companyName: input.companyName ?? null,
+  joinedOn: input.joinedOn ?? now(),
+  leftOn: input.leftOn ?? null,
+  createdAt: input.createdAt ?? now(),
+  updatedAt: input.updatedAt ?? now()
+})
+
+export const createQuarterlySubmission = (input = {}) => ({
+  id: input.id ?? newId(),
+  version: 0,
+  schemeId: input.schemeId ?? null,
+  compliancePeriodYear: input.compliancePeriodYear ?? null,
+  quarter: input.quarter ?? null,
+  status: input.status ?? 'not-started',
+  marketData: input.marketData ?? null,
+  wasteData: input.wasteData ?? null,
+  submittedOn: input.submittedOn ?? null,
+  createdAt: input.createdAt ?? now(),
+  updatedAt: input.updatedAt ?? now()
+})
+
+export const createIaSubmission = (input = {}) => ({
+  id: input.id ?? newId(),
+  version: 0,
+  schemeId: input.schemeId ?? null,
+  compliancePeriodYear: input.compliancePeriodYear ?? null,
+  status: input.status ?? 'not-started',
+  placed: input.placed ?? null,
+  exported: input.exported ?? null,
+  takenBack: input.takenBack ?? null,
+  delivered: input.delivered ?? null,
+  submittedOn: input.submittedOn ?? null,
+  createdAt: input.createdAt ?? now(),
+  updatedAt: input.updatedAt ?? now()
+})
+
+export const createEvidence = (input = {}) => ({
+  id: input.id ?? newId(),
+  version: 0,
+  schemeId: input.schemeId ?? null,
+  compliancePeriodYear: input.compliancePeriodYear ?? null,
+  recipientBprn: input.recipientBprn ?? null,
+  recipientName: input.recipientName ?? null,
+  tonnes: coerceTonnes(input.tonnes),
+  category: input.category ?? null,
+  status: input.status ?? 'awaiting-acceptance',
+  issuedOn: input.issuedOn ?? now(),
+  transferDirection: input.transferDirection ?? null,
+  counterpartySchemeId: input.counterpartySchemeId ?? null,
   createdAt: input.createdAt ?? now(),
   updatedAt: input.updatedAt ?? now()
 })
@@ -343,6 +427,204 @@ const allocateBprn = ({ agencyCode, compliancePeriod }) => {
   return `BPRN-${agencyCode}-${compliancePeriod}-${padded}`
 }
 
+const listSchemes = () => Object.values(readMap(STORAGE_KEYS.schemes))
+
+const getScheme = (id) => readMap(STORAGE_KEYS.schemes)[id] ?? null
+
+const saveScheme = (scheme) => {
+  const schemes = readMap(STORAGE_KEYS.schemes)
+  const existing = scheme.id ? schemes[scheme.id] : null
+  const merged = {
+    ...scheme,
+    id: existing?.id ?? scheme.id ?? newId(),
+    ...stamp(existing, !existing)
+  }
+  schemes[merged.id] = merged
+  writeJson(STORAGE_KEYS.schemes, schemes)
+  return merged
+}
+
+const listSchemeMembers = (schemeId) => {
+  const members = Object.values(readMap(STORAGE_KEYS.schemeMembers))
+  return schemeId ? members.filter((m) => m.schemeId === schemeId) : members
+}
+
+const listActiveSchemeMembers = (schemeId) =>
+  listSchemeMembers(schemeId).filter((m) => m.leftOn === null)
+
+const yearOf = (iso) => Number(String(iso).slice(0, 4))
+
+const membersForYear = (schemeId, compliancePeriodYear) => {
+  const year = Number(compliancePeriodYear)
+  const all = listSchemeMembers(schemeId).filter(
+    (m) => yearOf(m.joinedOn) <= year
+  )
+  const active = all.filter(
+    (m) => m.leftOn === null || yearOf(m.leftOn) > year
+  )
+  const history = all.filter(
+    (m) => m.leftOn !== null && yearOf(m.leftOn) <= year
+  )
+  return { active, history }
+}
+
+const saveSchemeMember = (member) => {
+  const members = readMap(STORAGE_KEYS.schemeMembers)
+  const existing = member.id ? members[member.id] : null
+  const merged = {
+    ...member,
+    id: existing?.id ?? member.id ?? newId(),
+    ...stamp(existing, !existing)
+  }
+  members[merged.id] = merged
+  writeJson(STORAGE_KEYS.schemeMembers, members)
+  return merged
+}
+
+const listQuarterlySubmissions = (schemeId, compliancePeriodYear) => {
+  const items = Object.values(readMap(STORAGE_KEYS.quarterlySubmissions))
+  return items.filter(
+    (s) =>
+      (!schemeId || s.schemeId === schemeId) &&
+      (!compliancePeriodYear || s.compliancePeriodYear === compliancePeriodYear)
+  )
+}
+
+const saveQuarterlySubmission = (submission) => {
+  const items = readMap(STORAGE_KEYS.quarterlySubmissions)
+  const existing = submission.id ? items[submission.id] : null
+  const merged = {
+    ...submission,
+    id: existing?.id ?? submission.id ?? newId(),
+    ...stamp(existing, !existing)
+  }
+  items[merged.id] = merged
+  writeJson(STORAGE_KEYS.quarterlySubmissions, items)
+  return merged
+}
+
+const findQuarterlySubmission = (schemeId, compliancePeriodYear, quarter) =>
+  listQuarterlySubmissions(schemeId, compliancePeriodYear).find(
+    (s) => s.quarter === quarter
+  ) ?? null
+
+const upsertQuarterlySubmission = (
+  schemeId,
+  compliancePeriodYear,
+  quarter,
+  patch
+) => {
+  const existing = findQuarterlySubmission(
+    schemeId,
+    compliancePeriodYear,
+    quarter
+  )
+  return saveQuarterlySubmission({
+    ...(existing ?? {
+      schemeId,
+      compliancePeriodYear,
+      quarter,
+      status: 'in-progress'
+    }),
+    ...patch
+  })
+}
+
+const listIaSubmissions = (schemeId, compliancePeriodYear) => {
+  const items = Object.values(readMap(STORAGE_KEYS.iaSubmissions))
+  return items.filter(
+    (s) =>
+      (!schemeId || s.schemeId === schemeId) &&
+      (!compliancePeriodYear || s.compliancePeriodYear === compliancePeriodYear)
+  )
+}
+
+const saveIaSubmission = (submission) => {
+  const items = readMap(STORAGE_KEYS.iaSubmissions)
+  const existing = submission.id ? items[submission.id] : null
+  const merged = {
+    ...submission,
+    id: existing?.id ?? submission.id ?? newId(),
+    ...stamp(existing, !existing)
+  }
+  items[merged.id] = merged
+  writeJson(STORAGE_KEYS.iaSubmissions, items)
+  return merged
+}
+
+const findIaSubmission = (schemeId, compliancePeriodYear) =>
+  listIaSubmissions(schemeId, compliancePeriodYear)[0] ?? null
+
+const upsertIaSubmission = (schemeId, compliancePeriodYear, patch) => {
+  const existing = findIaSubmission(schemeId, compliancePeriodYear)
+  return saveIaSubmission({
+    ...(existing ?? {
+      schemeId,
+      compliancePeriodYear,
+      status: 'in-progress'
+    }),
+    ...patch
+  })
+}
+
+const listEvidence = (schemeId, compliancePeriodYear) => {
+  const items = Object.values(readMap(STORAGE_KEYS.evidence))
+  return items.filter(
+    (e) =>
+      (!schemeId || e.schemeId === schemeId) &&
+      (!compliancePeriodYear || e.compliancePeriodYear === compliancePeriodYear)
+  )
+}
+
+const findEvidence = (id) => readMap(STORAGE_KEYS.evidence)[id] ?? null
+
+const saveEvidence = (evidence) => {
+  const items = readMap(STORAGE_KEYS.evidence)
+  const existing = evidence.id ? items[evidence.id] : null
+  const merged = {
+    ...evidence,
+    id: existing?.id ?? evidence.id ?? newId(),
+    tonnes: coerceTonnes(evidence.tonnes),
+    ...stamp(existing, !existing)
+  }
+  items[merged.id] = merged
+  writeJson(STORAGE_KEYS.evidence, items)
+  return merged
+}
+
+const updateEvidenceStatus = (id, status) => {
+  const existing = findEvidence(id)
+  if (!existing) return null
+  return saveEvidence({ ...existing, status })
+}
+
+const transferEvidence = (id, counterpartySchemeId) => {
+  const existing = findEvidence(id)
+  if (!existing) return null
+  return saveEvidence({
+    ...existing,
+    transferDirection: 'XOUT',
+    counterpartySchemeId,
+    status: 'awaiting-authorisation'
+  })
+}
+
+const setEvidenceAvailability = (schemeId, evidenceAvailable) => {
+  const scheme = getScheme(schemeId)
+  if (!scheme) return null
+  return saveScheme({ ...scheme, evidenceAvailable })
+}
+
+const sumByCategory = (evidenceItems) => {
+  const totals = { portable: 0, industrial: 0, automotive: 0 }
+  for (const item of evidenceItems) {
+    if (totals[item.category] !== undefined) {
+      totals[item.category] += Number(item.tonnes) || 0
+    }
+  }
+  return totals
+}
+
 const resetAllData = () => {
   for (const key of allOurKeys()) {
     removeKey(key)
@@ -385,6 +667,13 @@ const seedDemoData = () => {
     }
   }
   writeJson(STORAGE_KEYS.producers, producersByEmail)
+
+  const schemes = readMap(STORAGE_KEYS.schemes)
+  for (const scheme of seedData.schemes) {
+    if (!schemes[scheme.id]) schemes[scheme.id] = scheme
+  }
+  writeJson(STORAGE_KEYS.schemes, schemes)
+
   globalThis.localStorage.setItem(
     STORAGE_KEYS.seedVersion,
     String(seedData.seedVersion)
@@ -414,5 +703,27 @@ export const storage = {
   seedDemoData,
   setTimeTravelToYear,
   getTimeTravelTargetYear,
-  clearTimeTravel
+  clearTimeTravel,
+  listSchemes,
+  getScheme,
+  saveScheme,
+  listSchemeMembers,
+  listActiveSchemeMembers,
+  membersForYear,
+  saveSchemeMember,
+  listQuarterlySubmissions,
+  saveQuarterlySubmission,
+  findQuarterlySubmission,
+  upsertQuarterlySubmission,
+  listIaSubmissions,
+  saveIaSubmission,
+  findIaSubmission,
+  upsertIaSubmission,
+  listEvidence,
+  findEvidence,
+  saveEvidence,
+  updateEvidenceStatus,
+  transferEvidence,
+  setEvidenceAvailability,
+  sumByCategory
 }

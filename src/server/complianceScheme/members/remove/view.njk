@@ -1,0 +1,21 @@
+{% extends 'complianceSchemeMembers/_form-layout.njk' %}
+
+{% block stepBody %}
+  <p class="govuk-body" data-testid="members-remove-name">
+    <span data-testid="members-remove-member-name"></span>
+    (<span data-testid="members-remove-member-bprn"></span>)
+  </p>
+
+  <p class="govuk-body" data-testid="members-remove-not-found" hidden>{{ labels.notFound }}</p>
+
+  <form method="post" action="{{ action }}" novalidate data-testid="members-remove-form">
+    <div class="govuk-button-group">
+      {{ govukButton({
+        text: labels.confirmAction,
+        classes: "govuk-button--warning",
+        attributes: { "data-testid": "members-remove-confirm" }
+      }) }}
+      <a class="govuk-link" href="{{ cancelUrl }}" data-testid="members-remove-cancel">{{ labels.cancelAction }}</a>
+    </div>
+  </form>
+{% endblock %}

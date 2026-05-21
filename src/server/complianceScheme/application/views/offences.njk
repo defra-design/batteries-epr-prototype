@@ -1,0 +1,41 @@
+{% extends 'complianceSchemeApplication/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="application-form">
+    {{ govukRadios({
+      idPrefix: "hasOffences",
+      name: "hasOffences",
+      fieldset: { legend: { text: labels.hasOffencesLabel } },
+      errorMessage: { text: errors.hasOffences } if errors.hasOffences,
+      items: [
+        {
+          value: "yes",
+          text: labels.yesLabel,
+          checked: formValues.hasOffences == "yes",
+          conditional: {
+            html: govukTextarea({
+              label: { text: labels.offencesDetailLabel },
+              hint: { text: labels.offencesDetailHint },
+              id: "offencesDetail",
+              name: "offencesDetail",
+              rows: 4,
+              value: formValues.offencesDetail,
+              errorMessage: { text: errors.offencesDetail } if errors.offencesDetail
+            }) | safe
+          }
+        },
+        {
+          value: "no",
+          text: labels.noLabel,
+          checked: formValues.hasOffences == "no"
+        }
+      ],
+      attributes: { "data-testid": "has-offences" }
+    }) }}
+
+    {{ govukButton({
+      text: continueAction,
+      attributes: { "data-testid": "application-continue" }
+    }) }}
+  </form>
+{% endblock %}

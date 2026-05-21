@@ -1,0 +1,32 @@
+{% extends 'complianceSchemeIa/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="ia-form">
+    {{ govukInput({
+      label: { text: labels.industrialLabel },
+      hint: { text: labels.hint },
+      id: "industrial",
+      name: "industrial",
+      classes: "govuk-input--width-10",
+      value: formValues.industrial,
+      errorMessage: { text: errors.industrial } if errors.industrial,
+      attributes: { "data-testid": "ia-tonnes-industrial" }
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.automotiveLabel },
+      hint: { text: labels.hint },
+      id: "automotive",
+      name: "automotive",
+      classes: "govuk-input--width-10",
+      value: formValues.automotive,
+      errorMessage: { text: errors.automotive } if errors.automotive,
+      attributes: { "data-testid": "ia-tonnes-automotive" }
+    }) }}
+
+    {{ govukButton({
+      text: continueAction,
+      attributes: { "data-testid": "ia-continue" }
+    }) }}
+  </form>
+{% endblock %}
