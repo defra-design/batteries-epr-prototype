@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { afterEach, beforeEach, describe, expect, test } from 'vitest'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { runObligationPage } from './index.js'
 import { storage, createEvidence } from '../../storage-adapter.js'
@@ -30,6 +30,7 @@ const buildDom = (payload = PAYLOAD) => {
 beforeEach(() => {
   globalThis.localStorage.clear()
   storage.seedDemoData()
+  storage.setCurrentSchemeId(storage.listSchemes()[0].id)
 })
 
 afterEach(() => {
@@ -142,5 +143,15 @@ describe('runObligationPage', () => {
         '[data-testid="obligation-row-portable-placed"]'
       ).textContent
     ).toBe('500.000')
+  })
+
+  test('redirects to the sign-in picker when no current scheme is selected', () => {
+    storage.clearCurrentSchemeId()
+    const assign = vi.fn()
+    buildDom()
+    expect(runObligationPage(document, { assign })).toBe(
+      'redirected-to-sign-in'
+    )
+    expect(assign).toHaveBeenCalledWith('/compliance-scheme/sign-in')
   })
 })

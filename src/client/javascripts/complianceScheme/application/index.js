@@ -3,11 +3,14 @@ import { readPagePayload } from '../../page-payload.js'
 import { hydrateForm } from '../../hydrate-form.js'
 import { HYDRATORS } from './hydrators.js'
 
-const firstScheme = () => storage.listSchemes()[0]
-
-const ensureScheme = () => {
+const ensureScheme = (loc) => {
   storage.seedDemoData()
-  return firstScheme()
+  const scheme = storage.currentScheme()
+  if (!scheme) {
+    loc.assign('/compliance-scheme/sign-in')
+    return null
+  }
+  return scheme
 }
 
 const applyPatch = (scheme, patch) => storage.saveScheme({ ...scheme, ...patch })
@@ -17,7 +20,8 @@ export const runApplicationStep = (
   loc = globalThis.location
 ) => {
   const payload = readPagePayload(doc)
-  const scheme = ensureScheme()
+  const scheme = ensureScheme(loc)
+  if (!scheme) return 'redirected-to-sign-in'
 
   if (payload.target === 'persist') {
     applyPatch(scheme, payload.patch)

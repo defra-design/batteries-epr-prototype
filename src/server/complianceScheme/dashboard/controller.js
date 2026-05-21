@@ -40,6 +40,8 @@ export const dashboardController = {
       pageTitle: pageContent.title,
       heading: pageContent.heading,
       introParagraph: pageContent.introParagraph,
+      switchSchemeAction: pageContent.switchSchemeAction,
+      switchSchemeUrl: paths.complianceSchemeSignIn,
       pagePayload
     })
   }

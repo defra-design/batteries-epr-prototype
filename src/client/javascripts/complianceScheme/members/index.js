@@ -19,11 +19,14 @@ const formatDate = (iso) =>
     year: 'numeric'
   })
 
-const firstScheme = () => storage.listSchemes()[0]
-
-const ensureScheme = () => {
+const ensureScheme = (loc) => {
   storage.seedDemoData()
-  return firstScheme()
+  const scheme = storage.currentScheme()
+  if (!scheme) {
+    loc.assign('/compliance-scheme/sign-in')
+    return null
+  }
+  return scheme
 }
 
 const renderActive = (doc, members, payload) => {
@@ -183,7 +186,8 @@ export const runMembersPage = (
   loc = globalThis.location
 ) => {
   const payload = readPagePayload(doc)
-  const scheme = ensureScheme()
+  const scheme = ensureScheme(loc)
+  if (!scheme) return 'redirected-to-sign-in'
 
   if (payload.view === 'list') {
     runListView(doc, loc, payload, scheme)

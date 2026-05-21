@@ -1,0 +1,59 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorSummary and errorSummary.length %}
+        {{ govukErrorSummary({
+          titleText: errorTitle,
+          errorList: errorSummary,
+          attributes: { "data-testid": "compliance-scheme-sign-in-error-summary" }
+        }) }}
+      {% endif %}
+
+      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      <p class="govuk-body">{{ intro }}</p>
+
+      <form method="post" action="{{ action }}" novalidate data-testid="compliance-scheme-sign-in-form">
+        {% set schemeItems = [] %}
+        {% for scheme in schemes %}
+          {% set schemeItems = (schemeItems.push({
+            value: scheme.id,
+            text: scheme.name,
+            hint: { text: scheme.operator } if scheme.operator else null,
+            checked: formValues.schemeId == scheme.id,
+            attributes: { "data-testid": "compliance-scheme-sign-in-radio-" + scheme.id }
+          }), schemeItems) %}
+        {% endfor %}
+
+        {{ govukRadios({
+          idPrefix: "schemeId",
+          name: "schemeId",
+          fieldset: { legend: { text: labels.legend } },
+          errorMessage: { text: errors.schemeId } if errors.schemeId,
+          items: schemeItems
+        }) }}
+
+        {{ govukButton({
+          text: labels.continueAction,
+          attributes: { "data-testid": "compliance-scheme-sign-in-continue" }
+        }) }}
+
+        <p class="govuk-body">
+          <a class="govuk-link" href="{{ cancelUrl }}" data-testid="compliance-scheme-sign-in-cancel">{{ labels.cancelAction }}</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('complianceSchemeSignIn.js') }}"></script>
+{% endblock %}

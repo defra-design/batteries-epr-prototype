@@ -23,6 +23,7 @@ import { devReset } from './devReset/index.js'
 import { devTimeTravel } from './devTimeTravel/index.js'
 import { devSchemes } from './devSchemes/index.js'
 import { complianceSchemeDashboard } from './complianceScheme/dashboard/index.js'
+import { complianceSchemeSignIn } from './complianceScheme/signIn/index.js'
 import { complianceSchemeApplication } from './complianceScheme/application/index.js'
 import { complianceSchemeMembers } from './complianceScheme/members/index.js'
 import { complianceSchemeQuarterly } from './complianceScheme/quarterly/index.js'
@@ -73,6 +74,7 @@ export const router = {
         devTimeTravel: devTimeTravel.openRoutes,
         devSchemes: devSchemes.openRoutes,
         complianceSchemeDashboard: complianceSchemeDashboard.openRoutes,
+        complianceSchemeSignIn: complianceSchemeSignIn.openRoutes,
         complianceSchemeApplication: complianceSchemeApplication.openRoutes,
         complianceSchemeMembers: complianceSchemeMembers.openRoutes,
         complianceSchemeQuarterly: complianceSchemeQuarterly.openRoutes,

@@ -111,6 +111,7 @@ let assignSpy
 beforeEach(() => {
   globalThis.localStorage.clear()
   storage.seedDemoData()
+  storage.setCurrentSchemeId(storage.listSchemes()[0].id)
   assignSpy = vi.fn()
   Object.defineProperty(globalThis, 'location', {
     value: { assign: assignSpy, reload: vi.fn() },
@@ -536,6 +537,7 @@ describe('evidence transfer', () => {
       approvalStatus: 'approved',
       evidenceAvailable: true
     })
+    storage.setCurrentSchemeId('solo')
     const item = storage.saveEvidence(
       createEvidence({
         schemeId: 'solo',
@@ -617,5 +619,14 @@ describe('evidence availability', () => {
     runEvidencePage(document, globalThis.location)
     expect(storage.getScheme(scheme.id).evidenceAvailable).toBe(false)
     expect(assignSpy).toHaveBeenCalledWith('/compliance-scheme/evidence')
+  })
+
+  test('redirects to the sign-in picker when no current scheme is selected', () => {
+    storage.clearCurrentSchemeId()
+    buildListDom()
+    expect(runEvidencePage(document, globalThis.location)).toBe(
+      'redirected-to-sign-in'
+    )
+    expect(assignSpy).toHaveBeenCalledWith('/compliance-scheme/sign-in')
   })
 })

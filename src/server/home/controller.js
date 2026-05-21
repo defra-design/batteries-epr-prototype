@@ -9,13 +9,11 @@ export const homeController = {
       pageTitle: pageContent.title,
       heading: pageContent.heading,
       intro: pageContent.intro,
-      whoCanUse: pageContent.whoCanUse,
-      smallProducer: pageContent.smallProducer,
-      directRegistrant: pageContent.directRegistrant,
-      publicRegisterCta: pageContent.publicRegisterCta,
-      signInCta: pageContent.signInCta,
+      prototypeBanner: pageContent.prototypeBanner,
+      journeys: pageContent.journeys,
+      producerSignInUrl: paths.signIn,
       publicRegisterUrl: paths.publicRegisterSearch,
-      signInUrl: paths.signIn
+      complianceSchemeSignInUrl: paths.complianceSchemeSignIn
     })
   }
 }

@@ -28,6 +28,7 @@ let assignSpy
 beforeEach(() => {
   globalThis.localStorage.clear()
   storage.seedDemoData()
+  storage.setCurrentSchemeId(storage.listSchemes()[0].id)
   assignSpy = vi.fn()
   Object.defineProperty(globalThis, 'location', {
     value: { assign: assignSpy, reload: vi.fn() },
@@ -297,5 +298,20 @@ describe('runQuarterlyStep hydrate', () => {
     expect(
       document.querySelector('input[name="declarationAccepted"]').checked
     ).toBe(false)
+  })
+
+  test('redirects to the sign-in picker when no current scheme is selected', () => {
+    storage.clearCurrentSchemeId()
+    buildDom({
+      view: 'quarterly',
+      step: 'market-data',
+      quarter: 'Q1',
+      compliancePeriodYear: '2026',
+      target: 'hydrate'
+    })
+    expect(runQuarterlyStep(document, globalThis.location)).toBe(
+      'redirected-to-sign-in'
+    )
+    expect(assignSpy).toHaveBeenCalledWith('/compliance-scheme/sign-in')
   })
 })

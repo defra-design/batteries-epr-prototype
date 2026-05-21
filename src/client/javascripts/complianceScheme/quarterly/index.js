@@ -2,11 +2,14 @@ import { storage } from '../../storage-adapter.js'
 import { readPagePayload } from '../../page-payload.js'
 import { hydrateForm } from '../../hydrate-form.js'
 
-const firstScheme = () => storage.listSchemes()[0]
-
-const ensureScheme = () => {
+const ensureScheme = (loc) => {
   storage.seedDemoData()
-  return firstScheme()
+  const scheme = storage.currentScheme()
+  if (!scheme) {
+    loc.assign('/compliance-scheme/sign-in')
+    return null
+  }
+  return scheme
 }
 
 const setText = (doc, selector, text) => {
@@ -44,7 +47,8 @@ export const runQuarterlyStep = (
   loc = globalThis.location
 ) => {
   const payload = readPagePayload(doc)
-  const scheme = ensureScheme()
+  const scheme = ensureScheme(loc)
+  if (!scheme) return 'redirected-to-sign-in'
 
   if (payload.target === 'persist') {
     storage.upsertQuarterlySubmission(

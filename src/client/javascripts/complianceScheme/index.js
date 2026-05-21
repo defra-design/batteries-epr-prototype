@@ -149,10 +149,7 @@ const renderObligation = (doc, tile) => {
   )
 }
 
-const firstScheme = () => storage.listSchemes()[0] ?? null
-
-const fastForwardApproval = (doc, loc) => {
-  const scheme = firstScheme()
+const fastForwardApproval = (doc, loc, scheme) => {
   storage.saveScheme({
     ...scheme,
     approvalStatus: 'approved',
@@ -164,11 +161,11 @@ const fastForwardApproval = (doc, loc) => {
   loc.reload()
 }
 
-const attachDebugHandlers = (doc, loc, payload) => {
+const attachDebugHandlers = (doc, loc, payload, scheme) => {
   if (!payload.debug.fastForwardEnabled) return
   doc
     .querySelector('[data-testid="debug-fast-forward"]')
-    .addEventListener('click', () => fastForwardApproval(doc, loc))
+    .addEventListener('click', () => fastForwardApproval(doc, loc, scheme))
 }
 
 export const initComplianceSchemeDashboard = (
@@ -177,23 +174,26 @@ export const initComplianceSchemeDashboard = (
 ) => {
   storage.seedDemoData()
   const payload = readPagePayload(doc)
-  const scheme = firstScheme()
-  const schemeId = scheme?.id ?? null
+  const scheme = storage.currentScheme()
+  if (!scheme) {
+    loc.assign('/compliance-scheme/sign-in')
+    return 'redirected-to-sign-in'
+  }
+  const schemeId = scheme.id
+
+  doc.querySelector('[data-testid="app-heading-title"]').textContent =
+    scheme.name
 
   const year = payload.compliancePeriodYear
-  const activeMembers = schemeId
-    ? storage.membersForYear(schemeId, year).active
-    : []
-  const quarterly = schemeId
-    ? storage.listQuarterlySubmissions(schemeId, year)
-    : []
-  const evidence = schemeId ? storage.listEvidence(schemeId, year) : []
+  const activeMembers = storage.membersForYear(schemeId, year).active
+  const quarterly = storage.listQuarterlySubmissions(schemeId, year)
+  const evidence = storage.listEvidence(schemeId, year)
   const obligation = buildObligation({ quarterly, evidence })
   const viewModel = buildDashboardViewModel({
     scheme,
     members: activeMembers,
     quarterly,
-    ia: schemeId ? storage.listIaSubmissions(schemeId, year) : [],
+    ia: storage.listIaSubmissions(schemeId, year),
     evidence,
     obligation,
     urls: payload.urls,
@@ -206,7 +206,7 @@ export const initComplianceSchemeDashboard = (
   renderQuarterly(doc, viewModel.quarterly)
   renderIa(doc, viewModel.ia)
   renderObligation(doc, viewModel.obligationBreakdown)
-  attachDebugHandlers(doc, loc, payload)
+  attachDebugHandlers(doc, loc, payload, scheme)
 
   return 'rendered'
 }

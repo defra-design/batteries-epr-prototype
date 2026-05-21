@@ -16,6 +16,7 @@ let assignSpy
 beforeEach(() => {
   globalThis.localStorage.clear()
   storage.seedDemoData()
+  storage.setCurrentSchemeId(storage.listSchemes()[0].id)
   assignSpy = vi.fn()
   Object.defineProperty(globalThis, 'location', {
     value: { assign: assignSpy, reload: vi.fn() },
@@ -224,7 +225,6 @@ describe('runApplicationStep hydrate target', () => {
   })
 
   test('hydrators return empty defaults when scheme has no values yet', () => {
-    globalThis.localStorage.removeItem('npwd-batteries:schemes')
     const seeded = storage.listSchemes()[0]
     storage.saveScheme({
       ...seeded,
@@ -251,5 +251,14 @@ describe('runApplicationStep hydrate target', () => {
       buildDom({ step, target: 'hydrate' }, '<form></form>')
       expect(runApplicationStep(document, globalThis.location)).toBe('hydrated')
     }
+  })
+
+  test('redirects to the sign-in picker when no current scheme is selected', () => {
+    storage.clearCurrentSchemeId()
+    buildDom({ step: 'scheme-details', target: 'hydrate' }, '<form></form>')
+    expect(runApplicationStep(document, globalThis.location)).toBe(
+      'redirected-to-sign-in'
+    )
+    expect(assignSpy).toHaveBeenCalledWith('/compliance-scheme/sign-in')
   })
 })

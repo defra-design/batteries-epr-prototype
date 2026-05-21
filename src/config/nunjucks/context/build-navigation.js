@@ -11,14 +11,6 @@ export function buildNavigation(_request) {
       }
     },
     {
-      text: 'Compliance scheme',
-      href: paths.complianceSchemeDashboard,
-      attributes: {
-        'data-auth-state': 'always',
-        'data-testid': 'nav-compliance-scheme'
-      }
-    },
-    {
       text: 'Sign in',
       href: paths.signIn,
       attributes: {

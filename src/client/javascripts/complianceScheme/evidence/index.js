@@ -24,11 +24,14 @@ const setText = (doc, selector, text) => {
   doc.querySelector(selector).textContent = text
 }
 
-const firstScheme = () => storage.listSchemes()[0]
-
-const ensureScheme = () => {
+const ensureScheme = (loc) => {
   storage.seedDemoData()
-  return firstScheme()
+  const scheme = storage.currentScheme()
+  if (!scheme) {
+    loc.assign('/compliance-scheme/sign-in')
+    return null
+  }
+  return scheme
 }
 
 const ISSUE_DRAFT_KEY = 'npwd-batteries:evidence-issue-draft'
@@ -304,7 +307,8 @@ export const runEvidencePage = (
   loc = globalThis.location
 ) => {
   const payload = readPagePayload(doc)
-  const scheme = ensureScheme()
+  const scheme = ensureScheme(loc)
+  if (!scheme) return 'redirected-to-sign-in'
 
   if (payload.view === 'list') {
     renderList(doc, payload, scheme)

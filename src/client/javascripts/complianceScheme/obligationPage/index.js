@@ -17,18 +17,25 @@ const setText = (doc, selector, text) => {
   doc.querySelector(selector).textContent = text
 }
 
-const firstScheme = () => storage.listSchemes()[0]
-
-const ensureScheme = () => {
+const ensureScheme = (loc) => {
   storage.seedDemoData()
-  return firstScheme()
+  const scheme = storage.currentScheme()
+  if (!scheme) {
+    loc.assign('/compliance-scheme/sign-in')
+    return null
+  }
+  return scheme
 }
 
 const fmt = (value) => value.toFixed(3)
 
-export const runObligationPage = (doc = globalThis.document) => {
+export const runObligationPage = (
+  doc = globalThis.document,
+  loc = globalThis.location
+) => {
   const payload = readPagePayload(doc)
-  const scheme = ensureScheme()
+  const scheme = ensureScheme(loc)
+  if (!scheme) return 'redirected-to-sign-in'
   const year = payload.compliancePeriodYear
 
   const quarterly = storage.listQuarterlySubmissions(scheme.id, year)

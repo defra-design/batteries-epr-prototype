@@ -1,28 +1,93 @@
 {% extends 'layouts/page.njk' %}
+
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-xl">{{ heading }}</h1>
       <p class="govuk-body-l">{{ intro }}</p>
+      <p class="govuk-body" data-testid="home-prototype-banner">{{ prototypeBanner }}</p>
+    </div>
+  </div>
 
-      <h2 class="govuk-heading-m">{{ whoCanUse }}</h2>
-      <ul class="govuk-list govuk-list--bullet">
-        <li>{{ smallProducer }}</li>
-        <li>{{ directRegistrant }}</li>
-      </ul>
+  <div class="govuk-grid-row" data-testid="home-journeys">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-summary-card" data-testid="home-journey-producer">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">{{ journeys.producer.title }}</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <p class="govuk-body">{{ journeys.producer.description }}</p>
+          <ul class="govuk-list govuk-list--bullet">
+            {% for item in journeys.producer.bullets %}
+              <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+          {{ govukButton({
+            text: journeys.producer.primaryAction,
+            href: producerSignInUrl,
+            isStartButton: true,
+            attributes: { "data-testid": "home-journey-producer-cta" }
+          }) }}
+          <p class="govuk-body">
+            <a class="govuk-link" href="{{ publicRegisterUrl }}" data-testid="home-public-register-cta">{{ journeys.producer.secondaryAction }}</a>
+          </p>
+        </div>
+      </div>
+    </div>
 
-      {{ govukButton({
-        text: signInCta,
-        href: signInUrl,
-        isStartButton: true,
-        attributes: { "data-testid": "sign-in-cta" }
-      }) }}
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-summary-card" data-testid="home-journey-compliance-scheme">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">{{ journeys.complianceScheme.title }}</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <p class="govuk-body">{{ journeys.complianceScheme.description }}</p>
+          <ul class="govuk-list govuk-list--bullet">
+            {% for item in journeys.complianceScheme.bullets %}
+              <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+          {{ govukButton({
+            text: journeys.complianceScheme.primaryAction,
+            href: complianceSchemeSignInUrl,
+            isStartButton: true,
+            attributes: { "data-testid": "home-journey-compliance-scheme-cta" }
+          }) }}
+        </div>
+      </div>
+    </div>
+  </div>
 
-      <p class="govuk-body">
-        <a class="govuk-link" href="{{ publicRegisterUrl }}" data-testid="public-register-cta">{{ publicRegisterCta }}</a>
-      </p>
+  <div class="govuk-grid-row" data-testid="home-coming-soon">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-summary-card" data-testid="home-journey-abto">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">{{ journeys.comingSoon.abto.title }}</h2>
+          <div class="app-task-cards__status">
+            {{ govukTag({ text: journeys.comingSoon.label, classes: "govuk-tag--grey" }) }}
+          </div>
+        </div>
+        <div class="govuk-summary-card__content">
+          <p class="govuk-body">{{ journeys.comingSoon.abto.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-summary-card" data-testid="home-journey-regulator">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">{{ journeys.comingSoon.regulator.title }}</h2>
+          <div class="app-task-cards__status">
+            {{ govukTag({ text: journeys.comingSoon.label, classes: "govuk-tag--grey" }) }}
+          </div>
+        </div>
+        <div class="govuk-summary-card__content">
+          <p class="govuk-body">{{ journeys.comingSoon.regulator.description }}</p>
+        </div>
+      </div>
     </div>
   </div>
 {% endblock %}

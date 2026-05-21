@@ -65,6 +65,7 @@ const PAYLOAD = {
 
 const buildDom = (payload = PAYLOAD) => {
   document.body.innerHTML = `
+    <h1 data-testid="app-heading-title">Compliance scheme</h1>
     <div id="compliance-scheme-dashboard">
       <span data-testid="tile-approval-status"></span>
       <p data-testid="tile-approval-meta"></p>
@@ -90,6 +91,8 @@ const buildDom = (payload = PAYLOAD) => {
 
 beforeEach(() => {
   globalThis.localStorage.clear()
+  storage.seedDemoData()
+  storage.setCurrentSchemeId(storage.listSchemes()[0].id)
 })
 
 afterEach(() => {
@@ -149,6 +152,7 @@ describe('initComplianceSchemeDashboard', () => {
   test('gates quarterly and ia tiles when scheme not approved', () => {
     buildDom()
     storage.seedDemoData()
+    storage.setCurrentSchemeId(storage.listSchemes()[0].id)
     const notStarted = storage
       .listSchemes()
       .find((s) => s.approvalStatus === 'not-started')
@@ -175,6 +179,7 @@ describe('initComplianceSchemeDashboard', () => {
   test('renders submitted approval state with submission date in meta', () => {
     buildDom()
     storage.seedDemoData()
+    storage.setCurrentSchemeId(storage.listSchemes()[0].id)
     for (const scheme of storage.listSchemes()) {
       storage.saveScheme({
         ...scheme,
@@ -197,6 +202,7 @@ describe('initComplianceSchemeDashboard', () => {
   test('renders in-progress approval and submitted quarter / in-progress IA states', () => {
     buildDom()
     storage.seedDemoData()
+    storage.setCurrentSchemeId(storage.listSchemes()[0].id)
     const approved = storage
       .listSchemes()
       .find((s) => s.approvalStatus === 'approved')
@@ -260,6 +266,7 @@ describe('initComplianceSchemeDashboard', () => {
       }
     }
     document.body.innerHTML = `
+      <h1 data-testid="app-heading-title">Compliance scheme</h1>
       <div id="compliance-scheme-dashboard">
         <span data-testid="tile-approval-status"></span>
         <p data-testid="tile-approval-meta"></p>
@@ -285,6 +292,7 @@ describe('initComplianceSchemeDashboard', () => {
     `
 
     storage.seedDemoData()
+    storage.setCurrentSchemeId(storage.listSchemes()[0].id)
     for (const scheme of storage.listSchemes()) {
       storage.saveScheme({
         ...scheme,
@@ -326,6 +334,7 @@ describe('initComplianceSchemeDashboard', () => {
       }
     }
     document.body.innerHTML = `
+      <h1 data-testid="app-heading-title">Compliance scheme</h1>
       <div>
         <span data-testid="tile-approval-status"></span>
         <p data-testid="tile-approval-meta"></p>
@@ -367,6 +376,7 @@ describe('initComplianceSchemeDashboard', () => {
   test('members tile only counts members who joined on or before the active year', () => {
     buildDom()
     storage.seedDemoData()
+    storage.setCurrentSchemeId(storage.listSchemes()[0].id)
     const [scheme] = storage.listSchemes()
     storage.saveSchemeMember({
       id: 'past-member',
@@ -409,18 +419,13 @@ describe('initComplianceSchemeDashboard', () => {
     ).toBe('2 active members')
   })
 
-  test('falls back to empty state when no scheme is seeded', () => {
+  test('redirects to the sign-in picker when no current scheme is selected', () => {
     buildDom()
-    storage.seedDemoData()
-    globalThis.localStorage.removeItem('npwd-batteries:schemes')
-
-    initComplianceSchemeDashboard(document)
-
+    storage.clearCurrentSchemeId()
+    const assign = vi.fn()
     expect(
-      document.querySelector('[data-testid="tile-approval-status"]').textContent
-    ).toBe('Not started')
-    expect(
-      document.querySelector('[data-testid="tile-approval-meta"]').textContent
-    ).toBe('')
+      initComplianceSchemeDashboard(document, { assign, reload: vi.fn() })
+    ).toBe('redirected-to-sign-in')
+    expect(assign).toHaveBeenCalledWith('/compliance-scheme/sign-in')
   })
 })

@@ -1034,6 +1034,34 @@ describe('compliance scheme factories and storage', () => {
     expect(storage.getSchemeById('missing')).toBeNull()
   })
 
+  test('getCurrentSchemeId returns null when nothing is set', () => {
+    expect(storage.getCurrentSchemeId()).toBeNull()
+  })
+
+  test('setCurrentSchemeId / getCurrentSchemeId / clearCurrentSchemeId roundtrip', () => {
+    storage.setCurrentSchemeId('22222222-0001-4000-a000-000000000001')
+    expect(storage.getCurrentSchemeId()).toBe(
+      '22222222-0001-4000-a000-000000000001'
+    )
+    storage.clearCurrentSchemeId()
+    expect(storage.getCurrentSchemeId()).toBeNull()
+  })
+
+  test('currentScheme returns null when no id is set', () => {
+    expect(storage.currentScheme()).toBeNull()
+  })
+
+  test('currentScheme returns null when the stored id points at a missing scheme', () => {
+    storage.setCurrentSchemeId('does-not-exist')
+    expect(storage.currentScheme()).toBeNull()
+  })
+
+  test('currentScheme returns the scheme when id and record exist', () => {
+    const s = storage.saveScheme(createScheme({ name: 'Current' }))
+    storage.setCurrentSchemeId(s.id)
+    expect(storage.currentScheme()).toEqual(s)
+  })
+
   test('getActiveSchemeMembership returns the open membership and null otherwise', () => {
     storage.saveSchemeMember(
       createSchemeMember({

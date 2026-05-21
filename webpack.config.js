@@ -54,6 +54,7 @@ export default {
     devTimeTravel: './javascripts/devTimeTravel/entry.js',
     timeTravelShim: './javascripts/timeTravelShim/entry.js',
     complianceSchemeDashboard: './javascripts/complianceScheme/entry.js',
+    complianceSchemeSignIn: './javascripts/complianceScheme/signIn/entry.js',
     complianceSchemeApplication:
       './javascripts/complianceScheme/application/entry.js',
     complianceSchemeMembers:

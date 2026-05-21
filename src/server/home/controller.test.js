@@ -14,7 +14,7 @@ describe('#homeController', () => {
     await server.stop({ timeout: 0 })
   })
 
-  test('renders the home page', async () => {
+  test('renders the prototype landing page with journey cards', async () => {
     const { result, statusCode } = await server.inject({
       method: 'GET',
       url: paths.home
@@ -24,9 +24,28 @@ describe('#homeController', () => {
     const pageContent = content.home({})
     expect(result).toEqual(expect.stringContaining(pageContent.heading))
     expect(result).toEqual(expect.stringContaining(pageContent.intro))
-    expect(result).toEqual(expect.stringContaining('data-testid="sign-in-cta"'))
     expect(result).toEqual(
-      expect.stringContaining('data-testid="public-register-cta"')
+      expect.stringContaining('data-testid="home-prototype-banner"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="home-journey-producer-cta"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining(`href="${paths.signIn}"`)
+    )
+    expect(result).toEqual(
+      expect.stringContaining(
+        'data-testid="home-journey-compliance-scheme-cta"'
+      )
+    )
+    expect(result).toEqual(
+      expect.stringContaining(`href="${paths.complianceSchemeSignIn}"`)
+    )
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="home-journey-abto"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="home-journey-regulator"')
     )
   })
 })

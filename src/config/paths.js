@@ -59,6 +59,7 @@ export const paths = {
   nextAction: '/next-action',
 
   complianceSchemeDashboard: '/compliance-scheme',
+  complianceSchemeSignIn: '/compliance-scheme/sign-in',
   complianceSchemeApplication: '/compliance-scheme/application/{step}',
   complianceSchemeMembers: '/compliance-scheme/members',
   complianceSchemeMembersAdd: '/compliance-scheme/members/add',

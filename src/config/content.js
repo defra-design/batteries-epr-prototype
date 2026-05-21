@@ -13,22 +13,76 @@ export const content = {
   home: (request) =>
     getContentForLanguage(request, {
       en: {
-        title: 'Home',
-        heading: 'Register as a battery producer',
+        title: 'Battery EPR prototype',
+        heading: 'Battery EPR prototype',
         intro:
-          'Use this service to register as a UK battery producer, declare the batteries you place on the market, and submit annual compliance returns.',
-        whoCanUse: 'Who can use this service',
-        smallProducer:
-          'Small producers — UK businesses placing fewer than 1 tonne of portable batteries on the market each year.',
-        directRegistrant:
-          'Direct registrants — UK businesses placing industrial or automotive batteries on the market, or more than 1 tonne of portable batteries.',
-        publicRegisterCta: 'Search the public register',
-        signInCta: 'Sign in to register'
+          'A walkthrough of the new Battery Extended Producer Responsibility service journeys.',
+        prototypeBanner:
+          'This is a prototype. All data is stored in your browser. Choose a journey to begin.',
+        journeys: {
+          producer: {
+            title: 'I am a producer',
+            description:
+              'Register as a battery producer, declare the batteries you place on the market, and submit annual returns.',
+            bullets: [
+              'Small producers — UK businesses placing fewer than 1 tonne of portable batteries on the market each year.',
+              'Direct registrants — UK businesses placing industrial or automotive batteries, or more than 1 tonne of portable batteries.',
+              'Compliance scheme members — UK businesses whose annual return is filed by an approved scheme.'
+            ],
+            primaryAction: 'Sign in to register',
+            secondaryAction: 'Search the public register'
+          },
+          complianceScheme: {
+            title: 'I am a compliance scheme',
+            description:
+              'Sign in as an approved battery compliance scheme to manage your members and submissions.',
+            bullets: [
+              'Accept producers who have nominated your scheme during registration.',
+              'File quarterly market data and the annual Industrial & Automotive return.',
+              'Issue evidence to members and track your obligation.'
+            ],
+            primaryAction: 'Sign in to your scheme'
+          },
+          comingSoon: {
+            label: 'Coming soon',
+            abto: {
+              title: 'I am an approved battery treatment operator',
+              description:
+                'Issue evidence notes to compliance schemes and the public register. Not part of this prototype yet.'
+            },
+            regulator: {
+              title: 'I am a regulator',
+              description:
+                'Approve compliance schemes, monitor producer registrations and trigger enforcement actions. Not part of this prototype yet.'
+            }
+          }
+        }
       },
       cy: {
-        title: 'Home',
-        heading: 'Register as a battery producer',
-        intro: 'TODO welsh'
+        title: 'TODO welsh',
+        heading: 'TODO welsh',
+        intro: 'TODO welsh',
+        prototypeBanner: 'TODO welsh',
+        journeys: {
+          producer: {
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            bullets: [],
+            primaryAction: 'TODO welsh',
+            secondaryAction: 'TODO welsh'
+          },
+          complianceScheme: {
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            bullets: [],
+            primaryAction: 'TODO welsh'
+          },
+          comingSoon: {
+            label: 'TODO welsh',
+            abto: { title: 'TODO welsh', description: 'TODO welsh' },
+            regulator: { title: 'TODO welsh', description: 'TODO welsh' }
+          }
+        }
       }
     }),
   about: (request) =>
@@ -1379,13 +1433,42 @@ export const content = {
         heading: 'TODO welsh'
       }
     }),
+  complianceSchemeSignIn: (request) =>
+    getContentForLanguage(request, {
+      en: {
+        title: 'Sign in to your compliance scheme',
+        heading: 'Sign in to your compliance scheme',
+        intro:
+          'Choose which approved battery compliance scheme you are operating as. You can switch later.',
+        legend: 'Compliance scheme',
+        continueAction: 'Continue',
+        cancelAction: 'Cancel and return to the prototype home',
+        error: {
+          title: 'There is a problem',
+          choice: 'Select a compliance scheme to continue'
+        }
+      },
+      cy: {
+        title: 'TODO welsh',
+        heading: 'TODO welsh',
+        intro: 'TODO welsh',
+        legend: 'TODO welsh',
+        continueAction: 'TODO welsh',
+        cancelAction: 'TODO welsh',
+        error: {
+          title: 'TODO welsh',
+          choice: 'TODO welsh'
+        }
+      }
+    }),
   complianceScheme: (request) =>
     getContentForLanguage(request, {
       en: {
         title: 'Compliance scheme',
-        heading: heading('Compliance scheme', null, null),
+        heading: heading('Compliance scheme', 'Compliance scheme', null),
         introParagraph:
           'Manage your battery compliance scheme: apply for approval, manage your members, submit quarterly and annual returns, and issue evidence.',
+        switchSchemeAction: 'Switch scheme',
         navLabel: 'Compliance scheme',
         tiles: {
           approval: {
@@ -1924,8 +2007,9 @@ export const content = {
       },
       cy: {
         title: 'Compliance scheme',
-        heading: heading('TODO welsh', null, null),
+        heading: heading('TODO welsh', 'TODO welsh', null),
         introParagraph: 'TODO welsh',
+        switchSchemeAction: 'TODO welsh',
         navLabel: 'TODO welsh',
         tiles: {
           approval: {

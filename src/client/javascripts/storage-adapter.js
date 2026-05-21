@@ -14,7 +14,8 @@ export const STORAGE_KEYS = {
   iaSubmissions: `${KEY_PREFIX}iaSubmissions`,
   evidence: `${KEY_PREFIX}evidence`,
   seedVersion: `${KEY_PREFIX}seed-version`,
-  timeTravelTargetYear: `${KEY_PREFIX}time-travel-target-year`
+  timeTravelTargetYear: `${KEY_PREFIX}time-travel-target-year`,
+  currentSchemeId: `${KEY_PREFIX}currentSchemeId`
 }
 
 const bprnSequenceKey = (agencyCode, compliancePeriod) =>
@@ -486,6 +487,22 @@ const getSchemes = ({
 const getScheme = (id) => readMap(STORAGE_KEYS.schemes)[id] ?? null
 
 const getSchemeById = (id) => getScheme(id)
+
+const getCurrentSchemeId = () =>
+  globalThis.localStorage.getItem(STORAGE_KEYS.currentSchemeId)
+
+const setCurrentSchemeId = (id) => {
+  globalThis.localStorage.setItem(STORAGE_KEYS.currentSchemeId, id)
+}
+
+const clearCurrentSchemeId = () => {
+  globalThis.localStorage.removeItem(STORAGE_KEYS.currentSchemeId)
+}
+
+const currentScheme = () => {
+  const id = getCurrentSchemeId()
+  return id ? getScheme(id) : null
+}
 
 const saveScheme = (scheme) => {
   const schemes = readMap(STORAGE_KEYS.schemes)
@@ -959,6 +976,10 @@ export const storage = {
   getSchemes,
   getScheme,
   getSchemeById,
+  getCurrentSchemeId,
+  setCurrentSchemeId,
+  clearCurrentSchemeId,
+  currentScheme,
   saveScheme,
   listSchemeMembers,
   listActiveSchemeMembers,
