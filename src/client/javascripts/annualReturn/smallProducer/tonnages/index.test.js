@@ -56,6 +56,27 @@ describe('initTonnages — auth gate', () => {
     expect(initTonnages(document, globalThis.location)).toBe(false)
     expect(assignSpy).toHaveBeenCalledWith('/sign-in')
   })
+
+  test('redirects to scheme-represented when registration is on the scheme route', () => {
+    const reg = storage.saveRegistration({
+      compliancePeriod: '2026',
+      producerRoute: 'complianceScheme'
+    })
+    buildDom({
+      json: {
+        step: 'smallProducerTonnages',
+        target: 'hydrate',
+        registrationId: reg.id
+      },
+      formMode: 'simple'
+    })
+    expect(initTonnages(document, globalThis.location)).toBe(
+      'redirected-to-scheme-represented'
+    )
+    expect(assignSpy).toHaveBeenCalledWith(
+      `/annual-return/${reg.id}/scheme-represented`
+    )
+  })
 })
 
 describe('initTonnages — submission branch', () => {

@@ -45,6 +45,24 @@ describe('initDeclaration auth gate', () => {
     expect(initDeclaration(document, globalThis.location)).toBe(false)
     expect(assignSpy).toHaveBeenCalledWith('/sign-in')
   })
+
+  test('redirects to scheme-represented when registration is on the scheme route', () => {
+    const reg = storage.saveRegistration({
+      compliancePeriod: '2026',
+      producerRoute: 'complianceScheme'
+    })
+    buildDom({
+      step: 'smallProducerDeclaration',
+      target: 'hydrate',
+      registrationId: reg.id
+    })
+    expect(initDeclaration(document, globalThis.location)).toBe(
+      'redirected-to-scheme-represented'
+    )
+    expect(assignSpy).toHaveBeenCalledWith(
+      `/annual-return/${reg.id}/scheme-represented`
+    )
+  })
 })
 
 describe('initDeclaration submission-submit branch', () => {

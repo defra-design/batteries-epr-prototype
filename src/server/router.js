@@ -17,8 +17,11 @@ import { annualReturn } from './annualReturn/index.js'
 import { serviceCharge } from './serviceCharge/index.js'
 import { paymentDetails } from './paymentDetails/index.js'
 import { account } from './account/index.js'
+import { accountScheme } from './account/scheme/index.js'
+import { leaveScheme } from './leaveScheme/index.js'
 import { devReset } from './devReset/index.js'
 import { devTimeTravel } from './devTimeTravel/index.js'
+import { devSchemes } from './devSchemes/index.js'
 import { complianceSchemeDashboard } from './complianceScheme/dashboard/index.js'
 import { complianceSchemeApplication } from './complianceScheme/application/index.js'
 import { complianceSchemeMembers } from './complianceScheme/members/index.js'
@@ -64,8 +67,11 @@ export const router = {
         serviceCharge: serviceCharge.openRoutes,
         paymentDetails: paymentDetails.openRoutes,
         account: account.openRoutes,
+        accountScheme: accountScheme.openRoutes,
+        leaveScheme: leaveScheme.openRoutes,
         devReset: devReset.openRoutes,
         devTimeTravel: devTimeTravel.openRoutes,
+        devSchemes: devSchemes.openRoutes,
         complianceSchemeDashboard: complianceSchemeDashboard.openRoutes,
         complianceSchemeApplication: complianceSchemeApplication.openRoutes,
         complianceSchemeMembers: complianceSchemeMembers.openRoutes,

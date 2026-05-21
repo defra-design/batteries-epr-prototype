@@ -6,6 +6,7 @@ import {
   readActiveSubmission,
   upsertSubmission
 } from '../persist-submission.js'
+import { redirectIfSchemeRoute } from '../../scheme-represented-gate.js'
 
 const declarationToFormValues = (submission) => {
   const declaration = submission?.declaration
@@ -31,6 +32,10 @@ export const initDeclaration = (
   if (!requireAuth('/sign-in')) return false
 
   const payload = readPagePayload(doc) ?? {}
+
+  if (redirectIfSchemeRoute(payload.registrationId, loc)) {
+    return 'redirected-to-scheme-represented'
+  }
 
   if (payload.target === 'submission-submit') {
     upsertSubmission(payload.registrationId, payload.savedFields)

@@ -339,3 +339,234 @@ describe('runOnboardingStep — producer route gate', () => {
     )
   })
 })
+
+describe('runOnboardingStep — schemeSelect agency filter', () => {
+  const renderSchemeSelect = (schemes) => {
+    const radios = schemes
+      .map(
+        (s) =>
+          `<div class="govuk-radios__item">
+            <input name="schemeId" value="${s.id}" type="radio" ${s.checked ? 'checked' : ''} />
+          </div>`
+      )
+      .join('')
+    document.body.innerHTML = `
+      <form>${radios}</form>
+      <p data-testid="scheme-select-no-agency-match" hidden></p>
+      <script id="page-payload" type="application/json">${JSON.stringify({ step: 'schemeSelect', target: 'hydrate', compliancePeriod: '2026' })}</script>
+    `
+  }
+
+  test('hides schemes whose agencyCode does not match the producer', () => {
+    storage.saveProducer({
+      contactEmail: 'wizard@example.com',
+      agencyCode: 'EA'
+    })
+    const ea = storage.saveScheme({ name: 'EA Scheme', agencyCode: 'EA' })
+    const nrw = storage.saveScheme({ name: 'NRW Scheme', agencyCode: 'NRW' })
+    renderSchemeSelect([{ id: ea.id }, { id: nrw.id }])
+    runOnboardingStep(document, globalThis.location)
+
+    const eaItem = document
+      .querySelector(`input[value="${ea.id}"]`)
+      .closest('.govuk-radios__item')
+    const nrwItem = document
+      .querySelector(`input[value="${nrw.id}"]`)
+      .closest('.govuk-radios__item')
+    expect(eaItem.hidden).toBe(false)
+    expect(nrwItem.hidden).toBe(true)
+  })
+
+  test('reveals the no-agency-match message when nothing matches', () => {
+    storage.saveProducer({
+      contactEmail: 'wizard@example.com',
+      agencyCode: 'NIEA'
+    })
+    const ea = storage.saveScheme({ name: 'EA Scheme', agencyCode: 'EA' })
+    renderSchemeSelect([{ id: ea.id }])
+    runOnboardingStep(document, globalThis.location)
+    expect(
+      document.querySelector('[data-testid="scheme-select-no-agency-match"]')
+        .hidden
+    ).toBe(false)
+  })
+
+  test('un-checks a hidden radio that was previously selected', () => {
+    storage.saveProducer({
+      contactEmail: 'wizard@example.com',
+      agencyCode: 'EA'
+    })
+    const nrw = storage.saveScheme({ name: 'NRW Scheme', agencyCode: 'NRW' })
+    renderSchemeSelect([{ id: nrw.id, checked: true }])
+    runOnboardingStep(document, globalThis.location)
+    expect(document.querySelector(`input[value="${nrw.id}"]`).checked).toBe(
+      false
+    )
+  })
+
+  test('does nothing when the producer has no agencyCode', () => {
+    storage.saveProducer({ contactEmail: 'wizard@example.com' })
+    const ea = storage.saveScheme({ name: 'EA Scheme', agencyCode: 'EA' })
+    const nrw = storage.saveScheme({ name: 'NRW Scheme', agencyCode: 'NRW' })
+    renderSchemeSelect([{ id: ea.id }, { id: nrw.id }])
+    runOnboardingStep(document, globalThis.location)
+    const nrwItem = document
+      .querySelector(`input[value="${nrw.id}"]`)
+      .closest('.govuk-radios__item')
+    expect(nrwItem.hidden).toBe(false)
+  })
+
+  test('skips schemes whose radio is not present in the DOM', () => {
+    storage.saveProducer({
+      contactEmail: 'wizard@example.com',
+      agencyCode: 'EA'
+    })
+    storage.saveScheme({ name: 'EA Scheme', agencyCode: 'EA' })
+    document.body.innerHTML = `
+      <form></form>
+      <script id="page-payload" type="application/json">${JSON.stringify({ step: 'schemeSelect', target: 'hydrate', compliancePeriod: '2026' })}</script>
+    `
+    expect(() =>
+      runOnboardingStep(document, globalThis.location)
+    ).not.toThrow()
+  })
+
+  test('treats schemes without an agencyCode as visible to any producer', () => {
+    storage.saveProducer({
+      contactEmail: 'wizard@example.com',
+      agencyCode: 'EA'
+    })
+    const generic = storage.saveScheme({ name: 'Generic Scheme' })
+    renderSchemeSelect([{ id: generic.id }])
+    runOnboardingStep(document, globalThis.location)
+    expect(
+      document
+        .querySelector(`input[value="${generic.id}"]`)
+        .closest('.govuk-radios__item').hidden
+    ).toBe(false)
+  })
+})
+
+describe('runOnboardingStep — schemeConfirm hydration', () => {
+  const renderSchemeConfirm = () => {
+    document.body.innerHTML = `
+      <dl>
+        <dd data-testid="scheme-confirm-name">—</dd>
+        <dd data-testid="scheme-confirm-operator">—</dd>
+        <dd data-testid="scheme-confirm-contact-email">—</dd>
+        <dd data-testid="scheme-confirm-web-address">—</dd>
+      </dl>
+      <script id="page-payload" type="application/json">${JSON.stringify({ step: 'schemeConfirm', target: 'hydrate', compliancePeriod: '2026' })}</script>
+    `
+  }
+
+  test('fills the summary list from the registration schemeId', () => {
+    const producer = storage.saveProducer({
+      contactEmail: 'wizard@example.com',
+      registeredAddress: { postcode: 'M1 4AA' }
+    })
+    const scheme = storage.saveScheme({
+      id: '22222222-0001-4000-a000-000000000001',
+      name: 'Northern Battery Compliance Scheme',
+      operator: 'NBCS Ltd',
+      contactEmail: 'ops@nbcs.test',
+      webAddress: 'https://nbcs.test'
+    })
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      schemeId: scheme.id
+    })
+
+    renderSchemeConfirm()
+    runOnboardingStep(document, globalThis.location)
+
+    expect(
+      document.querySelector('[data-testid="scheme-confirm-name"]').textContent
+    ).toBe('Northern Battery Compliance Scheme')
+    expect(
+      document.querySelector('[data-testid="scheme-confirm-operator"]').textContent
+    ).toBe('NBCS Ltd')
+    expect(
+      document.querySelector('[data-testid="scheme-confirm-contact-email"]').textContent
+    ).toBe('ops@nbcs.test')
+    expect(
+      document.querySelector('[data-testid="scheme-confirm-web-address"]').textContent
+    ).toBe('https://nbcs.test')
+  })
+
+  test('leaves placeholders untouched when no schemeId stored', () => {
+    storage.saveProducer({
+      contactEmail: 'wizard@example.com',
+      registeredAddress: { postcode: 'M1 4AA' }
+    })
+    renderSchemeConfirm()
+    runOnboardingStep(document, globalThis.location)
+    expect(
+      document.querySelector('[data-testid="scheme-confirm-name"]').textContent
+    ).toBe('—')
+  })
+
+  test('shows em-dash when scheme exists but optional fields are null', () => {
+    const producer = storage.saveProducer({
+      contactEmail: 'wizard@example.com',
+      registeredAddress: { postcode: 'M1 4AA' }
+    })
+    const scheme = storage.saveScheme({
+      id: '22222222-0001-4000-a000-000000000099',
+      name: 'Bare Scheme',
+      operator: null,
+      contactEmail: null,
+      webAddress: null
+    })
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      schemeId: scheme.id
+    })
+
+    renderSchemeConfirm()
+    runOnboardingStep(document, globalThis.location)
+    expect(
+      document.querySelector('[data-testid="scheme-confirm-operator"]').textContent
+    ).toBe('—')
+  })
+
+  test('skips hydration when the scheme cannot be found', () => {
+    const producer = storage.saveProducer({
+      contactEmail: 'wizard@example.com',
+      registeredAddress: { postcode: 'M1 4AA' }
+    })
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      schemeId: 'no-such-scheme'
+    })
+
+    renderSchemeConfirm()
+    runOnboardingStep(document, globalThis.location)
+    expect(
+      document.querySelector('[data-testid="scheme-confirm-name"]').textContent
+    ).toBe('—')
+  })
+
+  test('does nothing when the dl placeholders are absent', () => {
+    const producer = storage.saveProducer({
+      contactEmail: 'wizard@example.com',
+      registeredAddress: { postcode: 'M1 4AA' }
+    })
+    const scheme = storage.saveScheme({
+      id: '22222222-0001-4000-a000-000000000098',
+      name: 'Headless Scheme'
+    })
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      schemeId: scheme.id
+    })
+
+    document.body.innerHTML = `<script id="page-payload" type="application/json">${JSON.stringify({ step: 'schemeConfirm', target: 'hydrate', compliancePeriod: '2026' })}</script>`
+
+    expect(() => runOnboardingStep(document, globalThis.location)).not.toThrow()
+  })
+})

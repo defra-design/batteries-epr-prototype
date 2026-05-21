@@ -46,6 +46,24 @@ describe('initIaDeclaration', () => {
     expect(assignSpy).toHaveBeenCalledWith('/sign-in')
   })
 
+  test('redirects to scheme-represented when registration is on the scheme route', () => {
+    const reg = storage.saveRegistration({
+      compliancePeriod: '2026',
+      producerRoute: 'complianceScheme'
+    })
+    buildDom({
+      step: 'iaDeclaration',
+      target: 'hydrate',
+      registrationId: reg.id
+    })
+    expect(initIaDeclaration(document, globalThis.location)).toBe(
+      'redirected-to-scheme-represented'
+    )
+    expect(assignSpy).toHaveBeenCalledWith(
+      `/annual-return/${reg.id}/scheme-represented`
+    )
+  })
+
   test('persists savedFields and navigates to confirmation on submit', () => {
     upsertSubmission('reg-1', {
       submissionType: 'industrialAutomotiveAnnual',

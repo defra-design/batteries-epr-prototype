@@ -6,6 +6,8 @@ import { storage, createSchemeMember } from '../../storage-adapter.js'
 
 const buildListDom = (payload) => {
   document.body.innerHTML = `
+    <table><tbody data-testid="members-pending-body"></tbody></table>
+    <p data-testid="members-pending-empty" hidden></p>
     <table><tbody data-testid="members-active-body"></tbody></table>
     <p data-testid="members-active-empty" hidden></p>
     <table><tbody data-testid="members-history-body"></tbody></table>
@@ -36,7 +38,13 @@ const buildRemoveDom = (payload) => {
 const LIST_PAYLOAD = {
   view: 'list',
   compliancePeriodYear: '2026',
-  copy: { removeAction: 'Remove' },
+  copy: {
+    removeAction: 'Remove',
+    acceptAction: 'Accept',
+    rejectAction: 'Reject',
+    acceptConfirm: 'Accept this producer into the scheme?',
+    rejectConfirm: 'Reject this producer’s request to join?'
+  },
   urls: {
     add: '/compliance-scheme/members/add',
     removeTemplate: '/compliance-scheme/members/{memberId}/remove',
@@ -195,6 +203,113 @@ describe('members list view', () => {
     expect(
       document.querySelectorAll('[data-testid="members-history-row"]')
     ).toHaveLength(2)
+  })
+})
+
+describe('members pending acceptance', () => {
+  const seedPendingMember = (scheme, overrides = {}) =>
+    storage.saveSchemeMember(
+      createSchemeMember({
+        schemeId: scheme.id,
+        producerEmail: 'pending@x.com',
+        companyName: 'Pending Co',
+        compliancePeriod: '2026',
+        status: 'pendingAcceptance',
+        joinedOn: '2026-02-01T00:00:00Z',
+        ...overrides
+      })
+    )
+
+  test('renders one row per pending member and hides the empty message', () => {
+    const [scheme] = storage.listSchemes()
+    seedPendingMember(scheme)
+    buildListDom(LIST_PAYLOAD)
+    runMembersPage(document, globalThis.location)
+    const rows = document.querySelectorAll(
+      '[data-testid="members-pending-row"]'
+    )
+    expect(rows).toHaveLength(1)
+    expect(rows[0].dataset.memberId).toBeTruthy()
+    expect(
+      document.querySelector('[data-testid="members-pending-company"]').textContent
+    ).toBe('Pending Co')
+    expect(
+      document.querySelector('[data-testid="members-pending-empty"]').hidden
+    ).toBe(true)
+  })
+
+  test('shows the empty pending message when no pending members exist', () => {
+    buildListDom(LIST_PAYLOAD)
+    runMembersPage(document, globalThis.location)
+    expect(
+      document.querySelector('[data-testid="members-pending-empty"]').hidden
+    ).toBe(false)
+  })
+
+  test('accept button flips the member to active when confirmed and reloads', () => {
+    const [scheme] = storage.listSchemes()
+    const member = seedPendingMember(scheme)
+    const confirmSpy = vi.spyOn(globalThis, 'confirm').mockReturnValue(true)
+
+    buildListDom(LIST_PAYLOAD)
+    runMembersPage(document, globalThis.location)
+    document.querySelector('[data-testid="members-pending-accept"]').click()
+
+    const updated = storage
+      .listSchemeMembers()
+      .find((m) => m.id === member.id)
+    expect(updated.status).toBe('active')
+    expect(updated.producerBprn).toMatch(/^BPRN-/)
+    expect(globalThis.location.reload).toHaveBeenCalled()
+    confirmSpy.mockRestore()
+  })
+
+  test('accept button is a no-op when the operator declines the confirm', () => {
+    const [scheme] = storage.listSchemes()
+    const member = seedPendingMember(scheme)
+    const confirmSpy = vi.spyOn(globalThis, 'confirm').mockReturnValue(false)
+
+    buildListDom(LIST_PAYLOAD)
+    runMembersPage(document, globalThis.location)
+    document.querySelector('[data-testid="members-pending-accept"]').click()
+
+    expect(
+      storage.listSchemeMembers().find((m) => m.id === member.id).status
+    ).toBe('pendingAcceptance')
+    expect(globalThis.location.reload).not.toHaveBeenCalled()
+    confirmSpy.mockRestore()
+  })
+
+  test('reject button closes the membership when confirmed', () => {
+    const [scheme] = storage.listSchemes()
+    const member = seedPendingMember(scheme)
+    const confirmSpy = vi.spyOn(globalThis, 'confirm').mockReturnValue(true)
+
+    buildListDom(LIST_PAYLOAD)
+    runMembersPage(document, globalThis.location)
+    document.querySelector('[data-testid="members-pending-reject"]').click()
+
+    const updated = storage
+      .listSchemeMembers()
+      .find((m) => m.id === member.id)
+    expect(updated.status).toBe('rejected')
+    expect(updated.reasonForLeaving).toBe('rejected-by-scheme')
+    confirmSpy.mockRestore()
+  })
+
+  test('reject button is a no-op when declined', () => {
+    const [scheme] = storage.listSchemes()
+    const member = seedPendingMember(scheme)
+    const confirmSpy = vi.spyOn(globalThis, 'confirm').mockReturnValue(false)
+
+    buildListDom(LIST_PAYLOAD)
+    runMembersPage(document, globalThis.location)
+    document.querySelector('[data-testid="members-pending-reject"]').click()
+
+    expect(
+      storage.listSchemeMembers().find((m) => m.id === member.id).status
+    ).toBe('pendingAcceptance')
+    confirmSpy.mockRestore()
   })
 })
 

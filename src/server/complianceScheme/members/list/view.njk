@@ -19,6 +19,19 @@
         }) }}
       </p>
 
+      <h2 class="govuk-heading-m" data-testid="members-pending-heading">{{ labels.pendingHeading }}</h2>
+      <table class="govuk-table" data-testid="members-pending-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">{{ labels.columns.companyName }}</th>
+            <th scope="col" class="govuk-table__header">{{ labels.columns.joinedOn }}</th>
+            <th scope="col" class="govuk-table__header">{{ labels.columns.actions }}</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body" data-testid="members-pending-body"></tbody>
+      </table>
+      <p class="govuk-body" data-testid="members-pending-empty" hidden>{{ labels.pendingEmpty }}</p>
+
       <table class="govuk-table" data-testid="members-active-table">
         <caption class="govuk-table__caption govuk-table__caption--m">{{ labels.tableCaption }}</caption>
         <thead class="govuk-table__head">

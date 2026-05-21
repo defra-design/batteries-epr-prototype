@@ -5,6 +5,7 @@ import { categories as iaCategories } from './ia/categories/index.js'
 import { tonnages as iaTonnages } from './ia/tonnages/index.js'
 import { declaration as iaDeclaration } from './ia/declaration/index.js'
 import { confirmation as iaConfirmation } from './ia/confirmation/index.js'
+import { schemeRepresented } from './schemeRepresented/index.js'
 
 export const annualReturn = {
   openRoutes: [
@@ -14,6 +15,7 @@ export const annualReturn = {
     ...iaCategories.openRoutes,
     ...iaTonnages.openRoutes,
     ...iaDeclaration.openRoutes,
-    ...iaConfirmation.openRoutes
+    ...iaConfirmation.openRoutes,
+    ...schemeRepresented.openRoutes
   ]
 }

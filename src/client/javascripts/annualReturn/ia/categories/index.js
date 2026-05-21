@@ -1,6 +1,7 @@
 import { storage } from '../../../storage-adapter.js'
 import { readPagePayload } from '../../../page-payload.js'
 import { requireAuth } from '../../../auth-gate.js'
+import { redirectIfSchemeRoute } from '../../scheme-represented-gate.js'
 
 const showSection = (doc, id, visible) => {
   const node = doc.querySelector(`#${id}`)
@@ -15,6 +16,10 @@ export const initCategories = (
   const signInUrl = payload.signInUrl ?? '/sign-in'
 
   if (!requireAuth(signInUrl)) return false
+
+  if (redirectIfSchemeRoute(payload.registrationId, loc)) {
+    return 'redirected-to-scheme-represented'
+  }
 
   const user = storage.getCurrentUser()
   const producer = storage.getProducerByEmail(user.email)

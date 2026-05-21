@@ -17,7 +17,11 @@ const CARDS_COPY = {
     inProgressBody: 'You have started your registration.',
     inProgressLink: 'Continue your registration',
     submittedBody: 'Your registration is submitted.',
-    approvedBody: 'Your registration is approved for {compliancePeriod}.'
+    approvedBody: 'Your registration is approved for {compliancePeriod}.',
+    statusPendingScheme: 'Awaiting scheme',
+    bprnAwaitingScheme: 'Awaiting scheme roster',
+    pendingSchemeBody:
+      'A compliance scheme will register you when it files its next roster.'
   },
   fee: {
     title: 'Service charge',
@@ -39,6 +43,19 @@ const CARDS_COPY = {
     deadlineValue: '31 December {compliancePeriod}',
     startLink: 'Start your annual return',
     blockedBody: 'Submit and pay registration first.'
+  },
+  schemeRoute: {
+    title: 'Your compliance scheme',
+    description: 'A compliance scheme files your annual return on your behalf.',
+    statusRepresented: 'Represented',
+    bodyWithScheme:
+      '{scheme} files your annual return on your behalf — there is nothing for you to submit this period.',
+    bodyAwaitingScheme:
+      'Your chosen scheme will confirm your registration when it files its next member roster.',
+    viewSchemeLink: 'View scheme details',
+    rosterLabel: 'Last roster update:',
+    rosterValueAwaiting: 'Awaiting first roster',
+    statusPending: 'Awaiting roster'
   },
   activity: {
     title: 'Recent activity',
@@ -65,18 +82,28 @@ const buildDom = (payload = PAYLOAD) => {
           <h1>X</h1>
         </div>
       </div>
-      <span data-testid="card-registration-status"></span>
-      <p data-testid="card-registration-bprn"></p>
-      <p data-testid="card-registration-body"></p>
-      <p data-testid="card-registration-action"></p>
-      <span data-testid="card-fee-status"></span>
-      <p data-testid="card-fee-body"></p>
-      <p data-testid="card-fee-action"></p>
-      <span data-testid="card-annual-return-status"></span>
-      <p data-testid="card-annual-return-deadline"></p>
-      <p data-testid="card-annual-return-body"></p>
-      <p data-testid="card-annual-return-action"></p>
-      <ol data-testid="card-activity-list"></ol>
+      <div data-testid="dashboard-cards">
+        <span data-testid="card-registration-status"></span>
+        <p data-testid="card-registration-bprn"></p>
+        <p data-testid="card-registration-body"></p>
+        <p data-testid="card-registration-action"></p>
+        <div data-testid="card-fee-wrapper" class="govuk-grid-column-one-half">
+          <span data-testid="card-fee-status"></span>
+          <p data-testid="card-fee-body"></p>
+          <p data-testid="card-fee-action"></p>
+        </div>
+      </div>
+      <div data-testid="dashboard-cards-row-2">
+        <div data-testid="card-annual-return-wrapper" class="govuk-grid-column-one-half">
+          <span data-testid="card-annual-return-status"></span>
+          <p data-testid="card-annual-return-deadline"></p>
+          <p data-testid="card-annual-return-body"></p>
+          <p data-testid="card-annual-return-action"></p>
+        </div>
+        <div data-testid="card-activity-wrapper" class="govuk-grid-column-one-half">
+          <ol data-testid="card-activity-list"></ol>
+        </div>
+      </div>
     </div>
     <script id="page-payload" type="application/json">${JSON.stringify(payload)}</script>
   `
@@ -804,5 +831,244 @@ describe('initDashboard heading and visibility', () => {
     buildDom()
 
     expect(() => initDashboard(document, globalThis.location)).not.toThrow()
+  })
+})
+
+describe('initDashboard compliance-scheme route', () => {
+  const seedSchemeRegistration = ({ schemeId = null } = {}) => {
+    storage.setCurrentUser({ email: 'scheme@x.com' })
+    storage.saveProducer({
+      contactEmail: 'scheme@x.com',
+      companyName: 'Scheme Co',
+      registeredAddress: { postcode: 'M1 4AA' }
+    })
+    const producer = storage.getProducerByEmail('scheme@x.com')
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      status: 'pendingScheme',
+      producerRoute: 'complianceScheme',
+      schemeId
+    })
+  }
+
+  test('registration card shows the awaiting-scheme-roster state', () => {
+    seedSchemeRegistration()
+    buildDom()
+    initDashboard(document, globalThis.location)
+    expect(
+      document.querySelector('[data-testid="card-registration-bprn"]').textContent
+    ).toContain('Awaiting scheme roster')
+    expect(
+      document.querySelector('[data-testid="card-registration-status"]').textContent
+    ).toBe('Awaiting scheme')
+  })
+
+  test('scheme card replaces the annual-return card with the named scheme', () => {
+    const scheme = storage.saveScheme({
+      name: 'Northern Battery Compliance Scheme'
+    })
+    seedSchemeRegistration({ schemeId: scheme.id })
+
+    const payloadWithTitle = {
+      ...PAYLOAD,
+      cards: { ...CARDS_COPY }
+    }
+    buildDom(payloadWithTitle)
+    document.body.insertAdjacentHTML(
+      'beforeend',
+      '<h2 data-testid="card-annual-return-title">Annual return</h2>'
+    )
+    initDashboard(document, globalThis.location)
+
+    expect(
+      document.querySelector('[data-testid="card-annual-return-title"]').textContent
+    ).toBe('Your compliance scheme')
+    expect(
+      document.querySelector('[data-testid="card-annual-return-body"]').textContent
+    ).toContain('Northern Battery Compliance Scheme')
+    const link = document.querySelector(
+      '[data-testid="card-scheme-view-link"]'
+    )
+    expect(link).not.toBeNull()
+    expect(link.getAttribute('href')).toBe('/account/scheme')
+  })
+
+  test('rearranges the layout: removes the fee card, lifts the scheme card next to registration, and widens activity to full width', () => {
+    const scheme = storage.saveScheme({ name: 'Layout Scheme', agencyCode: 'EA' })
+    storage.setCurrentUser({ email: 'layout@x.com' })
+    storage.saveProducer({
+      contactEmail: 'layout@x.com',
+      companyName: 'Layout Co',
+      registeredAddress: { postcode: 'M1 4AA' },
+      agencyCode: 'EA'
+    })
+    const producer = storage.getProducerByEmail('layout@x.com')
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      status: 'pendingScheme',
+      producerRoute: 'complianceScheme',
+      schemeId: scheme.id
+    })
+    buildDom()
+    initDashboard(document, globalThis.location)
+
+    expect(
+      document.querySelector('[data-testid="card-fee-wrapper"]')
+    ).toBeNull()
+    const row1 = document.querySelector('[data-testid="dashboard-cards"]')
+    expect(
+      row1.querySelector('[data-testid="card-annual-return-wrapper"]')
+    ).not.toBeNull()
+    const activity = document.querySelector(
+      '[data-testid="card-activity-wrapper"]'
+    )
+    expect(activity.classList.contains('govuk-grid-column-full')).toBe(true)
+    expect(activity.classList.contains('govuk-grid-column-one-half')).toBe(false)
+  })
+
+  test('renders an agency-mismatch banner when scheme agencyCode differs from producer agencyCode', () => {
+    const scheme = storage.saveScheme({
+      name: 'Cross-Border Scheme',
+      agencyCode: 'NRW'
+    })
+    storage.setCurrentUser({ email: 'mismatch@x.com' })
+    storage.saveProducer({
+      contactEmail: 'mismatch@x.com',
+      companyName: 'Cross Co',
+      registeredAddress: { postcode: 'M1 4AA' },
+      agencyCode: 'EA'
+    })
+    const producer = storage.getProducerByEmail('mismatch@x.com')
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      status: 'pendingScheme',
+      producerRoute: 'complianceScheme',
+      schemeId: scheme.id
+    })
+    const payload = {
+      ...PAYLOAD,
+      cards: {
+        ...CARDS_COPY,
+        agencyMismatch: {
+          title: 'Important',
+          body: 'Your scheme is regulated by {schemeAgency} but your registered address is now in {producerAgency} — contact your scheme.'
+        }
+      }
+    }
+    buildDom(payload)
+    document.body.insertAdjacentHTML(
+      'beforeend',
+      '<h2 data-testid="card-annual-return-title"></h2>'
+    )
+    initDashboard(document, globalThis.location)
+    const banner = document.querySelector(
+      '[data-testid="dashboard-agency-mismatch"]'
+    )
+    expect(banner).not.toBeNull()
+    expect(banner.textContent).toEqual(expect.stringContaining('NRW'))
+    expect(banner.textContent).toEqual(expect.stringContaining('EA'))
+  })
+
+  test('agency-mismatch banner does not render when agency codes match', () => {
+    const scheme = storage.saveScheme({ name: 'Same Agency', agencyCode: 'EA' })
+    storage.setCurrentUser({ email: 'match@x.com' })
+    storage.saveProducer({
+      contactEmail: 'match@x.com',
+      companyName: 'Match Co',
+      registeredAddress: { postcode: 'M1 4AA' },
+      agencyCode: 'EA'
+    })
+    const producer = storage.getProducerByEmail('match@x.com')
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      status: 'pendingScheme',
+      producerRoute: 'complianceScheme',
+      schemeId: scheme.id
+    })
+    const payload = {
+      ...PAYLOAD,
+      cards: {
+        ...CARDS_COPY,
+        agencyMismatch: { title: 'x', body: 'x' }
+      }
+    }
+    buildDom(payload)
+    initDashboard(document, globalThis.location)
+    expect(
+      document.querySelector('[data-testid="dashboard-agency-mismatch"]')
+    ).toBeNull()
+  })
+
+  test('agency-mismatch banner skipped when registration has no schemeId', () => {
+    storage.setCurrentUser({ email: 'noscheme@x.com' })
+    storage.saveProducer({
+      contactEmail: 'noscheme@x.com',
+      companyName: 'No Scheme Co',
+      registeredAddress: { postcode: 'M1 4AA' },
+      agencyCode: 'EA'
+    })
+    const producer = storage.getProducerByEmail('noscheme@x.com')
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      status: 'pendingScheme',
+      producerRoute: 'complianceScheme'
+    })
+    const payload = {
+      ...PAYLOAD,
+      cards: {
+        ...CARDS_COPY,
+        agencyMismatch: { title: 'x', body: 'x' }
+      }
+    }
+    buildDom(payload)
+    initDashboard(document, globalThis.location)
+    expect(
+      document.querySelector('[data-testid="dashboard-agency-mismatch"]')
+    ).toBeNull()
+  })
+
+  test('agency-mismatch banner skipped when scheme has no agencyCode', () => {
+    const scheme = storage.saveScheme({ name: 'No Agency' })
+    storage.setCurrentUser({ email: 'noagency@x.com' })
+    storage.saveProducer({
+      contactEmail: 'noagency@x.com',
+      companyName: 'No Agency Co',
+      registeredAddress: { postcode: 'M1 4AA' },
+      agencyCode: 'EA'
+    })
+    const producer = storage.getProducerByEmail('noagency@x.com')
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      status: 'pendingScheme',
+      producerRoute: 'complianceScheme',
+      schemeId: scheme.id
+    })
+    const payload = {
+      ...PAYLOAD,
+      cards: {
+        ...CARDS_COPY,
+        agencyMismatch: { title: 'x', body: 'x' }
+      }
+    }
+    buildDom(payload)
+    initDashboard(document, globalThis.location)
+    expect(
+      document.querySelector('[data-testid="dashboard-agency-mismatch"]')
+    ).toBeNull()
+  })
+
+  test('scheme card falls back to the awaiting-scheme body when scheme record is missing', () => {
+    seedSchemeRegistration({ schemeId: 'no-such-scheme' })
+    buildDom()
+    initDashboard(document, globalThis.location)
+    expect(
+      document.querySelector('[data-testid="card-annual-return-body"]').textContent
+    ).toContain('Your chosen scheme will confirm your registration')
   })
 })

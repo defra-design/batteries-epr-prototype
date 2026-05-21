@@ -76,6 +76,9 @@ const buildDom = (payload = PAYLOAD, { withReset = false } = {}) => {
       <dl data-testid="account-son-list"></dl>
       <p data-testid="account-battery-types"></p>
       <ul data-testid="account-brand-names"></ul>
+      <div data-testid="account-scheme-section" hidden>
+        <dd data-testid="account-scheme-row-name"></dd>
+      </div>
       <div data-testid="account-submissions"></div>
       ${withReset ? '<button data-testid="account-reset-confirm" type="button">Reset</button>' : ''}
     </div>
@@ -438,5 +441,80 @@ describe('initAccount DOM tolerance', () => {
     document.body.innerHTML = `<div></div>`
     expect(initAccount(document, globalThis.location)).toBe(false)
     expect(assignSpy).toHaveBeenCalledWith('/sign-in')
+  })
+})
+
+describe('initAccount compliance scheme row', () => {
+  const seedSchemeRegistration = ({ schemeId = null } = {}) => {
+    storage.setCurrentUser({ email: 'a@b.com' })
+    storage.saveProducer({
+      contactEmail: 'a@b.com',
+      companyName: 'Acme'
+    })
+    const producer = storage.getProducerByEmail('a@b.com')
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      producerRoute: 'complianceScheme',
+      schemeId
+    })
+  }
+
+  test('shows the scheme section and populates the scheme name for scheme-route producers', () => {
+    const scheme = storage.saveScheme({
+      name: 'Northern Battery Compliance Scheme'
+    })
+    seedSchemeRegistration({ schemeId: scheme.id })
+    buildDom()
+    initAccount(document, globalThis.location)
+    expect(
+      document.querySelector('[data-testid="account-scheme-section"]').hidden
+    ).toBe(false)
+    expect(
+      document.querySelector('[data-testid="account-scheme-row-name"]').textContent
+    ).toBe('Northern Battery Compliance Scheme')
+  })
+
+  test('keeps the scheme section hidden for non-scheme producers', () => {
+    storage.setCurrentUser({ email: 'a@b.com' })
+    storage.saveProducer({
+      contactEmail: 'a@b.com',
+      companyName: 'Acme'
+    })
+    const producer = storage.getProducerByEmail('a@b.com')
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      producerRoute: 'smallProducer'
+    })
+    buildDom()
+    initAccount(document, globalThis.location)
+    expect(
+      document.querySelector('[data-testid="account-scheme-section"]').hidden
+    ).toBe(true)
+  })
+
+  test('handles a missing scheme record gracefully', () => {
+    seedSchemeRegistration({ schemeId: 'no-such-scheme' })
+    buildDom()
+    initAccount(document, globalThis.location)
+    expect(
+      document.querySelector('[data-testid="account-scheme-row-name"]').textContent
+    ).toBe('')
+    expect(
+      document.querySelector('[data-testid="account-scheme-section"]').hidden
+    ).toBe(false)
+  })
+
+  test('renders an empty name when registration has no schemeId', () => {
+    seedSchemeRegistration({ schemeId: null })
+    buildDom()
+    initAccount(document, globalThis.location)
+    expect(
+      document.querySelector('[data-testid="account-scheme-row-name"]').textContent
+    ).toBe('')
+    expect(
+      document.querySelector('[data-testid="account-scheme-section"]').hidden
+    ).toBe(false)
   })
 })

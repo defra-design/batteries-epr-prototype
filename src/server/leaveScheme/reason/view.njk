@@ -1,0 +1,61 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorSummary and errorSummary.length %}
+        {{ govukErrorSummary({
+          titleText: errorTitle,
+          errorList: errorSummary,
+          attributes: { "data-testid": "leave-scheme-error-summary" }
+        }) }}
+      {% endif %}
+
+      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      <p class="govuk-body">{{ intro }}</p>
+
+      <form method="post" action="{{ action }}" novalidate data-testid="leave-scheme-form">
+        {{ govukRadios({
+          idPrefix: "reasonForLeaving",
+          name: "reasonForLeaving",
+          fieldset: { legend: { text: labels.reasonLegend } },
+          errorMessage: { text: errors.reasonForLeaving } if errors.reasonForLeaving,
+          items: [
+            { value: "joinedAnotherScheme", text: labels.reasons.joinedAnotherScheme, checked: formValues.reasonForLeaving == "joinedAnotherScheme", attributes: { "data-testid": "leave-scheme-reason-joined" } },
+            { value: "belowThreshold", text: labels.reasons.belowThreshold, checked: formValues.reasonForLeaving == "belowThreshold", attributes: { "data-testid": "leave-scheme-reason-threshold" } },
+            { value: "ceasedTrading", text: labels.reasons.ceasedTrading, checked: formValues.reasonForLeaving == "ceasedTrading", attributes: { "data-testid": "leave-scheme-reason-ceased" } },
+            { value: "other", text: labels.reasons.other, checked: formValues.reasonForLeaving == "other", attributes: { "data-testid": "leave-scheme-reason-other" } }
+          ]
+        }) }}
+
+        {{ govukTextarea({
+          name: "otherReason",
+          id: "otherReason",
+          label: { text: labels.otherReasonLabel },
+          hint: { text: labels.otherReasonHint },
+          value: formValues.otherReason,
+          errorMessage: { text: errors.otherReason } if errors.otherReason,
+          attributes: { "data-testid": "leave-scheme-other-reason" }
+        }) }}
+
+        {{ govukButton({ text: labels.continueAction, attributes: { "data-testid": "leave-scheme-continue" } }) }}
+
+        <p class="govuk-body">
+          <a class="govuk-link" href="{{ accountUrl }}" data-testid="leave-scheme-cancel">{{ labels.cancelAction }}</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('leaveScheme.js') }}"></script>
+{% endblock %}

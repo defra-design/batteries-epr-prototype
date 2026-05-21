@@ -1,0 +1,59 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorSummary and errorSummary.length %}
+        {{ govukErrorSummary({
+          titleText: errorTitle,
+          errorList: errorSummary,
+          attributes: { "data-testid": "leave-scheme-error-summary" }
+        }) }}
+      {% endif %}
+
+      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      <p class="govuk-body">{{ intro }}</p>
+
+      <dl class="govuk-summary-list" data-testid="leave-scheme-summary">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.summaryReasonLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="leave-scheme-summary-reason">—</dd>
+        </div>
+      </dl>
+
+      <ul class="govuk-list govuk-list--bullet">
+        <li>{{ labels.responsibility1 }}</li>
+        <li>{{ labels.responsibility2 }}</li>
+        <li>{{ labels.responsibility3 }}</li>
+      </ul>
+
+      <form method="post" action="{{ action }}" novalidate data-testid="leave-scheme-form">
+        {{ govukCheckboxes({
+          name: "declarationConfirm",
+          fieldset: { legend: { text: labels.confirmLegend } },
+          errorMessage: { text: errors.declarationConfirm } if errors.declarationConfirm,
+          items: [
+            { value: "yes", text: labels.confirmLabel, checked: formValues.declarationConfirm == "yes", attributes: { "data-testid": "leave-scheme-declaration-confirm" } }
+          ]
+        }) }}
+
+        {{ govukButton({ text: labels.continueAction, attributes: { "data-testid": "leave-scheme-continue" } }) }}
+
+        <p class="govuk-body">
+          <a class="govuk-link" href="{{ backUrl }}" data-testid="leave-scheme-back">{{ labels.backAction }}</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('leaveScheme.js') }}"></script>
+{% endblock %}

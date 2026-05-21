@@ -27,6 +27,10 @@ const renderResultRow = (item, detailUrl) => `
           <dt class="govuk-summary-list__key">Brand names</dt>
           <dd class="govuk-summary-list__value">${escape((item.brandNames || []).join(', ') || 'None')}</dd>
         </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Represented by</dt>
+          <dd class="govuk-summary-list__value" data-testid="register-result-represented-by">${escape(item.representedBy || '—')}</dd>
+        </div>
       </dl>
     </div>
   </li>

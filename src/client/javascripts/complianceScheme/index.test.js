@@ -107,7 +107,7 @@ describe('initComplianceSchemeDashboard', () => {
     const meta = document.querySelector(
       '[data-testid="tile-approval-meta"]'
     ).textContent
-    expect(meta).toMatch(/Approval number: BCS\/2026\/001/)
+    expect(meta).toMatch(/Approval number: BCS2010864\/E/)
     expect(meta).toMatch(/Approved on/)
     expect(
       document.querySelector('[data-testid="tile-approval-action"] a').textContent
@@ -360,8 +360,8 @@ describe('initComplianceSchemeDashboard', () => {
     document.querySelector('[data-testid="debug-fast-forward"]').click()
 
     const [scheme] = storage.listSchemes()
-    expect(scheme.approvalNumber).toBe('BCS/2026/001')
-    expect(scheme.submittedOn).toBe('2026-01-02T00:00:00Z')
+    expect(scheme.approvalNumber).toBe('BCS2010864/E')
+    expect(scheme.submittedOn).toBe('2009-12-01T00:00:00Z')
   })
 
   test('members tile only counts members who joined on or before the active year', () => {

@@ -1,0 +1,29 @@
+{% extends 'onboarding/_layout.njk' %}
+
+{% block stepBody %}
+  <dl class="govuk-summary-list" data-testid="scheme-confirm-summary">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ labels.nameLabel }}</dt>
+      <dd class="govuk-summary-list__value" data-testid="scheme-confirm-name">—</dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ labels.operatorLabel }}</dt>
+      <dd class="govuk-summary-list__value" data-testid="scheme-confirm-operator">—</dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ labels.contactEmailLabel }}</dt>
+      <dd class="govuk-summary-list__value" data-testid="scheme-confirm-contact-email">—</dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ labels.webAddressLabel }}</dt>
+      <dd class="govuk-summary-list__value" data-testid="scheme-confirm-web-address">—</dd>
+    </div>
+  </dl>
+
+  <form method="post" action="{{ action }}" novalidate data-testid="onboarding-form">
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "onboarding-continue" }
+    }) }}
+  </form>
+{% endblock %}

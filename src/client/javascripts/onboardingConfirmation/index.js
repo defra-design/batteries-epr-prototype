@@ -20,7 +20,15 @@ export const renderConfirmation = (doc = globalThis.document) => {
     ? findRegistration(producer.id, compliancePeriod)
     : null
 
-  const bprn = producer?.bprn ?? 'Pending'
+  const isSchemeRoute = registration?.producerRoute === 'complianceScheme'
+  const scheme =
+    isSchemeRoute && registration?.schemeId
+      ? storage.getScheme(registration.schemeId)
+      : null
+
+  const bprn = isSchemeRoute
+    ? 'Awaiting scheme roster'
+    : (producer?.bprn ?? 'Pending')
   const status = registration?.status ?? 'Started'
 
   const setText = (selector, text) => {
@@ -32,5 +40,12 @@ export const renderConfirmation = (doc = globalThis.document) => {
   setText('[data-testid="confirmation-status"]', status)
   setText('[data-testid="confirmation-period"]', compliancePeriod)
 
-  return { bprn, status, compliancePeriod }
+  if (isSchemeRoute) {
+    const schemeMessage = scheme
+      ? `We have passed your details to ${scheme.name}. Your registration will be confirmed when the scheme files its next member roster.`
+      : 'We have passed your details to your chosen compliance scheme. Your registration will be confirmed when the scheme files its next member roster.'
+    setText('[data-testid="confirmation-intro"]', schemeMessage)
+  }
+
+  return { bprn, status, compliancePeriod, isSchemeRoute }
 }

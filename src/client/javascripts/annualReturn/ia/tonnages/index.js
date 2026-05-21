@@ -7,6 +7,7 @@ import {
   submissionToFormValues,
   upsertSubmission
 } from '../persist-submission.js'
+import { redirectIfSchemeRoute } from '../../scheme-represented-gate.js'
 
 const showCategoriesForProducer = (doc, producer) => {
   const battery = producer?.batteryTypes ?? {}
@@ -53,6 +54,10 @@ export const initIaTonnages = (
   const payload = readPagePayload(doc) ?? {}
   const signInUrl = payload.signInUrl ?? '/sign-in'
   if (!requireAuth(signInUrl)) return false
+
+  if (redirectIfSchemeRoute(payload.registrationId, loc)) {
+    return 'redirected-to-scheme-represented'
+  }
 
   if (payload.target === 'submission') {
     if (payload.savedFields) {

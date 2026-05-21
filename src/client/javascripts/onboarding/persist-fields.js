@@ -53,9 +53,12 @@ export const submitRegistration = (email, compliancePeriod) => {
   const producer = storage.getProducerByEmail(email)
   if (!producer) return null
 
-  let bprn = producer.bprn
-  if (!bprn) {
-    bprn = storage.allocateBprn({
+  const existingRegistration = findRegistration(producer.id, compliancePeriod)
+  const isSchemeRoute =
+    existingRegistration?.producerRoute === 'complianceScheme'
+
+  if (!isSchemeRoute && !producer.bprn) {
+    const bprn = storage.allocateBprn({
       agencyCode: producer.agencyCode ?? 'EA',
       compliancePeriod
     })
@@ -68,9 +71,21 @@ export const submitRegistration = (email, compliancePeriod) => {
 
   const refreshed = storage.getProducerByEmail(email)
   const registration = ensureRegistration(refreshed, compliancePeriod, {
-    status: 'Submitted',
+    status: isSchemeRoute ? 'pendingScheme' : 'Submitted',
     submittedAt: new Date().toISOString()
   })
+
+  if (isSchemeRoute && registration.schemeId) {
+    storage.joinScheme({
+      producerBprn: refreshed.bprn ?? null,
+      producerEmail: email,
+      schemeId: registration.schemeId,
+      compliancePeriod,
+      companyName: refreshed.companyName ?? null,
+      status: 'pendingAcceptance'
+    })
+  }
+
   return { producer: refreshed, registration }
 }
 
@@ -118,6 +133,7 @@ export const readOnboardingState = (email, compliancePeriod) => {
     producerRoute: registration?.producerRoute ?? '',
     smallProducerSelfDeclare:
       registration?.producerRoute === 'smallProducer' ? 'yes' : '',
+    schemeId: registration?.schemeId ?? '',
     declarationFirstName: declaration.firstName ?? '',
     declarationLastName: declaration.lastName ?? '',
     declarationPosition: declaration.position ?? '',

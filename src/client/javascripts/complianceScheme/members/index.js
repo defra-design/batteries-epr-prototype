@@ -73,13 +73,65 @@ const renderHistory = (doc, members) => {
     .join('')
 }
 
-const runListView = (doc, payload, scheme) => {
+const renderPending = (doc, members, payload) => {
+  const body = doc.querySelector('[data-testid="members-pending-body"]')
+  const empty = doc.querySelector('[data-testid="members-pending-empty"]')
+  if (members.length === 0) {
+    body.innerHTML = ''
+    empty.hidden = false
+    return
+  }
+  empty.hidden = true
+  body.innerHTML = members
+    .map(
+      (m) =>
+        `<tr class="govuk-table__row" data-testid="members-pending-row" data-member-id="${escape(m.id)}">
+        <td class="govuk-table__cell" data-testid="members-pending-company">${escape(m.companyName)}</td>
+        <td class="govuk-table__cell" data-testid="members-pending-joined">${escape(formatDate(m.joinedOn))}</td>
+        <td class="govuk-table__cell">
+          <button type="button" class="govuk-button govuk-button--secondary govuk-!-margin-right-2" data-testid="members-pending-accept" data-member-id="${escape(m.id)}">${escape(payload.copy.acceptAction)}</button>
+          <button type="button" class="govuk-button govuk-button--warning" data-testid="members-pending-reject" data-member-id="${escape(m.id)}">${escape(payload.copy.rejectAction)}</button>
+        </td>
+      </tr>`
+    )
+    .join('')
+}
+
+const wirePendingActions = (doc, loc, scheme, payload) => {
+  doc.querySelectorAll('[data-testid="members-pending-accept"]').forEach(
+    (button) => {
+      button.addEventListener('click', () => {
+        if (!globalThis.confirm(payload.copy.acceptConfirm)) return
+        storage.acceptSchemeMember(button.dataset.memberId, {
+          agencyCode: scheme.agencyCode
+        })
+        loc.reload()
+      })
+    }
+  )
+  doc.querySelectorAll('[data-testid="members-pending-reject"]').forEach(
+    (button) => {
+      button.addEventListener('click', () => {
+        if (!globalThis.confirm(payload.copy.rejectConfirm)) return
+        storage.rejectSchemeMember(button.dataset.memberId, 'rejected-by-scheme')
+        loc.reload()
+      })
+    }
+  )
+}
+
+const runListView = (doc, loc, payload, scheme) => {
+  const pending = storage
+    .listPendingSchemeMembers(scheme.id)
+    .filter((m) => m.compliancePeriod === payload.compliancePeriodYear)
   const { active, history } = storage.membersForYear(
     scheme.id,
     payload.compliancePeriodYear
   )
+  renderPending(doc, pending, payload)
   renderActive(doc, active, payload)
   renderHistory(doc, history)
+  wirePendingActions(doc, loc, scheme, payload)
 }
 
 const runAddView = (doc, loc, payload, scheme) => {
@@ -134,7 +186,7 @@ export const runMembersPage = (
   const scheme = ensureScheme()
 
   if (payload.view === 'list') {
-    runListView(doc, payload, scheme)
+    runListView(doc, loc, payload, scheme)
     return 'list'
   }
   if (payload.view === 'add') {

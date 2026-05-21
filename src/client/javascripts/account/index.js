@@ -162,6 +162,23 @@ const showContent = (doc) => {
   if (main) main.hidden = false
 }
 
+const findRegistrationForProducer = (producer, compliancePeriod) =>
+  storage
+    .listRegistrationsForProducer(producer.id)
+    .find((r) => r.compliancePeriod === compliancePeriod) ?? null
+
+const renderSchemeRow = (doc, producer, compliancePeriod) => {
+  const registration = findRegistrationForProducer(producer, compliancePeriod)
+  if (registration?.producerRoute !== 'complianceScheme') return
+
+  const scheme = registration.schemeId
+    ? storage.getScheme(registration.schemeId)
+    : null
+  doc.querySelector('[data-testid="account-scheme-row-name"]').textContent =
+    scheme?.name ?? ''
+  doc.querySelector('[data-testid="account-scheme-section"]').hidden = false
+}
+
 const wireResetButton = (doc, loc) => {
   const button = doc.querySelector('[data-testid="account-reset-confirm"]')
   if (!button) return
@@ -196,6 +213,7 @@ export const initAccount = (
   renderServiceOfNotice(doc, copy.serviceOfNotice, producer)
   renderBatteryTypes(doc, copy.batteryTypes, producer)
   renderBrandNames(doc, copy.brandNames, producer)
+  renderSchemeRow(doc, producer, payload.compliancePeriod)
   renderSubmissions(doc, copy.submissions, producer)
 
   if (payload.showReset) {

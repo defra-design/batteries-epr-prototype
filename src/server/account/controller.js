@@ -13,7 +13,8 @@ export const accountController = {
       contact: paths.onboardingContactDetails + RETURN_QS,
       serviceOfNotice: paths.onboardingServiceOfNotice + RETURN_QS,
       batteryTypes: paths.onboardingBatteryTypes + RETURN_QS,
-      brandNames: paths.onboardingBrandNames + RETURN_QS
+      brandNames: paths.onboardingBrandNames + RETURN_QS,
+      scheme: paths.onboardingSchemeSelect + RETURN_QS
     }
 
     return h.view('account/view', {
@@ -24,6 +25,7 @@ export const accountController = {
       sections: pageContent.sections,
       editLinks,
       dashboardUrl: paths.dashboard,
+      schemeDetailUrl: paths.accountScheme,
       showReset: true,
       pagePayload: {
         signInUrl: paths.signIn,

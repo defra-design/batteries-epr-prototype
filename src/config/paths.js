@@ -19,6 +19,10 @@ export const paths = {
 
   dashboard: '/dashboard',
   account: '/account',
+  accountScheme: '/account/scheme',
+  leaveSchemeReason: '/leave-scheme/reason',
+  leaveSchemeDeclaration: '/leave-scheme/declaration',
+  leaveSchemeConfirmation: '/leave-scheme/confirmation',
   newAccount: '/new-account',
 
   onboarding: '/onboarding/{step}',
@@ -28,10 +32,14 @@ export const paths = {
   onboardingBatteryTypes: '/onboarding/battery-types',
   onboardingBrandNames: '/onboarding/brand-names',
   onboardingProducerRoute: '/onboarding/producer-route',
+  onboardingSchemeSelect: '/onboarding/scheme-select',
+  onboardingSchemeConfirm: '/onboarding/scheme-confirm',
   onboardingDeclaration: '/onboarding/declaration',
   onboardingConfirmation: '/onboarding/confirmation',
 
   annualReturn: '/annual-return/{registrationId}/{step}',
+  annualReturnSchemeRepresented:
+    '/annual-return/{registrationId}/scheme-represented',
   annualReturnSmallTonnages:
     '/annual-return/{registrationId}/small-producer/tonnages',
   annualReturnSmallDeclaration:
@@ -67,7 +75,8 @@ export const paths = {
   complianceSchemeObligation: '/compliance-scheme/obligation',
 
   devReset: '/dev/reset',
-  devTimeTravel: '/dev/time-travel'
+  devTimeTravel: '/dev/time-travel',
+  devSchemes: '/dev/schemes'
 }
 /* v8 ignore stop */
 

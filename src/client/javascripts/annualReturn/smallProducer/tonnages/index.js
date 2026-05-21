@@ -6,6 +6,7 @@ import {
   submissionToFormValues,
   upsertSubmission
 } from '../persist-submission.js'
+import { redirectIfSchemeRoute } from '../../scheme-represented-gate.js'
 
 const showSection = (doc, mode) => {
   const simple = doc.querySelector('[data-testid="simple-fields"]')
@@ -56,6 +57,10 @@ export const initTonnages = (
   if (!requireAuth('/sign-in')) return false
 
   const payload = readPagePayload(doc) ?? {}
+
+  if (redirectIfSchemeRoute(payload.registrationId, loc)) {
+    return 'redirected-to-scheme-represented'
+  }
 
   if (payload.target === 'submission') {
     if (payload.savedFields) {

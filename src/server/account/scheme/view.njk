@@ -1,0 +1,69 @@
+{% extends 'layouts/page.njk' %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      <p class="govuk-body">{{ intro }}</p>
+
+      <div id="account-scheme-loading" data-testid="account-scheme-loading">
+        <p class="govuk-body">{{ loadingMessage }}</p>
+      </div>
+
+      <div id="account-scheme-not-member" data-testid="account-scheme-not-member" hidden>
+        <p class="govuk-body">{{ labels.notMemberBody }}</p>
+        <p class="govuk-body">
+          <a class="govuk-link" href="{{ backToAccountUrl }}" data-testid="account-scheme-back">{{ labels.backAction }}</a>
+        </p>
+      </div>
+
+      <div id="account-scheme-content" data-testid="account-scheme-content" hidden>
+        <h2 class="govuk-heading-m">{{ labels.detailsHeading }}</h2>
+        <dl class="govuk-summary-list" data-testid="account-scheme-details">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">{{ labels.nameLabel }}</dt>
+            <dd class="govuk-summary-list__value" data-testid="account-scheme-name"></dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">{{ labels.operatorLabel }}</dt>
+            <dd class="govuk-summary-list__value" data-testid="account-scheme-operator"></dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">{{ labels.approvalNumberLabel }}</dt>
+            <dd class="govuk-summary-list__value" data-testid="account-scheme-approval-number"></dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">{{ labels.contactEmailLabel }}</dt>
+            <dd class="govuk-summary-list__value" data-testid="account-scheme-contact-email"></dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">{{ labels.webAddressLabel }}</dt>
+            <dd class="govuk-summary-list__value" data-testid="account-scheme-web-address"></dd>
+          </div>
+        </dl>
+
+        <p class="govuk-body">
+          <a class="govuk-link" href="{{ editLinks.scheme }}" data-testid="account-scheme-edit">{{ labels.editAction }}</a>
+        </p>
+        <p class="govuk-body">
+          <a class="govuk-link govuk-link--no-visited-state" href="{{ leaveSchemeUrl }}" data-testid="account-scheme-leave">{{ labels.leaveAction }}</a>
+        </p>
+
+        <h2 class="govuk-heading-m">{{ labels.timelineHeading }}</h2>
+        <ol class="govuk-list" data-testid="account-scheme-timeline"></ol>
+        <p class="govuk-body" data-testid="account-scheme-timeline-empty" hidden>{{ labels.timelineEmpty }}</p>
+
+        <p class="govuk-body">
+          <a class="govuk-link" href="{{ backToAccountUrl }}" data-testid="account-scheme-back-from-content">{{ labels.backAction }}</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('accountScheme.js') }}"></script>
+{% endblock %}

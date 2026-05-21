@@ -16,7 +16,8 @@
       errorMessage: { text: errors.producerRoute } if errors.producerRoute,
       items: [
         { value: "smallProducer", text: labels.smallProducerLabel, hint: { text: labels.smallProducerHint }, checked: formValues.producerRoute == "smallProducer", attributes: { "data-testid": "producer-route-small-radio" } },
-        { value: "directRegistrant", text: labels.directRegistrantLabel, hint: { text: labels.directRegistrantHint }, checked: formValues.producerRoute == "directRegistrant", attributes: { "data-testid": "producer-route-direct-radio" } }
+        { value: "directRegistrant", text: labels.directRegistrantLabel, hint: { text: labels.directRegistrantHint }, checked: formValues.producerRoute == "directRegistrant", attributes: { "data-testid": "producer-route-direct-radio" } },
+        { value: "complianceScheme", text: labels.complianceSchemeLabel, hint: { text: labels.complianceSchemeHint }, checked: formValues.producerRoute == "complianceScheme", attributes: { "data-testid": "producer-route-scheme-radio" } }
       ]
     }) }}
 

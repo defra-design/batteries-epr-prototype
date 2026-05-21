@@ -43,9 +43,13 @@ export default {
       './javascripts/annualReturn/ia/declaration/entry.js',
     annualReturnIaConfirmation:
       './javascripts/annualReturn/ia/confirmation/entry.js',
+    annualReturnSchemeRepresented:
+      './javascripts/annualReturn/schemeRepresented/entry.js',
     serviceCharge: './javascripts/serviceCharge/entry.js',
     paymentDetails: './javascripts/paymentDetails/entry.js',
     account: './javascripts/account/entry.js',
+    accountScheme: './javascripts/account/scheme/entry.js',
+    leaveScheme: './javascripts/leaveScheme/entry.js',
     devReset: './javascripts/devReset/entry.js',
     devTimeTravel: './javascripts/devTimeTravel/entry.js',
     timeTravelShim: './javascripts/timeTravelShim/entry.js',

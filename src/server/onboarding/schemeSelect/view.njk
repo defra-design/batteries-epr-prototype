@@ -1,0 +1,38 @@
+{% extends 'onboarding/_layout.njk' %}
+
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="onboarding-form">
+    {% set schemeItems = [] %}
+    {% for scheme in schemes %}
+      {% set schemeItems = (schemeItems.push({
+        value: scheme.id,
+        text: scheme.name,
+        hint: { text: scheme.operator + " (" + scheme.agencyCode + ")" } if scheme.operator else null,
+        checked: formValues.schemeId == scheme.id,
+        attributes: { "data-testid": "scheme-select-radio-" + scheme.id }
+      }), schemeItems) %}
+    {% endfor %}
+
+    {{ govukRadios({
+      idPrefix: "schemeId",
+      name: "schemeId",
+      errorMessage: { text: errors.schemeId } if errors.schemeId,
+      items: schemeItems
+    }) }}
+
+    <p class="govuk-body" data-testid="scheme-select-no-agency-match" hidden>{{ labels.noAgencyMatch }}</p>
+
+    {{ govukDetails({
+      summaryText: labels.cannotFindSummary,
+      text: labels.cannotFindBody,
+      attributes: { "data-testid": "scheme-select-cannot-find" }
+    }) }}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "onboarding-continue" }
+    }) }}
+  </form>
+{% endblock %}

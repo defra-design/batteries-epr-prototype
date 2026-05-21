@@ -57,9 +57,51 @@ export const runOnboardingStep = (
 
   if (payload.step === 'producerRoute') {
     applyProducerRouteGate(doc, existing)
+  } else if (payload.step === 'schemeConfirm') {
+    applySchemeConfirm(doc, existing)
+  } else if (payload.step === 'schemeSelect') {
+    applySchemeSelectAgencyFilter(doc, user.email)
   }
 
   return payload.skipHydration ? 'preserved' : 'hydrated'
+}
+
+const setText = (doc, testId, value) => {
+  const el = doc.querySelector(`[data-testid="${testId}"]`)
+  if (el) el.textContent = value || '—'
+}
+
+const applySchemeSelectAgencyFilter = (doc, email) => {
+  const producer = storage.getProducerByEmail(email)
+  const producerAgency = producer?.agencyCode
+  if (!producerAgency) return
+  let visible = 0
+  for (const scheme of storage.listSchemes()) {
+    const radio = doc.querySelector(
+      `input[name="schemeId"][value="${scheme.id}"]`
+    )
+    const item = radio?.closest('.govuk-radios__item') ?? null
+    if (!item) continue
+    if (scheme.agencyCode && scheme.agencyCode !== producerAgency) {
+      item.hidden = true
+      radio.checked = false
+    } else {
+      visible += 1
+    }
+  }
+  const noMatch = doc.querySelector(
+    '[data-testid="scheme-select-no-agency-match"]'
+  )
+  if (noMatch) noMatch.hidden = visible !== 0
+}
+
+const applySchemeConfirm = (doc, existing) => {
+  const scheme = existing.schemeId ? storage.getScheme(existing.schemeId) : null
+  if (!scheme) return
+  setText(doc, 'scheme-confirm-name', scheme.name)
+  setText(doc, 'scheme-confirm-operator', scheme.operator)
+  setText(doc, 'scheme-confirm-contact-email', scheme.contactEmail)
+  setText(doc, 'scheme-confirm-web-address', scheme.webAddress)
 }
 
 const applyProducerRouteGate = (doc, existing) => {

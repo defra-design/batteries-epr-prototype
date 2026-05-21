@@ -135,6 +135,61 @@ describe('submitRegistration', () => {
   test('returns null when producer is missing', () => {
     expect(submitRegistration('nope@x.com', '2026')).toBeNull()
   })
+
+  test('compliance-scheme route skips BPRN allocation and marks pendingScheme', () => {
+    persistProducerFields('a@b.com', {
+      companyName: 'Scheme Co',
+      registeredAddress: { postcode: 'M1 4AA' }
+    })
+    const scheme = storage.saveScheme({
+      id: '22222222-0001-4000-a000-000000000001',
+      name: 'Northern Battery Compliance Scheme'
+    })
+    persistRegistrationFields('a@b.com', '2026', {
+      producerRoute: 'complianceScheme',
+      schemeId: scheme.id
+    })
+
+    const result = submitRegistration('a@b.com', '2026')
+
+    expect(result.producer.bprn ?? null).toBeNull()
+    expect(result.registration.status).toBe('pendingScheme')
+    const memberships = storage.getSchemeMembershipHistory(null)
+    expect(memberships.length).toBeGreaterThanOrEqual(1)
+    const joined = memberships[0]
+    expect(joined.schemeId).toBe(scheme.id)
+    expect(joined.companyName).toBe('Scheme Co')
+  })
+
+  test('compliance-scheme submit defaults companyName to null on the membership when producer has none', () => {
+    persistProducerFields('a@b.com', {
+      registeredAddress: { postcode: 'M1 4AA' }
+    })
+    const scheme = storage.saveScheme({
+      id: '22222222-0001-4000-a000-000000000099',
+      name: 'Anonymous Scheme'
+    })
+    persistRegistrationFields('a@b.com', '2026', {
+      producerRoute: 'complianceScheme',
+      schemeId: scheme.id
+    })
+    submitRegistration('a@b.com', '2026')
+    const memberships = storage.getSchemeMembershipHistory(null)
+    expect(memberships.find((m) => m.schemeId === scheme.id)?.companyName).toBeNull()
+  })
+
+  test('compliance-scheme submit without a schemeId still marks pendingScheme without creating membership', () => {
+    persistProducerFields('a@b.com', {
+      registeredAddress: { postcode: 'M1 4AA' }
+    })
+    persistRegistrationFields('a@b.com', '2026', {
+      producerRoute: 'complianceScheme'
+    })
+
+    const result = submitRegistration('a@b.com', '2026')
+    expect(result.registration.status).toBe('pendingScheme')
+    expect(storage.getSchemeMembershipHistory(null)).toHaveLength(0)
+  })
 })
 
 describe('readOnboardingState', () => {

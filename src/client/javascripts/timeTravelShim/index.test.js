@@ -5,22 +5,22 @@ import { installShim } from './index.js'
 
 const KEY = 'npwd-batteries:time-travel-target-year'
 
-let originalDate
+let OriginalDate
 
 beforeEach(() => {
-  originalDate = globalThis.Date
+  OriginalDate = globalThis.Date
   globalThis.localStorage.clear()
 })
 
 afterEach(() => {
-  globalThis.Date = originalDate
+  globalThis.Date = OriginalDate
   globalThis.localStorage.clear()
 })
 
 describe('installShim', () => {
   test('returns null when no target year is stored', () => {
     expect(installShim()).toBeNull()
-    expect(globalThis.Date).toBe(originalDate)
+    expect(globalThis.Date).toBe(OriginalDate)
   })
 
   test('returns null when the stored value is non-integer', () => {
@@ -34,14 +34,14 @@ describe('installShim', () => {
   })
 
   test('returns null when the target year matches the current real year', () => {
-    const realYear = new originalDate(originalDate.now()).getUTCFullYear()
+    const realYear = new OriginalDate(OriginalDate.now()).getUTCFullYear()
     globalThis.localStorage.setItem(KEY, String(realYear))
     expect(installShim()).toBeNull()
-    expect(globalThis.Date).toBe(originalDate)
+    expect(globalThis.Date).toBe(OriginalDate)
   })
 
   test('patches Date so new Date() reports the target year', () => {
-    const realYear = new originalDate(originalDate.now()).getUTCFullYear()
+    const realYear = new OriginalDate(OriginalDate.now()).getUTCFullYear()
     const target = realYear + 5
     globalThis.localStorage.setItem(KEY, String(target))
 
@@ -51,17 +51,17 @@ describe('installShim', () => {
   })
 
   test('Date.now() returns shifted milliseconds', () => {
-    const realYear = new originalDate(originalDate.now()).getUTCFullYear()
+    const realYear = new OriginalDate(OriginalDate.now()).getUTCFullYear()
     globalThis.localStorage.setItem(KEY, String(realYear + 2))
 
     installShim()
 
     const shifted = globalThis.Date.now()
-    expect(new originalDate(shifted).getUTCFullYear()).toBe(realYear + 2)
+    expect(new OriginalDate(shifted).getUTCFullYear()).toBe(realYear + 2)
   })
 
   test('explicit Date(args) is unshifted', () => {
-    const realYear = new originalDate(originalDate.now()).getUTCFullYear()
+    const realYear = new OriginalDate(OriginalDate.now()).getUTCFullYear()
     globalThis.localStorage.setItem(KEY, String(realYear + 5))
 
     installShim()
@@ -71,7 +71,7 @@ describe('installShim', () => {
   })
 
   test('called as a function returns a string with the shifted year', () => {
-    const realYear = new originalDate(originalDate.now()).getUTCFullYear()
+    const realYear = new OriginalDate(OriginalDate.now()).getUTCFullYear()
     globalThis.localStorage.setItem(KEY, String(realYear + 3))
 
     installShim()
@@ -82,14 +82,14 @@ describe('installShim', () => {
   })
 
   test('Date.UTC and Date.parse remain functional', () => {
-    const realYear = new originalDate(originalDate.now()).getUTCFullYear()
+    const realYear = new OriginalDate(OriginalDate.now()).getUTCFullYear()
     globalThis.localStorage.setItem(KEY, String(realYear + 1))
 
     installShim()
 
-    expect(globalThis.Date.UTC(2020, 0, 1)).toBe(originalDate.UTC(2020, 0, 1))
+    expect(globalThis.Date.UTC(2020, 0, 1)).toBe(OriginalDate.UTC(2020, 0, 1))
     expect(globalThis.Date.parse('2020-01-01T00:00:00Z')).toBe(
-      originalDate.parse('2020-01-01T00:00:00Z')
+      OriginalDate.parse('2020-01-01T00:00:00Z')
     )
   })
 })

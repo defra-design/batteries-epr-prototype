@@ -57,6 +57,21 @@ describe('initCategories', () => {
     expect(assignSpy).toHaveBeenCalledWith('/dashboard')
   })
 
+  test('redirects to scheme-represented when registration is on the scheme route', () => {
+    storage.setCurrentUser({ email: 'a@b.com' })
+    const reg = storage.saveRegistration({
+      compliancePeriod: '2026',
+      producerRoute: 'complianceScheme'
+    })
+    buildDom({ ...PAYLOAD, registrationId: reg.id })
+    expect(initCategories(document, globalThis.location)).toBe(
+      'redirected-to-scheme-represented'
+    )
+    expect(assignSpy).toHaveBeenCalledWith(
+      `/annual-return/${reg.id}/scheme-represented`
+    )
+  })
+
   test('lists declared categories for an industrial+automotive producer', () => {
     storage.setCurrentUser({ email: 'a@b.com' })
     storage.saveProducer({

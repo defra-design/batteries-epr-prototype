@@ -83,4 +83,42 @@ describe('#declaration', () => {
       expect.stringContaining('data-testid="onboarding-error-summary"')
     )
   })
+
+  test('GET with ?route=complianceScheme renders the scheme-route copy', async () => {
+    const { result, statusCode } = await server.inject({
+      method: 'GET',
+      url: `${paths.onboardingDeclaration}?route=complianceScheme`
+    })
+    expect(statusCode).toBe(statusCodes.ok)
+    expect(result).toEqual(
+      expect.stringContaining('joint and several liability')
+    )
+    expect(result).toEqual(
+      expect.stringContaining('action="/onboarding/declaration?route=complianceScheme"')
+    )
+  })
+
+  test('POST with ?route=complianceScheme preserves the route and onward target', async () => {
+    const { result } = await server.inject({
+      method: 'POST',
+      url: `${paths.onboardingDeclaration}?route=complianceScheme`,
+      payload: validPayload
+    })
+    expect(result).toEqual(
+      expect.stringContaining('action="/onboarding/declaration?route=complianceScheme"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining('"target":"registration-and-submit"')
+    )
+  })
+
+  test('POST with ?route=complianceScheme failure redirects back to the scheme variant', async () => {
+    const { statusCode, headers } = await server.inject({
+      method: 'POST',
+      url: `${paths.onboardingDeclaration}?route=complianceScheme`,
+      payload: {}
+    })
+    expect(statusCode).toBe(statusCodes.found)
+    expect(headers.location).toBe('/onboarding/declaration?route=complianceScheme')
+  })
 })

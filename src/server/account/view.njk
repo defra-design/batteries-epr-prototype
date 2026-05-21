@@ -51,6 +51,22 @@
           <a class="govuk-link" href="{{ editLinks.brandNames }}" data-testid="account-edit-brand-names">{{ sections.brandNames.editAction }}</a>
         </p>
 
+        <div data-testid="account-scheme-section" hidden>
+          <h2 class="govuk-heading-m">{{ sections.scheme.title }}</h2>
+          <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">{{ sections.scheme.nameLabel }}</dt>
+              <dd class="govuk-summary-list__value" data-testid="account-scheme-row-name"></dd>
+            </div>
+          </dl>
+          <p class="govuk-body">
+            <a class="govuk-link" href="{{ schemeDetailUrl }}" data-testid="account-scheme-view">{{ sections.scheme.viewAction }}</a>
+          </p>
+          <p class="govuk-body">
+            <a class="govuk-link" href="{{ editLinks.scheme }}" data-testid="account-edit-scheme">{{ sections.scheme.editAction }}</a>
+          </p>
+        </div>
+
         <h2 class="govuk-heading-m">{{ sections.submissions.title }}</h2>
         <div data-testid="account-submissions"></div>
 

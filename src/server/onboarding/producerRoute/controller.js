@@ -16,7 +16,7 @@ const schema = joi
   .object({
     producerRoute: joi
       .string()
-      .valid('smallProducer', 'directRegistrant')
+      .valid('smallProducer', 'directRegistrant', 'complianceScheme')
       .required()
   })
   .options({ stripUnknown: true })
@@ -66,6 +66,10 @@ export const producerRouteController = {
     handler(request, h) {
       const pageContent = content.onboardingProducerRoute(request)
       const savedFields = { producerRoute: request.payload.producerRoute }
+      const nextStepOverride =
+        request.payload.producerRoute === 'complianceScheme'
+          ? paths.onboardingSchemeSelect
+          : null
 
       return renderView(h, pageContent, {
         errorSummary: [],
@@ -75,7 +79,8 @@ export const producerRouteController = {
           request,
           STEP_ID,
           'registration',
-          savedFields
+          savedFields,
+          nextStepOverride
         )
       })
     }

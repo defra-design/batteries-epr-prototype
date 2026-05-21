@@ -387,11 +387,142 @@ describe('public register', () => {
   test('returns approved/BPRN-allocated producers when no filters applied', () => {
     const result = storage.searchPublicRegister({})
     const expectedCount = seedData.producers.filter(
-      (p) => p.status === 'Active' || p.status === 'Approved' || p.bprn != null
+      (p) =>
+        p.bprn != null && (p.status === 'Active' || p.status === 'Approved')
     ).length
     expect(result.totalCount).toBe(expectedCount)
     expect(result.items).toHaveLength(10)
     expect(result.totalPages).toBe(Math.ceil(expectedCount / 10))
+  })
+
+  test('omits scheme-represented producers whose BPRN has not been issued (pendingScheme)', () => {
+    const scheme = storage.saveScheme({
+      name: 'Pending Scheme',
+      approvalStatus: 'approved'
+    })
+    storage.saveProducer({
+      contactEmail: 'pending@x.com',
+      companyName: 'Pending Co',
+      bprn: null,
+      status: 'Started'
+    })
+    const producer = storage.getProducerByEmail('pending@x.com')
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      producerRoute: 'complianceScheme',
+      schemeId: scheme.id,
+      status: 'pendingScheme'
+    })
+
+    const result = storage.searchPublicRegister({ q: 'Pending' })
+    expect(result.items).toHaveLength(0)
+    expect(storage.getPublicProducer(null)).toBeNull()
+  })
+
+  test('search filters scheme-represented producers by scheme name keyword', () => {
+    const scheme = storage.saveScheme({
+      name: 'Tartan Battery Scheme',
+      operator: 'TBS Ltd',
+      approvalNumber: 'BCS/2026/777',
+      approvalStatus: 'approved'
+    })
+    storage.saveProducer({
+      contactEmail: 'rep@x.com',
+      companyName: 'Repped Producer Ltd',
+      bprn: 'BPRN-SEPA-2026-099000',
+      status: 'Approved'
+    })
+    const producer = storage.getProducerByEmail('rep@x.com')
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      producerRoute: 'complianceScheme',
+      schemeId: scheme.id,
+      status: 'Submitted'
+    })
+
+    const result = storage.searchPublicRegister({ q: 'tartan' })
+    expect(result.items).toHaveLength(1)
+    expect(result.items[0].representedBy).toBe('Tartan Battery Scheme')
+    expect(result.items[0].companyName).toBe('Repped Producer Ltd')
+  })
+
+  test('search items expose representedBy as null for direct registrants', () => {
+    const result = storage.searchPublicRegister({ q: 'kelvin' })
+    expect(result.items[0].representedBy).toBeNull()
+  })
+
+  test('getPublicProducer returns the scheme block for a scheme-represented producer', () => {
+    const scheme = storage.saveScheme({
+      name: 'Detail Scheme',
+      operator: 'DS Ltd',
+      approvalNumber: 'BCS/2026/888',
+      approvalStatus: 'approved'
+    })
+    storage.saveProducer({
+      contactEmail: 'detail@x.com',
+      companyName: 'Detail Producer',
+      bprn: 'BPRN-EA-2026-099777',
+      status: 'Approved'
+    })
+    const producer = storage.getProducerByEmail('detail@x.com')
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      producerRoute: 'complianceScheme',
+      schemeId: scheme.id
+    })
+
+    const detail = storage.getPublicProducer('BPRN-EA-2026-099777')
+    expect(detail.scheme).toEqual({
+      name: 'Detail Scheme',
+      operator: 'DS Ltd',
+      approvalNumber: 'BCS/2026/888'
+    })
+  })
+
+  test('getPublicProducer returns null scheme for direct producers', () => {
+    const detail = storage.getPublicProducer('BPRN-EA-2026-000001')
+    expect(detail.scheme).toBeNull()
+  })
+
+  test('getPublicProducer prefers the most recent scheme registration', () => {
+    const oldScheme = storage.saveScheme({
+      name: 'Old Scheme',
+      operator: 'Old Op',
+      approvalNumber: 'BCS/2025/001',
+      approvalStatus: 'approved'
+    })
+    const newScheme = storage.saveScheme({
+      name: 'New Scheme',
+      operator: 'New Op',
+      approvalNumber: 'BCS/2026/001',
+      approvalStatus: 'approved'
+    })
+    storage.saveProducer({
+      contactEmail: 'multi@x.com',
+      companyName: 'Multi Producer',
+      bprn: 'BPRN-EA-2026-099666',
+      status: 'Approved'
+    })
+    const producer = storage.getProducerByEmail('multi@x.com')
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2025',
+      producerRoute: 'complianceScheme',
+      schemeId: oldScheme.id
+    })
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      producerRoute: 'complianceScheme',
+      schemeId: newScheme.id
+    })
+
+    expect(
+      storage.getPublicProducer('BPRN-EA-2026-099666').scheme.name
+    ).toBe('New Scheme')
   })
 
   test('omits producers in Started status with no BPRN', () => {
@@ -630,6 +761,11 @@ describe('compliance scheme factories and storage', () => {
       additionalFiles: [{ name: 'f.pdf' }],
       evidenceAvailable: true,
       tradingNames: ['ACME'],
+      agencyCode: 'EA',
+      compliancePeriod: '2026',
+      operator: 'Acme Compliance Ltd',
+      contactEmail: 'schemes@acme.test',
+      webAddress: 'https://acme.test',
       createdAt: '2025-12-01T00:00:00Z',
       updatedAt: '2025-12-02T00:00:00Z'
     })
@@ -637,6 +773,11 @@ describe('compliance scheme factories and storage', () => {
     expect(s.name).toBe('Acme Scheme')
     expect(s.evidenceAvailable).toBe(true)
     expect(s.partners).toEqual([{ name: 'p' }])
+    expect(s.agencyCode).toBe('EA')
+    expect(s.compliancePeriod).toBe('2026')
+    expect(s.operator).toBe('Acme Compliance Ltd')
+    expect(s.contactEmail).toBe('schemes@acme.test')
+    expect(s.webAddress).toBe('https://acme.test')
   })
 
   test('createSchemeMember defaults', () => {
@@ -652,13 +793,19 @@ describe('compliance scheme factories and storage', () => {
       schemeId: 's-1',
       producerBprn: 'BPRN-EA-2026-000010',
       companyName: 'Members Ltd',
+      compliancePeriod: '2026',
       joinedOn: '2026-02-01T00:00:00Z',
       leftOn: '2026-04-01T00:00:00Z',
+      reasonForLeaving: 'left-the-scheme',
+      replacedById: 'reg-99',
       createdAt: '2026-02-01T00:00:00Z',
       updatedAt: '2026-04-01T00:00:00Z'
     })
     expect(m.schemeId).toBe('s-1')
     expect(m.leftOn).toBe('2026-04-01T00:00:00Z')
+    expect(m.compliancePeriod).toBe('2026')
+    expect(m.reasonForLeaving).toBe('left-the-scheme')
+    expect(m.replacedById).toBe('reg-99')
   })
 
   test('createQuarterlySubmission and createIaSubmission defaults', () => {
@@ -827,6 +974,539 @@ describe('compliance scheme factories and storage', () => {
     ])
   })
 
+  test('getSchemes filters by status, agencyCode and compliancePeriod', () => {
+    storage.saveScheme(
+      createScheme({
+        name: 'EA-Approved-2026',
+        approvalStatus: 'approved',
+        agencyCode: 'EA',
+        compliancePeriod: '2026'
+      })
+    )
+    storage.saveScheme(
+      createScheme({
+        name: 'EA-Pending-2026',
+        approvalStatus: 'pending',
+        agencyCode: 'EA',
+        compliancePeriod: '2026'
+      })
+    )
+    storage.saveScheme(
+      createScheme({
+        name: 'NRW-Approved-2026',
+        approvalStatus: 'approved',
+        agencyCode: 'NRW',
+        compliancePeriod: '2026'
+      })
+    )
+    storage.saveScheme(
+      createScheme({
+        name: 'EA-Approved-2027',
+        approvalStatus: 'approved',
+        agencyCode: 'EA',
+        compliancePeriod: '2027'
+      })
+    )
+
+    const approvedDefault = storage.getSchemes()
+    expect(approvedDefault.map((s) => s.name).sort()).toEqual([
+      'EA-Approved-2026',
+      'EA-Approved-2027',
+      'NRW-Approved-2026'
+    ])
+
+    expect(
+      storage
+        .getSchemes({ agencyCode: 'EA', compliancePeriod: '2026' })
+        .map((s) => s.name)
+    ).toEqual(['EA-Approved-2026'])
+
+    expect(storage.getSchemes({ status: 'pending' }).map((s) => s.name)).toEqual(
+      ['EA-Pending-2026']
+    )
+
+    expect(storage.getSchemes({ status: null })).toHaveLength(4)
+  })
+
+  test('getSchemeById is an alias for getScheme', () => {
+    const s = storage.saveScheme(createScheme({ name: 'Alias' }))
+    expect(storage.getSchemeById(s.id)).toEqual(s)
+    expect(storage.getSchemeById('missing')).toBeNull()
+  })
+
+  test('getActiveSchemeMembership returns the open membership and null otherwise', () => {
+    storage.saveSchemeMember(
+      createSchemeMember({
+        schemeId: 's-x',
+        producerBprn: 'BPRN-EA-2026-000050',
+        compliancePeriod: '2026',
+        joinedOn: '2026-02-01T00:00:00Z'
+      })
+    )
+    storage.saveSchemeMember(
+      createSchemeMember({
+        schemeId: 's-x',
+        producerBprn: 'BPRN-EA-2026-000050',
+        compliancePeriod: '2025',
+        joinedOn: '2025-02-01T00:00:00Z',
+        leftOn: '2025-12-31T00:00:00Z'
+      })
+    )
+
+    const active = storage.getActiveSchemeMembership(
+      'BPRN-EA-2026-000050',
+      '2026'
+    )
+    expect(active?.compliancePeriod).toBe('2026')
+
+    expect(
+      storage.getActiveSchemeMembership('BPRN-EA-2026-000050', '2025')
+    ).toBeNull()
+    expect(
+      storage.getActiveSchemeMembership('BPRN-EA-2026-000050')
+    ).not.toBeNull()
+    expect(storage.getActiveSchemeMembership('BPRN-NONE')).toBeNull()
+  })
+
+  test('getSchemeMembershipHistory returns all memberships newest first', () => {
+    storage.saveSchemeMember(
+      createSchemeMember({
+        schemeId: 's-h',
+        producerBprn: 'BPRN-EA-2026-000051',
+        compliancePeriod: '2025',
+        joinedOn: '2025-02-01T00:00:00Z',
+        leftOn: '2025-12-31T00:00:00Z'
+      })
+    )
+    storage.saveSchemeMember(
+      createSchemeMember({
+        schemeId: 's-h',
+        producerBprn: 'BPRN-EA-2026-000051',
+        compliancePeriod: '2026',
+        joinedOn: '2026-02-01T00:00:00Z'
+      })
+    )
+
+    const history = storage.getSchemeMembershipHistory('BPRN-EA-2026-000051')
+    expect(history).toHaveLength(2)
+    expect(history[0].compliancePeriod).toBe('2026')
+    expect(history[1].compliancePeriod).toBe('2025')
+
+    expect(storage.getSchemeMembershipHistory('BPRN-NONE')).toEqual([])
+  })
+
+  test('joinScheme creates a new membership and is idempotent on (bprn, period)', () => {
+    const first = storage.joinScheme({
+      producerBprn: 'BPRN-EA-2026-000052',
+      schemeId: 's-j',
+      compliancePeriod: '2026',
+      companyName: 'Joiner Ltd'
+    })
+    expect(first.schemeId).toBe('s-j')
+    expect(first.leftOn).toBeNull()
+
+    const sameAgain = storage.joinScheme({
+      producerBprn: 'BPRN-EA-2026-000052',
+      schemeId: 's-j',
+      compliancePeriod: '2026'
+    })
+    expect(sameAgain.id).toBe(first.id)
+
+    const differentScheme = storage.joinScheme({
+      producerBprn: 'BPRN-EA-2026-000052',
+      schemeId: 's-other',
+      compliancePeriod: '2026'
+    })
+    expect(differentScheme.id).not.toBe(first.id)
+
+    const noCompanyName = storage.joinScheme({
+      producerBprn: 'BPRN-EA-2026-000053',
+      schemeId: 's-j',
+      compliancePeriod: '2026'
+    })
+    expect(noCompanyName.companyName).toBeNull()
+  })
+
+  test('leaveScheme closes the active membership and returns null when none', () => {
+    storage.joinScheme({
+      producerBprn: 'BPRN-EA-2026-000054',
+      schemeId: 's-l',
+      compliancePeriod: '2026',
+      companyName: 'Leaver Ltd'
+    })
+
+    const left = storage.leaveScheme({
+      producerBprn: 'BPRN-EA-2026-000054',
+      compliancePeriod: '2026',
+      reasonForLeaving: 'switching-scheme'
+    })
+    expect(left?.leftOn).toBeTruthy()
+    expect(left?.reasonForLeaving).toBe('switching-scheme')
+
+    expect(
+      storage.getActiveSchemeMembership('BPRN-EA-2026-000054', '2026')
+    ).toBeNull()
+
+    expect(
+      storage.leaveScheme({
+        producerBprn: 'BPRN-NONE',
+        compliancePeriod: '2026'
+      })
+    ).toBeNull()
+
+    storage.joinScheme({
+      producerBprn: 'BPRN-EA-2026-000055',
+      schemeId: 's-l',
+      compliancePeriod: '2026'
+    })
+    const noReason = storage.leaveScheme({
+      producerBprn: 'BPRN-EA-2026-000055',
+      compliancePeriod: '2026'
+    })
+    expect(noReason?.reasonForLeaving).toBeNull()
+  })
+
+  test('joinScheme with status pendingAcceptance does not set acceptedOn', () => {
+    const m = storage.joinScheme({
+      producerBprn: null,
+      producerEmail: 'pending@x.com',
+      schemeId: 's-pending',
+      compliancePeriod: '2026',
+      status: 'pendingAcceptance'
+    })
+    expect(m.status).toBe('pendingAcceptance')
+    expect(m.acceptedOn).toBeNull()
+    expect(m.producerEmail).toBe('pending@x.com')
+  })
+
+  test('joinScheme deduplicates pending memberships by producerEmail when bprn is null', () => {
+    const first = storage.joinScheme({
+      producerBprn: null,
+      producerEmail: 'dup@x.com',
+      schemeId: 's-dedup',
+      compliancePeriod: '2026',
+      status: 'pendingAcceptance'
+    })
+    const second = storage.joinScheme({
+      producerBprn: null,
+      producerEmail: 'dup@x.com',
+      schemeId: 's-dedup',
+      compliancePeriod: '2026',
+      status: 'pendingAcceptance'
+    })
+    expect(second.id).toBe(first.id)
+  })
+
+  test('listPendingSchemeMembers returns only pending entries for a scheme', () => {
+    storage.saveSchemeMember(
+      createSchemeMember({
+        schemeId: 's-pending',
+        producerEmail: 'p1@x.com',
+        compliancePeriod: '2026',
+        status: 'pendingAcceptance'
+      })
+    )
+    storage.saveSchemeMember(
+      createSchemeMember({
+        schemeId: 's-pending',
+        producerBprn: 'BPRN-EA-2026-000060',
+        compliancePeriod: '2026',
+        status: 'active'
+      })
+    )
+    storage.saveSchemeMember(
+      createSchemeMember({
+        schemeId: 's-other',
+        producerEmail: 'other@x.com',
+        compliancePeriod: '2026',
+        status: 'pendingAcceptance'
+      })
+    )
+    const list = storage.listPendingSchemeMembers('s-pending')
+    expect(list).toHaveLength(1)
+    expect(list[0].producerEmail).toBe('p1@x.com')
+  })
+
+  test('acceptSchemeMember allocates a BPRN, flips status to active, and updates the producer', () => {
+    storage.saveProducer({
+      contactEmail: 'accept@x.com',
+      companyName: 'Accept Co',
+      registeredAddress: { postcode: 'M1 4AA' },
+      agencyCode: 'EA'
+    })
+    const producer = storage.getProducerByEmail('accept@x.com')
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      producerRoute: 'complianceScheme',
+      status: 'pendingScheme'
+    })
+    const scheme = storage.saveScheme({ agencyCode: 'EA' })
+    const member = storage.joinScheme({
+      producerBprn: null,
+      producerEmail: 'accept@x.com',
+      schemeId: scheme.id,
+      compliancePeriod: '2026',
+      companyName: 'Accept Co',
+      status: 'pendingAcceptance'
+    })
+
+    const accepted = storage.acceptSchemeMember(member.id, { agencyCode: 'EA' })
+    expect(accepted.status).toBe('active')
+    expect(accepted.producerBprn).toMatch(/^BPRN-EA-2026-/)
+    const updatedProducer = storage.getProducerByEmail('accept@x.com')
+    expect(updatedProducer.bprn).toBe(accepted.producerBprn)
+    expect(updatedProducer.status).toBe('Approved')
+    const reg = storage
+      .listRegistrationsForProducer(producer.id)
+      .find((r) => r.compliancePeriod === '2026')
+    expect(reg.status).toBe('Submitted')
+  })
+
+  test('acceptSchemeMember on an already-accepted member returns null', () => {
+    const m = storage.saveSchemeMember(
+      createSchemeMember({
+        schemeId: 's',
+        compliancePeriod: '2026',
+        status: 'active'
+      })
+    )
+    expect(storage.acceptSchemeMember(m.id)).toBeNull()
+    expect(storage.acceptSchemeMember('missing-id')).toBeNull()
+  })
+
+  test('acceptSchemeMember reuses an existing producer BPRN when present', () => {
+    const m = storage.saveSchemeMember(
+      createSchemeMember({
+        schemeId: 's',
+        producerBprn: 'BPRN-EA-2026-999999',
+        compliancePeriod: '2026',
+        status: 'pendingAcceptance'
+      })
+    )
+    const accepted = storage.acceptSchemeMember(m.id)
+    expect(accepted.producerBprn).toBe('BPRN-EA-2026-999999')
+    expect(accepted.status).toBe('active')
+  })
+
+  test('acceptSchemeMember without a producer record still allocates a BPRN on the member', () => {
+    const m = storage.saveSchemeMember(
+      createSchemeMember({
+        schemeId: 's',
+        producerEmail: 'ghost@x.com',
+        compliancePeriod: '2026',
+        status: 'pendingAcceptance'
+      })
+    )
+    const accepted = storage.acceptSchemeMember(m.id, { agencyCode: 'NRW' })
+    expect(accepted.producerBprn).toMatch(/^BPRN-NRW-2026-/)
+  })
+
+  test('acceptSchemeMember allocates a BPRN even with no producerEmail or producerBprn', () => {
+    const m = storage.saveSchemeMember(
+      createSchemeMember({
+        schemeId: 's',
+        compliancePeriod: '2026',
+        status: 'pendingAcceptance'
+      })
+    )
+    const accepted = storage.acceptSchemeMember(m.id)
+    expect(accepted.producerBprn).toMatch(/^BPRN-EA-2026-/)
+  })
+
+  test('rejectSchemeMember closes a pending membership', () => {
+    const m = storage.saveSchemeMember(
+      createSchemeMember({
+        schemeId: 's',
+        producerEmail: 'reject@x.com',
+        compliancePeriod: '2026',
+        status: 'pendingAcceptance'
+      })
+    )
+    const rejected = storage.rejectSchemeMember(m.id, 'not-eligible')
+    expect(rejected.status).toBe('rejected')
+    expect(rejected.leftOn).toBeTruthy()
+    expect(rejected.reasonForLeaving).toBe('not-eligible')
+  })
+
+  test('transitionToDirect reuses the producer existing BPRN when present', () => {
+    storage.saveProducer({
+      contactEmail: 't1@x.com',
+      companyName: 'T1 Co',
+      bprn: 'BPRN-EA-2026-088001',
+      registeredAddress: { postcode: 'M1 4AA' },
+      agencyCode: 'EA',
+      status: 'Approved'
+    })
+    const producer = storage.getProducerByEmail('t1@x.com')
+    const scheme = storage.saveScheme({ name: 'T1 Scheme' })
+    const oldReg = storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      producerRoute: 'complianceScheme',
+      schemeId: scheme.id,
+      status: 'Submitted'
+    })
+    storage.joinScheme({
+      producerBprn: producer.bprn,
+      producerEmail: 't1@x.com',
+      schemeId: scheme.id,
+      compliancePeriod: '2026',
+      status: 'active'
+    })
+
+    const result = storage.transitionToDirect({
+      producerEmail: 't1@x.com',
+      compliancePeriod: '2026',
+      reasonForLeaving: 'joinedAnotherScheme'
+    })
+
+    expect(result.bprn).toBe('BPRN-EA-2026-088001')
+    expect(result.registration.producerRoute).toBe('directRegistrant')
+    expect(result.registration.replacesId).toBe(oldReg.id)
+    expect(storage.getRegistration(oldReg.id).status).toBe('superseded')
+    const closedMember = storage
+      .listSchemeMembers(scheme.id)
+      .find((m) => m.producerBprn === 'BPRN-EA-2026-088001')
+    expect(closedMember.leftOn).toBeTruthy()
+    expect(closedMember.reasonForLeaving).toBe('joinedAnotherScheme')
+  })
+
+  test('transitionToDirect allocates a fresh BPRN when producer has none', () => {
+    storage.saveProducer({
+      contactEmail: 't2@x.com',
+      companyName: 'T2 Co',
+      agencyCode: 'NRW',
+      registeredAddress: { postcode: 'CF10 3AT' },
+      status: 'Started'
+    })
+    const producer = storage.getProducerByEmail('t2@x.com')
+    const scheme = storage.saveScheme({ name: 'T2 Scheme' })
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      producerRoute: 'complianceScheme',
+      schemeId: scheme.id,
+      status: 'pendingScheme'
+    })
+
+    const result = storage.transitionToDirect({
+      producerEmail: 't2@x.com',
+      compliancePeriod: '2026',
+      reasonForLeaving: 'belowThreshold'
+    })
+
+    expect(result.bprn).toMatch(/^BPRN-NRW-2026-/)
+    expect(result.producer.bprn).toBe(result.bprn)
+  })
+
+  test('transitionToDirect with other reason stores the free text after a colon', () => {
+    storage.saveProducer({
+      contactEmail: 't3@x.com',
+      companyName: 'T3 Co',
+      bprn: 'BPRN-EA-2026-088003',
+      agencyCode: 'EA',
+      status: 'Approved'
+    })
+    const producer = storage.getProducerByEmail('t3@x.com')
+    const scheme = storage.saveScheme({ name: 'T3 Scheme' })
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      producerRoute: 'complianceScheme',
+      schemeId: scheme.id,
+      status: 'Submitted'
+    })
+    storage.joinScheme({
+      producerBprn: producer.bprn,
+      schemeId: scheme.id,
+      compliancePeriod: '2026',
+      status: 'active'
+    })
+
+    storage.transitionToDirect({
+      producerEmail: 't3@x.com',
+      compliancePeriod: '2026',
+      reasonForLeaving: 'other',
+      otherReason: 'Closing UK arm'
+    })
+
+    const closedMember = storage
+      .listSchemeMembers(scheme.id)
+      .find((m) => m.producerBprn === 'BPRN-EA-2026-088003')
+    expect(closedMember.reasonForLeaving).toBe('other:Closing UK arm')
+  })
+
+  test('transitionToDirect returns null for an unknown producer email', () => {
+    expect(
+      storage.transitionToDirect({
+        producerEmail: 'nobody@x.com',
+        compliancePeriod: '2026',
+        reasonForLeaving: 'ceasedTrading'
+      })
+    ).toBeNull()
+  })
+
+  test('transitionToDirect returns null when there is no active scheme registration', () => {
+    storage.saveProducer({
+      contactEmail: 't4@x.com',
+      companyName: 'T4 Co',
+      status: 'Approved',
+      bprn: 'BPRN-EA-2026-088004',
+      agencyCode: 'EA'
+    })
+    const producer = storage.getProducerByEmail('t4@x.com')
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      producerRoute: 'directRegistrant',
+      status: 'Submitted'
+    })
+
+    expect(
+      storage.transitionToDirect({
+        producerEmail: 't4@x.com',
+        compliancePeriod: '2026',
+        reasonForLeaving: 'ceasedTrading'
+      })
+    ).toBeNull()
+  })
+
+  test('transitionToDirect with a producer missing agencyCode allocates under EA', () => {
+    storage.saveProducer({
+      contactEmail: 't5@x.com',
+      companyName: 'T5 Co',
+      status: 'Started'
+    })
+    const producer = storage.getProducerByEmail('t5@x.com')
+    const scheme = storage.saveScheme({ name: 'T5 Scheme' })
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      producerRoute: 'complianceScheme',
+      schemeId: scheme.id,
+      status: 'pendingScheme'
+    })
+
+    const result = storage.transitionToDirect({
+      producerEmail: 't5@x.com',
+      compliancePeriod: '2026',
+      reasonForLeaving: 'belowThreshold'
+    })
+    expect(result.bprn).toMatch(/^BPRN-EA-2026-/)
+  })
+
+  test('rejectSchemeMember returns null for unknown or already-accepted members', () => {
+    const accepted = storage.saveSchemeMember(
+      createSchemeMember({
+        schemeId: 's',
+        status: 'active'
+      })
+    )
+    expect(storage.rejectSchemeMember(accepted.id)).toBeNull()
+    expect(storage.rejectSchemeMember('missing-id')).toBeNull()
+  })
+
   test('quarterly submissions filter by scheme and year', () => {
     const a = storage.saveQuarterlySubmission(
       createQuarterlySubmission({
@@ -992,9 +1672,20 @@ describe('compliance scheme factories and storage', () => {
 
   test('seedDemoData seeds schemes once and respects existing entries', () => {
     expect(storage.seedDemoData()).toBe(true)
-    expect(storage.listSchemes().length).toBeGreaterThanOrEqual(2)
+    expect(storage.listSchemes().length).toBeGreaterThanOrEqual(4)
     expect(storage.seedDemoData()).toBe(false)
   })
+
+  test('seedDemoData seeds the EA-registered compliance schemes from the public register', () => {
+    storage.seedDemoData()
+    const names = storage.listSchemes().map((s) => s.name)
+    expect(names).toEqual(
+      expect.arrayContaining(['BatteryBack', 'ERP UK Ltd', 'Valpak Ltd'])
+    )
+    const statuses = new Set(storage.listSchemes().map((s) => s.approvalStatus))
+    expect(statuses.has('approved')).toBe(true)
+  })
+
 
   test('seedDemoData skips schemes that already exist', () => {
     const [first] = seedData.schemes

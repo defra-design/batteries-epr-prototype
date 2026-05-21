@@ -1,0 +1,35 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukPanel({
+        titleText: heading,
+        html: '<p class="govuk-body">' + labels.bprnLabel + ' <span data-testid="leave-scheme-bprn">…</span></p>'
+      }) }}
+
+      <p class="govuk-body" data-testid="leave-scheme-intro">{{ labels.intro }}</p>
+
+      <ul class="govuk-list govuk-list--bullet">
+        <li>{{ labels.next1 }}</li>
+        <li>{{ labels.next2 }}</li>
+      </ul>
+
+      {{ govukButton({
+        text: labels.continueAction,
+        href: dashboardUrl,
+        attributes: { "data-testid": "leave-scheme-back-to-dashboard" }
+      }) }}
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('leaveScheme.js') }}"></script>
+{% endblock %}

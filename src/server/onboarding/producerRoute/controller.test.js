@@ -52,6 +52,32 @@ describe('#producerRoute', () => {
     )
   })
 
+  test('POST complianceScheme is accepted by the validator and routes onward to schemeSelect', async () => {
+    const { result, statusCode } = await server.inject({
+      method: 'POST',
+      url: paths.onboardingProducerRoute,
+      payload: { producerRoute: 'complianceScheme' }
+    })
+    expect(statusCode).toBe(statusCodes.ok)
+    expect(result).toEqual(
+      expect.stringContaining('"producerRoute":"complianceScheme"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining(`"nextStep":"${paths.onboardingSchemeSelect}"`)
+    )
+  })
+
+  test('POST smallProducer keeps the default declaration next step', async () => {
+    const { result } = await server.inject({
+      method: 'POST',
+      url: paths.onboardingProducerRoute,
+      payload: { producerRoute: 'smallProducer' }
+    })
+    expect(result).toEqual(
+      expect.stringContaining(`"nextStep":"${paths.onboardingDeclaration}"`)
+    )
+  })
+
   test('POST missing route redirects', async () => {
     const { statusCode } = await server.inject({
       method: 'POST',

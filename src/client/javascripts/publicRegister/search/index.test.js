@@ -2,6 +2,7 @@
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 
 import { initSearch, prefillForm, renderSearchResults } from './index.js'
+import { storage } from '../../storage-adapter.js'
 import seedData from '../../storage-seed.json'
 
 const buildDom = (search = '') => {
@@ -81,6 +82,46 @@ describe('renderSearchResults', () => {
       '[data-testid="register-result-link"]'
     )
     expect(firstLink.getAttribute('href')).toMatch(/\/register\/BPRN-/)
+  })
+
+  test('result rows include a Represented by column with — for direct registrants', () => {
+    buildDom('')
+    renderSearchResults(document, { page: 1 }, '/register/{bprn}')
+    const repCells = document.querySelectorAll(
+      '[data-testid="register-result-represented-by"]'
+    )
+    expect(repCells.length).toBeGreaterThan(0)
+    expect(repCells[0].textContent).toBe('—')
+  })
+
+  test('result rows show the scheme name for scheme-represented producers', () => {
+    buildDom('')
+    const scheme = storage.saveScheme({
+      name: 'Visible Scheme',
+      approvalStatus: 'approved'
+    })
+    storage.saveProducer({
+      contactEmail: 'visible@x.com',
+      companyName: 'AAA Visible Producer',
+      bprn: 'BPRN-EA-2026-099500',
+      status: 'Approved'
+    })
+    const producer = storage.getProducerByEmail('visible@x.com')
+    storage.saveRegistration({
+      producerId: producer.id,
+      compliancePeriod: '2026',
+      producerRoute: 'complianceScheme',
+      schemeId: scheme.id
+    })
+    renderSearchResults(
+      document,
+      { q: 'Visible', page: 1 },
+      '/register/{bprn}'
+    )
+    const repCells = document.querySelectorAll(
+      '[data-testid="register-result-represented-by"]'
+    )
+    expect(repCells[0].textContent).toBe('Visible Scheme')
   })
 
   test('returns the search result without a container present', () => {

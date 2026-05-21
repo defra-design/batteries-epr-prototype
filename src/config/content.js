@@ -474,6 +474,9 @@ export const content = {
         directRegistrantLabel: 'Direct registrant',
         directRegistrantHint:
           'I place 1 tonne or more of portable batteries, or any industrial or automotive batteries.',
+        complianceSchemeLabel: 'Member of a battery compliance scheme',
+        complianceSchemeHint:
+          'A scheme files your annual return for you. You will need to know which approved scheme you belong to.',
         continueAction: 'Continue',
         forcedHeading: 'You must register as a direct registrant',
         forcedBody:
@@ -491,6 +494,8 @@ export const content = {
         smallProducerHint: 'TODO welsh',
         directRegistrantLabel: 'TODO welsh',
         directRegistrantHint: 'TODO welsh',
+        complianceSchemeLabel: 'TODO welsh',
+        complianceSchemeHint: 'TODO welsh',
         continueAction: 'TODO welsh',
         forcedHeading: 'TODO welsh',
         forcedBody: 'TODO welsh',
@@ -498,6 +503,62 @@ export const content = {
           title: 'TODO welsh',
           choice: 'TODO welsh'
         }
+      }
+    }),
+  onboardingSchemeSelect: (request) =>
+    getContentForLanguage(request, {
+      en: {
+        title: 'Choose your compliance scheme',
+        heading: 'Choose your compliance scheme',
+        intro:
+          'Select the approved battery compliance scheme that will register and report on your behalf.',
+        continueAction: 'Continue',
+        cannotFindSummary: 'I cannot find my scheme',
+        cannotFindBody:
+          'Speak to the scheme that has agreed to act on your behalf. If you do not yet have a scheme, you cannot complete registration on this route.',
+        noAgencyMatch:
+          'There are no approved compliance schemes registered with your environment agency. Contact your scheme directly to confirm next steps.',
+        error: {
+          title: 'There is a problem',
+          choice: 'Select your compliance scheme'
+        }
+      },
+      cy: {
+        title: 'TODO welsh',
+        heading: 'TODO welsh',
+        intro: 'TODO welsh',
+        continueAction: 'TODO welsh',
+        cannotFindSummary: 'TODO welsh',
+        cannotFindBody: 'TODO welsh',
+        noAgencyMatch: 'TODO welsh',
+        error: {
+          title: 'TODO welsh',
+          choice: 'TODO welsh'
+        }
+      }
+    }),
+  onboardingSchemeConfirm: (request) =>
+    getContentForLanguage(request, {
+      en: {
+        title: 'Confirm your compliance scheme',
+        heading: 'Confirm your compliance scheme',
+        intro:
+          'Check the scheme details below. By confirming, you authorise this scheme to register and report on your behalf.',
+        nameLabel: 'Scheme name',
+        operatorLabel: 'Scheme operator',
+        contactEmailLabel: 'Scheme contact email',
+        webAddressLabel: 'Scheme website',
+        continueAction: 'Confirm my scheme'
+      },
+      cy: {
+        title: 'TODO welsh',
+        heading: 'TODO welsh',
+        intro: 'TODO welsh',
+        nameLabel: 'TODO welsh',
+        operatorLabel: 'TODO welsh',
+        contactEmailLabel: 'TODO welsh',
+        webAddressLabel: 'TODO welsh',
+        continueAction: 'TODO welsh'
       }
     }),
   onboardingDeclaration: (request) =>
@@ -519,6 +580,13 @@ export const content = {
           lastName: 'Enter your last name',
           position: 'Enter your position in the business',
           confirm: 'You must confirm before submitting'
+        },
+        schemeOverrides: {
+          intro:
+            'Confirm the information you have provided is correct. By submitting, you authorise your chosen compliance scheme to act on your behalf for this compliance period. You accept joint and several liability for the obligations the scheme files under your name.',
+          confirmLabel:
+            'I confirm I am authorised to nominate this scheme to act on behalf of the business and that the details are correct.',
+          continueAction: 'Submit and notify scheme'
         }
       },
       cy: {
@@ -536,6 +604,11 @@ export const content = {
           lastName: 'TODO welsh',
           position: 'TODO welsh',
           confirm: 'TODO welsh'
+        },
+        schemeOverrides: {
+          intro: 'TODO welsh',
+          confirmLabel: 'TODO welsh',
+          continueAction: 'TODO welsh'
         }
       }
     }),
@@ -590,7 +663,11 @@ export const content = {
             submittedBody:
               'Your registration is submitted. Pay the service charge to complete approval.',
             approvedBody:
-              'Your registration is approved for the {compliancePeriod} compliance period.'
+              'Your registration is approved for the {compliancePeriod} compliance period.',
+            statusPendingScheme: 'Awaiting scheme',
+            bprnAwaitingScheme: 'Awaiting scheme roster',
+            pendingSchemeBody:
+              'Your compliance scheme will register you when it files its next member roster.'
           },
           fee: {
             title: 'Service charge',
@@ -616,6 +693,24 @@ export const content = {
             blockedBody:
               'Submit and pay for your registration before you can file an annual return.'
           },
+          agencyMismatch: {
+            title: 'Important',
+            body: 'Your scheme is regulated by {schemeAgency} but your registered address is now in {producerAgency} — contact your scheme.'
+          },
+          schemeRoute: {
+            title: 'Your compliance scheme',
+            description:
+              'A compliance scheme files your annual return on your behalf.',
+            statusRepresented: 'Represented',
+            bodyWithScheme:
+              '{scheme} files your annual return on your behalf — there is nothing for you to submit this period.',
+            bodyAwaitingScheme:
+              'Your chosen scheme will confirm your registration when it files its next member roster.',
+            viewSchemeLink: 'View scheme details',
+            rosterLabel: 'Last roster update:',
+            rosterValueAwaiting: 'Awaiting first roster',
+            statusPending: 'Awaiting roster'
+          },
           activity: {
             title: 'Recent activity',
             description: 'A timeline of changes to your producer record.',
@@ -633,6 +728,7 @@ export const content = {
           registration: { title: 'TODO welsh' },
           fee: { title: 'TODO welsh' },
           annualReturn: { title: 'TODO welsh' },
+          agencyMismatch: { title: 'TODO welsh', body: 'TODO welsh' },
           activity: { title: 'TODO welsh' }
         }
       }
@@ -735,6 +831,32 @@ export const content = {
           position: 'TODO welsh',
           confirm: 'TODO welsh'
         }
+      }
+    }),
+  annualReturnSchemeRepresented: (request) =>
+    getContentForLanguage(request, {
+      en: {
+        title: 'Your scheme reports on your behalf',
+        heading: 'Your scheme reports on your behalf',
+        intro:
+          'You are a member of a battery compliance scheme. The scheme files your annual return on your behalf — there is nothing for you to submit for this compliance period.',
+        schemeNameLabel: 'Scheme',
+        periodLabel: 'Compliance period',
+        rosterLabel: 'Last roster update',
+        rosterPending: 'Awaiting first roster',
+        viewSchemeAction: 'View your scheme details',
+        backToDashboardAction: 'Back to your dashboard'
+      },
+      cy: {
+        title: 'TODO welsh',
+        heading: 'TODO welsh',
+        intro: 'TODO welsh',
+        schemeNameLabel: 'TODO welsh',
+        periodLabel: 'TODO welsh',
+        rosterLabel: 'TODO welsh',
+        rosterPending: 'TODO welsh',
+        viewSchemeAction: 'TODO welsh',
+        backToDashboardAction: 'TODO welsh'
       }
     }),
   annualReturnSmallConfirmation: (request) =>
@@ -887,6 +1009,169 @@ export const content = {
         backToDashboardAction: 'TODO welsh'
       }
     }),
+  leaveSchemeReason: (request) =>
+    getContentForLanguage(request, {
+      en: {
+        title: 'Why are you leaving your compliance scheme?',
+        heading: 'Why are you leaving your compliance scheme?',
+        intro:
+          'Tell us why you are leaving so the scheme and your environment agency have a record of the change.',
+        reasonLegend: 'Reason for leaving',
+        reasons: {
+          joinedAnotherScheme: 'I am joining a different compliance scheme',
+          belowThreshold:
+            'I am now below the threshold and want to register as a small producer',
+          ceasedTrading: 'My business has ceased placing batteries on the market',
+          other: 'Other'
+        },
+        otherReasonLabel: 'If other, please describe',
+        otherReasonHint: 'Tell us briefly why you are leaving the scheme.',
+        continueAction: 'Continue',
+        cancelAction: 'Cancel and return to your account',
+        error: {
+          title: 'There is a problem',
+          choice: 'Select a reason for leaving',
+          otherRequired: 'Tell us why you are leaving the scheme'
+        }
+      },
+      cy: {
+        title: 'TODO welsh',
+        heading: 'TODO welsh',
+        intro: 'TODO welsh',
+        reasonLegend: 'TODO welsh',
+        reasons: {
+          joinedAnotherScheme: 'TODO welsh',
+          belowThreshold: 'TODO welsh',
+          ceasedTrading: 'TODO welsh',
+          other: 'TODO welsh'
+        },
+        otherReasonLabel: 'TODO welsh',
+        otherReasonHint: 'TODO welsh',
+        continueAction: 'TODO welsh',
+        cancelAction: 'TODO welsh',
+        error: {
+          title: 'TODO welsh',
+          choice: 'TODO welsh',
+          otherRequired: 'TODO welsh'
+        }
+      }
+    }),
+  leaveSchemeDeclaration: (request) =>
+    getContentForLanguage(request, {
+      en: {
+        title: 'Confirm you will register directly',
+        heading: 'Confirm you will register directly',
+        intro:
+          'By leaving your compliance scheme you take back responsibility for filing your own annual return.',
+        summaryReasonLabel: 'Your reason',
+        responsibility1:
+          'You will be issued a Battery Producer Registration Number (BPRN) directly.',
+        responsibility2:
+          'You must file your own annual return for the current compliance period.',
+        responsibility3:
+          'Your environment agency will be notified of the change.',
+        confirmLegend: 'Declaration',
+        confirmLabel:
+          'I confirm I am authorised to leave the scheme on behalf of this business and that the details above are correct.',
+        continueAction: 'Leave the scheme',
+        backAction: 'Back',
+        error: {
+          title: 'There is a problem',
+          confirm: 'You must confirm the declaration before continuing'
+        }
+      },
+      cy: {
+        title: 'TODO welsh',
+        heading: 'TODO welsh',
+        intro: 'TODO welsh',
+        summaryReasonLabel: 'TODO welsh',
+        responsibility1: 'TODO welsh',
+        responsibility2: 'TODO welsh',
+        responsibility3: 'TODO welsh',
+        confirmLegend: 'TODO welsh',
+        confirmLabel: 'TODO welsh',
+        continueAction: 'TODO welsh',
+        backAction: 'TODO welsh',
+        error: {
+          title: 'TODO welsh',
+          confirm: 'TODO welsh'
+        }
+      }
+    }),
+  leaveSchemeConfirmation: (request) =>
+    getContentForLanguage(request, {
+      en: {
+        title: 'You have left your compliance scheme',
+        heading: 'You have left your compliance scheme',
+        intro:
+          'You are now a direct registrant. You are responsible for filing your own annual return for this compliance period.',
+        bprnLabel: 'Your BPRN:',
+        next1: 'Your scheme membership has been closed.',
+        next2:
+          'You can file an annual return from your dashboard whenever you are ready.',
+        continueAction: 'Continue to your dashboard'
+      },
+      cy: {
+        title: 'TODO welsh',
+        heading: 'TODO welsh',
+        intro: 'TODO welsh',
+        bprnLabel: 'TODO welsh',
+        next1: 'TODO welsh',
+        next2: 'TODO welsh',
+        continueAction: 'TODO welsh'
+      }
+    }),
+  accountScheme: (request) =>
+    getContentForLanguage(request, {
+      en: {
+        title: 'Your compliance scheme',
+        heading: 'Your compliance scheme',
+        intro:
+          'This is the battery compliance scheme that files annual returns on your behalf.',
+        loadingMessage: 'Loading your scheme details…',
+        detailsHeading: 'Scheme details',
+        nameLabel: 'Scheme name',
+        operatorLabel: 'Scheme operator',
+        approvalNumberLabel: 'Approval number',
+        contactEmailLabel: 'Scheme contact email',
+        webAddressLabel: 'Scheme website',
+        editAction: 'Change scheme',
+        leaveAction: 'Leave this scheme',
+        timelineHeading: 'Membership history',
+        timelineEmpty: 'No previous memberships recorded.',
+        timelineJoined: 'Joined',
+        timelineLeft: 'Left',
+        timelineActive: 'current',
+        timelineReason: 'Reason',
+        notMemberBody:
+          'You are not a member of a compliance scheme. Go back to your account to change your producer route.',
+        backAction: 'Back to your account',
+        notFoundName: 'Scheme record unavailable'
+      },
+      cy: {
+        title: 'TODO welsh',
+        heading: 'TODO welsh',
+        intro: 'TODO welsh',
+        loadingMessage: 'TODO welsh',
+        detailsHeading: 'TODO welsh',
+        nameLabel: 'TODO welsh',
+        operatorLabel: 'TODO welsh',
+        approvalNumberLabel: 'TODO welsh',
+        contactEmailLabel: 'TODO welsh',
+        webAddressLabel: 'TODO welsh',
+        editAction: 'TODO welsh',
+        leaveAction: 'TODO welsh',
+        timelineHeading: 'TODO welsh',
+        timelineEmpty: 'TODO welsh',
+        timelineJoined: 'TODO welsh',
+        timelineLeft: 'TODO welsh',
+        timelineActive: 'TODO welsh',
+        timelineReason: 'TODO welsh',
+        notMemberBody: 'TODO welsh',
+        backAction: 'TODO welsh',
+        notFoundName: 'TODO welsh'
+      }
+    }),
   account: (request) =>
     getContentForLanguage(request, {
       en: {
@@ -934,6 +1219,12 @@ export const content = {
             title: 'Brand names',
             empty: 'No brands recorded',
             editAction: 'Edit brand names'
+          },
+          scheme: {
+            title: 'Compliance scheme',
+            nameLabel: 'Scheme',
+            viewAction: 'View scheme details',
+            editAction: 'Change scheme'
           },
           submissions: {
             title: 'Past submissions',
@@ -993,6 +1284,12 @@ export const content = {
           brandNames: {
             title: 'TODO welsh',
             empty: 'TODO welsh',
+            editAction: 'TODO welsh'
+          },
+          scheme: {
+            title: 'TODO welsh',
+            nameLabel: 'TODO welsh',
+            viewAction: 'TODO welsh',
             editAction: 'TODO welsh'
           },
           submissions: {
@@ -1169,7 +1466,13 @@ export const content = {
             backToDashboardAction: 'Back to compliance scheme dashboard',
             historyHeading: 'Past members',
             historyEmpty: 'No past members.',
-            leftOnLabel: 'Left'
+            leftOnLabel: 'Left',
+            pendingHeading: 'Awaiting your acceptance',
+            pendingEmpty: 'No producers are awaiting acceptance.',
+            acceptAction: 'Accept',
+            rejectAction: 'Reject',
+            acceptConfirm: 'Accept this producer into the scheme?',
+            rejectConfirm: 'Reject this producer’s request to join?'
           },
           add: {
             title: 'Add a scheme member',
@@ -1702,7 +2005,13 @@ export const content = {
             backToDashboardAction: 'TODO welsh',
             historyHeading: 'TODO welsh',
             historyEmpty: 'TODO welsh',
-            leftOnLabel: 'TODO welsh'
+            leftOnLabel: 'TODO welsh',
+            pendingHeading: 'TODO welsh',
+            pendingEmpty: 'TODO welsh',
+            acceptAction: 'TODO welsh',
+            rejectAction: 'TODO welsh',
+            acceptConfirm: 'TODO welsh',
+            rejectConfirm: 'TODO welsh'
           },
           add: {
             title: 'TODO welsh',

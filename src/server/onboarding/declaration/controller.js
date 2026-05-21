@@ -32,16 +32,31 @@ const fieldMessages = (errorContent) => ({
   declarationConfirm: errorContent.confirm
 })
 
-const renderView = (h, pageContent, viewModel) =>
-  h.view('onboarding/declaration/view', {
-    pageTitle: pageContent.title,
-    heading: pageContent.heading,
-    intro: pageContent.intro,
-    labels: pageContent,
-    errorTitle: pageContent.error.title,
-    action: paths.onboardingDeclaration,
+const isSchemeRoute = (request) =>
+  request.query?.route === 'complianceScheme'
+
+const actionFor = (request) =>
+  isSchemeRoute(request)
+    ? `${paths.onboardingDeclaration}?route=complianceScheme`
+    : paths.onboardingDeclaration
+
+const variantFor = (request, pageContent) =>
+  isSchemeRoute(request)
+    ? { ...pageContent, ...pageContent.schemeOverrides }
+    : pageContent
+
+const renderView = (h, request, pageContent, viewModel) => {
+  const labels = variantFor(request, pageContent)
+  return h.view('onboarding/declaration/view', {
+    pageTitle: labels.title,
+    heading: labels.heading,
+    intro: labels.intro,
+    labels,
+    errorTitle: labels.error.title,
+    action: actionFor(request),
     ...viewModel
   })
+}
 
 export const declarationController = {
   get: {
@@ -49,7 +64,7 @@ export const declarationController = {
       const pageContent = content.onboardingDeclaration(request)
       const { errors, values } = readStepErrors(request, STEP_ID)
 
-      return renderView(h, pageContent, {
+      return renderView(h, request, pageContent, {
         errorSummary: errors || [],
         errors: errorListToMap(errors),
         formValues: values || {},
@@ -68,7 +83,7 @@ export const declarationController = {
           const pageContent = content.onboardingDeclaration(request)
           const list = collectErrors(err, fieldMessages(pageContent.error))
           flashStepErrors(request, STEP_ID, list, request.payload)
-          return h.redirect(paths.onboardingDeclaration).takeover()
+          return h.redirect(actionFor(request)).takeover()
         }
       }
     },
@@ -81,7 +96,7 @@ export const declarationController = {
         declaredAt: getCurrentDate(request).toISOString()
       }
 
-      return renderView(h, pageContent, {
+      return renderView(h, request, pageContent, {
         errorSummary: [],
         errors: {},
         formValues: request.payload,

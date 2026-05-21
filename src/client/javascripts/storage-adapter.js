@@ -153,6 +153,11 @@ export const createScheme = (input = {}) => ({
   offences: input.offences ?? null,
   additionalFiles: input.additionalFiles ?? [],
   evidenceAvailable: input.evidenceAvailable ?? false,
+  agencyCode: input.agencyCode ?? null,
+  compliancePeriod: input.compliancePeriod ?? null,
+  operator: input.operator ?? null,
+  contactEmail: input.contactEmail ?? null,
+  webAddress: input.webAddress ?? null,
   createdAt: input.createdAt ?? now(),
   updatedAt: input.updatedAt ?? now()
 })
@@ -162,9 +167,15 @@ export const createSchemeMember = (input = {}) => ({
   version: 0,
   schemeId: input.schemeId ?? null,
   producerBprn: input.producerBprn ?? null,
+  producerEmail: input.producerEmail ?? null,
   companyName: input.companyName ?? null,
+  compliancePeriod: input.compliancePeriod ?? null,
+  status: input.status ?? 'active',
   joinedOn: input.joinedOn ?? now(),
+  acceptedOn: input.acceptedOn ?? null,
   leftOn: input.leftOn ?? null,
+  reasonForLeaving: input.reasonForLeaving ?? null,
+  replacedById: input.replacedById ?? null,
   createdAt: input.createdAt ?? now(),
   updatedAt: input.updatedAt ?? now()
 })
@@ -330,11 +341,26 @@ const completePayment = (paymentId) =>
 
 const getPayment = (id) => readMap(STORAGE_KEYS.payments)[id] ?? null
 
-const matchesSearch = (producer, { q, bprn, postcode }) => {
+const findRepresentingSchemeForProducer = (producerId) => {
+  const registrations = Object.values(readMap(STORAGE_KEYS.registrations))
+    .filter(
+      (r) =>
+        r.producerId === producerId &&
+        r.producerRoute === 'complianceScheme' &&
+        r.schemeId
+    )
+    .sort((a, b) => String(b.compliancePeriod).localeCompare(a.compliancePeriod))
+  if (registrations.length === 0) return null
+  return getScheme(registrations[0].schemeId)
+}
+
+const matchesSearch = (producer, scheme, { q, bprn, postcode }) => {
   if (bprn && producer.bprn !== bprn) return false
   if (q) {
-    const haystack = String(producer.companyName ?? '').toLowerCase()
-    if (!haystack.includes(q.toLowerCase())) return false
+    const needle = q.toLowerCase()
+    const company = String(producer.companyName ?? '').toLowerCase()
+    const schemeName = String(scheme?.name ?? '').toLowerCase()
+    if (!company.includes(needle) && !schemeName.includes(needle)) return false
   }
   if (postcode) {
     const producerPostcode = producer.registeredAddress?.postcode ?? ''
@@ -354,26 +380,33 @@ const searchPublicRegister = ({
   page = 1
 } = {}) => {
   const producers = Object.values(readMap(STORAGE_KEYS.producers))
-  const filtered = producers
-    .filter(
-      (p) => p.status === 'Active' || p.status === 'Approved' || p.bprn != null
+  const withScheme = producers
+    .filter((p) => p.bprn)
+    .filter((p) => p.status === 'Active' || p.status === 'Approved')
+    .map((p) => ({ producer: p, scheme: findRepresentingSchemeForProducer(p.id) }))
+    .filter(({ producer, scheme }) =>
+      matchesSearch(producer, scheme, { q, bprn, postcode })
     )
-    .filter((p) => matchesSearch(p, { q, bprn, postcode }))
     .sort((a, b) =>
-      String(a.companyName ?? '').localeCompare(String(b.companyName ?? ''))
+      String(a.producer.companyName ?? '').localeCompare(
+        String(b.producer.companyName ?? '')
+      )
     )
 
-  const totalCount = filtered.length
+  const totalCount = withScheme.length
   const totalPages = Math.max(1, Math.ceil(totalCount / PUBLIC_PAGE_SIZE))
   const safePage = Math.min(Math.max(1, page), totalPages)
   const start = (safePage - 1) * PUBLIC_PAGE_SIZE
-  const items = filtered.slice(start, start + PUBLIC_PAGE_SIZE).map((p) => ({
-    bprn: p.bprn,
-    companyName: p.companyName,
-    registeredAddress: p.registeredAddress,
-    batteryTypes: p.batteryTypes,
-    brandNames: p.brandNames
-  }))
+  const items = withScheme
+    .slice(start, start + PUBLIC_PAGE_SIZE)
+    .map(({ producer: p, scheme }) => ({
+      bprn: p.bprn,
+      companyName: p.companyName,
+      registeredAddress: p.registeredAddress,
+      batteryTypes: p.batteryTypes,
+      brandNames: p.brandNames,
+      representedBy: scheme?.name ?? null
+    }))
 
   return {
     items,
@@ -385,15 +418,24 @@ const searchPublicRegister = ({
 }
 
 const getPublicProducer = (bprn) => {
+  if (!bprn) return null
   const producers = Object.values(readMap(STORAGE_KEYS.producers))
   const producer = producers.find((p) => p.bprn === bprn)
   if (!producer) return null
+  const scheme = findRepresentingSchemeForProducer(producer.id)
   return {
     bprn: producer.bprn,
     companyName: producer.companyName,
     registeredAddress: producer.registeredAddress,
     batteryTypes: producer.batteryTypes,
-    brandNames: producer.brandNames
+    brandNames: producer.brandNames,
+    scheme: scheme
+      ? {
+          name: scheme.name,
+          operator: scheme.operator,
+          approvalNumber: scheme.approvalNumber
+        }
+      : null
   }
 }
 
@@ -429,7 +471,21 @@ const allocateBprn = ({ agencyCode, compliancePeriod }) => {
 
 const listSchemes = () => Object.values(readMap(STORAGE_KEYS.schemes))
 
+const getSchemes = ({
+  agencyCode,
+  compliancePeriod,
+  status = 'approved'
+} = {}) =>
+  listSchemes().filter(
+    (s) =>
+      (!status || s.approvalStatus === status) &&
+      (!agencyCode || s.agencyCode === agencyCode) &&
+      (!compliancePeriod || s.compliancePeriod === compliancePeriod)
+  )
+
 const getScheme = (id) => readMap(STORAGE_KEYS.schemes)[id] ?? null
+
+const getSchemeById = (id) => getScheme(id)
 
 const saveScheme = (scheme) => {
   const schemes = readMap(STORAGE_KEYS.schemes)
@@ -450,14 +506,22 @@ const listSchemeMembers = (schemeId) => {
 }
 
 const listActiveSchemeMembers = (schemeId) =>
-  listSchemeMembers(schemeId).filter((m) => m.leftOn === null)
+  listSchemeMembers(schemeId).filter(
+    (m) => m.leftOn === null && m.status === 'active'
+  )
+
+const listPendingSchemeMembers = (schemeId) =>
+  listSchemeMembers(schemeId).filter(
+    (m) => m.status === 'pendingAcceptance'
+  )
 
 const yearOf = (iso) => Number(String(iso).slice(0, 4))
 
 const membersForYear = (schemeId, compliancePeriodYear) => {
   const year = Number(compliancePeriodYear)
   const all = listSchemeMembers(schemeId).filter(
-    (m) => yearOf(m.joinedOn) <= year
+    (m) =>
+      yearOf(m.joinedOn) <= year && m.status !== 'pendingAcceptance'
   )
   const active = all.filter(
     (m) => m.leftOn === null || yearOf(m.leftOn) > year
@@ -467,6 +531,24 @@ const membersForYear = (schemeId, compliancePeriodYear) => {
   )
   return { active, history }
 }
+
+const listMembershipsForProducer = (producerBprn) =>
+  Object.values(readMap(STORAGE_KEYS.schemeMembers)).filter(
+    (m) => m.producerBprn === producerBprn
+  )
+
+const getSchemeMembershipHistory = (producerBprn) =>
+  listMembershipsForProducer(producerBprn).sort((a, b) =>
+    b.joinedOn.localeCompare(a.joinedOn)
+  )
+
+const getActiveSchemeMembership = (producerBprn, compliancePeriod) =>
+  listMembershipsForProducer(producerBprn).find(
+    (m) =>
+      m.leftOn === null &&
+      m.status === 'active' &&
+      (!compliancePeriod || m.compliancePeriod === compliancePeriod)
+  ) ?? null
 
 const saveSchemeMember = (member) => {
   const members = readMap(STORAGE_KEYS.schemeMembers)
@@ -479,6 +561,175 @@ const saveSchemeMember = (member) => {
   members[merged.id] = merged
   writeJson(STORAGE_KEYS.schemeMembers, members)
   return merged
+}
+
+const findOpenMembership = (predicate) =>
+  Object.values(readMap(STORAGE_KEYS.schemeMembers)).find(
+    (m) => m.leftOn === null && predicate(m)
+  ) ?? null
+
+const joinScheme = ({
+  producerBprn,
+  producerEmail = null,
+  schemeId,
+  compliancePeriod,
+  companyName = null,
+  status = 'active'
+}) => {
+  const matchByBprn =
+    producerBprn &&
+    findOpenMembership(
+      (m) =>
+        m.producerBprn === producerBprn &&
+        m.compliancePeriod === compliancePeriod
+    )
+  const matchByEmail =
+    !matchByBprn &&
+    producerEmail &&
+    findOpenMembership(
+      (m) =>
+        m.producerEmail === producerEmail &&
+        m.compliancePeriod === compliancePeriod
+    )
+  const existing = matchByBprn || matchByEmail
+  if (existing && existing.schemeId === schemeId) return existing
+  return saveSchemeMember(
+    createSchemeMember({
+      producerBprn,
+      producerEmail,
+      schemeId,
+      compliancePeriod,
+      companyName,
+      status,
+      joinedOn: now(),
+      acceptedOn: status === 'active' ? now() : null
+    })
+  )
+}
+
+const leaveScheme = ({
+  producerBprn,
+  compliancePeriod,
+  reasonForLeaving = null
+}) => {
+  const active = getActiveSchemeMembership(producerBprn, compliancePeriod)
+  if (!active) return null
+  return saveSchemeMember({
+    ...active,
+    leftOn: now(),
+    reasonForLeaving
+  })
+}
+
+const acceptSchemeMember = (memberId, { agencyCode = 'EA' } = {}) => {
+  const members = readMap(STORAGE_KEYS.schemeMembers)
+  const member = members[memberId]
+  if (!member || member.status !== 'pendingAcceptance') return null
+
+  let bprn = member.producerBprn
+  if (!bprn) {
+    const producer = member.producerEmail
+      ? getProducerByEmail(member.producerEmail)
+      : null
+    const allocAgency = producer?.agencyCode ?? agencyCode
+    bprn = allocateBprn({
+      agencyCode: allocAgency,
+      compliancePeriod: member.compliancePeriod
+    })
+    if (producer) {
+      saveProducer({
+        ...producer,
+        bprn,
+        agencyCode: allocAgency,
+        bprnAllocatedAt: now(),
+        status: 'Approved'
+      })
+      const registrations = listRegistrationsForProducer(producer.id).filter(
+        (r) => r.compliancePeriod === member.compliancePeriod
+      )
+      for (const reg of registrations) {
+        saveRegistration({ ...reg, status: 'Submitted' })
+      }
+    }
+  }
+
+  return saveSchemeMember({
+    ...member,
+    producerBprn: bprn,
+    status: 'active',
+    acceptedOn: now()
+  })
+}
+
+const transitionToDirect = ({
+  producerEmail,
+  compliancePeriod,
+  reasonForLeaving,
+  otherReason = null
+}) => {
+  const producer = getProducerByEmail(producerEmail)
+  if (!producer) return null
+  const oldRegistration = listRegistrationsForProducer(producer.id).find(
+    (r) =>
+      r.compliancePeriod === compliancePeriod &&
+      r.producerRoute === 'complianceScheme' &&
+      r.status !== 'superseded'
+  )
+  if (!oldRegistration) return null
+
+  const codedReason =
+    reasonForLeaving === 'other' && otherReason
+      ? `other:${otherReason}`
+      : reasonForLeaving
+  leaveScheme({
+    producerBprn: producer.bprn,
+    compliancePeriod,
+    reasonForLeaving: codedReason
+  })
+
+  saveRegistration({ ...oldRegistration, status: 'superseded' })
+
+  const reusedBprn =
+    producer.bprn ??
+    allocateBprn({
+      agencyCode: producer.agencyCode ?? 'EA',
+      compliancePeriod
+    })
+
+  const updatedProducer = saveProducer({
+    ...producer,
+    bprn: reusedBprn,
+    bprnAllocatedAt: producer.bprnAllocatedAt ?? now(),
+    status: 'Approved'
+  })
+
+  const newRegistration = saveRegistration({
+    producerId: producer.id,
+    compliancePeriod,
+    producerRoute: 'directRegistrant',
+    status: 'Submitted',
+    submittedAt: now(),
+    replacesId: oldRegistration.id,
+    schemeId: null
+  })
+
+  return {
+    producer: updatedProducer,
+    registration: newRegistration,
+    bprn: reusedBprn
+  }
+}
+
+const rejectSchemeMember = (memberId, reasonForLeaving = null) => {
+  const members = readMap(STORAGE_KEYS.schemeMembers)
+  const member = members[memberId]
+  if (!member || member.status !== 'pendingAcceptance') return null
+  return saveSchemeMember({
+    ...member,
+    status: 'rejected',
+    leftOn: now(),
+    reasonForLeaving
+  })
 }
 
 const listQuarterlySubmissions = (schemeId, compliancePeriodYear) => {
@@ -705,12 +956,22 @@ export const storage = {
   getTimeTravelTargetYear,
   clearTimeTravel,
   listSchemes,
+  getSchemes,
   getScheme,
+  getSchemeById,
   saveScheme,
   listSchemeMembers,
   listActiveSchemeMembers,
+  listPendingSchemeMembers,
   membersForYear,
   saveSchemeMember,
+  getActiveSchemeMembership,
+  getSchemeMembershipHistory,
+  joinScheme,
+  leaveScheme,
+  acceptSchemeMember,
+  rejectSchemeMember,
+  transitionToDirect,
   listQuarterlySubmissions,
   saveQuarterlySubmission,
   findQuarterlySubmission,

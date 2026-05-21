@@ -53,6 +53,23 @@ const formatDate = (iso) => {
 const renderRegistrationCard = (doc, copy, registration, producer) => {
   const status = registration?.status
 
+  if (status === 'pendingScheme') {
+    setTag(
+      doc,
+      '[data-testid="card-registration-status"]',
+      copy.statusPendingScheme,
+      'govuk-tag--blue'
+    )
+    setText(
+      doc,
+      '[data-testid="card-registration-bprn"]',
+      `${copy.bprnLabel} ${copy.bprnAwaitingScheme}`
+    )
+    setText(doc, '[data-testid="card-registration-body"]', copy.pendingSchemeBody)
+    setLink(doc, '[data-testid="card-registration-action"]', null)
+    return
+  }
+
   if (status === 'Approved') {
     setTag(
       doc,
@@ -160,6 +177,32 @@ const renderFeeCard = (doc, copy, registration, urls) => {
   )
   setText(doc, '[data-testid="card-fee-body"]', copy.notApplicableBody)
   setLink(doc, '[data-testid="card-fee-action"]', null)
+}
+
+const renderSchemeRouteCard = (doc, copy, registration) => {
+  setText(doc, '[data-testid="card-annual-return-title"]', copy.title)
+  setTag(
+    doc,
+    '[data-testid="card-annual-return-status"]',
+    copy.statusRepresented,
+    'govuk-tag--blue'
+  )
+
+  const scheme = registration.schemeId
+    ? storage.getScheme(registration.schemeId)
+    : null
+  const body = scheme
+    ? copy.bodyWithScheme.replace('{scheme}', scheme.name)
+    : copy.bodyAwaitingScheme
+  setText(doc, '[data-testid="card-annual-return-deadline"]', '')
+  setText(doc, '[data-testid="card-annual-return-body"]', body)
+  setLink(
+    doc,
+    '[data-testid="card-annual-return-action"]',
+    '/account/scheme',
+    copy.viewSchemeLink,
+    'card-scheme-view-link'
+  )
 }
 
 const renderAnnualReturnCard = (doc, copy, registration, compliancePeriod) => {
@@ -300,6 +343,42 @@ const renderActivityCard = (doc, copy, producer) => {
     .join('')
 }
 
+const restackForSchemeRoute = (doc) => {
+  doc.querySelector('[data-testid="card-fee-wrapper"]').remove()
+  const row1 = doc.querySelector('[data-testid="dashboard-cards"]')
+  const schemeColumn = doc.querySelector(
+    '[data-testid="card-annual-return-wrapper"]'
+  )
+  row1.appendChild(schemeColumn)
+  const activity = doc.querySelector('[data-testid="card-activity-wrapper"]')
+  activity.classList.remove('govuk-grid-column-one-half')
+  activity.classList.add('govuk-grid-column-full')
+}
+
+const renderAgencyMismatchBanner = (doc, copy, producer, registration) => {
+  const banner = doc.querySelector('[data-testid="dashboard-banner"]')
+  if (!banner || !copy) return
+  const scheme = registration?.schemeId
+    ? storage.getScheme(registration.schemeId)
+    : null
+  if (!scheme?.agencyCode || !producer?.agencyCode) return
+  if (scheme.agencyCode === producer.agencyCode) return
+
+  banner.hidden = false
+  banner.innerHTML = `<div class="govuk-notification-banner" role="region" data-testid="dashboard-agency-mismatch">
+    <div class="govuk-notification-banner__header">
+      <h2 class="govuk-notification-banner__title">${escape(copy.title)}</h2>
+    </div>
+    <div class="govuk-notification-banner__content">
+      <p class="govuk-notification-banner__heading">${escape(
+        copy.body
+          .replace('{schemeAgency}', scheme.agencyCode)
+          .replace('{producerAgency}', producer.agencyCode)
+      )}</p>
+    </div>
+  </div>`
+}
+
 const showContent = (doc) => {
   const loading = doc.querySelector('[data-testid="dashboard-loading"]')
   const main = doc.querySelector('[data-testid="dashboard-content"]')
@@ -348,13 +427,24 @@ export const initDashboard = (
   setHeadingOrgName(doc, producer.companyName)
   if (cards) {
     renderRegistrationCard(doc, cards.registration, registration, producer)
-    renderFeeCard(doc, cards.fee, registration, payload)
-    renderAnnualReturnCard(
-      doc,
-      cards.annualReturn,
-      registration,
-      compliancePeriod
-    )
+    if (registration?.producerRoute === 'complianceScheme') {
+      restackForSchemeRoute(doc)
+      renderSchemeRouteCard(doc, cards.schemeRoute, registration)
+      renderAgencyMismatchBanner(
+        doc,
+        cards.agencyMismatch,
+        producer,
+        registration
+      )
+    } else {
+      renderFeeCard(doc, cards.fee, registration, payload)
+      renderAnnualReturnCard(
+        doc,
+        cards.annualReturn,
+        registration,
+        compliancePeriod
+      )
+    }
     renderActivityCard(doc, cards.activity, producer)
   }
 
