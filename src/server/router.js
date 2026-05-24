@@ -30,6 +30,8 @@ import { complianceSchemeQuarterly } from './complianceScheme/quarterly/index.js
 import { complianceSchemeIa } from './complianceScheme/industrialAutomotive/index.js'
 import { complianceSchemeEvidence } from './complianceScheme/evidence/index.js'
 import { complianceSchemeObligation } from './complianceScheme/obligation/index.js'
+import { operatorSignIn } from './operator/signIn/index.js'
+import { operatorDashboard } from './operator/dashboard/index.js'
 import { serveStaticFiles } from './common/helpers/serve-static-files.js'
 
 const createPlugin = (plugins, [item, routes]) => {
@@ -80,7 +82,9 @@ export const router = {
         complianceSchemeQuarterly: complianceSchemeQuarterly.openRoutes,
         complianceSchemeIa: complianceSchemeIa.openRoutes,
         complianceSchemeEvidence: complianceSchemeEvidence.openRoutes,
-        complianceSchemeObligation: complianceSchemeObligation.openRoutes
+        complianceSchemeObligation: complianceSchemeObligation.openRoutes,
+        operatorSignIn: operatorSignIn.openRoutes,
+        operatorDashboard: operatorDashboard.openRoutes
       }).reduce((p, entry) => createPlugin(p, entry), [])
 
       await server.register(plugins)

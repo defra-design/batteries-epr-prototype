@@ -15,7 +15,9 @@ export const STORAGE_KEYS = {
   evidence: `${KEY_PREFIX}evidence`,
   seedVersion: `${KEY_PREFIX}seed-version`,
   timeTravelTargetYear: `${KEY_PREFIX}time-travel-target-year`,
-  currentSchemeId: `${KEY_PREFIX}currentSchemeId`
+  currentSchemeId: `${KEY_PREFIX}currentSchemeId`,
+  operators: `${KEY_PREFIX}operators`,
+  currentOperatorId: `${KEY_PREFIX}currentOperatorId`
 }
 
 const bprnSequenceKey = (agencyCode, compliancePeriod) =>
@@ -159,6 +161,31 @@ export const createScheme = (input = {}) => ({
   operator: input.operator ?? null,
   contactEmail: input.contactEmail ?? null,
   webAddress: input.webAddress ?? null,
+  createdAt: input.createdAt ?? now(),
+  updatedAt: input.updatedAt ?? now()
+})
+
+export const createOperator = (input = {}) => ({
+  id: input.id ?? newId(),
+  version: 0,
+  name: input.name ?? null,
+  approvalType: input.approvalType ?? 'abto',
+  approvalNumber: input.approvalNumber ?? null,
+  approvalStatus: input.approvalStatus ?? 'not-started',
+  approvedOn: input.approvedOn ?? null,
+  submittedOn: input.submittedOn ?? null,
+  registeredAddress: input.registeredAddress ?? null,
+  contactAddress: input.contactAddress ?? null,
+  serviceOfNoticeAddress: input.serviceOfNoticeAddress ?? null,
+  batteryTypes: input.batteryTypes ?? {
+    isPortable: false,
+    isIndustrial: false,
+    isAutomotive: false
+  },
+  sites: input.sites ?? [],
+  agencyCode: input.agencyCode ?? null,
+  compliancePeriod: input.compliancePeriod ?? null,
+  contactEmail: input.contactEmail ?? null,
   createdAt: input.createdAt ?? now(),
   updatedAt: input.updatedAt ?? now()
 })
@@ -510,6 +537,41 @@ const saveScheme = (scheme) => {
   }
   schemes[merged.id] = merged
   writeJson(STORAGE_KEYS.schemes, schemes)
+  return merged
+}
+
+const listOperators = () => Object.values(readMap(STORAGE_KEYS.operators))
+
+const getOperator = (id) => readMap(STORAGE_KEYS.operators)[id] ?? null
+
+const getCurrentOperatorId = () =>
+  globalThis.localStorage.getItem(STORAGE_KEYS.currentOperatorId)
+
+const setCurrentOperatorId = (id) => {
+  globalThis.localStorage.setItem(STORAGE_KEYS.currentOperatorId, id)
+}
+
+const clearCurrentOperatorId = () => {
+  globalThis.localStorage.removeItem(STORAGE_KEYS.currentOperatorId)
+}
+
+const currentOperator = () => {
+  const id = getCurrentOperatorId()
+  return id ? getOperator(id) : null
+}
+
+const saveOperator = (operator) => {
+  const operators = readMap(STORAGE_KEYS.operators)
+  /* v8 ignore next */
+  const existing = operator.id ? operators[operator.id] : null
+  const merged = {
+    ...operator,
+    /* v8 ignore next */
+    id: existing?.id ?? operator.id ?? newId(),
+    ...stamp(existing, !existing)
+  }
+  operators[merged.id] = merged
+  writeJson(STORAGE_KEYS.operators, operators)
   return merged
 }
 
@@ -1021,6 +1083,12 @@ const seedDemoData = () => {
   }
   writeJson(STORAGE_KEYS.schemes, schemes)
 
+  const operators = readMap(STORAGE_KEYS.operators)
+  for (const operator of seedData.operators) {
+    if (!operators[operator.id]) operators[operator.id] = operator
+  }
+  writeJson(STORAGE_KEYS.operators, operators)
+
   globalThis.localStorage.setItem(
     STORAGE_KEYS.seedVersion,
     String(seedData.seedVersion)
@@ -1060,6 +1128,13 @@ export const storage = {
   clearCurrentSchemeId,
   currentScheme,
   saveScheme,
+  listOperators,
+  getOperator,
+  getCurrentOperatorId,
+  setCurrentOperatorId,
+  clearCurrentOperatorId,
+  currentOperator,
+  saveOperator,
   listSchemeMembers,
   listActiveSchemeMembers,
   listPendingSchemeMembers,

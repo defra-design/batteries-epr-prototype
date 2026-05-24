@@ -61,17 +61,25 @@
     </div>
   </div>
 
-  <div class="govuk-grid-row" data-testid="home-coming-soon">
+  <div class="govuk-grid-row" data-testid="home-journeys-row-2">
     <div class="govuk-grid-column-one-half">
-      <div class="govuk-summary-card" data-testid="home-journey-abto">
+      <div class="govuk-summary-card" data-testid="home-journey-operator">
         <div class="govuk-summary-card__title-wrapper">
-          <h2 class="govuk-summary-card__title">{{ journeys.comingSoon.abto.title }}</h2>
-          <div class="app-task-cards__status">
-            {{ govukTag({ text: journeys.comingSoon.label, classes: "govuk-tag--grey" }) }}
-          </div>
+          <h2 class="govuk-summary-card__title">{{ journeys.operator.title }}</h2>
         </div>
         <div class="govuk-summary-card__content">
-          <p class="govuk-body">{{ journeys.comingSoon.abto.description }}</p>
+          <p class="govuk-body">{{ journeys.operator.description }}</p>
+          <ul class="govuk-list govuk-list--bullet">
+            {% for item in journeys.operator.bullets %}
+              <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+          {{ govukButton({
+            text: journeys.operator.primaryAction,
+            href: operatorSignInUrl,
+            isStartButton: true,
+            attributes: { "data-testid": "home-journey-operator-cta" }
+          }) }}
         </div>
       </div>
     </div>

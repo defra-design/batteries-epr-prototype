@@ -43,13 +43,18 @@ export const content = {
             ],
             primaryAction: 'Sign in to your scheme'
           },
+          operator: {
+            title: 'I am a treatment operator or exporter',
+            description:
+              'Sign in as an approved battery treatment operator (ABTO) or approved battery exporter (ABE) to issue evidence and submit returns.',
+            bullets: [
+              'Issue Batteries Evidence Notes (BENs) to compliance schemes.',
+              'Submit quarterly portable battery returns and annual industrial/automotive returns.'
+            ],
+            primaryAction: 'Sign in as an operator'
+          },
           comingSoon: {
             label: 'Coming soon',
-            abto: {
-              title: 'I am an approved battery treatment operator',
-              description:
-                'Issue evidence notes to compliance schemes and the public register. Not part of this prototype yet.'
-            },
             regulator: {
               title: 'I am a regulator',
               description:
@@ -77,9 +82,14 @@ export const content = {
             bullets: [],
             primaryAction: 'TODO welsh'
           },
+          operator: {
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            bullets: [],
+            primaryAction: 'TODO welsh'
+          },
           comingSoon: {
             label: 'TODO welsh',
-            abto: { title: 'TODO welsh', description: 'TODO welsh' },
             regulator: { title: 'TODO welsh', description: 'TODO welsh' }
           }
         }
@@ -2577,6 +2587,140 @@ export const content = {
               returnToDashboardAction: 'TODO welsh'
             }
           }
+        }
+      }
+    }),
+  operatorSignIn: (request) =>
+    getContentForLanguage(request, {
+      en: {
+        title: 'Sign in as an operator',
+        heading: 'Sign in as an operator',
+        intro:
+          'Choose which approved battery treatment operator or exporter you are operating as. You can switch later.',
+        legend: 'Operator',
+        continueAction: 'Continue',
+        cancelAction: 'Cancel and return to the prototype home',
+        error: {
+          title: 'There is a problem',
+          choice: 'Select an operator to continue'
+        }
+      },
+      cy: {
+        title: 'TODO welsh',
+        heading: 'TODO welsh',
+        intro: 'TODO welsh',
+        legend: 'TODO welsh',
+        continueAction: 'TODO welsh',
+        cancelAction: 'TODO welsh',
+        error: {
+          title: 'TODO welsh',
+          choice: 'TODO welsh'
+        }
+      }
+    }),
+  operator: (request) =>
+    getContentForLanguage(request, {
+      en: {
+        title: 'Operator dashboard',
+        heading: heading('Operator dashboard', 'Operator dashboard', null),
+        introParagraph:
+          'Manage your approved battery treatment or export operation: issue evidence notes, submit quarterly and annual returns.',
+        switchOperatorAction: 'Switch operator',
+        tiles: {
+          approval: {
+            heading: 'Approval',
+            statuses: {
+              'not-started': 'Not started',
+              'in-progress': 'In progress',
+              submitted: 'Submitted',
+              approved: 'Approved'
+            },
+            startAction: 'Start application',
+            continueAction: 'Continue application',
+            viewAction: 'View approval'
+          },
+          evidence: {
+            heading: 'Evidence notes',
+            issuedLabel: 'BENs issued',
+            issuedTonnesLabel: 'Total tonnes issued',
+            awaitingLabel: 'Awaiting acceptance',
+            manageAction: 'Manage evidence',
+            issueAction: 'Issue a new evidence note'
+          },
+          quarterly: {
+            heading: 'Quarterly portable returns',
+            disabledHint: 'Available after your approval is granted.',
+            startAction: 'Start',
+            continueAction: 'Continue',
+            viewAction: 'View',
+            statuses: {
+              'not-started': 'Not started',
+              'in-progress': 'In progress',
+              submitted: 'Submitted'
+            }
+          },
+          annual: {
+            heading: 'Annual industrial/automotive return',
+            disabledHint: 'Available after your approval is granted.',
+            startAction: 'Start',
+            continueAction: 'Continue',
+            viewAction: 'View'
+          }
+        },
+        debug: {
+          fastForwardAction: 'Mark operator as approved (debug)',
+          fastForwardConfirmation: 'Operator marked as approved.'
+        }
+      },
+      cy: {
+        title: 'TODO welsh',
+        heading: heading('TODO welsh', 'TODO welsh', null),
+        introParagraph: 'TODO welsh',
+        switchOperatorAction: 'TODO welsh',
+        tiles: {
+          approval: {
+            heading: 'TODO welsh',
+            statuses: {
+              'not-started': 'TODO welsh',
+              'in-progress': 'TODO welsh',
+              submitted: 'TODO welsh',
+              approved: 'TODO welsh'
+            },
+            startAction: 'TODO welsh',
+            continueAction: 'TODO welsh',
+            viewAction: 'TODO welsh'
+          },
+          evidence: {
+            heading: 'TODO welsh',
+            issuedLabel: 'TODO welsh',
+            issuedTonnesLabel: 'TODO welsh',
+            awaitingLabel: 'TODO welsh',
+            manageAction: 'TODO welsh',
+            issueAction: 'TODO welsh'
+          },
+          quarterly: {
+            heading: 'TODO welsh',
+            disabledHint: 'TODO welsh',
+            startAction: 'TODO welsh',
+            continueAction: 'TODO welsh',
+            viewAction: 'TODO welsh',
+            statuses: {
+              'not-started': 'TODO welsh',
+              'in-progress': 'TODO welsh',
+              submitted: 'TODO welsh'
+            }
+          },
+          annual: {
+            heading: 'TODO welsh',
+            disabledHint: 'TODO welsh',
+            startAction: 'TODO welsh',
+            continueAction: 'TODO welsh',
+            viewAction: 'TODO welsh'
+          }
+        },
+        debug: {
+          fastForwardAction: 'TODO welsh',
+          fastForwardConfirmation: 'TODO welsh'
         }
       }
     })

@@ -65,7 +65,9 @@ export default {
     complianceSchemeEvidence:
       './javascripts/complianceScheme/evidence/entry.js',
     complianceSchemeObligation:
-      './javascripts/complianceScheme/obligationPage/entry.js'
+      './javascripts/complianceScheme/obligationPage/entry.js',
+    operatorSignIn: './javascripts/operator/signIn/entry.js',
+    operatorDashboard: './javascripts/operator/dashboard/entry.js'
   },
   experiments: {
     outputModule: true

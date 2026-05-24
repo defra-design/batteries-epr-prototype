@@ -11,6 +11,7 @@ import {
   createQuarterlySubmission,
   createIaSubmission,
   createEvidence,
+  createOperator,
   storage
 } from './storage-adapter.js'
 import seedData from './storage-seed.json'
@@ -892,6 +893,61 @@ describe('compliance scheme factories and storage', () => {
     expect(second.id).toBe(first.id)
     expect(second.version).toBe(1)
     expect(second.name).toBe('B')
+  })
+
+  test('saveOperator and listOperators round-trip', () => {
+    const saved = storage.saveOperator(
+      createOperator({ name: 'Test ABTO', approvalType: 'abto' })
+    )
+    expect(saved.id).toBeTruthy()
+    expect(storage.listOperators()).toHaveLength(1)
+    expect(storage.getOperator(saved.id)).toEqual(saved)
+    expect(storage.getOperator('missing')).toBeNull()
+  })
+
+  test('saveOperator increments version on update', () => {
+    const first = storage.saveOperator(createOperator({ name: 'A' }))
+    const second = storage.saveOperator({ ...first, name: 'B' })
+    expect(second.id).toBe(first.id)
+    expect(second.version).toBe(1)
+    expect(second.name).toBe('B')
+  })
+
+  test('currentOperator returns null when no operator selected', () => {
+    expect(storage.currentOperator()).toBeNull()
+    expect(storage.getCurrentOperatorId()).toBeNull()
+  })
+
+  test('setCurrentOperatorId and currentOperator round-trip', () => {
+    const op = storage.saveOperator(
+      createOperator({ name: 'Test ABE', approvalType: 'abe' })
+    )
+    storage.setCurrentOperatorId(op.id)
+    expect(storage.getCurrentOperatorId()).toBe(op.id)
+    expect(storage.currentOperator()).toEqual(op)
+    storage.clearCurrentOperatorId()
+    expect(storage.getCurrentOperatorId()).toBeNull()
+    expect(storage.currentOperator()).toBeNull()
+  })
+
+  test('createOperator defaults', () => {
+    const op = createOperator()
+    expect(op.approvalType).toBe('abto')
+    expect(op.approvalStatus).toBe('not-started')
+    expect(op.batteryTypes).toEqual({
+      isPortable: false,
+      isIndustrial: false,
+      isAutomotive: false
+    })
+    expect(op.sites).toEqual([])
+  })
+
+  test('seedDemoData seeds operators', () => {
+    storage.seedDemoData()
+    const operators = storage.listOperators()
+    expect(operators.length).toBeGreaterThanOrEqual(3)
+    expect(operators.some((o) => o.approvalType === 'abto')).toBe(true)
+    expect(operators.some((o) => o.approvalType === 'abe')).toBe(true)
   })
 
   test('scheme members add and filter by status', () => {

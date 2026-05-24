@@ -79,6 +79,9 @@ export const paths = {
     '/compliance-scheme/evidence/availability',
   complianceSchemeObligation: '/compliance-scheme/obligation',
 
+  operatorDashboard: '/operator',
+  operatorSignIn: '/operator/sign-in',
+
   devReset: '/dev/reset',
   devTimeTravel: '/dev/time-travel',
   devSchemes: '/dev/schemes'

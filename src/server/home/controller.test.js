@@ -42,7 +42,10 @@ describe('#homeController', () => {
       expect.stringContaining(`href="${paths.complianceSchemeSignIn}"`)
     )
     expect(result).toEqual(
-      expect.stringContaining('data-testid="home-journey-abto"')
+      expect.stringContaining('data-testid="home-journey-operator-cta"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining(`href="${paths.operatorSignIn}"`)
     )
     expect(result).toEqual(
       expect.stringContaining('data-testid="home-journey-regulator"')

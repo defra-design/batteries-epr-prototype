@@ -13,7 +13,8 @@ export const homeController = {
       journeys: pageContent.journeys,
       producerSignInUrl: paths.signIn,
       publicRegisterUrl: paths.publicRegisterSearch,
-      complianceSchemeSignInUrl: paths.complianceSchemeSignIn
+      complianceSchemeSignInUrl: paths.complianceSchemeSignIn,
+      operatorSignInUrl: paths.operatorSignIn
     })
   }
 }

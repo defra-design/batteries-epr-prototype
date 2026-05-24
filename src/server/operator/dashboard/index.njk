@@ -1,0 +1,88 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "heading/macro.njk" import appHeading %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ appHeading({ text: heading.text, organisationName: heading.caption }) }}
+      <p class="govuk-body" data-testid="operator-intro">{{ introParagraph }}</p>
+      <p class="govuk-body govuk-!-margin-bottom-2">
+        <strong>Compliance period:</strong> <span data-testid="operator-period">{{ pagePayload.compliancePeriodYear }}</span>
+      </p>
+      <p class="govuk-body">
+        <a class="govuk-link" href="{{ switchOperatorUrl }}" data-testid="operator-switch">{{ switchOperatorAction }}</a>
+      </p>
+    </div>
+  </div>
+
+  <div id="operator-dashboard" data-testid="operator-dashboard">
+    <div class="govuk-grid-row govuk-!-margin-top-4" data-testid="operator-cards-row-1">
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-summary-card govuk-!-margin-bottom-4">
+          <div class="govuk-summary-card__title-wrapper">
+            <h2 class="govuk-summary-card__title" data-testid="tile-approval-title">Approval</h2>
+            <div class="app-task-cards__status"><span data-testid="tile-approval-status"></span></div>
+          </div>
+          <div class="govuk-summary-card__content">
+            <p class="govuk-body" data-testid="tile-approval-type"></p>
+            <p class="govuk-body" data-testid="tile-approval-meta"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-summary-card govuk-!-margin-bottom-4">
+          <div class="govuk-summary-card__title-wrapper">
+            <h2 class="govuk-summary-card__title" data-testid="tile-evidence-title">Evidence notes</h2>
+          </div>
+          <div class="govuk-summary-card__content">
+            <p class="govuk-body" data-testid="tile-evidence-summary"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row" data-testid="operator-cards-row-2">
+      <div class="govuk-grid-column-two-thirds" data-testid="tile-quarterly-container">
+        <div class="govuk-summary-card govuk-!-margin-bottom-4">
+          <div class="govuk-summary-card__title-wrapper">
+            <h2 class="govuk-summary-card__title" data-testid="tile-quarterly-title">Quarterly portable returns</h2>
+          </div>
+          <div class="govuk-summary-card__content">
+            <p class="govuk-body" data-testid="tile-quarterly-hint"></p>
+            <ul class="govuk-list" data-testid="tile-quarterly-list"></ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="govuk-grid-column-one-third" data-testid="tile-annual-container">
+        <div class="govuk-summary-card govuk-!-margin-bottom-4">
+          <div class="govuk-summary-card__title-wrapper">
+            <h2 class="govuk-summary-card__title" data-testid="tile-annual-title">Annual industrial/automotive return</h2>
+            <div class="app-task-cards__status"><span data-testid="tile-annual-status"></span></div>
+          </div>
+          <div class="govuk-summary-card__content">
+            <p class="govuk-body" data-testid="tile-annual-hint"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if pagePayload.debug.fastForwardEnabled %}
+    <div class="govuk-!-margin-top-6" data-testid="operator-debug">
+      <h2 class="govuk-heading-s">Debug</h2>
+      <button type="button" class="govuk-button govuk-button--warning" data-testid="debug-fast-forward">{{ pagePayload.debug.fastForwardLabel }}</button>
+      <p class="govuk-body" data-testid="debug-fast-forward-message" hidden>{{ pagePayload.debug.fastForwardConfirmation }}</p>
+    </div>
+  {% endif %}
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('operatorDashboard.js') }}"></script>
+{% endblock %}

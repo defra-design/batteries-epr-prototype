@@ -1,5 +1,5 @@
 {
-  "seedVersion": 6,
+  "seedVersion": 7,
   "schemes": [
     {
       "id": "22222222-0001-4000-a000-000000000001",
@@ -1119,6 +1119,164 @@
       "createdAt": "2026-03-12T10:00:00Z",
       "updatedAt": "2026-04-02T10:00:00Z",
       "bprnAllocatedAt": "2026-04-02T10:00:00Z"
+    }
+  ],
+  "operators": [
+    {
+      "id": "33333333-0001-4000-a000-000000000001",
+      "version": 0,
+      "name": "Green Recycling Ltd",
+      "approvalType": "abto",
+      "approvalNumber": "ABTO-EA-2026-000001",
+      "approvalStatus": "approved",
+      "approvedOn": "2026-01-15T00:00:00Z",
+      "submittedOn": "2025-12-10T00:00:00Z",
+      "registeredAddress": {
+        "line1": "Unit 3, Greenway Industrial Park",
+        "line2": "Recycling Lane",
+        "line3": null,
+        "line4": null,
+        "town": "Sheffield",
+        "postcode": "S9 2RG",
+        "countryCode": "GB"
+      },
+      "contactAddress": null,
+      "serviceOfNoticeAddress": null,
+      "batteryTypes": {
+        "isPortable": true,
+        "isIndustrial": true,
+        "isAutomotive": false
+      },
+      "sites": [
+        {
+          "id": "44444444-0001-4000-a000-000000000001",
+          "name": "Sheffield Treatment Facility",
+          "address": {
+            "line1": "Unit 3, Greenway Industrial Park",
+            "line2": "Recycling Lane",
+            "line3": null,
+            "line4": null,
+            "town": "Sheffield",
+            "postcode": "S9 2RG",
+            "countryCode": "GB"
+          },
+          "batteryTypes": {
+            "isPortable": true,
+            "isIndustrial": true,
+            "isAutomotive": false
+          },
+          "operationsDescription": "Mechanical sorting and hydrometallurgical treatment of portable and industrial batteries."
+        }
+      ],
+      "agencyCode": "EA",
+      "compliancePeriod": "2026",
+      "contactEmail": "ops@greenrecycling.co.uk",
+      "createdAt": "2025-12-10T00:00:00Z",
+      "updatedAt": "2026-01-15T00:00:00Z"
+    },
+    {
+      "id": "33333333-0001-4000-a000-000000000002",
+      "version": 0,
+      "name": "Atlantic Battery Exports",
+      "approvalType": "abe",
+      "approvalNumber": "ABE-EA-2026-000001",
+      "approvalStatus": "approved",
+      "approvedOn": "2026-02-01T00:00:00Z",
+      "submittedOn": "2026-01-05T00:00:00Z",
+      "registeredAddress": {
+        "line1": "Atlantic Wharf",
+        "line2": "Dock Road",
+        "line3": null,
+        "line4": null,
+        "town": "Southampton",
+        "postcode": "SO14 3QN",
+        "countryCode": "GB"
+      },
+      "contactAddress": null,
+      "serviceOfNoticeAddress": null,
+      "batteryTypes": {
+        "isPortable": true,
+        "isIndustrial": false,
+        "isAutomotive": false
+      },
+      "sites": [
+        {
+          "id": "44444444-0001-4000-a000-000000000002",
+          "name": "Southampton Export Terminal",
+          "address": {
+            "line1": "Atlantic Wharf",
+            "line2": "Dock Road",
+            "line3": null,
+            "line4": null,
+            "town": "Southampton",
+            "postcode": "SO14 3QN",
+            "countryCode": "GB"
+          },
+          "batteryTypes": {
+            "isPortable": true,
+            "isIndustrial": false,
+            "isAutomotive": false
+          },
+          "operationsDescription": "Consolidation and export of waste portable batteries for overseas treatment."
+        }
+      ],
+      "agencyCode": "EA",
+      "compliancePeriod": "2026",
+      "contactEmail": "logistics@atlanticbatteryexports.co.uk",
+      "createdAt": "2026-01-05T00:00:00Z",
+      "updatedAt": "2026-02-01T00:00:00Z"
+    },
+    {
+      "id": "33333333-0001-4000-a000-000000000003",
+      "version": 0,
+      "name": "Celtic Recovery Cymru",
+      "approvalType": "abto",
+      "approvalNumber": "ABTO-NRW-2026-000001",
+      "approvalStatus": "approved",
+      "approvedOn": "2026-01-20T00:00:00Z",
+      "submittedOn": "2025-12-15T00:00:00Z",
+      "registeredAddress": {
+        "line1": "Heol y Ffwrnais",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Port Talbot",
+        "postcode": "SA13 1PH",
+        "countryCode": "GB"
+      },
+      "contactAddress": null,
+      "serviceOfNoticeAddress": null,
+      "batteryTypes": {
+        "isPortable": false,
+        "isIndustrial": false,
+        "isAutomotive": true
+      },
+      "sites": [
+        {
+          "id": "44444444-0001-4000-a000-000000000003",
+          "name": "Port Talbot Recovery Centre",
+          "address": {
+            "line1": "Heol y Ffwrnais",
+            "line2": null,
+            "line3": null,
+            "line4": null,
+            "town": "Port Talbot",
+            "postcode": "SA13 1PH",
+            "countryCode": "GB"
+          },
+          "batteryTypes": {
+            "isPortable": false,
+            "isIndustrial": false,
+            "isAutomotive": true
+          },
+          "operationsDescription": "Lead-acid automotive battery treatment and lead recovery."
+        }
+      ],
+      "agencyCode": "NRW",
+      "compliancePeriod": "2026",
+      "contactEmail": "info@celticrecovery.cymru",
+      "createdAt": "2025-12-15T00:00:00Z",
+      "updatedAt": "2026-01-20T00:00:00Z"
     }
   ]
 }

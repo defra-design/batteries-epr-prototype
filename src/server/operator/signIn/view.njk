@@ -1,0 +1,60 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorSummary and errorSummary.length %}
+        {{ govukErrorSummary({
+          titleText: errorTitle,
+          errorList: errorSummary,
+          attributes: { "data-testid": "operator-sign-in-error-summary" }
+        }) }}
+      {% endif %}
+
+      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      <p class="govuk-body">{{ intro }}</p>
+
+      <form method="post" action="{{ action }}" novalidate data-testid="operator-sign-in-form">
+        {% set operatorItems = [] %}
+        {% for op in operators %}
+          {% set typeLabel = "ABTO" if op.approvalType == "abto" else "ABE" %}
+          {% set operatorItems = (operatorItems.push({
+            value: op.id,
+            text: op.name,
+            hint: { text: typeLabel + " — " + op.approvalNumber },
+            checked: formValues.operatorId == op.id,
+            attributes: { "data-testid": "operator-sign-in-radio-" + op.id }
+          }), operatorItems) %}
+        {% endfor %}
+
+        {{ govukRadios({
+          idPrefix: "operatorId",
+          name: "operatorId",
+          fieldset: { legend: { text: labels.legend } },
+          errorMessage: { text: errors.operatorId } if errors.operatorId,
+          items: operatorItems
+        }) }}
+
+        {{ govukButton({
+          text: labels.continueAction,
+          attributes: { "data-testid": "operator-sign-in-continue" }
+        }) }}
+
+        <p class="govuk-body">
+          <a class="govuk-link" href="{{ cancelUrl }}" data-testid="operator-sign-in-cancel">{{ labels.cancelAction }}</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('operatorSignIn.js') }}"></script>
+{% endblock %}
