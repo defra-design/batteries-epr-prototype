@@ -105,7 +105,11 @@ const applySchemeConfirm = (doc, existing) => {
 }
 
 const applyProducerRouteGate = (doc, existing) => {
-  const forcedDirect = Boolean(existing.isIndustrial || existing.isAutomotive)
+  const isIA = Boolean(existing.isIndustrial || existing.isAutomotive)
+  const isPortableOnly = Boolean(
+    existing.isPortable && !existing.isIndustrial && !existing.isAutomotive
+  )
+
   const smallRadio = doc.querySelector(
     'input[name="producerRoute"][value="smallProducer"]'
   )
@@ -113,14 +117,24 @@ const applyProducerRouteGate = (doc, existing) => {
   const directRadio = doc.querySelector(
     'input[name="producerRoute"][value="directRegistrant"]'
   )
-  const forcedNotice = doc.querySelector('[data-testid="forced-direct"]')
+  const directContainer = directRadio?.closest('.govuk-radios__item') ?? null
+  const forcedDirectNotice = doc.querySelector('[data-testid="forced-direct"]')
+  const forcedPortableNotice = doc.querySelector(
+    '[data-testid="forced-portable-only"]'
+  )
 
-  if (forcedDirect) {
+  if (isIA) {
     if (smallContainer) smallContainer.hidden = true
     if (smallRadio) smallRadio.checked = false
-    if (directRadio && !directRadio.checked) directRadio.checked = true
-    if (forcedNotice) forcedNotice.hidden = false
-  } else if (forcedNotice) {
-    forcedNotice.hidden = true
+    if (forcedDirectNotice) forcedDirectNotice.hidden = false
+    if (forcedPortableNotice) forcedPortableNotice.hidden = true
+  } else if (isPortableOnly) {
+    if (directContainer) directContainer.hidden = true
+    if (directRadio) directRadio.checked = false
+    if (forcedPortableNotice) forcedPortableNotice.hidden = false
+    if (forcedDirectNotice) forcedDirectNotice.hidden = true
+  } else {
+    if (forcedDirectNotice) forcedDirectNotice.hidden = true
+    if (forcedPortableNotice) forcedPortableNotice.hidden = true
   }
 }

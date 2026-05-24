@@ -521,20 +521,23 @@ export const content = {
         title: 'Producer route',
         heading: 'Choose your producer route',
         intro:
-          'Small producers place fewer than 1 tonne of portable batteries on the market each year and can register directly. All other producers must register as a direct registrant.',
+          'Small producers place fewer than 1 tonne of portable batteries on the market each year. Producers who place 1 tonne or more of portable batteries must register through a compliance scheme. Producers who place industrial or automotive batteries can register as a direct registrant or through a compliance scheme.',
         smallProducerLabel: 'Small producer',
         smallProducerHint:
           'I place fewer than 1 tonne of portable batteries on the UK market each year.',
         directRegistrantLabel: 'Direct registrant',
         directRegistrantHint:
-          'I place 1 tonne or more of portable batteries, or any industrial or automotive batteries.',
+          'I place industrial or automotive batteries on the market.',
         complianceSchemeLabel: 'Member of a battery compliance scheme',
         complianceSchemeHint:
           'A scheme files your annual return for you. You will need to know which approved scheme you belong to.',
         continueAction: 'Continue',
-        forcedHeading: 'You must register as a direct registrant',
+        forcedHeading: 'The small producer route is not available',
         forcedBody:
-          'Because you place industrial or automotive batteries on the market, the small producer route is not available to you.',
+          'Because you place industrial or automotive batteries on the market, the small producer route is not available. You can register as a direct registrant or through a compliance scheme.',
+        portableOnlyHeading: 'You cannot register as a direct registrant',
+        portableOnlyBody:
+          'Because you only place portable batteries on the market, you must either register as a small producer (fewer than 1 tonne) or through a compliance scheme.',
         error: {
           title: 'There is a problem',
           choice: 'Select your producer route'
@@ -553,6 +556,8 @@ export const content = {
         continueAction: 'TODO welsh',
         forcedHeading: 'TODO welsh',
         forcedBody: 'TODO welsh',
+        portableOnlyHeading: 'TODO welsh',
+        portableOnlyBody: 'TODO welsh',
         error: {
           title: 'TODO welsh',
           choice: 'TODO welsh'

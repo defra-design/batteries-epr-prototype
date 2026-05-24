@@ -8,6 +8,11 @@
       html: "<strong>" + labels.forcedHeading + "</strong><p class=\"govuk-body\">" + labels.forcedBody + "</p>"
     }) }}
   </div>
+  <div data-testid="forced-portable-only" hidden>
+    {{ govukInsetText({
+      html: "<strong>" + labels.portableOnlyHeading + "</strong><p class=\"govuk-body\">" + labels.portableOnlyBody + "</p>"
+    }) }}
+  </div>
 
   <form method="post" action="{{ action }}" novalidate data-testid="onboarding-form">
     {{ govukRadios({

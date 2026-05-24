@@ -230,7 +230,7 @@ describe('runOnboardingStep — producer-route gate edge cases', () => {
     expect(() => runOnboardingStep(document, globalThis.location)).not.toThrow()
   })
 
-  test('does not flip directRegistrant if it is already checked', () => {
+  test('does not auto-select directRegistrant for IA producers', () => {
     storage.saveProducer({
       contactEmail: 'wizard@example.com',
       batteryTypes: {
@@ -246,7 +246,7 @@ describe('runOnboardingStep — producer-route gate edge cases', () => {
           <input name="producerRoute" value="smallProducer" type="radio" />
         </div>
         <div class="govuk-radios__item">
-          <input name="producerRoute" value="directRegistrant" type="radio" checked />
+          <input name="producerRoute" value="directRegistrant" type="radio" />
         </div>
       </form>
       <script id="page-payload" type="application/json">${JSON.stringify({ step: 'producerRoute', target: 'hydrate', compliancePeriod: '2026' })}</script>
@@ -254,14 +254,34 @@ describe('runOnboardingStep — producer-route gate edge cases', () => {
     runOnboardingStep(document, globalThis.location)
     expect(
       document.querySelector('input[value="directRegistrant"]').checked
-    ).toBe(true)
+    ).toBe(false)
   })
 
-  test('handles a portable-only producer with no forced-direct notice element', () => {
+  test('handles a portable-only producer with no notice elements', () => {
     storage.saveProducer({
       contactEmail: 'wizard@example.com',
       batteryTypes: {
         isPortable: true,
+        isIndustrial: false,
+        isAutomotive: false
+      }
+    })
+    document.body.innerHTML = `
+      <form>
+        <div class="govuk-radios__item">
+          <input name="producerRoute" value="smallProducer" type="radio" />
+        </div>
+      </form>
+      <script id="page-payload" type="application/json">${JSON.stringify({ step: 'producerRoute', target: 'hydrate', compliancePeriod: '2026' })}</script>
+    `
+    expect(() => runOnboardingStep(document, globalThis.location)).not.toThrow()
+  })
+
+  test('handles no battery types with no notice elements', () => {
+    storage.saveProducer({
+      contactEmail: 'wizard@example.com',
+      batteryTypes: {
+        isPortable: false,
         isIndustrial: false,
         isAutomotive: false
       }
@@ -282,6 +302,7 @@ describe('runOnboardingStep — producer route gate', () => {
   const renderRoutePage = () => {
     document.body.innerHTML = `
       <div data-testid="forced-direct" hidden></div>
+      <div data-testid="forced-portable-only" hidden></div>
       <form>
         <div class="govuk-radios__item">
           <input name="producerRoute" value="smallProducer" type="radio" />
@@ -289,12 +310,15 @@ describe('runOnboardingStep — producer route gate', () => {
         <div class="govuk-radios__item">
           <input name="producerRoute" value="directRegistrant" type="radio" />
         </div>
+        <div class="govuk-radios__item">
+          <input name="producerRoute" value="complianceScheme" type="radio" />
+        </div>
       </form>
       <script id="page-payload" type="application/json">${JSON.stringify({ step: 'producerRoute', target: 'hydrate', compliancePeriod: '2026' })}</script>
     `
   }
 
-  test('hides the smallProducer option and shows the forced notice when industrial is set', () => {
+  test('hides smallProducer and shows forced notice for industrial producers', () => {
     storage.saveProducer({
       contactEmail: 'wizard@example.com',
       batteryTypes: {
@@ -309,16 +333,27 @@ describe('runOnboardingStep — producer route gate', () => {
     const small = document
       .querySelector('input[value="smallProducer"]')
       .closest('.govuk-radios__item')
+    const direct = document
+      .querySelector('input[value="directRegistrant"]')
+      .closest('.govuk-radios__item')
+    const scheme = document
+      .querySelector('input[value="complianceScheme"]')
+      .closest('.govuk-radios__item')
     expect(small.hidden).toBe(true)
+    expect(direct.hidden).toBe(false)
+    expect(scheme.hidden).toBe(false)
     expect(document.querySelector('[data-testid="forced-direct"]').hidden).toBe(
       false
     )
     expect(
-      document.querySelector('input[value="directRegistrant"]').checked
+      document.querySelector('[data-testid="forced-portable-only"]').hidden
     ).toBe(true)
+    expect(
+      document.querySelector('input[value="directRegistrant"]').checked
+    ).toBe(false)
   })
 
-  test('keeps the smallProducer option visible for portable-only producers', () => {
+  test('hides directRegistrant and shows portable-only notice for portable-only producers', () => {
     storage.saveProducer({
       contactEmail: 'wizard@example.com',
       batteryTypes: {
@@ -333,10 +368,53 @@ describe('runOnboardingStep — producer route gate', () => {
     const small = document
       .querySelector('input[value="smallProducer"]')
       .closest('.govuk-radios__item')
+    const direct = document
+      .querySelector('input[value="directRegistrant"]')
+      .closest('.govuk-radios__item')
+    const scheme = document
+      .querySelector('input[value="complianceScheme"]')
+      .closest('.govuk-radios__item')
     expect(small.hidden).toBe(false)
+    expect(direct.hidden).toBe(true)
+    expect(scheme.hidden).toBe(false)
+    expect(
+      document.querySelector('[data-testid="forced-portable-only"]').hidden
+    ).toBe(false)
     expect(document.querySelector('[data-testid="forced-direct"]').hidden).toBe(
       true
     )
+  })
+
+  test('shows all options when no battery types are set', () => {
+    storage.saveProducer({
+      contactEmail: 'wizard@example.com',
+      batteryTypes: {
+        isPortable: false,
+        isIndustrial: false,
+        isAutomotive: false
+      }
+    })
+    renderRoutePage()
+    runOnboardingStep(document, globalThis.location)
+
+    const small = document
+      .querySelector('input[value="smallProducer"]')
+      .closest('.govuk-radios__item')
+    const direct = document
+      .querySelector('input[value="directRegistrant"]')
+      .closest('.govuk-radios__item')
+    const scheme = document
+      .querySelector('input[value="complianceScheme"]')
+      .closest('.govuk-radios__item')
+    expect(small.hidden).toBe(false)
+    expect(direct.hidden).toBe(false)
+    expect(scheme.hidden).toBe(false)
+    expect(document.querySelector('[data-testid="forced-direct"]').hidden).toBe(
+      true
+    )
+    expect(
+      document.querySelector('[data-testid="forced-portable-only"]').hidden
+    ).toBe(true)
   })
 })
 
