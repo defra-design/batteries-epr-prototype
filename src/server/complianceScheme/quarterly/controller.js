@@ -7,7 +7,13 @@ import {
   flashStepErrors,
   readStepErrors
 } from '../application/shared.js'
-import { STEPS, isKnownQuarter, isKnownStep } from './steps.js'
+import {
+  STEPS,
+  MEMBER_STEPS,
+  isKnownQuarter,
+  isKnownStep,
+  isKnownMemberStep
+} from './steps.js'
 
 const flashKey = (quarter, step) => `quarterly:${quarter}:${step}`
 
@@ -15,6 +21,12 @@ const stepUrl = (quarter, step) =>
   paths.complianceSchemeQuarterly
     .replace('{quarter}', quarter)
     .replace('{step}', step)
+
+const memberStepUrl = (quarter, memberId, dataType) =>
+  paths.complianceSchemeQuarterlyMember
+    .replace('{quarter}', quarter)
+    .replace('{memberId}', memberId)
+    .replace('{dataType}', dataType)
 
 const nextUrl = (quarter, step) => {
   const next = STEPS[step].next
@@ -46,8 +58,28 @@ const renderStep = (h, request, quarter, step, viewModel) => {
     quarter,
     step,
     action: stepUrl(quarter, step),
-    marketDataUrl: stepUrl(quarter, 'market-data'),
-    wasteDataUrl: stepUrl(quarter, 'waste-data'),
+    ...viewModel
+  })
+}
+
+const renderMemberStep = (h, request, quarter, memberId, dataType, viewModel) => {
+  const quarterlyContent = content.complianceScheme(request).quarterlyPages
+  const stepConfig = MEMBER_STEPS[dataType]
+  const stepContent = quarterlyContent.steps[stepConfig.contentKey]
+
+  return h.view(stepConfig.view, {
+    pageTitle: stepContent.title,
+    heading: stepContent.heading,
+    intro: stepContent.intro,
+    labels: stepContent,
+    errorTitle: quarterlyContent.errorTitle,
+    continueAction: quarterlyContent.continueAction,
+    dashboardUrl: paths.complianceSchemeDashboard,
+    quarter,
+    memberId,
+    dataType,
+    action: memberStepUrl(quarter, memberId, dataType),
+    memberListUrl: stepUrl(quarter, 'member-list'),
     ...viewModel
   })
 }
@@ -72,7 +104,8 @@ export const quarterlyController = {
           step,
           compliancePeriodYear,
           target: 'hydrate',
-          next: nextUrl(quarter, step)
+          next: nextUrl(quarter, step),
+          memberStepUrlTemplate: memberStepUrl(quarter, '{memberId}', '{dataType}')
         }
       })
     }
@@ -120,3 +153,71 @@ export const quarterlyController = {
   }
 }
 
+export const quarterlyMemberController = {
+  get: {
+    handler(request, h) {
+      const { quarter, memberId, dataType } = request.params
+      if (!isKnownQuarter(quarter) || !isKnownMemberStep(dataType)) {
+        return h.response().code(statusCodes.notFound)
+      }
+      const compliancePeriodYear = getCompliancePeriod(request)
+      const flashId = flashKey(quarter, `member:${memberId}:${dataType}`)
+      const { errors, values } = readStepErrors(request, flashId)
+
+      return renderMemberStep(h, request, quarter, memberId, dataType, {
+        errorSummary: errors || [],
+        errors: errorListToMap(errors),
+        formValues: values || {},
+        pagePayload: {
+          view: 'quarterly-member',
+          quarter,
+          memberId,
+          dataType,
+          compliancePeriodYear,
+          target: 'hydrate',
+          next: stepUrl(quarter, 'member-list')
+        }
+      })
+    }
+  },
+
+  post: {
+    handler(request, h) {
+      const { quarter, memberId, dataType } = request.params
+      if (!isKnownQuarter(quarter) || !isKnownMemberStep(dataType)) {
+        return h.response().code(statusCodes.notFound)
+      }
+      const compliancePeriodYear = getCompliancePeriod(request)
+      const stepConfig = MEMBER_STEPS[dataType]
+      const quarterlyContent = content.complianceScheme(request).quarterlyPages
+      const stepContent = quarterlyContent.steps[stepConfig.contentKey]
+      const payload = request.payload
+      const { error, value } = stepConfig.schema.validate(payload)
+
+      if (error) {
+        const flashId = flashKey(quarter, `member:${memberId}:${dataType}`)
+        const list = collectErrors(error, stepConfig.fieldMessages(stepContent.error))
+        flashStepErrors(request, flashId, list, payload)
+        return h.redirect(memberStepUrl(quarter, memberId, dataType))
+      }
+
+      const patch = stepConfig.toPatch(value)
+
+      return renderMemberStep(h, request, quarter, memberId, dataType, {
+        errorSummary: [],
+        errors: {},
+        formValues: value,
+        pagePayload: {
+          view: 'quarterly-member',
+          quarter,
+          memberId,
+          dataType,
+          compliancePeriodYear,
+          target: 'persist',
+          patch,
+          next: stepUrl(quarter, 'member-list')
+        }
+      })
+    }
+  }
+}

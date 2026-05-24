@@ -1,0 +1,28 @@
+{% extends 'complianceSchemeQuarterly/_layout.njk' %}
+
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% block stepBody %}
+  <table class="govuk-table" data-testid="quarterly-member-list-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">{{ labels.bprnColumn }}</th>
+        <th scope="col" class="govuk-table__header">{{ labels.companyColumn }}</th>
+        <th scope="col" class="govuk-table__header">{{ labels.marketStatusColumn }}</th>
+        <th scope="col" class="govuk-table__header">{{ labels.wasteStatusColumn }}</th>
+        <th scope="col" class="govuk-table__header">{{ labels.actionColumn }}</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body" data-testid="quarterly-member-list-body"></tbody>
+  </table>
+
+  <p class="govuk-body" data-testid="quarterly-member-list-empty" hidden>{{ labels.emptyMessage }}</p>
+
+  <p class="govuk-body">
+    {{ govukButton({
+      text: labels.continueAction,
+      href: pagePayload.next,
+      attributes: { "data-testid": "quarterly-member-list-continue" }
+    }) }}
+  </p>
+{% endblock %}

@@ -29,10 +29,9 @@ const pair = (payload) => ({
   automotive: payload.automotive
 })
 
-const tonneStep = (contentKey, fieldKey, next) => ({
+const memberTonneStep = (contentKey, fieldKey) => ({
   contentKey,
-  view: 'complianceScheme/industrialAutomotive/views/tonnes',
-  next,
+  view: 'complianceScheme/industrialAutomotive/views/member-tonnes',
   formStep: true,
   schema: tonnePair,
   fieldMessages: pairMessages,
@@ -40,10 +39,12 @@ const tonneStep = (contentKey, fieldKey, next) => ({
 })
 
 export const STEPS = {
-  placed: tonneStep('placed', 'placed', 'exported'),
-  exported: tonneStep('exported', 'exported', 'taken-back'),
-  'taken-back': tonneStep('takenBack', 'takenBack', 'delivered'),
-  delivered: tonneStep('delivered', 'delivered', 'check-answers'),
+  'member-list': {
+    contentKey: 'memberList',
+    view: 'complianceScheme/industrialAutomotive/views/member-list',
+    next: 'check-answers',
+    formStep: false
+  },
   'check-answers': {
     contentKey: 'checkAnswers',
     view: 'complianceScheme/industrialAutomotive/views/check-answers',
@@ -74,11 +75,22 @@ export const STEPS = {
   }
 }
 
-export const STEP_ORDER = [
+export const MEMBER_STEPS = {
+  placed: memberTonneStep('placed', 'placed'),
+  exported: memberTonneStep('exported', 'exported'),
+  'taken-back': memberTonneStep('takenBack', 'takenBack'),
+  delivered: memberTonneStep('delivered', 'delivered')
+}
+
+export const MEMBER_STEP_ORDER = [
   'placed',
   'exported',
   'taken-back',
-  'delivered',
+  'delivered'
+]
+
+export const STEP_ORDER = [
+  'member-list',
   'check-answers',
   'declaration',
   'confirmation'
@@ -86,3 +98,6 @@ export const STEP_ORDER = [
 
 export const isKnownStep = (step) =>
   Object.prototype.hasOwnProperty.call(STEPS, step)
+
+export const isKnownMemberStep = (step) =>
+  Object.prototype.hasOwnProperty.call(MEMBER_STEPS, step)

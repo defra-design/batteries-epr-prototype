@@ -188,8 +188,7 @@ export const createQuarterlySubmission = (input = {}) => ({
   compliancePeriodYear: input.compliancePeriodYear ?? null,
   quarter: input.quarter ?? null,
   status: input.status ?? 'not-started',
-  marketData: input.marketData ?? null,
-  wasteData: input.wasteData ?? null,
+  memberData: input.memberData ?? [],
   submittedOn: input.submittedOn ?? null,
   createdAt: input.createdAt ?? now(),
   updatedAt: input.updatedAt ?? now()
@@ -201,10 +200,7 @@ export const createIaSubmission = (input = {}) => ({
   schemeId: input.schemeId ?? null,
   compliancePeriodYear: input.compliancePeriodYear ?? null,
   status: input.status ?? 'not-started',
-  placed: input.placed ?? null,
-  exported: input.exported ?? null,
-  takenBack: input.takenBack ?? null,
-  delivered: input.delivered ?? null,
+  memberData: input.memberData ?? [],
   submittedOn: input.submittedOn ?? null,
   createdAt: input.createdAt ?? now(),
   updatedAt: input.updatedAt ?? now()
@@ -835,6 +831,89 @@ const upsertIaSubmission = (schemeId, compliancePeriodYear, patch) => {
   })
 }
 
+const emptyQuarterlyMemberEntry = (member) => ({
+  memberId: member.id,
+  producerBprn: member.producerBprn,
+  companyName: member.companyName,
+  marketData: null,
+  wasteData: null
+})
+
+const emptyIaMemberEntry = (member) => ({
+  memberId: member.id,
+  producerBprn: member.producerBprn,
+  companyName: member.companyName,
+  placed: null,
+  exported: null,
+  takenBack: null,
+  delivered: null
+})
+
+const initQuarterlyMemberData = (schemeId, compliancePeriodYear, quarter) => {
+  const submission = findQuarterlySubmission(
+    schemeId,
+    compliancePeriodYear,
+    quarter
+  )
+  const { active } = membersForYear(schemeId, compliancePeriodYear)
+  const existing = submission?.memberData ?? []
+  const memberData = active.map((member) => {
+    const found = existing.find((e) => e.memberId === member.id)
+    return found ?? emptyQuarterlyMemberEntry(member)
+  })
+  return upsertQuarterlySubmission(schemeId, compliancePeriodYear, quarter, {
+    memberData
+  })
+}
+
+const upsertQuarterlyMemberTonnage = (
+  schemeId,
+  compliancePeriodYear,
+  quarter,
+  memberId,
+  patch
+) => {
+  const submission = findQuarterlySubmission(
+    schemeId,
+    compliancePeriodYear,
+    quarter
+  )
+  if (!submission) return null
+  /* v8 ignore next */
+  const memberData = (submission.memberData ?? []).map((entry) =>
+    entry.memberId === memberId ? { ...entry, ...patch } : entry
+  )
+  return upsertQuarterlySubmission(schemeId, compliancePeriodYear, quarter, {
+    memberData
+  })
+}
+
+const initIaMemberData = (schemeId, compliancePeriodYear) => {
+  const submission = findIaSubmission(schemeId, compliancePeriodYear)
+  const { active } = membersForYear(schemeId, compliancePeriodYear)
+  const existing = submission?.memberData ?? []
+  const memberData = active.map((member) => {
+    const found = existing.find((e) => e.memberId === member.id)
+    return found ?? emptyIaMemberEntry(member)
+  })
+  return upsertIaSubmission(schemeId, compliancePeriodYear, { memberData })
+}
+
+const upsertIaMemberTonnage = (
+  schemeId,
+  compliancePeriodYear,
+  memberId,
+  patch
+) => {
+  const submission = findIaSubmission(schemeId, compliancePeriodYear)
+  if (!submission) return null
+  /* v8 ignore next */
+  const memberData = (submission.memberData ?? []).map((entry) =>
+    entry.memberId === memberId ? { ...entry, ...patch } : entry
+  )
+  return upsertIaSubmission(schemeId, compliancePeriodYear, { memberData })
+}
+
 const listEvidence = (schemeId, compliancePeriodYear) => {
   const items = Object.values(readMap(STORAGE_KEYS.evidence))
   return items.filter(
@@ -1001,6 +1080,10 @@ export const storage = {
   saveIaSubmission,
   findIaSubmission,
   upsertIaSubmission,
+  initQuarterlyMemberData,
+  upsertQuarterlyMemberTonnage,
+  initIaMemberData,
+  upsertIaMemberTonnage,
   listEvidence,
   findEvidence,
   saveEvidence,

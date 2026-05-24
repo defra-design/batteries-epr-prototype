@@ -1,5 +1,5 @@
 import { paths } from '../../../config/paths.js'
-import { iaController } from './controller.js'
+import { iaController, iaMemberController } from './controller.js'
 
 export const complianceSchemeIa = {
   openRoutes: [
@@ -12,6 +12,16 @@ export const complianceSchemeIa = {
       method: 'POST',
       path: paths.complianceSchemeIa,
       ...iaController.post
+    },
+    {
+      method: 'GET',
+      path: paths.complianceSchemeIaMember,
+      ...iaMemberController.get
+    },
+    {
+      method: 'POST',
+      path: paths.complianceSchemeIaMember,
+      ...iaMemberController.post
     }
   ]
 }

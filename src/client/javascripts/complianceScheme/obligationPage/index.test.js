@@ -56,7 +56,7 @@ describe('runObligationPage', () => {
       compliancePeriodYear: '2026',
       quarter: 'Q1',
       status: 'submitted',
-      marketData: { portable: '1', industrial: '0', automotive: '0' }
+      memberData: [{ memberId: 'm-1', marketData: { portable: '1', industrial: '0', automotive: '0' } }]
     })
     buildDom({
       ...PAYLOAD,
@@ -81,7 +81,7 @@ describe('runObligationPage', () => {
       compliancePeriodYear: '2026',
       quarter: 'Q1',
       status: 'submitted',
-      marketData: { portable: '100', industrial: '50', automotive: '50' }
+      memberData: [{ memberId: 'm-1', marketData: { portable: '100', industrial: '50', automotive: '50' } }]
     })
     storage.saveEvidence(
       createEvidence({
@@ -127,14 +127,14 @@ describe('runObligationPage', () => {
       compliancePeriodYear: '2026',
       quarter: 'Q1',
       status: 'submitted',
-      marketData: { portable: '100', industrial: '0', automotive: '0' }
+      memberData: [{ memberId: 'm-1', marketData: { portable: '100', industrial: '0', automotive: '0' } }]
     })
     storage.saveQuarterlySubmission({
       schemeId: scheme.id,
       compliancePeriodYear: '2027',
       quarter: 'Q1',
       status: 'submitted',
-      marketData: { portable: '500', industrial: '0', automotive: '0' }
+      memberData: [{ memberId: 'm-1', marketData: { portable: '500', industrial: '0', automotive: '0' } }]
     })
     buildDom({ ...PAYLOAD, compliancePeriodYear: '2027' })
     runObligationPage(document)

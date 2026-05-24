@@ -1,0 +1,27 @@
+{% extends 'complianceSchemeIa/_layout.njk' %}
+
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% block stepBody %}
+  <table class="govuk-table" data-testid="ia-member-list-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">{{ labels.bprnColumn }}</th>
+        <th scope="col" class="govuk-table__header">{{ labels.companyColumn }}</th>
+        <th scope="col" class="govuk-table__header">{{ labels.statusColumn }}</th>
+        <th scope="col" class="govuk-table__header">{{ labels.actionColumn }}</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body" data-testid="ia-member-list-body"></tbody>
+  </table>
+
+  <p class="govuk-body" data-testid="ia-member-list-empty" hidden>{{ labels.emptyMessage }}</p>
+
+  <p class="govuk-body">
+    {{ govukButton({
+      text: labels.continueAction,
+      href: pagePayload.next,
+      attributes: { "data-testid": "ia-member-list-continue" }
+    }) }}
+  </p>
+{% endblock %}

@@ -7,10 +7,13 @@ export const TARGET_PERCENTAGES = {
 }
 
 const sumQuarterCategory = (quarterly, category) =>
-  quarterly.reduce(
-    (total, q) => total + Number(q.marketData?.[category] ?? 0),
-    0
-  )
+  quarterly.reduce((total, q) => {
+    const memberTotal = (q.memberData ?? []).reduce(
+      (sum, m) => sum + Number(m.marketData?.[category] ?? 0),
+      0
+    )
+    return total + memberTotal
+  }, 0)
 
 const sumEvidenceCategory = (evidence, category) =>
   evidence

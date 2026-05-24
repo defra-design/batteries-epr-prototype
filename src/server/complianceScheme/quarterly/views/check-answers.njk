@@ -3,43 +3,33 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% block stepBody %}
-  <h2 class="govuk-heading-m" data-testid="quarterly-check-market-heading">{{ labels.marketHeading }}</h2>
-  <dl class="govuk-summary-list" data-testid="quarterly-check-market">
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">{{ labels.portableLabel }}</dt>
-      <dd class="govuk-summary-list__value" data-testid="quarterly-check-market-portable"></dd>
-      <dd class="govuk-summary-list__actions"><a class="govuk-link" href="{{ marketDataUrl }}">{{ labels.changeAction }}</a></dd>
-    </div>
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">{{ labels.industrialLabel }}</dt>
-      <dd class="govuk-summary-list__value" data-testid="quarterly-check-market-industrial"></dd>
-      <dd class="govuk-summary-list__actions"></dd>
-    </div>
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">{{ labels.automotiveLabel }}</dt>
-      <dd class="govuk-summary-list__value" data-testid="quarterly-check-market-automotive"></dd>
-      <dd class="govuk-summary-list__actions"></dd>
-    </div>
-  </dl>
-
-  <h2 class="govuk-heading-m" data-testid="quarterly-check-waste-heading">{{ labels.wasteHeading }}</h2>
-  <dl class="govuk-summary-list" data-testid="quarterly-check-waste">
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">{{ labels.portableLabel }}</dt>
-      <dd class="govuk-summary-list__value" data-testid="quarterly-check-waste-portable"></dd>
-      <dd class="govuk-summary-list__actions"><a class="govuk-link" href="{{ wasteDataUrl }}">{{ labels.changeAction }}</a></dd>
-    </div>
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">{{ labels.industrialLabel }}</dt>
-      <dd class="govuk-summary-list__value" data-testid="quarterly-check-waste-industrial"></dd>
-      <dd class="govuk-summary-list__actions"></dd>
-    </div>
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">{{ labels.automotiveLabel }}</dt>
-      <dd class="govuk-summary-list__value" data-testid="quarterly-check-waste-automotive"></dd>
-      <dd class="govuk-summary-list__actions"></dd>
-    </div>
-  </dl>
+  <table class="govuk-table" data-testid="quarterly-check-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">{{ labels.memberColumn | default('Member') }}</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ labels.marketPortableColumn | default('Market: Portable') }}</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ labels.marketIndustrialColumn | default('Market: Industrial') }}</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ labels.marketAutomotiveColumn | default('Market: Automotive') }}</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ labels.wastePortableColumn | default('Waste: Portable') }}</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ labels.wasteIndustrialColumn | default('Waste: Industrial') }}</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ labels.wasteAutomotiveColumn | default('Waste: Automotive') }}</th>
+        <th scope="col" class="govuk-table__header">{{ labels.changeAction }}</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body" data-testid="quarterly-check-body"></tbody>
+    <tfoot>
+      <tr class="govuk-table__row" data-testid="quarterly-check-totals">
+        <th scope="row" class="govuk-table__header">Totals</th>
+        <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="quarterly-check-total-market-portable"></td>
+        <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="quarterly-check-total-market-industrial"></td>
+        <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="quarterly-check-total-market-automotive"></td>
+        <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="quarterly-check-total-waste-portable"></td>
+        <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="quarterly-check-total-waste-industrial"></td>
+        <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="quarterly-check-total-waste-automotive"></td>
+        <td class="govuk-table__cell"></td>
+      </tr>
+    </tfoot>
+  </table>
 
   <p class="govuk-body">
     {{ govukButton({

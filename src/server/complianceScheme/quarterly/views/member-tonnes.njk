@@ -1,0 +1,49 @@
+{% extends 'complianceSchemeQuarterly/_layout.njk' %}
+
+{% block stepBody %}
+  <p class="govuk-body" data-testid="quarterly-member-name"></p>
+
+  <form method="post" action="{{ action }}" novalidate data-testid="quarterly-member-form">
+    {{ govukInput({
+      label: { text: labels.portableLabel },
+      hint: { text: labels.hint },
+      id: "portable",
+      name: "portable",
+      classes: "govuk-input--width-10",
+      value: formValues.portable,
+      errorMessage: { text: errors.portable } if errors.portable,
+      attributes: { "data-testid": "tonnes-portable" }
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.industrialLabel },
+      hint: { text: labels.hint },
+      id: "industrial",
+      name: "industrial",
+      classes: "govuk-input--width-10",
+      value: formValues.industrial,
+      errorMessage: { text: errors.industrial } if errors.industrial,
+      attributes: { "data-testid": "tonnes-industrial" }
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.automotiveLabel },
+      hint: { text: labels.hint },
+      id: "automotive",
+      name: "automotive",
+      classes: "govuk-input--width-10",
+      value: formValues.automotive,
+      errorMessage: { text: errors.automotive } if errors.automotive,
+      attributes: { "data-testid": "tonnes-automotive" }
+    }) }}
+
+    {{ govukButton({
+      text: continueAction,
+      attributes: { "data-testid": "quarterly-member-continue" }
+    }) }}
+  </form>
+
+  <p class="govuk-body">
+    <a class="govuk-link" href="{{ memberListUrl }}" data-testid="quarterly-member-back">Back to member list</a>
+  </p>
+{% endblock %}

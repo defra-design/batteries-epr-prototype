@@ -33,23 +33,11 @@ const triple = (payload) => ({
 })
 
 export const STEPS = {
-  'market-data': {
-    contentKey: 'marketData',
-    view: 'complianceScheme/quarterly/views/tonnes',
-    next: 'waste-data',
-    formStep: true,
-    schema: tonneTriple,
-    fieldMessages: tripleMessages,
-    toPatch: (payload) => ({ marketData: triple(payload) })
-  },
-  'waste-data': {
-    contentKey: 'wasteData',
-    view: 'complianceScheme/quarterly/views/tonnes',
+  'member-list': {
+    contentKey: 'memberList',
+    view: 'complianceScheme/quarterly/views/member-list',
     next: 'check-answers',
-    formStep: true,
-    schema: tonneTriple,
-    fieldMessages: tripleMessages,
-    toPatch: (payload) => ({ wasteData: triple(payload) })
+    formStep: false
   },
   'check-answers': {
     contentKey: 'checkAnswers',
@@ -81,9 +69,27 @@ export const STEPS = {
   }
 }
 
+export const MEMBER_STEPS = {
+  'market-data': {
+    contentKey: 'marketData',
+    view: 'complianceScheme/quarterly/views/member-tonnes',
+    formStep: true,
+    schema: tonneTriple,
+    fieldMessages: tripleMessages,
+    toPatch: (payload) => ({ marketData: triple(payload) })
+  },
+  'waste-data': {
+    contentKey: 'wasteData',
+    view: 'complianceScheme/quarterly/views/member-tonnes',
+    formStep: true,
+    schema: tonneTriple,
+    fieldMessages: tripleMessages,
+    toPatch: (payload) => ({ wasteData: triple(payload) })
+  }
+}
+
 export const STEP_ORDER = [
-  'market-data',
-  'waste-data',
+  'member-list',
   'check-answers',
   'declaration',
   'confirmation'
@@ -91,6 +97,9 @@ export const STEP_ORDER = [
 
 export const isKnownStep = (step) =>
   Object.prototype.hasOwnProperty.call(STEPS, step)
+
+export const isKnownMemberStep = (dataType) =>
+  Object.prototype.hasOwnProperty.call(MEMBER_STEPS, dataType)
 
 export const QUARTERS = ['Q1', 'Q2', 'Q3', 'Q4']
 

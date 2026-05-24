@@ -1752,11 +1752,29 @@ export const content = {
           continueAction: 'Continue',
           confirmAction: 'Confirm and submit',
           steps: {
+            memberList: {
+              title: 'Scheme members',
+              heading: 'Enter tonnage data for each member',
+              intro:
+                'Select a member to enter their market and waste tonnage data for this quarter.',
+              bprnColumn: 'BPRN',
+              companyColumn: 'Company name',
+              marketStatusColumn: 'Market data',
+              wasteStatusColumn: 'Waste data',
+              actionColumn: 'Action',
+              enterAction: 'Enter data',
+              editAction: 'Edit',
+              enteredTag: 'Entered',
+              notEnteredTag: 'Not entered',
+              continueAction: 'Continue',
+              emptyMessage: 'This scheme has no active members for the current compliance period.',
+              totalsHeading: 'Totals'
+            },
             marketData: {
               title: 'Batteries placed on the market',
               heading: 'Batteries placed on the market this quarter',
               intro:
-                'Enter the tonnes of batteries your members placed on the UK market, by category.',
+                'Enter the tonnes of batteries this member placed on the UK market, by category.',
               portableLabel: 'Portable batteries (tonnes)',
               industrialLabel: 'Industrial batteries (tonnes)',
               automotiveLabel: 'Automotive batteries (tonnes)',
@@ -1774,7 +1792,7 @@ export const content = {
               title: 'Waste batteries collected',
               heading: 'Waste batteries collected this quarter',
               intro:
-                'Enter the tonnes of waste batteries your members collected.',
+                'Enter the tonnes of waste batteries this member collected.',
               portableLabel: 'Portable batteries (tonnes)',
               industrialLabel: 'Industrial batteries (tonnes)',
               automotiveLabel: 'Automotive batteries (tonnes)',
@@ -1824,11 +1842,28 @@ export const content = {
           continueAction: 'Continue',
           confirmAction: 'Confirm and submit',
           steps: {
+            memberList: {
+              title: 'Scheme members',
+              heading: 'Enter tonnage data for each member',
+              intro:
+                'Select a member to enter their industrial and automotive battery data for this compliance period.',
+              bprnColumn: 'BPRN',
+              companyColumn: 'Company name',
+              statusColumn: 'Status',
+              actionColumn: 'Action',
+              enterAction: 'Enter data',
+              editAction: 'Edit',
+              enteredTag: 'Entered',
+              notEnteredTag: 'Not entered',
+              continueAction: 'Continue',
+              emptyMessage: 'This scheme has no active members for the current compliance period.',
+              totalsHeading: 'Totals'
+            },
             placed: {
               title: 'Industrial and automotive batteries placed',
               heading: 'Batteries placed on the market this year',
               intro:
-                'Enter the tonnes of industrial and automotive batteries placed on the UK market for this compliance period.',
+                'Enter the tonnes of industrial and automotive batteries this member placed on the UK market for this compliance period.',
               industrialLabel: 'Industrial batteries (tonnes)',
               automotiveLabel: 'Automotive batteries (tonnes)',
               hint: 'Enter a value in tonnes, up to three decimal places.',
@@ -1843,7 +1878,7 @@ export const content = {
               title: 'Batteries exported',
               heading: 'Industrial and automotive batteries exported this year',
               intro:
-                'Enter the tonnes of industrial and automotive batteries exported.',
+                'Enter the tonnes of industrial and automotive batteries this member exported.',
               industrialLabel: 'Industrial batteries (tonnes)',
               automotiveLabel: 'Automotive batteries (tonnes)',
               hint: 'Enter a value in tonnes, up to three decimal places.',
@@ -1858,7 +1893,7 @@ export const content = {
               title: 'Batteries taken back',
               heading: 'Industrial and automotive batteries taken back this year',
               intro:
-                'Enter the tonnes of industrial and automotive batteries taken back from the market.',
+                'Enter the tonnes of industrial and automotive batteries this member took back from the market.',
               industrialLabel: 'Industrial batteries (tonnes)',
               automotiveLabel: 'Automotive batteries (tonnes)',
               hint: 'Enter a value in tonnes, up to three decimal places.',
@@ -1874,7 +1909,7 @@ export const content = {
               heading:
                 'Industrial and automotive batteries delivered for treatment this year',
               intro:
-                'Enter the tonnes of industrial and automotive batteries delivered to treatment operators.',
+                'Enter the tonnes of industrial and automotive batteries this member delivered to treatment operators.',
               industrialLabel: 'Industrial batteries (tonnes)',
               automotiveLabel: 'Automotive batteries (tonnes)',
               hint: 'Enter a value in tonnes, up to three decimal places.',
@@ -2277,6 +2312,23 @@ export const content = {
           continueAction: 'TODO welsh',
           confirmAction: 'TODO welsh',
           steps: {
+            memberList: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              bprnColumn: 'TODO welsh',
+              companyColumn: 'TODO welsh',
+              marketStatusColumn: 'TODO welsh',
+              wasteStatusColumn: 'TODO welsh',
+              actionColumn: 'TODO welsh',
+              enterAction: 'TODO welsh',
+              editAction: 'TODO welsh',
+              enteredTag: 'TODO welsh',
+              notEnteredTag: 'TODO welsh',
+              continueAction: 'TODO welsh',
+              emptyMessage: 'TODO welsh',
+              totalsHeading: 'TODO welsh'
+            },
             marketData: {
               title: 'TODO welsh',
               heading: 'TODO welsh',
@@ -2343,6 +2395,22 @@ export const content = {
           continueAction: 'TODO welsh',
           confirmAction: 'TODO welsh',
           steps: {
+            memberList: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              bprnColumn: 'TODO welsh',
+              companyColumn: 'TODO welsh',
+              statusColumn: 'TODO welsh',
+              actionColumn: 'TODO welsh',
+              enterAction: 'TODO welsh',
+              editAction: 'TODO welsh',
+              enteredTag: 'TODO welsh',
+              notEnteredTag: 'TODO welsh',
+              continueAction: 'TODO welsh',
+              emptyMessage: 'TODO welsh',
+              totalsHeading: 'TODO welsh'
+            },
             placed: {
               title: 'TODO welsh',
               heading: 'TODO welsh',

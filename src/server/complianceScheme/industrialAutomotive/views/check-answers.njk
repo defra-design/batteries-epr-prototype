@@ -1,37 +1,37 @@
 {% extends 'complianceSchemeIa/_layout.njk' %}
 
-{% macro row(label, testidPrefix, suffix, changeHref, changeLabel) %}
-  <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">{{ label }}</dt>
-    <dd class="govuk-summary-list__value" data-testid="ia-check-{{ testidPrefix }}-{{ suffix }}"></dd>
-    <dd class="govuk-summary-list__actions">{% if changeHref %}<a class="govuk-link" href="{{ changeHref }}">{{ changeLabel }}</a>{% endif %}</dd>
-  </div>
-{% endmacro %}
-
 {% block stepBody %}
-  <h2 class="govuk-heading-m">{{ labels.placedHeading }}</h2>
-  <dl class="govuk-summary-list" data-testid="ia-check-placed">
-    {{ row(labels.industrialLabel, 'placed', 'industrial', placedUrl, labels.changeAction) }}
-    {{ row(labels.automotiveLabel, 'placed', 'automotive') }}
-  </dl>
-
-  <h2 class="govuk-heading-m">{{ labels.exportedHeading }}</h2>
-  <dl class="govuk-summary-list" data-testid="ia-check-exported">
-    {{ row(labels.industrialLabel, 'exported', 'industrial', exportedUrl, labels.changeAction) }}
-    {{ row(labels.automotiveLabel, 'exported', 'automotive') }}
-  </dl>
-
-  <h2 class="govuk-heading-m">{{ labels.takenBackHeading }}</h2>
-  <dl class="govuk-summary-list" data-testid="ia-check-taken-back">
-    {{ row(labels.industrialLabel, 'taken-back', 'industrial', takenBackUrl, labels.changeAction) }}
-    {{ row(labels.automotiveLabel, 'taken-back', 'automotive') }}
-  </dl>
-
-  <h2 class="govuk-heading-m">{{ labels.deliveredHeading }}</h2>
-  <dl class="govuk-summary-list" data-testid="ia-check-delivered">
-    {{ row(labels.industrialLabel, 'delivered', 'industrial', deliveredUrl, labels.changeAction) }}
-    {{ row(labels.automotiveLabel, 'delivered', 'automotive') }}
-  </dl>
+  <table class="govuk-table" data-testid="ia-check-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Member</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Placed: Ind.</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Placed: Auto.</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Exported: Ind.</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Exported: Auto.</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Taken back: Ind.</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Taken back: Auto.</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Delivered: Ind.</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Delivered: Auto.</th>
+        <th scope="col" class="govuk-table__header">{{ labels.changeAction }}</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body" data-testid="ia-check-body"></tbody>
+    <tfoot>
+      <tr class="govuk-table__row" data-testid="ia-check-totals">
+        <th scope="row" class="govuk-table__header">Totals</th>
+        <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="ia-check-total-placed-industrial"></td>
+        <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="ia-check-total-placed-automotive"></td>
+        <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="ia-check-total-exported-industrial"></td>
+        <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="ia-check-total-exported-automotive"></td>
+        <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="ia-check-total-taken-back-industrial"></td>
+        <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="ia-check-total-taken-back-automotive"></td>
+        <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="ia-check-total-delivered-industrial"></td>
+        <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="ia-check-total-delivered-automotive"></td>
+        <td class="govuk-table__cell"></td>
+      </tr>
+    </tfoot>
+  </table>
 
   <p class="govuk-body">
     {{ govukButton({

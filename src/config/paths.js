@@ -65,7 +65,11 @@ export const paths = {
   complianceSchemeMembersAdd: '/compliance-scheme/members/add',
   complianceSchemeMemberRemove: '/compliance-scheme/members/{memberId}/remove',
   complianceSchemeQuarterly: '/compliance-scheme/quarterly/{quarter}/{step}',
+  complianceSchemeQuarterlyMember:
+    '/compliance-scheme/quarterly/{quarter}/member/{memberId}/{dataType}',
   complianceSchemeIa: '/compliance-scheme/industrial-automotive/{step}',
+  complianceSchemeIaMember:
+    '/compliance-scheme/industrial-automotive/member/{memberId}/{step}',
   complianceSchemeEvidence: '/compliance-scheme/evidence',
   complianceSchemeEvidenceIssue: '/compliance-scheme/evidence/issue/{step}',
   complianceSchemeEvidenceDetail: '/compliance-scheme/evidence/{evidenceId}',

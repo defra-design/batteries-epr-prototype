@@ -206,7 +206,7 @@ describe('buildQuarterlyTile', () => {
     expect(tile.gated).toBe(false)
     expect(tile.quarters[0].action).toEqual({
       text: 'Start',
-      href: '/compliance-scheme/quarterly/Q1/market-data'
+      href: '/compliance-scheme/quarterly/Q1/member-list'
     })
   })
 
@@ -219,7 +219,7 @@ describe('buildQuarterlyTile', () => {
     )
     const q2 = tile.quarters.find((q) => q.quarter === 'Q2')
     expect(q2.action.text).toBe('Continue')
-    expect(q2.action.href).toBe('/compliance-scheme/quarterly/Q2/market-data')
+    expect(q2.action.href).toBe('/compliance-scheme/quarterly/Q2/member-list')
   })
 
   test('picks view for submitted quarters', () => {
@@ -252,7 +252,7 @@ describe('buildIaTile', () => {
     const tile = buildIaTile(approvedScheme, [], urls, copy.ia)
     expect(tile.action).toEqual({
       text: 'Start',
-      href: '/compliance-scheme/industrial-automotive/placed'
+      href: '/compliance-scheme/industrial-automotive/member-list'
     })
   })
 
@@ -265,7 +265,7 @@ describe('buildIaTile', () => {
     )
     expect(tile.action.text).toBe('Continue')
     expect(tile.action.href).toBe(
-      '/compliance-scheme/industrial-automotive/placed'
+      '/compliance-scheme/industrial-automotive/member-list'
     )
   })
 

@@ -812,41 +812,41 @@ describe('compliance scheme factories and storage', () => {
     const q = createQuarterlySubmission()
     expect(q.status).toBe('not-started')
     expect(q.quarter).toBeNull()
+    expect(q.memberData).toEqual([])
     const i = createIaSubmission()
     expect(i.status).toBe('not-started')
-    expect(i.placed).toBeNull()
+    expect(i.memberData).toEqual([])
   })
 
   test('createQuarterlySubmission and createIaSubmission accept overrides', () => {
+    const memberData = [{ memberId: 'm-1', producerBprn: 'BPRN-1', companyName: 'Acme', marketData: { portable: '1' }, wasteData: null }]
     const q = createQuarterlySubmission({
       id: 'q-1',
       schemeId: 's-1',
       compliancePeriodYear: 2026,
       quarter: 'Q1',
       status: 'submitted',
-      marketData: { portable: '1' },
-      wasteData: { collected: '2' },
+      memberData,
       submittedOn: '2026-04-30T00:00:00Z',
       createdAt: '2026-01-01T00:00:00Z',
       updatedAt: '2026-04-30T00:00:00Z'
     })
     expect(q.quarter).toBe('Q1')
     expect(q.status).toBe('submitted')
+    expect(q.memberData).toEqual(memberData)
 
+    const iaMemberData = [{ memberId: 'm-2', producerBprn: 'BPRN-2', companyName: 'Beta', placed: { industrial: '5' }, exported: null, takenBack: null, delivered: null }]
     const i = createIaSubmission({
       id: 'i-1',
       schemeId: 's-1',
       compliancePeriodYear: 2026,
       status: 'in-progress',
-      placed: { industrial: '5' },
-      exported: { industrial: '1' },
-      takenBack: { industrial: '2' },
-      delivered: { industrial: '3' },
+      memberData: iaMemberData,
       submittedOn: null,
       createdAt: '2026-02-01T00:00:00Z',
       updatedAt: '2026-02-15T00:00:00Z'
     })
-    expect(i.placed).toEqual({ industrial: '5' })
+    expect(i.memberData).toEqual(iaMemberData)
     expect(i.status).toBe('in-progress')
   })
 
@@ -1788,32 +1788,34 @@ describe('compliance scheme factories and storage', () => {
   })
 
   test('upsertQuarterlySubmission creates then updates the same record', () => {
+    const memberData = [{ memberId: 'm-1', producerBprn: 'B-1', companyName: 'Acme', marketData: null, wasteData: null }]
     const first = storage.upsertQuarterlySubmission('s-1', '2026', 'Q1', {
-      marketData: { portable: '1', industrial: '2', automotive: '3' }
+      memberData
     })
     expect(first.status).toBe('in-progress')
+    expect(first.memberData).toEqual(memberData)
     const second = storage.upsertQuarterlySubmission('s-1', '2026', 'Q1', {
-      wasteData: { portable: '0.5', industrial: '0', automotive: '0' }
+      status: 'submitted'
     })
     expect(second.id).toBe(first.id)
-    expect(second.marketData.portable).toBe('1')
-    expect(second.wasteData.portable).toBe('0.5')
+    expect(second.memberData).toEqual(memberData)
+    expect(second.status).toBe('submitted')
     expect(storage.listQuarterlySubmissions('s-1', '2026')).toHaveLength(1)
   })
 
   test('upsertQuarterlySubmission scopes records by year', () => {
     storage.upsertQuarterlySubmission('s-1', '2026', 'Q1', {
-      marketData: { portable: '1', industrial: '0', automotive: '0' }
+      memberData: [{ memberId: 'm-1', companyName: 'A' }]
     })
     storage.upsertQuarterlySubmission('s-1', '2027', 'Q1', {
-      marketData: { portable: '9', industrial: '0', automotive: '0' }
+      memberData: [{ memberId: 'm-2', companyName: 'B' }]
     })
     expect(
-      storage.findQuarterlySubmission('s-1', '2026', 'Q1').marketData.portable
-    ).toBe('1')
+      storage.findQuarterlySubmission('s-1', '2026', 'Q1').memberData[0].companyName
+    ).toBe('A')
     expect(
-      storage.findQuarterlySubmission('s-1', '2027', 'Q1').marketData.portable
-    ).toBe('9')
+      storage.findQuarterlySubmission('s-1', '2027', 'Q1').memberData[0].companyName
+    ).toBe('B')
   })
 
   test('findIaSubmission returns the matching record or null', () => {
@@ -1829,21 +1831,36 @@ describe('compliance scheme factories and storage', () => {
   })
 
   test('upsertIaSubmission creates then updates the same record per year', () => {
-    const first = storage.upsertIaSubmission('s-1', '2026', {
-      placed: { industrial: '1', automotive: '2' }
-    })
+    const memberData = [{ memberId: 'm-1', producerBprn: 'B-1', companyName: 'Acme', placed: null, exported: null, takenBack: null, delivered: null }]
+    const first = storage.upsertIaSubmission('s-1', '2026', { memberData })
     expect(first.status).toBe('in-progress')
+    expect(first.memberData).toEqual(memberData)
     const second = storage.upsertIaSubmission('s-1', '2026', {
-      exported: { industrial: '0.5', automotive: '0' }
+      status: 'submitted'
     })
     expect(second.id).toBe(first.id)
-    expect(second.placed.industrial).toBe('1')
-    expect(second.exported.industrial).toBe('0.5')
+    expect(second.memberData).toEqual(memberData)
 
     storage.upsertIaSubmission('s-1', '2027', {
-      placed: { industrial: '99', automotive: '0' }
+      memberData: [{ memberId: 'm-2', companyName: 'Beta' }]
     })
-    expect(storage.findIaSubmission('s-1', '2026').placed.industrial).toBe('1')
-    expect(storage.findIaSubmission('s-1', '2027').placed.industrial).toBe('99')
+    expect(storage.findIaSubmission('s-1', '2026').memberData[0].companyName).toBe('Acme')
+    expect(storage.findIaSubmission('s-1', '2027').memberData[0].companyName).toBe('Beta')
+  })
+
+  test('upsertQuarterlyMemberTonnage returns null when no submission exists', () => {
+    expect(
+      storage.upsertQuarterlyMemberTonnage('s-1', '2026', 'Q1', 'm-1', {
+        marketData: { portable: '1', industrial: '0', automotive: '0' }
+      })
+    ).toBeNull()
+  })
+
+  test('upsertIaMemberTonnage returns null when no submission exists', () => {
+    expect(
+      storage.upsertIaMemberTonnage('s-1', '2026', 'm-1', {
+        placed: { industrial: '1', automotive: '0' }
+      })
+    ).toBeNull()
   })
 })

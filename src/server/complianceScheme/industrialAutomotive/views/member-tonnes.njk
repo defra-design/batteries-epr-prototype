@@ -1,0 +1,38 @@
+{% extends 'complianceSchemeIa/_layout.njk' %}
+
+{% block stepBody %}
+  <p class="govuk-body" data-testid="ia-member-name"></p>
+
+  <form method="post" action="{{ action }}" novalidate data-testid="ia-member-form">
+    {{ govukInput({
+      label: { text: labels.industrialLabel },
+      hint: { text: labels.hint },
+      id: "industrial",
+      name: "industrial",
+      classes: "govuk-input--width-10",
+      value: formValues.industrial,
+      errorMessage: { text: errors.industrial } if errors.industrial,
+      attributes: { "data-testid": "ia-tonnes-industrial" }
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.automotiveLabel },
+      hint: { text: labels.hint },
+      id: "automotive",
+      name: "automotive",
+      classes: "govuk-input--width-10",
+      value: formValues.automotive,
+      errorMessage: { text: errors.automotive } if errors.automotive,
+      attributes: { "data-testid": "ia-tonnes-automotive" }
+    }) }}
+
+    {{ govukButton({
+      text: continueAction,
+      attributes: { "data-testid": "ia-member-continue" }
+    }) }}
+  </form>
+
+  <p class="govuk-body">
+    <a class="govuk-link" href="{{ memberListUrl }}" data-testid="ia-member-back">Back to member list</a>
+  </p>
+{% endblock %}

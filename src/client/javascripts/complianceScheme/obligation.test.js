@@ -33,13 +33,18 @@ describe('obligation', () => {
     })
   })
 
-  test('sums quarterly market data across the year and applies the target', () => {
+  test('sums quarterly member market data across the year and applies the target', () => {
     const quarterly = [
       {
-        marketData: { portable: '100', industrial: '200', automotive: '50' }
+        memberData: [
+          { memberId: 'm-1', marketData: { portable: '60', industrial: '200', automotive: '30' } },
+          { memberId: 'm-2', marketData: { portable: '40', industrial: '0', automotive: '20' } }
+        ]
       },
       {
-        marketData: { portable: '50', industrial: '0', automotive: '50' }
+        memberData: [
+          { memberId: 'm-1', marketData: { portable: '50', industrial: '0', automotive: '50' } }
+        ]
       }
     ]
     const { rows } = buildObligation({ quarterly, evidence: [] })
@@ -55,7 +60,7 @@ describe('obligation', () => {
 
   test('only accepted evidence counts toward fulfilment', () => {
     const quarterly = [
-      { marketData: { portable: '100', industrial: '0', automotive: '0' } }
+      { memberData: [{ memberId: 'm-1', marketData: { portable: '100', industrial: '0', automotive: '0' } }] }
     ]
     const evidence = [
       { category: 'portable', status: 'accepted', tonnes: '20' },
@@ -70,7 +75,7 @@ describe('obligation', () => {
   })
 
   test('missing tonnes fields are treated as zero', () => {
-    const quarterly = [{ marketData: { portable: undefined } }]
+    const quarterly = [{ memberData: [{ memberId: 'm-1', marketData: { portable: undefined } }] }]
     const evidence = [{ category: 'portable', status: 'accepted' }]
     const { rows } = buildObligation({ quarterly, evidence })
     const portable = rows.find((r) => r.category === 'portable')

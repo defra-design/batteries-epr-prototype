@@ -7,15 +7,34 @@ import {
   flashStepErrors,
   readStepErrors
 } from '../application/shared.js'
-import { STEPS, isKnownStep } from './steps.js'
+import {
+  STEPS,
+  MEMBER_STEPS,
+  MEMBER_STEP_ORDER,
+  isKnownStep,
+  isKnownMemberStep
+} from './steps.js'
 
 const flashKey = (step) => `ia:${step}`
 
 const stepUrl = (step) => paths.complianceSchemeIa.replace('{step}', step)
 
+const memberStepUrl = (memberId, step) =>
+  paths.complianceSchemeIaMember
+    .replace('{memberId}', memberId)
+    .replace('{step}', step)
+
 const nextUrl = (step) => {
   const next = STEPS[step].next
   return next ? stepUrl(next) : null
+}
+
+const nextMemberStepUrl = (memberId, currentStep) => {
+  const idx = MEMBER_STEP_ORDER.indexOf(currentStep)
+  if (idx < MEMBER_STEP_ORDER.length - 1) {
+    return memberStepUrl(memberId, MEMBER_STEP_ORDER[idx + 1])
+  }
+  return stepUrl('member-list')
 }
 
 const collectErrors = (joiError, fieldMessages) =>
@@ -42,10 +61,27 @@ const renderStep = (h, request, step, viewModel) => {
     dashboardUrl: paths.complianceSchemeDashboard,
     step,
     action: stepUrl(step),
-    placedUrl: stepUrl('placed'),
-    exportedUrl: stepUrl('exported'),
-    takenBackUrl: stepUrl('taken-back'),
-    deliveredUrl: stepUrl('delivered'),
+    ...viewModel
+  })
+}
+
+const renderMemberStep = (h, request, memberId, step, viewModel) => {
+  const iaContent = content.complianceScheme(request).iaPages
+  const stepConfig = MEMBER_STEPS[step]
+  const stepContent = iaContent.steps[stepConfig.contentKey]
+
+  return h.view(stepConfig.view, {
+    pageTitle: stepContent.title,
+    heading: stepContent.heading,
+    intro: stepContent.intro,
+    labels: stepContent,
+    errorTitle: iaContent.errorTitle,
+    continueAction: iaContent.continueAction,
+    dashboardUrl: paths.complianceSchemeDashboard,
+    memberId,
+    step,
+    action: memberStepUrl(memberId, step),
+    memberListUrl: stepUrl('member-list'),
     ...viewModel
   })
 }
@@ -69,7 +105,8 @@ export const iaController = {
           step,
           compliancePeriodYear,
           target: 'hydrate',
-          next: nextUrl(step)
+          next: nextUrl(step),
+          memberStepUrlTemplate: memberStepUrl('{memberId}', 'placed')
         }
       })
     }
@@ -107,6 +144,73 @@ export const iaController = {
           target: 'persist',
           patch,
           next: nextUrl(step)
+        }
+      })
+    }
+  }
+}
+
+export const iaMemberController = {
+  get: {
+    handler(request, h) {
+      const { memberId, step } = request.params
+      if (!isKnownMemberStep(step)) {
+        return h.response().code(statusCodes.notFound)
+      }
+      const compliancePeriodYear = getCompliancePeriod(request)
+      const flashId = flashKey(`member:${memberId}:${step}`)
+      const { errors, values } = readStepErrors(request, flashId)
+
+      return renderMemberStep(h, request, memberId, step, {
+        errorSummary: errors || [],
+        errors: errorListToMap(errors),
+        formValues: values || {},
+        pagePayload: {
+          view: 'ia-member',
+          memberId,
+          step,
+          compliancePeriodYear,
+          target: 'hydrate',
+          next: nextMemberStepUrl(memberId, step)
+        }
+      })
+    }
+  },
+
+  post: {
+    handler(request, h) {
+      const { memberId, step } = request.params
+      if (!isKnownMemberStep(step)) {
+        return h.response().code(statusCodes.notFound)
+      }
+      const compliancePeriodYear = getCompliancePeriod(request)
+      const stepConfig = MEMBER_STEPS[step]
+      const iaContent = content.complianceScheme(request).iaPages
+      const stepContent = iaContent.steps[stepConfig.contentKey]
+      const payload = request.payload
+
+      const { error, value } = stepConfig.schema.validate(payload)
+      if (error) {
+        const flashId = flashKey(`member:${memberId}:${step}`)
+        const list = collectErrors(error, stepConfig.fieldMessages(stepContent.error))
+        flashStepErrors(request, flashId, list, payload)
+        return h.redirect(memberStepUrl(memberId, step))
+      }
+
+      const patch = stepConfig.toPatch(value)
+
+      return renderMemberStep(h, request, memberId, step, {
+        errorSummary: [],
+        errors: {},
+        formValues: value,
+        pagePayload: {
+          view: 'ia-member',
+          memberId,
+          step,
+          compliancePeriodYear,
+          target: 'persist',
+          patch,
+          next: nextMemberStepUrl(memberId, step)
         }
       })
     }

@@ -64,13 +64,13 @@ const quarterAction = (status, quarter, urls, copy) => {
   if (status === 'not-started') {
     return {
       text: copy.startAction,
-      href: quarterlyHref(urls, quarter, 'market-data')
+      href: quarterlyHref(urls, quarter, 'member-list')
     }
   }
   if (status === 'in-progress') {
     return {
       text: copy.continueAction,
-      href: quarterlyHref(urls, quarter, 'market-data')
+      href: quarterlyHref(urls, quarter, 'member-list')
     }
   }
   return {
@@ -98,10 +98,10 @@ const iaHref = (urls, step) => urls.ia.replace('{step}', step)
 
 const iaAction = (status, urls, copy) => {
   if (status === 'not-started') {
-    return { text: copy.startAction, href: iaHref(urls, 'placed') }
+    return { text: copy.startAction, href: iaHref(urls, 'member-list') }
   }
   if (status === 'in-progress') {
-    return { text: copy.continueAction, href: iaHref(urls, 'placed') }
+    return { text: copy.continueAction, href: iaHref(urls, 'member-list') }
   }
   return { text: copy.viewAction, href: iaHref(urls, 'check-answers') }
 }
