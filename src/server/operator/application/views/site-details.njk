@@ -1,0 +1,82 @@
+{% extends 'operatorApplication/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="application-form">
+    {{ govukInput({
+      label: { text: labels.siteNameLabel },
+      id: "siteName",
+      name: "siteName",
+      value: formValues.siteName,
+      errorMessage: { text: errors.siteName } if errors.siteName,
+      attributes: { "data-testid": "site-name" }
+    }) }}
+
+    <h2 class="govuk-heading-m">{{ labels.siteAddressHeading }}</h2>
+
+    {{ govukInput({
+      label: { text: labels.siteLine1Label },
+      id: "siteLine1",
+      name: "siteLine1",
+      value: formValues.siteLine1,
+      errorMessage: { text: errors.siteLine1 } if errors.siteLine1
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.siteTownLabel },
+      id: "siteTown",
+      name: "siteTown",
+      value: formValues.siteTown,
+      errorMessage: { text: errors.siteTown } if errors.siteTown
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.sitePostcodeLabel },
+      id: "sitePostcode",
+      name: "sitePostcode",
+      classes: "govuk-input--width-10",
+      value: formValues.sitePostcode,
+      errorMessage: { text: errors.sitePostcode } if errors.sitePostcode
+    }) }}
+
+    {{ govukCheckboxes({
+      idPrefix: "batteryTypes",
+      name: "batteryTypes",
+      fieldset: { legend: { text: labels.batteryTypesLabel } },
+      hint: { text: labels.batteryTypesHint },
+      items: [
+        {
+          value: "yes",
+          text: labels.portableLabel,
+          name: "isPortable",
+          checked: formValues.isPortable == "yes"
+        },
+        {
+          value: "yes",
+          text: labels.industrialLabel,
+          name: "isIndustrial",
+          checked: formValues.isIndustrial == "yes"
+        },
+        {
+          value: "yes",
+          text: labels.automotiveLabel,
+          name: "isAutomotive",
+          checked: formValues.isAutomotive == "yes"
+        }
+      ]
+    }) }}
+
+    {{ govukTextarea({
+      label: { text: labels.operationsDescriptionLabel },
+      hint: { text: labels.operationsDescriptionHint },
+      id: "operationsDescription",
+      name: "operationsDescription",
+      value: formValues.operationsDescription,
+      errorMessage: { text: errors.operationsDescription } if errors.operationsDescription
+    }) }}
+
+    {{ govukButton({
+      text: continueAction,
+      attributes: { "data-testid": "application-continue" }
+    }) }}
+  </form>
+{% endblock %}

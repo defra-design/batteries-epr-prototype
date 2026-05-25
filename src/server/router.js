@@ -32,6 +32,10 @@ import { complianceSchemeEvidence } from './complianceScheme/evidence/index.js'
 import { complianceSchemeObligation } from './complianceScheme/obligation/index.js'
 import { operatorSignIn } from './operator/signIn/index.js'
 import { operatorDashboard } from './operator/dashboard/index.js'
+import { operatorApplication } from './operator/application/index.js'
+import { operatorEvidence } from './operator/evidence/index.js'
+import { operatorQuarterly } from './operator/quarterly/index.js'
+import { operatorAnnualReturn } from './operator/annualReturn/index.js'
 import { serveStaticFiles } from './common/helpers/serve-static-files.js'
 
 const createPlugin = (plugins, [item, routes]) => {
@@ -84,7 +88,11 @@ export const router = {
         complianceSchemeEvidence: complianceSchemeEvidence.openRoutes,
         complianceSchemeObligation: complianceSchemeObligation.openRoutes,
         operatorSignIn: operatorSignIn.openRoutes,
-        operatorDashboard: operatorDashboard.openRoutes
+        operatorDashboard: operatorDashboard.openRoutes,
+        operatorApplication: operatorApplication.openRoutes,
+        operatorEvidence: operatorEvidence.openRoutes,
+        operatorQuarterly: operatorQuarterly.openRoutes,
+        operatorAnnualReturn: operatorAnnualReturn.openRoutes
       }).reduce((p, entry) => createPlugin(p, entry), [])
 
       await server.register(plugins)

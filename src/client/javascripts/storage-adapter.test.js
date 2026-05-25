@@ -12,6 +12,8 @@ import {
   createIaSubmission,
   createEvidence,
   createOperator,
+  createOperatorQuarterlyReturn,
+  createOperatorAnnualReturn,
   storage
 } from './storage-adapter.js'
 import seedData from './storage-seed.json'
@@ -948,6 +950,75 @@ describe('compliance scheme factories and storage', () => {
     expect(operators.length).toBeGreaterThanOrEqual(3)
     expect(operators.some((o) => o.approvalType === 'abto')).toBe(true)
     expect(operators.some((o) => o.approvalType === 'abe')).toBe(true)
+  })
+
+  test('createEvidence includes operator fields', () => {
+    const e = createEvidence({
+      issuedByOperatorId: 'op-1',
+      issuedByApprovalNumber: 'ABTO-001',
+      issuedBySiteName: 'Site',
+      wasteReceivedFrom: '2026-01-01',
+      wasteReceivedTo: '2026-03-31',
+      direction: 'operator-to-scheme'
+    })
+    expect(e.issuedByOperatorId).toBe('op-1')
+    expect(e.direction).toBe('operator-to-scheme')
+    expect(e.wasteReceivedFrom).toBe('2026-01-01')
+  })
+
+  test('createEvidence defaults operator fields to null', () => {
+    const e = createEvidence()
+    expect(e.issuedByOperatorId).toBeNull()
+    expect(e.direction).toBeNull()
+    expect(e.wasteReceivedFrom).toBeNull()
+  })
+
+  test('listEvidenceByOperator filters by operator id', () => {
+    storage.saveEvidence(
+      createEvidence({ issuedByOperatorId: 'op-1', compliancePeriodYear: '2026' })
+    )
+    storage.saveEvidence(
+      createEvidence({ issuedByOperatorId: 'op-2', compliancePeriodYear: '2026' })
+    )
+    expect(storage.listEvidenceByOperator('op-1', '2026')).toHaveLength(1)
+    expect(storage.listEvidenceByOperator('op-1')).toHaveLength(1)
+    expect(storage.listEvidenceByOperator('op-3')).toHaveLength(0)
+  })
+
+  test('listEvidenceForSchemeFromOperators filters by direction and scheme', () => {
+    storage.saveEvidence(
+      createEvidence({
+        schemeId: 'scheme-1',
+        compliancePeriodYear: '2026',
+        direction: 'operator-to-scheme'
+      })
+    )
+    storage.saveEvidence(
+      createEvidence({
+        schemeId: 'scheme-1',
+        compliancePeriodYear: '2026',
+        direction: null
+      })
+    )
+    storage.saveEvidence(
+      createEvidence({
+        schemeId: 'scheme-2',
+        compliancePeriodYear: '2026',
+        direction: 'operator-to-scheme'
+      })
+    )
+    expect(
+      storage.listEvidenceForSchemeFromOperators('scheme-1', '2026')
+    ).toHaveLength(1)
+    expect(
+      storage.listEvidenceForSchemeFromOperators('scheme-2', '2026')
+    ).toHaveLength(1)
+    expect(
+      storage.listEvidenceForSchemeFromOperators('scheme-1')
+    ).toHaveLength(1)
+    expect(
+      storage.listEvidenceForSchemeFromOperators('scheme-3')
+    ).toHaveLength(0)
   })
 
   test('scheme members add and filter by status', () => {
@@ -1918,5 +1989,162 @@ describe('compliance scheme factories and storage', () => {
         placed: { industrial: '1', automotive: '0' }
       })
     ).toBeNull()
+  })
+})
+
+describe('createOperatorQuarterlyReturn', () => {
+  test('fills sensible defaults', () => {
+    const ret = createOperatorQuarterlyReturn()
+    expect(ret.id).toMatch(/^[0-9a-f-]{36}$/)
+    expect(ret.version).toBe(0)
+    expect(ret.operatorId).toBeNull()
+    expect(ret.compliancePeriodYear).toBeNull()
+    expect(ret.quarter).toBeNull()
+    expect(ret.status).toBe('not-started')
+    expect(ret.accepted).toEqual({ leadAcid: '0.000', nickelCadmium: '0.000', other: '0.000' })
+    expect(ret.treated).toEqual({ leadAcid: '0.000', nickelCadmium: '0.000', other: '0.000' })
+    expect(ret.submittedOn).toBeNull()
+    expect(ret.createdAt).toMatch(/T/)
+    expect(ret.updatedAt).toMatch(/T/)
+  })
+
+  test('accepts overrides', () => {
+    const ret = createOperatorQuarterlyReturn({
+      operatorId: 'op-1',
+      compliancePeriodYear: '2026',
+      quarter: 'Q1',
+      status: 'in-progress',
+      accepted: { leadAcid: '1.000', nickelCadmium: '2.000', other: '3.000' }
+    })
+    expect(ret.operatorId).toBe('op-1')
+    expect(ret.quarter).toBe('Q1')
+    expect(ret.status).toBe('in-progress')
+    expect(ret.accepted.leadAcid).toBe('1.000')
+  })
+})
+
+describe('operator quarterly return storage functions', () => {
+  test('saveOperatorQuarterlyReturn persists and retrieves', () => {
+    const ret = createOperatorQuarterlyReturn({
+      operatorId: 'op-1',
+      compliancePeriodYear: '2026',
+      quarter: 'Q1'
+    })
+    const saved = storage.saveOperatorQuarterlyReturn(ret)
+    expect(saved.id).toBe(ret.id)
+    expect(saved.version).toBe(0)
+
+    const found = storage.findOperatorQuarterlyReturn('op-1', '2026', 'Q1')
+    expect(found).not.toBeNull()
+    expect(found.operatorId).toBe('op-1')
+  })
+
+  test('saveOperatorQuarterlyReturn updates existing record', () => {
+    const ret = createOperatorQuarterlyReturn({
+      operatorId: 'op-1',
+      compliancePeriodYear: '2026',
+      quarter: 'Q1'
+    })
+    storage.saveOperatorQuarterlyReturn(ret)
+    const updated = storage.saveOperatorQuarterlyReturn({
+      ...ret,
+      status: 'in-progress'
+    })
+    expect(updated.version).toBe(1)
+    expect(updated.status).toBe('in-progress')
+  })
+
+  test('listOperatorQuarterlyReturns filters by operatorId', () => {
+    storage.saveOperatorQuarterlyReturn(
+      createOperatorQuarterlyReturn({ operatorId: 'op-1', compliancePeriodYear: '2026', quarter: 'Q1' })
+    )
+    storage.saveOperatorQuarterlyReturn(
+      createOperatorQuarterlyReturn({ operatorId: 'op-2', compliancePeriodYear: '2026', quarter: 'Q1' })
+    )
+    expect(storage.listOperatorQuarterlyReturns('op-1')).toHaveLength(1)
+    expect(storage.listOperatorQuarterlyReturns('op-2')).toHaveLength(1)
+  })
+
+  test('listOperatorQuarterlyReturns filters by compliancePeriodYear', () => {
+    storage.saveOperatorQuarterlyReturn(
+      createOperatorQuarterlyReturn({ operatorId: 'op-1', compliancePeriodYear: '2026', quarter: 'Q1' })
+    )
+    storage.saveOperatorQuarterlyReturn(
+      createOperatorQuarterlyReturn({ operatorId: 'op-1', compliancePeriodYear: '2027', quarter: 'Q1' })
+    )
+    expect(storage.listOperatorQuarterlyReturns('op-1', '2026')).toHaveLength(1)
+    expect(storage.listOperatorQuarterlyReturns('op-1')).toHaveLength(2)
+  })
+
+  test('findOperatorQuarterlyReturn returns null when not found', () => {
+    expect(storage.findOperatorQuarterlyReturn('op-1', '2026', 'Q1')).toBeNull()
+  })
+
+  test('upsertOperatorQuarterlyReturn creates new if not found', () => {
+    const ret = storage.upsertOperatorQuarterlyReturn('op-1', '2026', 'Q1', {
+      status: 'in-progress'
+    })
+    expect(ret.operatorId).toBe('op-1')
+    expect(ret.quarter).toBe('Q1')
+    expect(ret.status).toBe('in-progress')
+  })
+
+  test('upsertOperatorQuarterlyReturn updates existing', () => {
+    storage.upsertOperatorQuarterlyReturn('op-1', '2026', 'Q1', {
+      status: 'in-progress'
+    })
+    const updated = storage.upsertOperatorQuarterlyReturn('op-1', '2026', 'Q1', {
+      status: 'submitted',
+      submittedOn: '2026-04-01T00:00:00Z'
+    })
+    expect(updated.status).toBe('submitted')
+    expect(updated.submittedOn).toBe('2026-04-01T00:00:00Z')
+  })
+
+  test('createOperatorAnnualReturn defaults', () => {
+    const ret = createOperatorAnnualReturn()
+    expect(ret.status).toBe('not-started')
+    expect(ret.industrial.accepted.leadAcid).toBe('0.000')
+    expect(ret.automotive.treated.other).toBe('0.000')
+  })
+
+  test('createOperatorAnnualReturn merges partial input', () => {
+    const ret = createOperatorAnnualReturn({
+      industrial: { accepted: { leadAcid: '5.000' } }
+    })
+    expect(ret.industrial.accepted.leadAcid).toBe('5.000')
+    expect(ret.industrial.accepted.nickelCadmium).toBe('0.000')
+    expect(ret.industrial.treated.leadAcid).toBe('0.000')
+  })
+
+  test('findOperatorAnnualReturn returns null when not found', () => {
+    expect(storage.findOperatorAnnualReturn('op-1', '2026')).toBeNull()
+  })
+
+  test('saveOperatorAnnualReturn and findOperatorAnnualReturn round-trip', () => {
+    const saved = storage.saveOperatorAnnualReturn(
+      createOperatorAnnualReturn({ operatorId: 'op-1', compliancePeriodYear: '2026' })
+    )
+    expect(saved.id).toBeTruthy()
+    const found = storage.findOperatorAnnualReturn('op-1', '2026')
+    expect(found).toEqual(saved)
+  })
+
+  test('upsertOperatorAnnualReturn creates when none exists', () => {
+    const ret = storage.upsertOperatorAnnualReturn('op-2', '2026', {
+      status: 'in-progress'
+    })
+    expect(ret.operatorId).toBe('op-2')
+    expect(ret.status).toBe('in-progress')
+  })
+
+  test('upsertOperatorAnnualReturn updates existing', () => {
+    storage.upsertOperatorAnnualReturn('op-3', '2026', { status: 'in-progress' })
+    const updated = storage.upsertOperatorAnnualReturn('op-3', '2026', {
+      status: 'submitted',
+      submittedOn: '2026-12-01T00:00:00Z'
+    })
+    expect(updated.status).toBe('submitted')
+    expect(updated.submittedOn).toBe('2026-12-01T00:00:00Z')
   })
 })

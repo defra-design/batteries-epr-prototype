@@ -39,13 +39,18 @@ describe('#operatorDashboardController', () => {
     }
   })
 
-  test('emits a page-payload with copy', async () => {
+  test('emits a page-payload with urls and copy', async () => {
     const { result } = await server.inject({
       method: 'GET',
       url: paths.operatorDashboard
     })
 
     expect(result).toEqual(expect.stringContaining('id="page-payload"'))
+    expect(result).toEqual(
+      expect.stringContaining(
+        '"applicationStart":"/operator/application/operator-details"'
+      )
+    )
     expect(result).toEqual(expect.stringContaining('"copy"'))
   })
 })

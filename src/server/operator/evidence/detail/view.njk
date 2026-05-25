@@ -1,0 +1,49 @@
+{% extends 'layouts/page.njk' %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l" data-testid="evidence-heading">{{ heading }}</h1>
+
+      <p class="govuk-body" data-testid="evidence-detail-not-found" hidden>{{ labels.notFoundMessage }}</p>
+
+      <dl class="govuk-summary-list" data-testid="evidence-detail-list" hidden>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.schemeLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="evidence-detail-scheme"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.categoryLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="evidence-detail-category"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.tonnesLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="evidence-detail-tonnes"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.statusLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="evidence-detail-status"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.issuedLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="evidence-detail-issued"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.datesLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="evidence-detail-dates"></dd>
+        </div>
+      </dl>
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="{{ listUrl }}" data-testid="evidence-detail-back-link">{{ labels.backToListAction }}</a>
+      </p>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('operatorEvidence.js') }}"></script>
+{% endblock %}

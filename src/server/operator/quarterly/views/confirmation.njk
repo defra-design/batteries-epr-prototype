@@ -1,0 +1,15 @@
+{% extends 'operatorQuarterly/_layout.njk' %}
+
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% block stepBody %}
+  {{ govukPanel({
+    titleText: labels.heading,
+    text: labels.intro,
+    attributes: { "data-testid": "operator-quarterly-confirmation-panel" }
+  }) }}
+
+  <p class="govuk-body">
+    <a class="govuk-link" href="{{ dashboardUrl }}" data-testid="operator-quarterly-dashboard-link">{{ labels.returnToDashboardAction }}</a>
+  </p>
+{% endblock %}

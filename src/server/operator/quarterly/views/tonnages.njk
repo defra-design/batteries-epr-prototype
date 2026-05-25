@@ -1,0 +1,80 @@
+{% extends 'operatorQuarterly/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="operator-quarterly-form">
+    <h2 class="govuk-heading-m">{{ labels.acceptedHeading }}</h2>
+
+    {{ govukInput({
+      label: { text: labels.leadAcidLabel },
+      hint: { text: labels.hint },
+      id: "acceptedLeadAcid",
+      name: "acceptedLeadAcid",
+      classes: "govuk-input--width-10",
+      value: formValues.acceptedLeadAcid,
+      errorMessage: { text: errors.acceptedLeadAcid } if errors.acceptedLeadAcid,
+      attributes: { "data-testid": "accepted-lead-acid" }
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.nickelCadmiumLabel },
+      hint: { text: labels.hint },
+      id: "acceptedNickelCadmium",
+      name: "acceptedNickelCadmium",
+      classes: "govuk-input--width-10",
+      value: formValues.acceptedNickelCadmium,
+      errorMessage: { text: errors.acceptedNickelCadmium } if errors.acceptedNickelCadmium,
+      attributes: { "data-testid": "accepted-nickel-cadmium" }
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.otherLabel },
+      hint: { text: labels.hint },
+      id: "acceptedOther",
+      name: "acceptedOther",
+      classes: "govuk-input--width-10",
+      value: formValues.acceptedOther,
+      errorMessage: { text: errors.acceptedOther } if errors.acceptedOther,
+      attributes: { "data-testid": "accepted-other" }
+    }) }}
+
+    <h2 class="govuk-heading-m">{{ labels.treatedHeading }}</h2>
+
+    {{ govukInput({
+      label: { text: labels.leadAcidLabel },
+      hint: { text: labels.hint },
+      id: "treatedLeadAcid",
+      name: "treatedLeadAcid",
+      classes: "govuk-input--width-10",
+      value: formValues.treatedLeadAcid,
+      errorMessage: { text: errors.treatedLeadAcid } if errors.treatedLeadAcid,
+      attributes: { "data-testid": "treated-lead-acid" }
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.nickelCadmiumLabel },
+      hint: { text: labels.hint },
+      id: "treatedNickelCadmium",
+      name: "treatedNickelCadmium",
+      classes: "govuk-input--width-10",
+      value: formValues.treatedNickelCadmium,
+      errorMessage: { text: errors.treatedNickelCadmium } if errors.treatedNickelCadmium,
+      attributes: { "data-testid": "treated-nickel-cadmium" }
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.otherLabel },
+      hint: { text: labels.hint },
+      id: "treatedOther",
+      name: "treatedOther",
+      classes: "govuk-input--width-10",
+      value: formValues.treatedOther,
+      errorMessage: { text: errors.treatedOther } if errors.treatedOther,
+      attributes: { "data-testid": "treated-other" }
+    }) }}
+
+    {{ govukButton({
+      text: continueAction,
+      attributes: { "data-testid": "operator-quarterly-continue" }
+    }) }}
+  </form>
+{% endblock %}

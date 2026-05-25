@@ -1,0 +1,23 @@
+{% extends 'operatorEvidence/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="evidence-issue-form">
+    <div class="govuk-form-group{% if errors.schemeId %} govuk-form-group--error{% endif %}">
+      <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend">{{ labels.schemeLabel }}</legend>
+        {% if errors.schemeId %}
+          <p class="govuk-error-message" data-testid="evidence-issue-scheme-error">
+            <span class="govuk-visually-hidden">Error:</span> {{ errors.schemeId }}
+          </p>
+        {% endif %}
+        <div class="govuk-radios" data-testid="evidence-issue-scheme-radios"></div>
+        <p class="govuk-body" data-testid="evidence-issue-no-schemes" hidden>{{ labels.noSchemesMessage }}</p>
+      </fieldset>
+    </div>
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "evidence-issue-continue" }
+    }) }}
+  </form>
+{% endblock %}

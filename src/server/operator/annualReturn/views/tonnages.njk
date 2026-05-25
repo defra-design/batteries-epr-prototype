@@ -1,0 +1,139 @@
+{% extends 'operatorAnnualReturn/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="annual-return-form">
+
+    <h2 class="govuk-heading-m">{{ labels.industrialAcceptedHeading }}</h2>
+    {{ govukInput({
+      label: { text: labels.leadAcidLabel },
+      hint: { text: labels.hint },
+      id: "industrialAcceptedLeadAcid",
+      name: "industrialAcceptedLeadAcid",
+      classes: "govuk-input--width-10",
+      value: formValues.industrialAcceptedLeadAcid,
+      errorMessage: { text: errors.industrialAcceptedLeadAcid } if errors.industrialAcceptedLeadAcid,
+      attributes: { "data-testid": "industrialAcceptedLeadAcid" }
+    }) }}
+    {{ govukInput({
+      label: { text: labels.nickelCadmiumLabel },
+      hint: { text: labels.hint },
+      id: "industrialAcceptedNickelCadmium",
+      name: "industrialAcceptedNickelCadmium",
+      classes: "govuk-input--width-10",
+      value: formValues.industrialAcceptedNickelCadmium,
+      errorMessage: { text: errors.industrialAcceptedNickelCadmium } if errors.industrialAcceptedNickelCadmium,
+      attributes: { "data-testid": "industrialAcceptedNickelCadmium" }
+    }) }}
+    {{ govukInput({
+      label: { text: labels.otherLabel },
+      hint: { text: labels.hint },
+      id: "industrialAcceptedOther",
+      name: "industrialAcceptedOther",
+      classes: "govuk-input--width-10",
+      value: formValues.industrialAcceptedOther,
+      errorMessage: { text: errors.industrialAcceptedOther } if errors.industrialAcceptedOther,
+      attributes: { "data-testid": "industrialAcceptedOther" }
+    }) }}
+
+    <h2 class="govuk-heading-m">{{ labels.industrialTreatedHeading }}</h2>
+    {{ govukInput({
+      label: { text: labels.leadAcidLabel },
+      hint: { text: labels.hint },
+      id: "industrialTreatedLeadAcid",
+      name: "industrialTreatedLeadAcid",
+      classes: "govuk-input--width-10",
+      value: formValues.industrialTreatedLeadAcid,
+      errorMessage: { text: errors.industrialTreatedLeadAcid } if errors.industrialTreatedLeadAcid,
+      attributes: { "data-testid": "industrialTreatedLeadAcid" }
+    }) }}
+    {{ govukInput({
+      label: { text: labels.nickelCadmiumLabel },
+      hint: { text: labels.hint },
+      id: "industrialTreatedNickelCadmium",
+      name: "industrialTreatedNickelCadmium",
+      classes: "govuk-input--width-10",
+      value: formValues.industrialTreatedNickelCadmium,
+      errorMessage: { text: errors.industrialTreatedNickelCadmium } if errors.industrialTreatedNickelCadmium,
+      attributes: { "data-testid": "industrialTreatedNickelCadmium" }
+    }) }}
+    {{ govukInput({
+      label: { text: labels.otherLabel },
+      hint: { text: labels.hint },
+      id: "industrialTreatedOther",
+      name: "industrialTreatedOther",
+      classes: "govuk-input--width-10",
+      value: formValues.industrialTreatedOther,
+      errorMessage: { text: errors.industrialTreatedOther } if errors.industrialTreatedOther,
+      attributes: { "data-testid": "industrialTreatedOther" }
+    }) }}
+
+    <h2 class="govuk-heading-m">{{ labels.automotiveAcceptedHeading }}</h2>
+    {{ govukInput({
+      label: { text: labels.leadAcidLabel },
+      hint: { text: labels.hint },
+      id: "automotiveAcceptedLeadAcid",
+      name: "automotiveAcceptedLeadAcid",
+      classes: "govuk-input--width-10",
+      value: formValues.automotiveAcceptedLeadAcid,
+      errorMessage: { text: errors.automotiveAcceptedLeadAcid } if errors.automotiveAcceptedLeadAcid,
+      attributes: { "data-testid": "automotiveAcceptedLeadAcid" }
+    }) }}
+    {{ govukInput({
+      label: { text: labels.nickelCadmiumLabel },
+      hint: { text: labels.hint },
+      id: "automotiveAcceptedNickelCadmium",
+      name: "automotiveAcceptedNickelCadmium",
+      classes: "govuk-input--width-10",
+      value: formValues.automotiveAcceptedNickelCadmium,
+      errorMessage: { text: errors.automotiveAcceptedNickelCadmium } if errors.automotiveAcceptedNickelCadmium,
+      attributes: { "data-testid": "automotiveAcceptedNickelCadmium" }
+    }) }}
+    {{ govukInput({
+      label: { text: labels.otherLabel },
+      hint: { text: labels.hint },
+      id: "automotiveAcceptedOther",
+      name: "automotiveAcceptedOther",
+      classes: "govuk-input--width-10",
+      value: formValues.automotiveAcceptedOther,
+      errorMessage: { text: errors.automotiveAcceptedOther } if errors.automotiveAcceptedOther,
+      attributes: { "data-testid": "automotiveAcceptedOther" }
+    }) }}
+
+    <h2 class="govuk-heading-m">{{ labels.automotiveTreatedHeading }}</h2>
+    {{ govukInput({
+      label: { text: labels.leadAcidLabel },
+      hint: { text: labels.hint },
+      id: "automotiveTreatedLeadAcid",
+      name: "automotiveTreatedLeadAcid",
+      classes: "govuk-input--width-10",
+      value: formValues.automotiveTreatedLeadAcid,
+      errorMessage: { text: errors.automotiveTreatedLeadAcid } if errors.automotiveTreatedLeadAcid,
+      attributes: { "data-testid": "automotiveTreatedLeadAcid" }
+    }) }}
+    {{ govukInput({
+      label: { text: labels.nickelCadmiumLabel },
+      hint: { text: labels.hint },
+      id: "automotiveTreatedNickelCadmium",
+      name: "automotiveTreatedNickelCadmium",
+      classes: "govuk-input--width-10",
+      value: formValues.automotiveTreatedNickelCadmium,
+      errorMessage: { text: errors.automotiveTreatedNickelCadmium } if errors.automotiveTreatedNickelCadmium,
+      attributes: { "data-testid": "automotiveTreatedNickelCadmium" }
+    }) }}
+    {{ govukInput({
+      label: { text: labels.otherLabel },
+      hint: { text: labels.hint },
+      id: "automotiveTreatedOther",
+      name: "automotiveTreatedOther",
+      classes: "govuk-input--width-10",
+      value: formValues.automotiveTreatedOther,
+      errorMessage: { text: errors.automotiveTreatedOther } if errors.automotiveTreatedOther,
+      attributes: { "data-testid": "automotiveTreatedOther" }
+    }) }}
+
+    {{ govukButton({
+      text: continueAction,
+      attributes: { "data-testid": "annual-return-continue" }
+    }) }}
+  </form>
+{% endblock %}

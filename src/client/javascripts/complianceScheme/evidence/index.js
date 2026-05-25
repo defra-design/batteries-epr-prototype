@@ -53,7 +53,12 @@ const memberOf = (members, bprn) =>
   members.find((m) => m.producerBprn === bprn) ?? null
 
 const renderList = (doc, payload, scheme) => {
-  const items = storage.listEvidence(scheme.id, payload.compliancePeriodYear)
+  const schemeEvidence = storage.listEvidence(scheme.id, payload.compliancePeriodYear)
+  const operatorEvidence = storage.listEvidenceForSchemeFromOperators(
+    scheme.id,
+    payload.compliancePeriodYear
+  )
+  const items = [...schemeEvidence, ...operatorEvidence]
   const body = doc.querySelector('[data-testid="evidence-body"]')
   const empty = doc.querySelector('[data-testid="evidence-empty"]')
   if (items.length === 0) {
@@ -192,7 +197,12 @@ const renderDetail = (doc, payload, scheme) => {
   const list = doc.querySelector('[data-testid="evidence-detail-list"]')
   const actions = doc.querySelector('[data-testid="evidence-detail-buttons"]')
   const noActions = doc.querySelector('[data-testid="evidence-detail-no-actions"]')
-  if (!item || item.schemeId !== scheme.id) {
+  const isOwnEvidence = item?.schemeId === scheme.id && !item?.direction
+  /* v8 ignore next 2 */
+  const isOperatorEvidence =
+    item?.direction === 'operator-to-scheme' && item?.schemeId === scheme.id
+  /* v8 ignore next */
+  if (!item || (!isOwnEvidence && !isOperatorEvidence)) {
     notFound.hidden = false
     list.hidden = true
     actions.hidden = true

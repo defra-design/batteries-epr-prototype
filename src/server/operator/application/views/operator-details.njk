@@ -1,0 +1,49 @@
+{% extends 'operatorApplication/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="application-form">
+    {{ govukInput({
+      label: { text: labels.nameLabel },
+      id: "name",
+      name: "name",
+      value: formValues.name,
+      errorMessage: { text: errors.name } if errors.name,
+      attributes: { "data-testid": "operator-name" }
+    }) }}
+
+    {{ govukRadios({
+      idPrefix: "approvalType",
+      name: "approvalType",
+      fieldset: { legend: { text: labels.approvalTypeLabel } },
+      hint: { text: labels.approvalTypeHint },
+      errorMessage: { text: errors.approvalType } if errors.approvalType,
+      items: [
+        {
+          value: "abto",
+          text: labels.abtoLabel,
+          checked: formValues.approvalType == "abto"
+        },
+        {
+          value: "abe",
+          text: labels.abeLabel,
+          checked: formValues.approvalType == "abe"
+        }
+      ]
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.companyRegistrationNoLabel },
+      hint: { text: labels.companyRegistrationNoHint },
+      id: "companyRegistrationNo",
+      name: "companyRegistrationNo",
+      classes: "govuk-input--width-10",
+      value: formValues.companyRegistrationNo,
+      errorMessage: { text: errors.companyRegistrationNo } if errors.companyRegistrationNo
+    }) }}
+
+    {{ govukButton({
+      text: continueAction,
+      attributes: { "data-testid": "application-continue" }
+    }) }}
+  </form>
+{% endblock %}

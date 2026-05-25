@@ -17,7 +17,9 @@ export const STORAGE_KEYS = {
   timeTravelTargetYear: `${KEY_PREFIX}time-travel-target-year`,
   currentSchemeId: `${KEY_PREFIX}currentSchemeId`,
   operators: `${KEY_PREFIX}operators`,
-  currentOperatorId: `${KEY_PREFIX}currentOperatorId`
+  currentOperatorId: `${KEY_PREFIX}currentOperatorId`,
+  operatorQuarterlyReturns: `${KEY_PREFIX}operatorQuarterlyReturns`,
+  operatorAnnualReturns: `${KEY_PREFIX}operatorAnnualReturns`
 }
 
 const bprnSequenceKey = (agencyCode, compliancePeriod) =>
@@ -170,6 +172,7 @@ export const createOperator = (input = {}) => ({
   version: 0,
   name: input.name ?? null,
   approvalType: input.approvalType ?? 'abto',
+  companyRegistrationNo: input.companyRegistrationNo ?? null,
   approvalNumber: input.approvalNumber ?? null,
   approvalStatus: input.approvalStatus ?? 'not-started',
   approvedOn: input.approvedOn ?? null,
@@ -189,6 +192,42 @@ export const createOperator = (input = {}) => ({
   createdAt: input.createdAt ?? now(),
   updatedAt: input.updatedAt ?? now()
 })
+
+export const createOperatorQuarterlyReturn = (input = {}) => ({
+  id: input.id ?? newId(),
+  version: 0,
+  operatorId: input.operatorId ?? null,
+  compliancePeriodYear: input.compliancePeriodYear ?? null,
+  quarter: input.quarter ?? null,
+  status: input.status ?? 'not-started',
+  accepted: input.accepted ?? { leadAcid: '0.000', nickelCadmium: '0.000', other: '0.000' },
+  treated: input.treated ?? { leadAcid: '0.000', nickelCadmium: '0.000', other: '0.000' },
+  submittedOn: input.submittedOn ?? null,
+  createdAt: input.createdAt ?? now(),
+  updatedAt: input.updatedAt ?? now()
+})
+
+export const createOperatorAnnualReturn = (input = {}) => {
+  const chemistryDefaults = { leadAcid: '0.000', nickelCadmium: '0.000', other: '0.000' }
+  return {
+    id: input.id ?? newId(),
+    version: 0,
+    operatorId: input.operatorId ?? null,
+    compliancePeriodYear: input.compliancePeriodYear ?? null,
+    status: input.status ?? 'not-started',
+    industrial: {
+      accepted: { ...chemistryDefaults, ...input?.industrial?.accepted },
+      treated: { ...chemistryDefaults, ...input?.industrial?.treated }
+    },
+    automotive: {
+      accepted: { ...chemistryDefaults, ...input?.automotive?.accepted },
+      treated: { ...chemistryDefaults, ...input?.automotive?.treated }
+    },
+    submittedOn: input.submittedOn ?? null,
+    createdAt: input.createdAt ?? now(),
+    updatedAt: input.updatedAt ?? now()
+  }
+}
 
 export const createSchemeMember = (input = {}) => ({
   id: input.id ?? newId(),
@@ -246,6 +285,12 @@ export const createEvidence = (input = {}) => ({
   issuedOn: input.issuedOn ?? now(),
   transferDirection: input.transferDirection ?? null,
   counterpartySchemeId: input.counterpartySchemeId ?? null,
+  issuedByOperatorId: input.issuedByOperatorId ?? null,
+  issuedByApprovalNumber: input.issuedByApprovalNumber ?? null,
+  issuedBySiteName: input.issuedBySiteName ?? null,
+  wasteReceivedFrom: input.wasteReceivedFrom ?? null,
+  wasteReceivedTo: input.wasteReceivedTo ?? null,
+  direction: input.direction ?? null,
   createdAt: input.createdAt ?? now(),
   updatedAt: input.updatedAt ?? now()
 })
@@ -1034,6 +1079,94 @@ const sumByCategory = (evidenceItems) => {
   return totals
 }
 
+const listEvidenceByOperator = (operatorId, compliancePeriodYear) => {
+  const items = Object.values(readMap(STORAGE_KEYS.evidence))
+  return items.filter(
+    (e) =>
+      e.issuedByOperatorId === operatorId &&
+      (!compliancePeriodYear || e.compliancePeriodYear === compliancePeriodYear)
+  )
+}
+
+const listEvidenceForSchemeFromOperators = (schemeId, compliancePeriodYear) => {
+  const items = Object.values(readMap(STORAGE_KEYS.evidence))
+  return items.filter(
+    (e) =>
+      e.direction === 'operator-to-scheme' &&
+      e.schemeId === schemeId &&
+      (!compliancePeriodYear || e.compliancePeriodYear === compliancePeriodYear)
+  )
+}
+
+const listOperatorQuarterlyReturns = (operatorId, compliancePeriodYear) => {
+  const items = Object.values(readMap(STORAGE_KEYS.operatorQuarterlyReturns))
+  return items.filter(
+    (r) =>
+      r.operatorId === operatorId &&
+      (!compliancePeriodYear || r.compliancePeriodYear === compliancePeriodYear)
+  )
+}
+
+const findOperatorQuarterlyReturn = (operatorId, compliancePeriodYear, quarter) =>
+  listOperatorQuarterlyReturns(operatorId, compliancePeriodYear).find(
+    (r) => r.quarter === quarter
+  ) ?? null
+
+const saveOperatorQuarterlyReturn = (ret) => {
+  const items = readMap(STORAGE_KEYS.operatorQuarterlyReturns)
+  /* v8 ignore next */
+  const existing = ret.id ? items[ret.id] : null
+  const merged = {
+    ...ret,
+    /* v8 ignore next */
+    id: existing?.id ?? ret.id ?? newId(),
+    ...stamp(existing, !existing)
+  }
+  items[merged.id] = merged
+  writeJson(STORAGE_KEYS.operatorQuarterlyReturns, items)
+  return merged
+}
+
+const upsertOperatorQuarterlyReturn = (operatorId, compliancePeriodYear, quarter, patch) => {
+  let existing = findOperatorQuarterlyReturn(operatorId, compliancePeriodYear, quarter)
+  if (!existing) {
+    existing = createOperatorQuarterlyReturn({ operatorId, compliancePeriodYear, quarter })
+  }
+  return saveOperatorQuarterlyReturn({ ...existing, ...patch })
+}
+
+const findOperatorAnnualReturn = (operatorId, compliancePeriodYear) => {
+  const items = Object.values(readMap(STORAGE_KEYS.operatorAnnualReturns))
+  return items.find(
+    (r) =>
+      r.operatorId === operatorId &&
+      r.compliancePeriodYear === compliancePeriodYear
+  ) ?? null
+}
+
+const saveOperatorAnnualReturn = (ret) => {
+  const items = readMap(STORAGE_KEYS.operatorAnnualReturns)
+  /* v8 ignore next */
+  const existing = ret.id ? items[ret.id] : null
+  const merged = {
+    ...ret,
+    /* v8 ignore next */
+    id: existing?.id ?? ret.id ?? newId(),
+    ...stamp(existing, !existing)
+  }
+  items[merged.id] = merged
+  writeJson(STORAGE_KEYS.operatorAnnualReturns, items)
+  return merged
+}
+
+const upsertOperatorAnnualReturn = (operatorId, compliancePeriodYear, patch) => {
+  let existing = findOperatorAnnualReturn(operatorId, compliancePeriodYear)
+  if (!existing) {
+    existing = createOperatorAnnualReturn({ operatorId, compliancePeriodYear })
+  }
+  return saveOperatorAnnualReturn({ ...existing, ...patch })
+}
+
 const resetAllData = () => {
   for (const key of allOurKeys()) {
     removeKey(key)
@@ -1165,5 +1298,14 @@ export const storage = {
   updateEvidenceStatus,
   transferEvidence,
   setEvidenceAvailability,
-  sumByCategory
+  sumByCategory,
+  listEvidenceByOperator,
+  listEvidenceForSchemeFromOperators,
+  listOperatorQuarterlyReturns,
+  findOperatorQuarterlyReturn,
+  saveOperatorQuarterlyReturn,
+  upsertOperatorQuarterlyReturn,
+  findOperatorAnnualReturn,
+  saveOperatorAnnualReturn,
+  upsertOperatorAnnualReturn
 }

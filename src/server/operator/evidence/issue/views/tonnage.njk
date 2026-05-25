@@ -1,0 +1,54 @@
+{% extends 'operatorEvidence/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="evidence-issue-form">
+    {{ govukRadios({
+      idPrefix: "category",
+      name: "category",
+      fieldset: { legend: { text: labels.categoryLabel } },
+      errorMessage: { text: errors.category } if errors.category,
+      items: [
+        { value: "portable", text: labels.portableLabel, checked: formValues.category == "portable" },
+        { value: "industrial", text: labels.industrialLabel, checked: formValues.category == "industrial" },
+        { value: "automotive", text: labels.automotiveLabel, checked: formValues.category == "automotive" }
+      ]
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.tonnesLabel },
+      hint: { text: labels.tonnesHint },
+      id: "tonnes",
+      name: "tonnes",
+      classes: "govuk-input--width-10",
+      value: formValues.tonnes,
+      errorMessage: { text: errors.tonnes } if errors.tonnes
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.wasteReceivedFromLabel },
+      hint: { text: labels.dateHint },
+      id: "wasteReceivedFrom",
+      name: "wasteReceivedFrom",
+      type: "date",
+      classes: "govuk-input--width-10",
+      value: formValues.wasteReceivedFrom,
+      errorMessage: { text: errors.wasteReceivedFrom } if errors.wasteReceivedFrom
+    }) }}
+
+    {{ govukInput({
+      label: { text: labels.wasteReceivedToLabel },
+      hint: { text: labels.dateHint },
+      id: "wasteReceivedTo",
+      name: "wasteReceivedTo",
+      type: "date",
+      classes: "govuk-input--width-10",
+      value: formValues.wasteReceivedTo,
+      errorMessage: { text: errors.wasteReceivedTo } if errors.wasteReceivedTo
+    }) }}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "evidence-issue-continue" }
+    }) }}
+  </form>
+{% endblock %}

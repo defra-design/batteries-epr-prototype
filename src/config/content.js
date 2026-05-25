@@ -2670,6 +2670,299 @@ export const content = {
         debug: {
           fastForwardAction: 'Mark operator as approved (debug)',
           fastForwardConfirmation: 'Operator marked as approved.'
+        },
+        application: {
+          errorTitle: 'There is a problem',
+          continueAction: 'Continue',
+          steps: {
+            operatorDetails: {
+              title: 'Operator details',
+              heading: 'Operator details',
+              intro:
+                'Tell us the name of your organisation and the type of approval you are applying for.',
+              nameLabel: 'Organisation name',
+              approvalTypeLabel: 'What type of approval are you applying for?',
+              approvalTypeHint:
+                'Select the type that matches your operations.',
+              abtoLabel:
+                'Approved Battery Treatment Operator (ABTO)',
+              abeLabel: 'Approved Battery Exporter (ABE)',
+              companyRegistrationNoLabel: 'Companies House number',
+              companyRegistrationNoHint: '8 digits, for example 12345678',
+              error: {
+                name: 'Enter the organisation name',
+                approvalType: 'Select the type of approval',
+                companyRegistrationNo: 'Enter the Companies House number'
+              }
+            },
+            registeredAddress: {
+              title: 'Registered address',
+              heading: 'Registered address',
+              intro: 'The registered office address of your organisation.',
+              line1Label: 'Address line 1',
+              line2Label: 'Address line 2 (optional)',
+              townLabel: 'Town or city',
+              postcodeLabel: 'Postcode'
+            },
+            siteDetails: {
+              title: 'Site details',
+              heading: 'Site details',
+              intro:
+                'Provide details of the site where battery treatment or export operations take place.',
+              siteNameLabel: 'Site name',
+              siteAddressHeading: 'Site address',
+              siteLine1Label: 'Address line 1',
+              siteTownLabel: 'Town or city',
+              sitePostcodeLabel: 'Postcode',
+              batteryTypesLabel:
+                'Which battery types are handled at this site?',
+              batteryTypesHint: 'Select all that apply.',
+              portableLabel: 'Portable',
+              industrialLabel: 'Industrial',
+              automotiveLabel: 'Automotive',
+              operationsDescriptionLabel: 'Description of operations',
+              operationsDescriptionHint:
+                'Briefly describe how batteries are treated or exported at this site.',
+              error: {
+                siteName: 'Enter the site name',
+                siteLine1: 'Enter the first line of the site address',
+                siteTown: 'Enter the town or city',
+                sitePostcode: 'Enter a valid UK postcode',
+                operationsDescription: 'Enter a description of operations'
+              }
+            },
+            declaration: {
+              title: 'Declaration',
+              heading: 'Declaration',
+              intro:
+                'Confirm the information you have provided is correct and complete.',
+              declarationLabel:
+                'I confirm the information provided is correct and submit this application for approval.',
+              error: {
+                declarationAccepted:
+                  'Confirm the declaration to submit'
+              }
+            },
+            confirmation: {
+              title: 'Application submitted',
+              heading: 'Application submitted',
+              intro:
+                'Your application has been recorded. The regulator will review it and notify you of the outcome.',
+              returnToDashboardAction: 'Return to operator dashboard'
+            }
+          }
+        },
+        evidencePages: {
+          errorTitle: 'There is a problem',
+          list: {
+            title: 'Evidence notes',
+            heading: 'Evidence notes',
+            intro:
+              'Batteries Evidence Notes (BENs) you have issued to compliance schemes.',
+            issueAction: 'Issue a new evidence note',
+            backToDashboardAction: 'Back to operator dashboard',
+            emptyMessage: 'You have not issued any evidence notes yet.',
+            viewAction: 'View',
+            columns: {
+              scheme: 'Compliance scheme',
+              category: 'Category',
+              tonnes: 'Tonnes',
+              status: 'Status',
+              actions: 'Actions'
+            },
+            categories: {
+              portable: 'Portable',
+              industrial: 'Industrial',
+              automotive: 'Automotive'
+            },
+            statuses: {
+              'awaiting-acceptance': 'Awaiting acceptance',
+              accepted: 'Accepted',
+              cancelled: 'Cancelled'
+            }
+          },
+          detail: {
+            title: 'Evidence note detail',
+            heading: 'Evidence note detail',
+            notFoundMessage: 'This evidence note could not be found.',
+            schemeLabel: 'Compliance scheme',
+            categoryLabel: 'Category',
+            tonnesLabel: 'Tonnes',
+            statusLabel: 'Status',
+            issuedLabel: 'Issued on',
+            datesLabel: 'Waste received period',
+            backToListAction: 'Back to evidence list'
+          },
+          issue: {
+            steps: {
+              scheme: {
+                title: 'Select compliance scheme',
+                heading: 'Select compliance scheme',
+                intro:
+                  'Choose which approved battery compliance scheme to issue this evidence note to.',
+                schemeLabel: 'Compliance scheme',
+                noSchemesMessage:
+                  'No approved compliance schemes are available.',
+                continueAction: 'Continue',
+                error: {
+                  schemeId: 'Select a compliance scheme'
+                }
+              },
+              tonnage: {
+                title: 'Evidence details',
+                heading: 'Evidence details',
+                intro:
+                  'Enter the category, tonnage, and waste received dates for this evidence note.',
+                categoryLabel: 'Battery category',
+                portableLabel: 'Portable',
+                industrialLabel: 'Industrial',
+                automotiveLabel: 'Automotive',
+                tonnesLabel: 'Tonnage',
+                tonnesHint: 'Enter to 3 decimal places, for example 1.500',
+                wasteReceivedFromLabel: 'Waste received from',
+                wasteReceivedToLabel: 'Waste received to',
+                dateHint: 'For example, 2026-01-15',
+                continueAction: 'Continue',
+                error: {
+                  category: 'Select a battery category',
+                  tonnes: 'Enter the tonnage',
+                  tonnesFormat:
+                    'Enter a valid tonnage (for example, 1.500)',
+                  wasteReceivedFrom: 'Enter the waste received from date',
+                  wasteReceivedFromFormat:
+                    'Enter a valid date (YYYY-MM-DD)',
+                  wasteReceivedTo: 'Enter the waste received to date',
+                  wasteReceivedToFormat: 'Enter a valid date (YYYY-MM-DD)'
+                }
+              },
+              declaration: {
+                title: 'Declaration',
+                heading: 'Declaration',
+                intro:
+                  'Review the details and confirm this evidence note is correct.',
+                summarySchemeLabel: 'Compliance scheme',
+                summaryCategoryLabel: 'Category',
+                summaryTonnesLabel: 'Tonnes',
+                summaryDatesLabel: 'Waste received period',
+                declarationLabel:
+                  'I confirm this evidence note is accurate and issued in accordance with the regulations.',
+                submitAction: 'Confirm and issue',
+                error: {
+                  declarationAccepted:
+                    'Confirm the declaration to issue this evidence note'
+                }
+              },
+              confirmation: {
+                title: 'Evidence note issued',
+                heading: 'Evidence note issued',
+                intro:
+                  'The evidence note has been issued to the compliance scheme. It will appear as awaiting acceptance.',
+                returnToListAction: 'Return to evidence list'
+              }
+            }
+          }
+        },
+        quarterlyPages: {
+          errorTitle: 'There is a problem',
+          continueAction: 'Continue',
+          confirmAction: 'Confirm and submit',
+          steps: {
+            tonnages: {
+              title: 'Quarterly return — tonnages',
+              heading: 'Waste accepted and treated this quarter',
+              intro:
+                'Enter the tonnes of portable batteries accepted for treatment and treated, by chemistry.',
+              acceptedHeading: 'Accepted',
+              treatedHeading: 'Treated',
+              leadAcidLabel: 'Lead acid (tonnes)',
+              nickelCadmiumLabel: 'Nickel cadmium (tonnes)',
+              otherLabel: 'Other (tonnes)',
+              hint: 'Enter a value in tonnes, up to three decimal places.',
+              error: {
+                acceptedLeadAcid: 'Enter accepted lead acid tonnes',
+                acceptedLeadAcidFormat: 'Enter accepted lead acid tonnes as a number',
+                acceptedNickelCadmium: 'Enter accepted nickel cadmium tonnes',
+                acceptedNickelCadmiumFormat: 'Enter accepted nickel cadmium tonnes as a number',
+                acceptedOther: 'Enter accepted other tonnes',
+                acceptedOtherFormat: 'Enter accepted other tonnes as a number',
+                treatedLeadAcid: 'Enter treated lead acid tonnes',
+                treatedLeadAcidFormat: 'Enter treated lead acid tonnes as a number',
+                treatedNickelCadmium: 'Enter treated nickel cadmium tonnes',
+                treatedNickelCadmiumFormat: 'Enter treated nickel cadmium tonnes as a number',
+                treatedOther: 'Enter treated other tonnes',
+                treatedOtherFormat: 'Enter treated other tonnes as a number'
+              }
+            },
+            declaration: {
+              title: 'Quarterly return — declaration',
+              heading: 'Declaration',
+              intro:
+                'Confirm the figures are correct and submit the quarterly return.',
+              declarationLabel:
+                'I confirm the information provided is correct and submit this quarterly return.',
+              error: { declarationAccepted: 'Confirm the declaration to submit' }
+            },
+            confirmation: {
+              title: 'Quarterly return submitted',
+              heading: 'Quarterly return submitted',
+              intro:
+                'Your quarterly return has been recorded. You can review it from the dashboard.',
+              returnToDashboardAction: 'Return to operator dashboard'
+            }
+          }
+        },
+        annualPages: {
+          errorTitle: 'There is a problem',
+          continueAction: 'Continue',
+          confirmAction: 'Confirm and submit',
+          steps: {
+            tonnages: {
+              title: 'Annual return — waste tonnages',
+              heading: 'Enter waste accepted and treated tonnages',
+              intro:
+                'Enter the tonnes of industrial and automotive batteries accepted for treatment and treated at your site, by chemistry.',
+              industrialAcceptedHeading: 'Industrial batteries accepted',
+              industrialTreatedHeading: 'Industrial batteries treated',
+              automotiveAcceptedHeading: 'Automotive batteries accepted',
+              automotiveTreatedHeading: 'Automotive batteries treated',
+              leadAcidLabel: 'Lead acid (tonnes)',
+              nickelCadmiumLabel: 'Nickel cadmium (tonnes)',
+              otherLabel: 'Other (tonnes)',
+              hint: 'Enter a value in tonnes, up to three decimal places.',
+              error: {
+                industrialAcceptedLeadAcid: 'Enter industrial accepted lead acid tonnes',
+                industrialAcceptedNickelCadmium: 'Enter industrial accepted nickel cadmium tonnes',
+                industrialAcceptedOther: 'Enter industrial accepted other tonnes',
+                industrialTreatedLeadAcid: 'Enter industrial treated lead acid tonnes',
+                industrialTreatedNickelCadmium: 'Enter industrial treated nickel cadmium tonnes',
+                industrialTreatedOther: 'Enter industrial treated other tonnes',
+                automotiveAcceptedLeadAcid: 'Enter automotive accepted lead acid tonnes',
+                automotiveAcceptedNickelCadmium: 'Enter automotive accepted nickel cadmium tonnes',
+                automotiveAcceptedOther: 'Enter automotive accepted other tonnes',
+                automotiveTreatedLeadAcid: 'Enter automotive treated lead acid tonnes',
+                automotiveTreatedNickelCadmium: 'Enter automotive treated nickel cadmium tonnes',
+                automotiveTreatedOther: 'Enter automotive treated other tonnes'
+              }
+            },
+            declaration: {
+              title: 'Annual return — declaration',
+              heading: 'Declaration',
+              intro:
+                'Confirm the figures you have entered are correct. Submitting will record your annual return for the compliance period.',
+              declarationLabel:
+                'I confirm the information provided is correct and submit this annual return.',
+              error: {
+                declarationAccepted: 'Confirm the declaration to submit'
+              }
+            },
+            confirmation: {
+              title: 'Annual return submitted',
+              heading: 'Annual return submitted',
+              intro:
+                'Your annual return for industrial and automotive batteries has been recorded.',
+              returnToDashboardAction: 'Return to operator dashboard'
+            }
+          }
         }
       },
       cy: {
@@ -2721,6 +3014,263 @@ export const content = {
         debug: {
           fastForwardAction: 'TODO welsh',
           fastForwardConfirmation: 'TODO welsh'
+        },
+        application: {
+          errorTitle: 'TODO welsh',
+          continueAction: 'TODO welsh',
+          steps: {
+            operatorDetails: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              nameLabel: 'TODO welsh',
+              approvalTypeLabel: 'TODO welsh',
+              approvalTypeHint: 'TODO welsh',
+              abtoLabel: 'TODO welsh',
+              abeLabel: 'TODO welsh',
+              companyRegistrationNoLabel: 'TODO welsh',
+              companyRegistrationNoHint: 'TODO welsh',
+              error: {
+                name: 'TODO welsh',
+                approvalType: 'TODO welsh',
+                companyRegistrationNo: 'TODO welsh'
+              }
+            },
+            registeredAddress: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              line1Label: 'TODO welsh',
+              line2Label: 'TODO welsh',
+              townLabel: 'TODO welsh',
+              postcodeLabel: 'TODO welsh'
+            },
+            siteDetails: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              siteNameLabel: 'TODO welsh',
+              siteAddressHeading: 'TODO welsh',
+              siteLine1Label: 'TODO welsh',
+              siteTownLabel: 'TODO welsh',
+              sitePostcodeLabel: 'TODO welsh',
+              batteryTypesLabel: 'TODO welsh',
+              batteryTypesHint: 'TODO welsh',
+              portableLabel: 'TODO welsh',
+              industrialLabel: 'TODO welsh',
+              automotiveLabel: 'TODO welsh',
+              operationsDescriptionLabel: 'TODO welsh',
+              operationsDescriptionHint: 'TODO welsh',
+              error: {
+                siteName: 'TODO welsh',
+                siteLine1: 'TODO welsh',
+                siteTown: 'TODO welsh',
+                sitePostcode: 'TODO welsh',
+                operationsDescription: 'TODO welsh'
+              }
+            },
+            declaration: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              declarationLabel: 'TODO welsh',
+              error: { declarationAccepted: 'TODO welsh' }
+            },
+            confirmation: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              returnToDashboardAction: 'TODO welsh'
+            }
+          }
+        },
+        evidencePages: {
+          errorTitle: 'TODO welsh',
+          list: {
+            title: 'TODO welsh',
+            heading: 'TODO welsh',
+            intro: 'TODO welsh',
+            issueAction: 'TODO welsh',
+            backToDashboardAction: 'TODO welsh',
+            emptyMessage: 'TODO welsh',
+            viewAction: 'TODO welsh',
+            columns: {
+              scheme: 'TODO welsh',
+              category: 'TODO welsh',
+              tonnes: 'TODO welsh',
+              status: 'TODO welsh',
+              actions: 'TODO welsh'
+            },
+            categories: {
+              portable: 'TODO welsh',
+              industrial: 'TODO welsh',
+              automotive: 'TODO welsh'
+            },
+            statuses: {
+              'awaiting-acceptance': 'TODO welsh',
+              accepted: 'TODO welsh',
+              cancelled: 'TODO welsh'
+            }
+          },
+          detail: {
+            title: 'TODO welsh',
+            heading: 'TODO welsh',
+            notFoundMessage: 'TODO welsh',
+            schemeLabel: 'TODO welsh',
+            categoryLabel: 'TODO welsh',
+            tonnesLabel: 'TODO welsh',
+            statusLabel: 'TODO welsh',
+            issuedLabel: 'TODO welsh',
+            datesLabel: 'TODO welsh',
+            backToListAction: 'TODO welsh'
+          },
+          issue: {
+            steps: {
+              scheme: {
+                title: 'TODO welsh',
+                heading: 'TODO welsh',
+                intro: 'TODO welsh',
+                schemeLabel: 'TODO welsh',
+                noSchemesMessage: 'TODO welsh',
+                continueAction: 'TODO welsh',
+                error: { schemeId: 'TODO welsh' }
+              },
+              tonnage: {
+                title: 'TODO welsh',
+                heading: 'TODO welsh',
+                intro: 'TODO welsh',
+                categoryLabel: 'TODO welsh',
+                portableLabel: 'TODO welsh',
+                industrialLabel: 'TODO welsh',
+                automotiveLabel: 'TODO welsh',
+                tonnesLabel: 'TODO welsh',
+                tonnesHint: 'TODO welsh',
+                wasteReceivedFromLabel: 'TODO welsh',
+                wasteReceivedToLabel: 'TODO welsh',
+                dateHint: 'TODO welsh',
+                continueAction: 'TODO welsh',
+                error: {
+                  category: 'TODO welsh',
+                  tonnes: 'TODO welsh',
+                  tonnesFormat: 'TODO welsh',
+                  wasteReceivedFrom: 'TODO welsh',
+                  wasteReceivedFromFormat: 'TODO welsh',
+                  wasteReceivedTo: 'TODO welsh',
+                  wasteReceivedToFormat: 'TODO welsh'
+                }
+              },
+              declaration: {
+                title: 'TODO welsh',
+                heading: 'TODO welsh',
+                intro: 'TODO welsh',
+                summarySchemeLabel: 'TODO welsh',
+                summaryCategoryLabel: 'TODO welsh',
+                summaryTonnesLabel: 'TODO welsh',
+                summaryDatesLabel: 'TODO welsh',
+                declarationLabel: 'TODO welsh',
+                submitAction: 'TODO welsh',
+                error: { declarationAccepted: 'TODO welsh' }
+              },
+              confirmation: {
+                title: 'TODO welsh',
+                heading: 'TODO welsh',
+                intro: 'TODO welsh',
+                returnToListAction: 'TODO welsh'
+              }
+            }
+          }
+        },
+        quarterlyPages: {
+          errorTitle: 'TODO welsh',
+          continueAction: 'TODO welsh',
+          confirmAction: 'TODO welsh',
+          steps: {
+            tonnages: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              acceptedHeading: 'TODO welsh',
+              treatedHeading: 'TODO welsh',
+              leadAcidLabel: 'TODO welsh',
+              nickelCadmiumLabel: 'TODO welsh',
+              otherLabel: 'TODO welsh',
+              hint: 'TODO welsh',
+              error: {
+                acceptedLeadAcid: 'TODO welsh',
+                acceptedLeadAcidFormat: 'TODO welsh',
+                acceptedNickelCadmium: 'TODO welsh',
+                acceptedNickelCadmiumFormat: 'TODO welsh',
+                acceptedOther: 'TODO welsh',
+                acceptedOtherFormat: 'TODO welsh',
+                treatedLeadAcid: 'TODO welsh',
+                treatedLeadAcidFormat: 'TODO welsh',
+                treatedNickelCadmium: 'TODO welsh',
+                treatedNickelCadmiumFormat: 'TODO welsh',
+                treatedOther: 'TODO welsh',
+                treatedOtherFormat: 'TODO welsh'
+              }
+            },
+            declaration: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              declarationLabel: 'TODO welsh',
+              error: { declarationAccepted: 'TODO welsh' }
+            },
+            confirmation: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              returnToDashboardAction: 'TODO welsh'
+            }
+          }
+        },
+        annualPages: {
+          errorTitle: 'TODO welsh',
+          continueAction: 'TODO welsh',
+          confirmAction: 'TODO welsh',
+          steps: {
+            tonnages: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              industrialAcceptedHeading: 'TODO welsh',
+              industrialTreatedHeading: 'TODO welsh',
+              automotiveAcceptedHeading: 'TODO welsh',
+              automotiveTreatedHeading: 'TODO welsh',
+              leadAcidLabel: 'TODO welsh',
+              nickelCadmiumLabel: 'TODO welsh',
+              otherLabel: 'TODO welsh',
+              hint: 'TODO welsh',
+              error: {
+                industrialAcceptedLeadAcid: 'TODO welsh',
+                industrialAcceptedNickelCadmium: 'TODO welsh',
+                industrialAcceptedOther: 'TODO welsh',
+                industrialTreatedLeadAcid: 'TODO welsh',
+                industrialTreatedNickelCadmium: 'TODO welsh',
+                industrialTreatedOther: 'TODO welsh',
+                automotiveAcceptedLeadAcid: 'TODO welsh',
+                automotiveAcceptedNickelCadmium: 'TODO welsh',
+                automotiveAcceptedOther: 'TODO welsh',
+                automotiveTreatedLeadAcid: 'TODO welsh',
+                automotiveTreatedNickelCadmium: 'TODO welsh',
+                automotiveTreatedOther: 'TODO welsh'
+              }
+            },
+            declaration: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              declarationLabel: 'TODO welsh',
+              error: { declarationAccepted: 'TODO welsh' }
+            },
+            confirmation: {
+              title: 'TODO welsh',
+              heading: 'TODO welsh',
+              intro: 'TODO welsh',
+              returnToDashboardAction: 'TODO welsh'
+            }
+          }
         }
       }
     })

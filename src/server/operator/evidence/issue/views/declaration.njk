@@ -1,0 +1,43 @@
+{% extends 'operatorEvidence/_layout.njk' %}
+
+{% block stepBody %}
+  <dl class="govuk-summary-list govuk-!-margin-bottom-6" data-testid="evidence-issue-summary">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ labels.summarySchemeLabel }}</dt>
+      <dd class="govuk-summary-list__value" data-testid="evidence-issue-summary-scheme"></dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ labels.summaryCategoryLabel }}</dt>
+      <dd class="govuk-summary-list__value" data-testid="evidence-issue-summary-category"></dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ labels.summaryTonnesLabel }}</dt>
+      <dd class="govuk-summary-list__value" data-testid="evidence-issue-summary-tonnes"></dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ labels.summaryDatesLabel }}</dt>
+      <dd class="govuk-summary-list__value" data-testid="evidence-issue-summary-dates"></dd>
+    </div>
+  </dl>
+
+  <form method="post" action="{{ action }}" novalidate data-testid="evidence-issue-form">
+    {{ govukCheckboxes({
+      idPrefix: "declarationAccepted",
+      name: "declarationAccepted",
+      errorMessage: { text: errors.declarationAccepted } if errors.declarationAccepted,
+      items: [
+        {
+          value: "yes",
+          text: labels.declarationLabel,
+          checked: formValues.declarationAccepted == "yes"
+        }
+      ],
+      attributes: { "data-testid": "evidence-issue-declaration" }
+    }) }}
+
+    {{ govukButton({
+      text: labels.submitAction,
+      attributes: { "data-testid": "evidence-issue-continue" }
+    }) }}
+  </form>
+{% endblock %}

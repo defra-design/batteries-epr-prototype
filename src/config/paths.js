@@ -81,6 +81,12 @@ export const paths = {
 
   operatorDashboard: '/operator',
   operatorSignIn: '/operator/sign-in',
+  operatorApplication: '/operator/application/{step}',
+  operatorEvidence: '/operator/evidence',
+  operatorEvidenceIssue: '/operator/evidence/issue/{step}',
+  operatorEvidenceDetail: '/operator/evidence/{evidenceId}',
+  operatorQuarterly: '/operator/quarterly/{quarter}/{step}',
+  operatorAnnualReturn: '/operator/annual-return/{step}',
 
   devReset: '/dev/reset',
   devTimeTravel: '/dev/time-travel',
