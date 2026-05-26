@@ -23,9 +23,10 @@ export const initRegulatorDashboard = (
   doc.querySelector('[data-testid="app-heading-title"]').textContent =
     agency.name
 
-  const schemes = storage.listSchemes()
-  const operators = storage.listOperators()
-  const producers = storage.listAllProducers()
+  const code = agency.code
+  const schemes = storage.listSchemes().filter((s) => s.agencyCode === code)
+  const operators = storage.listOperators().filter((o) => o.agencyCode === code)
+  const producers = storage.listAllProducers().filter((p) => p.agencyCode === code)
   const evidence = storage.listAllEvidence(payload.compliancePeriodYear)
 
   setText(

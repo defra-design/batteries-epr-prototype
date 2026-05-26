@@ -24,7 +24,8 @@ const STATUS_TAG_CLASSES = {
 
 export const runRegulatorSchemeList = (doc, loc) => {
   const payload = readPagePayload(doc)
-  const schemes = storage.listSchemes()
+  const agency = storage.currentAgency()
+  const schemes = storage.listSchemes().filter((s) => s.agencyCode === agency?.code)
   const body = doc.querySelector('[data-testid="schemes-body"]')
   const empty = doc.querySelector('[data-testid="schemes-empty"]')
 

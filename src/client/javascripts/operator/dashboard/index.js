@@ -28,7 +28,9 @@ const STATUS_TAG_CLASS = {
   'not-started': 'govuk-tag--grey',
   'in-progress': 'govuk-tag--yellow',
   submitted: 'govuk-tag--blue',
-  approved: 'govuk-tag--green'
+  approved: 'govuk-tag--green',
+  rejected: 'govuk-tag--red',
+  withdrawn: 'govuk-tag--red'
 }
 
 const APPROVAL_TYPE_LABELS = {

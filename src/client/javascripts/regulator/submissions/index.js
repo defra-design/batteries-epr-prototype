@@ -54,21 +54,38 @@ export const runRegulatorSubmissionsPage = (
 
   const year = payload.compliancePeriodYear
   const typeLabels = payload.copy.typeLabels
+  const code = agency.code
+
+  const schemeForAgency = (s) => {
+    const scheme = storage.getScheme(s.schemeId)
+    /* v8 ignore next */
+    return scheme?.agencyCode === code
+  }
+
+  const operatorForAgency = (r) => {
+    const operator = storage.getOperator(r.operatorId)
+    /* v8 ignore next */
+    return operator?.agencyCode === code
+  }
 
   const schemeQuarterly = storage
     .listAllQuarterlySubmissions(year)
+    .filter(schemeForAgency)
     .map((s) => ({ ...s, typeLabel: typeLabels.schemeQuarterly }))
 
   const schemeIa = storage
     .listAllIaSubmissions(year)
+    .filter(schemeForAgency)
     .map((s) => ({ ...s, typeLabel: typeLabels.schemeIa }))
 
   const operatorQuarterly = storage
     .listAllOperatorQuarterlyReturns(year)
+    .filter(operatorForAgency)
     .map((r) => ({ ...r, typeLabel: typeLabels.operatorQuarterly }))
 
   const operatorAnnual = storage
     .listAllOperatorAnnualReturns(year)
+    .filter(operatorForAgency)
     .map((r) => ({ ...r, typeLabel: typeLabels.operatorAnnual }))
 
   const allItems = [

@@ -34,9 +34,25 @@ const resolveIssuerName = (item) => {
 }
 /* v8 ignore stop */
 
+const belongsToAgency = (item, agencyCode) => {
+  if (item.schemeId) {
+    const scheme = storage.getScheme(item.schemeId)
+    /* v8 ignore next */
+    if (scheme?.agencyCode === agencyCode) return true
+  }
+  if (item.issuedByOperatorId) {
+    const operator = storage.getOperator(item.issuedByOperatorId)
+    /* v8 ignore next */
+    if (operator?.agencyCode === agencyCode) return true
+  }
+  return false
+}
+
 export const runRegulatorEvidenceList = (doc, loc) => {
   const payload = readPagePayload(doc)
+  const agency = storage.currentAgency()
   const evidence = storage.listAllEvidence(payload.compliancePeriodYear)
+    .filter((e) => belongsToAgency(e, agency?.code))
   const body = doc.querySelector('[data-testid="evidence-body"]')
   const empty = doc.querySelector('[data-testid="evidence-empty"]')
 

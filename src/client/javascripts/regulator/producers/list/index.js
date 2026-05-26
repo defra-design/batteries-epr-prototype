@@ -26,7 +26,8 @@ const formatBatteryTypes = (batteryTypes) => {
 
 export const runRegulatorProducerList = (doc, loc) => {
   const payload = readPagePayload(doc)
-  const producers = storage.listAllProducers()
+  const agency = storage.currentAgency()
+  const producers = storage.listAllProducers().filter((p) => p.agencyCode === agency?.code)
   const body = doc.querySelector('[data-testid="producers-body"]')
   const empty = doc.querySelector('[data-testid="producers-empty"]')
 

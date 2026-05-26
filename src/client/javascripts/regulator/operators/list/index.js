@@ -24,7 +24,8 @@ const STATUS_TAG_CLASSES = {
 
 export const runRegulatorOperatorList = (doc, loc) => {
   const payload = readPagePayload(doc)
-  const operators = storage.listOperators()
+  const agency = storage.currentAgency()
+  const operators = storage.listOperators().filter((o) => o.agencyCode === agency?.code)
   const body = doc.querySelector('[data-testid="operators-body"]')
   const empty = doc.querySelector('[data-testid="operators-empty"]')
 

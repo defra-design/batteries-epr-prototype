@@ -1497,7 +1497,9 @@ export const content = {
               'not-started': 'Not started',
               'in-progress': 'In progress',
               submitted: 'Submitted',
-              approved: 'Approved'
+              approved: 'Approved',
+              rejected: 'Rejected',
+              withdrawn: 'Withdrawn'
             },
             startAction: 'Start application',
             continueAction: 'Continue application',
@@ -2073,7 +2075,9 @@ export const content = {
               'not-started': 'TODO welsh',
               'in-progress': 'TODO welsh',
               submitted: 'TODO welsh',
-              approved: 'TODO welsh'
+              approved: 'TODO welsh',
+              rejected: 'TODO welsh',
+              withdrawn: 'TODO welsh'
             },
             startAction: 'TODO welsh',
             continueAction: 'TODO welsh',
@@ -3045,7 +3049,9 @@ export const content = {
               'not-started': 'Not started',
               'in-progress': 'In progress',
               submitted: 'Submitted',
-              approved: 'Approved'
+              approved: 'Approved',
+              rejected: 'Rejected',
+              withdrawn: 'Withdrawn'
             },
             startAction: 'Start application',
             continueAction: 'Continue application',
@@ -3389,7 +3395,9 @@ export const content = {
               'not-started': 'TODO welsh',
               'in-progress': 'TODO welsh',
               submitted: 'TODO welsh',
-              approved: 'TODO welsh'
+              approved: 'TODO welsh',
+              rejected: 'TODO welsh',
+              withdrawn: 'TODO welsh'
             },
             startAction: 'TODO welsh',
             continueAction: 'TODO welsh',
