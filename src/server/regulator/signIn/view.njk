@@ -1,0 +1,58 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorSummary and errorSummary.length %}
+        {{ govukErrorSummary({
+          titleText: errorTitle,
+          errorList: errorSummary,
+          attributes: { "data-testid": "regulator-sign-in-error-summary" }
+        }) }}
+      {% endif %}
+
+      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      <p class="govuk-body">{{ intro }}</p>
+
+      <form method="post" action="{{ action }}" novalidate data-testid="regulator-sign-in-form">
+        {% set agencyItems = [] %}
+        {% for agency in agencies %}
+          {% set agencyItems = (agencyItems.push({
+            value: agency.code,
+            text: agency.name,
+            checked: formValues.agencyCode == agency.code,
+            attributes: { "data-testid": "regulator-sign-in-radio-" + agency.code }
+          }), agencyItems) %}
+        {% endfor %}
+
+        {{ govukRadios({
+          idPrefix: "agencyCode",
+          name: "agencyCode",
+          fieldset: { legend: { text: labels.legend } },
+          errorMessage: { text: errors.agencyCode } if errors.agencyCode,
+          items: agencyItems
+        }) }}
+
+        {{ govukButton({
+          text: labels.continueAction,
+          attributes: { "data-testid": "regulator-sign-in-continue" }
+        }) }}
+
+        <p class="govuk-body">
+          <a class="govuk-link" href="{{ cancelUrl }}" data-testid="regulator-sign-in-cancel">{{ labels.cancelAction }}</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('regulatorSignIn.js') }}"></script>
+{% endblock %}

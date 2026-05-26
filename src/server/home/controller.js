@@ -14,7 +14,8 @@ export const homeController = {
       producerSignInUrl: paths.signIn,
       publicRegisterUrl: paths.publicRegisterSearch,
       complianceSchemeSignInUrl: paths.complianceSchemeSignIn,
-      operatorSignInUrl: paths.operatorSignIn
+      operatorSignInUrl: paths.operatorSignIn,
+      regulatorSignInUrl: paths.regulatorSignIn
     })
   }
 }

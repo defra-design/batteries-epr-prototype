@@ -1,0 +1,42 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l" data-testid="operator-withdraw-heading">{{ heading }}</h1>
+
+      <p class="govuk-body" data-testid="operator-withdraw-name" hidden></p>
+      <p class="govuk-body">{{ intro }}</p>
+
+      <form method="post">
+        {{ govukTextarea({
+          id: "reason",
+          name: "reason",
+          label: { text: labels.reasonLabel, classes: "govuk-label--m" },
+          hint: { text: labels.reasonHint },
+          attributes: { "data-testid": "operator-withdraw-reason" }
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: labels.confirmAction,
+            type: "submit",
+            classes: "govuk-button--warning",
+            attributes: { "data-testid": "operator-withdraw-confirm" }
+          }) }}
+          <a class="govuk-link" href="{{ listUrl }}" data-testid="operator-withdraw-cancel">{{ labels.cancelAction }}</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('regulatorOperators.js') }}"></script>
+{% endblock %}

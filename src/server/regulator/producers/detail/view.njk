@@ -1,0 +1,61 @@
+{% extends 'layouts/page.njk' %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l" data-testid="producer-detail-heading">{{ heading }}</h1>
+
+      <p class="govuk-body" data-testid="producer-detail-not-found" hidden>{{ labels.notFoundMessage }}</p>
+
+      <dl class="govuk-summary-list" data-testid="producer-detail-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.bprnLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="producer-detail-bprn"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.companyNameLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="producer-detail-company-name"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.tradingNameLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="producer-detail-trading-name"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.companyRegLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="producer-detail-company-reg"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.addressLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="producer-detail-address"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.contactLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="producer-detail-contact"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.batteryTypesLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="producer-detail-battery-types"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.agencyLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="producer-detail-agency"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.statusLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="producer-detail-status"></dd>
+        </div>
+      </dl>
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="{{ listUrl }}" data-testid="producer-detail-back">{{ labels.backToListAction }}</a>
+      </p>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('regulatorProducers.js') }}"></script>
+{% endblock %}

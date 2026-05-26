@@ -1,0 +1,102 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l" data-testid="scheme-detail-heading">{{ heading }}</h1>
+
+      <p class="govuk-body" data-testid="scheme-detail-not-found" hidden>{{ labels.notFoundMessage }}</p>
+
+      <dl class="govuk-summary-list" data-testid="scheme-detail-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.nameLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="scheme-detail-name"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.operatorLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="scheme-detail-operator"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.addressLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="scheme-detail-address"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.contactAddressLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="scheme-detail-contact-address"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.operationalPlanLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="scheme-detail-operational-plan"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.partnersLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="scheme-detail-partners"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.offencesLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="scheme-detail-offences"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.statusLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="scheme-detail-status"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.agencyLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="scheme-detail-agency"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.approvalNumberLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="scheme-detail-approval-number"></dd>
+        </div>
+      </dl>
+
+      <div data-testid="scheme-detail-actions" hidden>
+        <h2 class="govuk-heading-m">{{ labels.approveHeading }}</h2>
+        <form method="post">
+          {{ govukInput({
+            id: "approvalNumber",
+            name: "approvalNumber",
+            label: { text: labels.approvalNumberInputLabel },
+            classes: "govuk-input--width-20",
+            attributes: { "data-testid": "scheme-detail-approval-input" }
+          }) }}
+          <div class="govuk-button-group">
+            {{ govukButton({
+              text: labels.approveAction,
+              name: "action",
+              value: "approve",
+              type: "submit",
+              attributes: { "data-testid": "scheme-detail-approve" }
+            }) }}
+            {{ govukButton({
+              text: labels.rejectAction,
+              name: "action",
+              value: "reject",
+              type: "submit",
+              classes: "govuk-button--warning",
+              attributes: { "data-testid": "scheme-detail-reject" }
+            }) }}
+          </div>
+        </form>
+      </div>
+
+      <p class="govuk-body" data-testid="scheme-detail-withdraw" hidden>
+        <a class="govuk-link govuk-link--warning" href="" data-testid="scheme-detail-withdraw-link">{{ labels.withdrawAction }}</a>
+      </p>
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="{{ listUrl }}" data-testid="scheme-detail-back">{{ labels.backToListAction }}</a>
+      </p>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('regulatorSchemes.js') }}"></script>
+{% endblock %}

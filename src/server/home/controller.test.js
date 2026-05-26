@@ -48,7 +48,10 @@ describe('#homeController', () => {
       expect.stringContaining(`href="${paths.operatorSignIn}"`)
     )
     expect(result).toEqual(
-      expect.stringContaining('data-testid="home-journey-regulator"')
+      expect.stringContaining('data-testid="home-journey-regulator-cta"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining(`href="${paths.regulatorSignIn}"`)
     )
   })
 })

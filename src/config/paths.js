@@ -88,6 +88,20 @@ export const paths = {
   operatorQuarterly: '/operator/quarterly/{quarter}/{step}',
   operatorAnnualReturn: '/operator/annual-return/{step}',
 
+  regulatorDashboard: '/regulator',
+  regulatorSignIn: '/regulator/sign-in',
+  regulatorSchemes: '/regulator/schemes',
+  regulatorSchemeDetail: '/regulator/schemes/{schemeId}',
+  regulatorOperators: '/regulator/operators',
+  regulatorOperatorDetail: '/regulator/operators/{operatorId}',
+  regulatorProducers: '/regulator/producers',
+  regulatorProducerDetail: '/regulator/producers/{producerId}',
+  regulatorEvidence: '/regulator/evidence',
+  regulatorEvidenceDetail: '/regulator/evidence/{evidenceId}',
+  regulatorSubmissions: '/regulator/submissions',
+  regulatorSchemeWithdraw: '/regulator/schemes/{schemeId}/withdraw',
+  regulatorOperatorWithdraw: '/regulator/operators/{operatorId}/withdraw',
+
   devReset: '/dev/reset',
   devTimeTravel: '/dev/time-travel',
   devSchemes: '/dev/schemes'

@@ -19,7 +19,8 @@ export const STORAGE_KEYS = {
   operators: `${KEY_PREFIX}operators`,
   currentOperatorId: `${KEY_PREFIX}currentOperatorId`,
   operatorQuarterlyReturns: `${KEY_PREFIX}operatorQuarterlyReturns`,
-  operatorAnnualReturns: `${KEY_PREFIX}operatorAnnualReturns`
+  operatorAnnualReturns: `${KEY_PREFIX}operatorAnnualReturns`,
+  currentAgencyCode: `${KEY_PREFIX}currentAgencyCode`
 }
 
 const bprnSequenceKey = (agencyCode, compliancePeriod) =>
@@ -228,6 +229,13 @@ export const createOperatorAnnualReturn = (input = {}) => {
     updatedAt: input.updatedAt ?? now()
   }
 }
+
+export const AGENCIES = [
+  { code: 'EA', name: 'Environment Agency' },
+  { code: 'NRW', name: 'Natural Resources Wales' },
+  { code: 'SEPA', name: 'Scottish Environment Protection Agency' },
+  { code: 'NIEA', name: 'Northern Ireland Environment Agency' }
+]
 
 export const createSchemeMember = (input = {}) => ({
   id: input.id ?? newId(),
@@ -1167,6 +1175,117 @@ const upsertOperatorAnnualReturn = (operatorId, compliancePeriodYear, patch) => 
   return saveOperatorAnnualReturn({ ...existing, ...patch })
 }
 
+const getAgencies = () => AGENCIES
+
+const getCurrentAgencyCode = () =>
+  globalThis.localStorage.getItem(STORAGE_KEYS.currentAgencyCode)
+
+const setCurrentAgencyCode = (code) => {
+  globalThis.localStorage.setItem(STORAGE_KEYS.currentAgencyCode, code)
+}
+
+const clearCurrentAgencyCode = () => {
+  globalThis.localStorage.removeItem(STORAGE_KEYS.currentAgencyCode)
+}
+
+const currentAgency = () => {
+  const code = getCurrentAgencyCode()
+  return code ? AGENCIES.find((a) => a.code === code) ?? null : null
+}
+
+const listAllProducers = () => Object.values(readMap(STORAGE_KEYS.producers))
+
+const listAllEvidence = (compliancePeriodYear) => {
+  const items = Object.values(readMap(STORAGE_KEYS.evidence))
+  return compliancePeriodYear
+    ? items.filter((e) => e.compliancePeriodYear === compliancePeriodYear)
+    : items
+}
+
+const approveScheme = (schemeId, approvalNumber) => {
+  const scheme = getScheme(schemeId)
+  if (!scheme) return null
+  return saveScheme({
+    ...scheme,
+    approvalStatus: 'approved',
+    approvalNumber,
+    approvedOn: now()
+  })
+}
+
+const rejectScheme = (schemeId) => {
+  const scheme = getScheme(schemeId)
+  if (!scheme) return null
+  return saveScheme({ ...scheme, approvalStatus: 'rejected' })
+}
+
+const approveOperator = (operatorId, approvalNumber) => {
+  const operator = getOperator(operatorId)
+  if (!operator) return null
+  return saveOperator({
+    ...operator,
+    approvalStatus: 'approved',
+    approvalNumber,
+    approvedOn: now()
+  })
+}
+
+const rejectOperator = (operatorId) => {
+  const operator = getOperator(operatorId)
+  if (!operator) return null
+  return saveOperator({ ...operator, approvalStatus: 'rejected' })
+}
+
+const listAllQuarterlySubmissions = (compliancePeriodYear) => {
+  const items = Object.values(readMap(STORAGE_KEYS.quarterlySubmissions))
+  return compliancePeriodYear
+    ? items.filter((s) => s.compliancePeriodYear === compliancePeriodYear)
+    : items
+}
+
+const listAllIaSubmissions = (compliancePeriodYear) => {
+  const items = Object.values(readMap(STORAGE_KEYS.iaSubmissions))
+  return compliancePeriodYear
+    ? items.filter((s) => s.compliancePeriodYear === compliancePeriodYear)
+    : items
+}
+
+const listAllOperatorQuarterlyReturns = (compliancePeriodYear) => {
+  const items = Object.values(readMap(STORAGE_KEYS.operatorQuarterlyReturns))
+  return compliancePeriodYear
+    ? items.filter((r) => r.compliancePeriodYear === compliancePeriodYear)
+    : items
+}
+
+const listAllOperatorAnnualReturns = (compliancePeriodYear) => {
+  const items = Object.values(readMap(STORAGE_KEYS.operatorAnnualReturns))
+  return compliancePeriodYear
+    ? items.filter((r) => r.compliancePeriodYear === compliancePeriodYear)
+    : items
+}
+
+const withdrawSchemeApproval = (schemeId, reason) => {
+  const scheme = getScheme(schemeId)
+  if (!scheme) return null
+  return saveScheme({
+    ...scheme,
+    approvalStatus: 'withdrawn',
+    withdrawnOn: now(),
+    withdrawalReason: reason
+  })
+}
+
+const withdrawOperatorApproval = (operatorId, reason) => {
+  const operator = getOperator(operatorId)
+  if (!operator) return null
+  return saveOperator({
+    ...operator,
+    approvalStatus: 'withdrawn',
+    withdrawnOn: now(),
+    withdrawalReason: reason
+  })
+}
+
 const resetAllData = () => {
   for (const key of allOurKeys()) {
     removeKey(key)
@@ -1307,5 +1426,22 @@ export const storage = {
   upsertOperatorQuarterlyReturn,
   findOperatorAnnualReturn,
   saveOperatorAnnualReturn,
-  upsertOperatorAnnualReturn
+  upsertOperatorAnnualReturn,
+  getAgencies,
+  getCurrentAgencyCode,
+  setCurrentAgencyCode,
+  clearCurrentAgencyCode,
+  currentAgency,
+  listAllProducers,
+  listAllEvidence,
+  approveScheme,
+  rejectScheme,
+  approveOperator,
+  rejectOperator,
+  listAllQuarterlySubmissions,
+  listAllIaSubmissions,
+  listAllOperatorQuarterlyReturns,
+  listAllOperatorAnnualReturns,
+  withdrawSchemeApproval,
+  withdrawOperatorApproval
 }

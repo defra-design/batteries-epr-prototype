@@ -30,6 +30,19 @@ import { complianceSchemeQuarterly } from './complianceScheme/quarterly/index.js
 import { complianceSchemeIa } from './complianceScheme/industrialAutomotive/index.js'
 import { complianceSchemeEvidence } from './complianceScheme/evidence/index.js'
 import { complianceSchemeObligation } from './complianceScheme/obligation/index.js'
+import { regulatorSignIn } from './regulator/signIn/index.js'
+import { regulatorDashboard } from './regulator/dashboard/index.js'
+import { regulatorSchemeList } from './regulator/schemes/list/index.js'
+import { regulatorSchemeDetail } from './regulator/schemes/detail/index.js'
+import { regulatorOperatorList } from './regulator/operators/list/index.js'
+import { regulatorOperatorDetail } from './regulator/operators/detail/index.js'
+import { regulatorProducerList } from './regulator/producers/list/index.js'
+import { regulatorProducerDetail } from './regulator/producers/detail/index.js'
+import { regulatorEvidenceList } from './regulator/evidence/list/index.js'
+import { regulatorEvidenceDetail } from './regulator/evidence/detail/index.js'
+import { regulatorSubmissions } from './regulator/submissions/index.js'
+import { regulatorSchemeWithdraw } from './regulator/schemes/withdraw/index.js'
+import { regulatorOperatorWithdraw } from './regulator/operators/withdraw/index.js'
 import { operatorSignIn } from './operator/signIn/index.js'
 import { operatorDashboard } from './operator/dashboard/index.js'
 import { operatorApplication } from './operator/application/index.js'
@@ -87,6 +100,19 @@ export const router = {
         complianceSchemeIa: complianceSchemeIa.openRoutes,
         complianceSchemeEvidence: complianceSchemeEvidence.openRoutes,
         complianceSchemeObligation: complianceSchemeObligation.openRoutes,
+        regulatorSignIn: regulatorSignIn.openRoutes,
+        regulatorDashboard: regulatorDashboard.openRoutes,
+        regulatorSchemeList: regulatorSchemeList.openRoutes,
+        regulatorSchemeDetail: regulatorSchemeDetail.openRoutes,
+        regulatorOperatorList: regulatorOperatorList.openRoutes,
+        regulatorOperatorDetail: regulatorOperatorDetail.openRoutes,
+        regulatorProducerList: regulatorProducerList.openRoutes,
+        regulatorProducerDetail: regulatorProducerDetail.openRoutes,
+        regulatorEvidenceList: regulatorEvidenceList.openRoutes,
+        regulatorEvidenceDetail: regulatorEvidenceDetail.openRoutes,
+        regulatorSubmissions: regulatorSubmissions.openRoutes,
+        regulatorSchemeWithdraw: regulatorSchemeWithdraw.openRoutes,
+        regulatorOperatorWithdraw: regulatorOperatorWithdraw.openRoutes,
         operatorSignIn: operatorSignIn.openRoutes,
         operatorDashboard: operatorDashboard.openRoutes,
         operatorApplication: operatorApplication.openRoutes,

@@ -87,13 +87,21 @@
     <div class="govuk-grid-column-one-half">
       <div class="govuk-summary-card" data-testid="home-journey-regulator">
         <div class="govuk-summary-card__title-wrapper">
-          <h2 class="govuk-summary-card__title">{{ journeys.comingSoon.regulator.title }}</h2>
-          <div class="app-task-cards__status">
-            {{ govukTag({ text: journeys.comingSoon.label, classes: "govuk-tag--grey" }) }}
-          </div>
+          <h2 class="govuk-summary-card__title">{{ journeys.regulator.title }}</h2>
         </div>
         <div class="govuk-summary-card__content">
-          <p class="govuk-body">{{ journeys.comingSoon.regulator.description }}</p>
+          <p class="govuk-body">{{ journeys.regulator.description }}</p>
+          <ul class="govuk-list govuk-list--bullet">
+            {% for item in journeys.regulator.bullets %}
+              <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+          {{ govukButton({
+            text: journeys.regulator.primaryAction,
+            href: regulatorSignInUrl,
+            isStartButton: true,
+            attributes: { "data-testid": "home-journey-regulator-cta" }
+          }) }}
         </div>
       </div>
     </div>

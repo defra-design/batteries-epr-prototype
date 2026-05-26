@@ -53,13 +53,15 @@ export const content = {
             ],
             primaryAction: 'Sign in as an operator'
           },
-          comingSoon: {
-            label: 'Coming soon',
-            regulator: {
-              title: 'I am a regulator',
-              description:
-                'Approve compliance schemes, monitor producer registrations and trigger enforcement actions. Not part of this prototype yet.'
-            }
+          regulator: {
+            title: 'I am a regulator',
+            description:
+              'Sign in as an environment agency to review applications, monitor compliance, and manage approvals.',
+            bullets: [
+              'Review and approve compliance scheme and operator applications.',
+              'Monitor producer registrations, evidence, and submissions.'
+            ],
+            primaryAction: 'Sign in as a regulator'
           }
         }
       },
@@ -88,9 +90,11 @@ export const content = {
             bullets: [],
             primaryAction: 'TODO welsh'
           },
-          comingSoon: {
-            label: 'TODO welsh',
-            regulator: { title: 'TODO welsh', description: 'TODO welsh' }
+          regulator: {
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            bullets: [],
+            primaryAction: 'TODO welsh'
           }
         }
       }
@@ -2587,6 +2591,414 @@ export const content = {
               returnToDashboardAction: 'TODO welsh'
             }
           }
+        }
+      }
+    }),
+  regulatorSignIn: (request) =>
+    getContentForLanguage(request, {
+      en: {
+        title: 'Sign in as a regulator',
+        heading: 'Sign in as a regulator',
+        intro: 'Choose which environment agency you are signing in as.',
+        legend: 'Environment agency',
+        continueAction: 'Continue',
+        cancelAction: 'Cancel and return to the prototype home',
+        error: {
+          title: 'There is a problem',
+          choice: 'Select an environment agency to continue'
+        }
+      },
+      cy: {
+        title: 'TODO welsh',
+        heading: 'TODO welsh',
+        intro: 'TODO welsh',
+        legend: 'TODO welsh',
+        continueAction: 'TODO welsh',
+        cancelAction: 'TODO welsh',
+        error: { title: 'TODO welsh', choice: 'TODO welsh' }
+      }
+    }),
+  regulator: (request) =>
+    getContentForLanguage(request, {
+      en: {
+        title: 'Regulator dashboard',
+        heading: heading('Regulator dashboard', 'Regulator dashboard', null),
+        introParagraph:
+          'Review applications, monitor compliance, and manage approvals for battery producers, compliance schemes, and operators.',
+        switchAgencyAction: 'Switch agency',
+        tiles: {
+          schemes: {
+            heading: 'Compliance schemes',
+            countLabel: 'Total schemes',
+            pendingLabel: 'Awaiting review',
+            manageAction: 'View schemes',
+            viewAction: 'View all schemes'
+          },
+          operators: {
+            heading: 'Operators (ABTO/ABE)',
+            countLabel: 'Total operators',
+            pendingLabel: 'Awaiting review',
+            manageAction: 'View operators',
+            viewAction: 'View all operators'
+          },
+          producers: {
+            heading: 'Registered producers',
+            countLabel: 'Total producers',
+            manageAction: 'View producers'
+          },
+          evidence: {
+            heading: 'Evidence notes',
+            countLabel: 'Total evidence notes',
+            manageAction: 'View evidence'
+          }
+        },
+        schemesPages: {
+          list: {
+            title: 'Compliance schemes',
+            heading: 'Compliance schemes',
+            intro: 'All compliance scheme applications and approvals.',
+            columns: { name: 'Name', approvalNumber: 'Approval number', status: 'Status', agency: 'Agency', actions: 'Actions' },
+            emptyMessage: 'No compliance schemes found.',
+            viewAction: 'View',
+            backToDashboardAction: 'Back to regulator dashboard',
+            statuses: { 'not-started': 'Not started', 'in-progress': 'In progress', submitted: 'Submitted', approved: 'Approved', rejected: 'Rejected', withdrawn: 'Withdrawn' }
+          },
+          detail: {
+            title: 'Scheme details',
+            heading: 'Scheme details',
+            nameLabel: 'Scheme name',
+            operatorLabel: 'Operator',
+            addressLabel: 'Registered address',
+            contactAddressLabel: 'Contact address',
+            operationalPlanLabel: 'Operational plan',
+            partnersLabel: 'Partners',
+            offencesLabel: 'Offences',
+            statusLabel: 'Status',
+            agencyLabel: 'Agency',
+            approvalNumberLabel: 'Approval number',
+            approveHeading: 'Approve this application',
+            approvalNumberInputLabel: 'Approval number',
+            approveAction: 'Approve',
+            rejectAction: 'Reject',
+            backToListAction: 'Back to schemes list',
+            notFoundMessage: 'Scheme not found.',
+            approvedConfirmation: 'Scheme approved.',
+            rejectedConfirmation: 'Scheme rejected.',
+            withdrawAction: 'Withdraw approval'
+          },
+          withdraw: {
+            title: 'Withdraw scheme approval',
+            heading: 'Withdraw approval',
+            intro: 'Withdrawing approval will prevent this scheme from operating.',
+            reasonLabel: 'Reason for withdrawal',
+            reasonHint: 'Explain why the approval is being withdrawn.',
+            confirmAction: 'Confirm withdrawal',
+            cancelAction: 'Cancel',
+            error: { reason: 'Enter the reason for withdrawal' }
+          }
+        },
+        operatorsPages: {
+          list: {
+            title: 'Operators (ABTO/ABE)',
+            heading: 'Operators (ABTO/ABE)',
+            intro: 'All operator applications and approvals.',
+            columns: { name: 'Name', type: 'Type', approvalNumber: 'Approval number', status: 'Status', agency: 'Agency', actions: 'Actions' },
+            emptyMessage: 'No operators found.',
+            viewAction: 'View',
+            backToDashboardAction: 'Back to regulator dashboard',
+            statuses: { 'not-started': 'Not started', 'in-progress': 'In progress', submitted: 'Submitted', approved: 'Approved', rejected: 'Rejected', withdrawn: 'Withdrawn' },
+            typeLabels: { abto: 'ABTO', abe: 'ABE' }
+          },
+          detail: {
+            title: 'Operator details',
+            heading: 'Operator details',
+            nameLabel: 'Organisation name',
+            typeLabel: 'Approval type',
+            companyRegLabel: 'Company registration',
+            addressLabel: 'Registered address',
+            sitesLabel: 'Sites',
+            batteryTypesLabel: 'Battery types',
+            statusLabel: 'Status',
+            agencyLabel: 'Agency',
+            approvalNumberLabel: 'Approval number',
+            approveHeading: 'Approve this application',
+            approvalNumberInputLabel: 'Approval number',
+            approveAction: 'Approve',
+            rejectAction: 'Reject',
+            backToListAction: 'Back to operators list',
+            notFoundMessage: 'Operator not found.',
+            approvedConfirmation: 'Operator approved.',
+            rejectedConfirmation: 'Operator rejected.',
+            withdrawAction: 'Withdraw approval'
+          },
+          withdraw: {
+            title: 'Withdraw operator approval',
+            heading: 'Withdraw approval',
+            intro: 'Withdrawing approval will prevent this operator from operating.',
+            reasonLabel: 'Reason for withdrawal',
+            reasonHint: 'Explain why the approval is being withdrawn.',
+            confirmAction: 'Confirm withdrawal',
+            cancelAction: 'Cancel',
+            error: { reason: 'Enter the reason for withdrawal' }
+          }
+        },
+        producersPages: {
+          list: {
+            title: 'Registered producers',
+            heading: 'Registered producers',
+            intro: 'All battery producers registered in the system.',
+            columns: { bprn: 'BPRN', companyName: 'Company name', agency: 'Agency', status: 'Status', batteryTypes: 'Battery types', actions: 'Actions' },
+            emptyMessage: 'No producers found.',
+            viewAction: 'View',
+            backToDashboardAction: 'Back to regulator dashboard'
+          },
+          detail: {
+            title: 'Producer details',
+            heading: 'Producer details',
+            bprnLabel: 'BPRN',
+            companyNameLabel: 'Company name',
+            tradingNameLabel: 'Trading name',
+            companyRegLabel: 'Company registration',
+            addressLabel: 'Registered address',
+            contactLabel: 'Primary contact',
+            batteryTypesLabel: 'Battery types',
+            agencyLabel: 'Agency',
+            statusLabel: 'Status',
+            notFoundMessage: 'Producer not found.',
+            backToListAction: 'Back to producers list'
+          }
+        },
+        evidenceOverviewPages: {
+          list: {
+            title: 'Evidence notes',
+            heading: 'All evidence notes',
+            intro: 'Evidence notes across all compliance schemes and operators.',
+            columns: { issuer: 'Issued by', recipient: 'Issued to', category: 'Category', tonnes: 'Tonnes', status: 'Status', actions: 'Actions' },
+            emptyMessage: 'No evidence notes found.',
+            viewAction: 'View',
+            backToDashboardAction: 'Back to regulator dashboard',
+            categories: { portable: 'Portable', industrial: 'Industrial', automotive: 'Automotive' },
+            statuses: { 'awaiting-acceptance': 'Awaiting acceptance', accepted: 'Accepted', cancelled: 'Cancelled', 'awaiting-authorisation': 'Awaiting authorisation' }
+          },
+          detail: {
+            title: 'Evidence note detail',
+            heading: 'Evidence note detail',
+            issuerLabel: 'Issued by',
+            recipientLabel: 'Issued to',
+            categoryLabel: 'Category',
+            tonnesLabel: 'Tonnes',
+            statusLabel: 'Status',
+            issuedLabel: 'Issued on',
+            datesLabel: 'Waste received period',
+            directionLabel: 'Direction',
+            notFoundMessage: 'Evidence note not found.',
+            backToListAction: 'Back to evidence list'
+          }
+        },
+        submissionsPages: {
+          title: 'Submissions overview',
+          heading: 'All submissions and returns',
+          intro: 'Quarterly and annual submissions from compliance schemes and operators.',
+          columns: { entityName: 'Entity', type: 'Type', period: 'Period', status: 'Status' },
+          emptyMessage: 'No submissions found.',
+          backToDashboardAction: 'Back to regulator dashboard',
+          typeLabels: {
+            schemeQuarterly: 'Scheme quarterly',
+            schemeIa: 'Scheme IA',
+            operatorQuarterly: 'Operator quarterly',
+            operatorAnnual: 'Operator annual'
+          },
+          statuses: { 'not-started': 'Not started', 'in-progress': 'In progress', submitted: 'Submitted' }
+        }
+      },
+      cy: {
+        title: 'TODO welsh',
+        heading: heading('TODO welsh', 'TODO welsh', null),
+        introParagraph: 'TODO welsh',
+        switchAgencyAction: 'TODO welsh',
+        tiles: {
+          schemes: {
+            heading: 'TODO welsh',
+            countLabel: 'TODO welsh',
+            pendingLabel: 'TODO welsh',
+            manageAction: 'TODO welsh',
+            viewAction: 'TODO welsh'
+          },
+          operators: {
+            heading: 'TODO welsh',
+            countLabel: 'TODO welsh',
+            pendingLabel: 'TODO welsh',
+            manageAction: 'TODO welsh',
+            viewAction: 'TODO welsh'
+          },
+          producers: {
+            heading: 'TODO welsh',
+            countLabel: 'TODO welsh',
+            manageAction: 'TODO welsh'
+          },
+          evidence: {
+            heading: 'TODO welsh',
+            countLabel: 'TODO welsh',
+            manageAction: 'TODO welsh'
+          }
+        },
+        schemesPages: {
+          list: {
+            title: 'TODO welsh',
+            heading: 'TODO welsh',
+            intro: 'TODO welsh',
+            columns: { name: 'TODO welsh', approvalNumber: 'TODO welsh', status: 'TODO welsh', agency: 'TODO welsh', actions: 'TODO welsh' },
+            emptyMessage: 'TODO welsh',
+            viewAction: 'TODO welsh',
+            backToDashboardAction: 'TODO welsh',
+            statuses: { 'not-started': 'TODO welsh', 'in-progress': 'TODO welsh', submitted: 'TODO welsh', approved: 'TODO welsh', rejected: 'TODO welsh', withdrawn: 'TODO welsh' }
+          },
+          detail: {
+            title: 'TODO welsh',
+            heading: 'TODO welsh',
+            nameLabel: 'TODO welsh',
+            operatorLabel: 'TODO welsh',
+            addressLabel: 'TODO welsh',
+            contactAddressLabel: 'TODO welsh',
+            operationalPlanLabel: 'TODO welsh',
+            partnersLabel: 'TODO welsh',
+            offencesLabel: 'TODO welsh',
+            statusLabel: 'TODO welsh',
+            agencyLabel: 'TODO welsh',
+            approvalNumberLabel: 'TODO welsh',
+            approveHeading: 'TODO welsh',
+            approvalNumberInputLabel: 'TODO welsh',
+            approveAction: 'TODO welsh',
+            rejectAction: 'TODO welsh',
+            backToListAction: 'TODO welsh',
+            notFoundMessage: 'TODO welsh',
+            approvedConfirmation: 'TODO welsh',
+            rejectedConfirmation: 'TODO welsh',
+            withdrawAction: 'TODO welsh'
+          },
+          withdraw: {
+            title: 'TODO welsh',
+            heading: 'TODO welsh',
+            intro: 'TODO welsh',
+            reasonLabel: 'TODO welsh',
+            reasonHint: 'TODO welsh',
+            confirmAction: 'TODO welsh',
+            cancelAction: 'TODO welsh',
+            error: { reason: 'TODO welsh' }
+          }
+        },
+        operatorsPages: {
+          list: {
+            title: 'TODO welsh',
+            heading: 'TODO welsh',
+            intro: 'TODO welsh',
+            columns: { name: 'TODO welsh', type: 'TODO welsh', approvalNumber: 'TODO welsh', status: 'TODO welsh', agency: 'TODO welsh', actions: 'TODO welsh' },
+            emptyMessage: 'TODO welsh',
+            viewAction: 'TODO welsh',
+            backToDashboardAction: 'TODO welsh',
+            statuses: { 'not-started': 'TODO welsh', 'in-progress': 'TODO welsh', submitted: 'TODO welsh', approved: 'TODO welsh', rejected: 'TODO welsh', withdrawn: 'TODO welsh' },
+            typeLabels: { abto: 'TODO welsh', abe: 'TODO welsh' }
+          },
+          detail: {
+            title: 'TODO welsh',
+            heading: 'TODO welsh',
+            nameLabel: 'TODO welsh',
+            typeLabel: 'TODO welsh',
+            companyRegLabel: 'TODO welsh',
+            addressLabel: 'TODO welsh',
+            sitesLabel: 'TODO welsh',
+            batteryTypesLabel: 'TODO welsh',
+            statusLabel: 'TODO welsh',
+            agencyLabel: 'TODO welsh',
+            approvalNumberLabel: 'TODO welsh',
+            approveHeading: 'TODO welsh',
+            approvalNumberInputLabel: 'TODO welsh',
+            approveAction: 'TODO welsh',
+            rejectAction: 'TODO welsh',
+            backToListAction: 'TODO welsh',
+            notFoundMessage: 'TODO welsh',
+            approvedConfirmation: 'TODO welsh',
+            rejectedConfirmation: 'TODO welsh',
+            withdrawAction: 'TODO welsh'
+          },
+          withdraw: {
+            title: 'TODO welsh',
+            heading: 'TODO welsh',
+            intro: 'TODO welsh',
+            reasonLabel: 'TODO welsh',
+            reasonHint: 'TODO welsh',
+            confirmAction: 'TODO welsh',
+            cancelAction: 'TODO welsh',
+            error: { reason: 'TODO welsh' }
+          }
+        },
+        producersPages: {
+          list: {
+            title: 'TODO welsh',
+            heading: 'TODO welsh',
+            intro: 'TODO welsh',
+            columns: { bprn: 'TODO welsh', companyName: 'TODO welsh', agency: 'TODO welsh', status: 'TODO welsh', batteryTypes: 'TODO welsh', actions: 'TODO welsh' },
+            emptyMessage: 'TODO welsh',
+            viewAction: 'TODO welsh',
+            backToDashboardAction: 'TODO welsh'
+          },
+          detail: {
+            title: 'TODO welsh',
+            heading: 'TODO welsh',
+            bprnLabel: 'TODO welsh',
+            companyNameLabel: 'TODO welsh',
+            tradingNameLabel: 'TODO welsh',
+            companyRegLabel: 'TODO welsh',
+            addressLabel: 'TODO welsh',
+            contactLabel: 'TODO welsh',
+            batteryTypesLabel: 'TODO welsh',
+            agencyLabel: 'TODO welsh',
+            statusLabel: 'TODO welsh',
+            notFoundMessage: 'TODO welsh',
+            backToListAction: 'TODO welsh'
+          }
+        },
+        evidenceOverviewPages: {
+          list: {
+            title: 'TODO welsh',
+            heading: 'TODO welsh',
+            intro: 'TODO welsh',
+            columns: { issuer: 'TODO welsh', recipient: 'TODO welsh', category: 'TODO welsh', tonnes: 'TODO welsh', status: 'TODO welsh', actions: 'TODO welsh' },
+            emptyMessage: 'TODO welsh',
+            viewAction: 'TODO welsh',
+            backToDashboardAction: 'TODO welsh',
+            categories: { portable: 'TODO welsh', industrial: 'TODO welsh', automotive: 'TODO welsh' },
+            statuses: { 'awaiting-acceptance': 'TODO welsh', accepted: 'TODO welsh', cancelled: 'TODO welsh', 'awaiting-authorisation': 'TODO welsh' }
+          },
+          detail: {
+            title: 'TODO welsh',
+            heading: 'TODO welsh',
+            issuerLabel: 'TODO welsh',
+            recipientLabel: 'TODO welsh',
+            categoryLabel: 'TODO welsh',
+            tonnesLabel: 'TODO welsh',
+            statusLabel: 'TODO welsh',
+            issuedLabel: 'TODO welsh',
+            datesLabel: 'TODO welsh',
+            directionLabel: 'TODO welsh',
+            notFoundMessage: 'TODO welsh',
+            backToListAction: 'TODO welsh'
+          }
+        },
+        submissionsPages: {
+          title: 'TODO welsh',
+          heading: 'TODO welsh',
+          intro: 'TODO welsh',
+          columns: { entityName: 'TODO welsh', type: 'TODO welsh', period: 'TODO welsh', status: 'TODO welsh' },
+          emptyMessage: 'TODO welsh',
+          backToDashboardAction: 'TODO welsh',
+          typeLabels: {
+            schemeQuarterly: 'TODO welsh',
+            schemeIa: 'TODO welsh',
+            operatorQuarterly: 'TODO welsh',
+            operatorAnnual: 'TODO welsh'
+          },
+          statuses: { 'not-started': 'TODO welsh', 'in-progress': 'TODO welsh', submitted: 'TODO welsh' }
         }
       }
     }),

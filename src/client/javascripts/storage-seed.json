@@ -1,5 +1,5 @@
 {
-  "seedVersion": 7,
+  "seedVersion": 9,
   "schemes": [
     {
       "id": "22222222-0001-4000-a000-000000000001",
@@ -132,6 +132,39 @@
       "webAddress": "https://www.valpak.co.uk",
       "createdAt": "2010-01-01T00:00:00Z",
       "updatedAt": "2026-01-05T00:00:00Z"
+    },
+    {
+      "id": "22222222-0001-4000-a000-000000000005",
+      "version": 0,
+      "name": "Circulon Compliance Ltd",
+      "tradingNames": [],
+      "approvalNumber": null,
+      "approvalStatus": "submitted",
+      "approvedOn": null,
+      "submittedOn": "2026-04-15T00:00:00Z",
+      "registeredAddress": {
+        "line1": "14 Compliance Way",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Bristol",
+        "postcode": "BS1 5AH",
+        "countryCode": "GB"
+      },
+      "contactAddress": null,
+      "serviceOfNoticeAddress": null,
+      "operationalPlan": "Collection via local authority partnerships and retail drop-off points.",
+      "partners": [{ "name": "Bristol Waste Company" }],
+      "offences": null,
+      "additionalFiles": [],
+      "evidenceAvailable": false,
+      "agencyCode": "EA",
+      "compliancePeriod": "2026",
+      "operator": "Circulon Holdings Plc",
+      "contactEmail": "compliance@circulon.co.uk",
+      "webAddress": "https://www.circulon-compliance.co.uk",
+      "createdAt": "2026-04-10T00:00:00Z",
+      "updatedAt": "2026-04-15T00:00:00Z"
     }
   ],
   "producers": [
@@ -1119,6 +1152,31 @@
       "createdAt": "2026-03-12T10:00:00Z",
       "updatedAt": "2026-04-02T10:00:00Z",
       "bprnAllocatedAt": "2026-04-02T10:00:00Z"
+    },
+    {
+      "id": "22222222-0001-4000-a000-000000000005",
+      "version": 0,
+      "name": "Circulon Compliance Ltd",
+      "tradingNames": [],
+      "approvalNumber": null,
+      "approvalStatus": "submitted",
+      "approvedOn": null,
+      "submittedOn": "2026-04-15T00:00:00Z",
+      "registeredAddress": { "line1": "14 Compliance Way", "line2": null, "line3": null, "line4": null, "town": "Bristol", "postcode": "BS1 5AH", "countryCode": "GB" },
+      "contactAddress": null,
+      "serviceOfNoticeAddress": null,
+      "operationalPlan": "Collection via local authority partnerships and retail drop-off points.",
+      "partners": [{ "name": "Bristol Waste Company" }],
+      "offences": null,
+      "additionalFiles": [],
+      "evidenceAvailable": false,
+      "agencyCode": "EA",
+      "compliancePeriod": "2026",
+      "operator": "Circulon Holdings Plc",
+      "contactEmail": "compliance@circulon.co.uk",
+      "webAddress": "https://www.circulon-compliance.co.uk",
+      "createdAt": "2026-04-10T00:00:00Z",
+      "updatedAt": "2026-04-15T00:00:00Z"
     }
   ],
   "operators": [
@@ -1277,6 +1335,27 @@
       "contactEmail": "info@celticrecovery.cymru",
       "createdAt": "2025-12-15T00:00:00Z",
       "updatedAt": "2026-01-20T00:00:00Z"
+    },
+    {
+      "id": "33333333-0001-4000-a000-000000000004",
+      "version": 0,
+      "name": "Northfield Battery Processing",
+      "approvalType": "abto",
+      "companyRegistrationNo": "20000004",
+      "approvalNumber": null,
+      "approvalStatus": "submitted",
+      "approvedOn": null,
+      "submittedOn": "2026-04-20T00:00:00Z",
+      "registeredAddress": { "line1": "Northfield Works", "line2": "Station Road", "line3": null, "line4": null, "town": "Birmingham", "postcode": "B31 2JT", "countryCode": "GB" },
+      "contactAddress": null,
+      "serviceOfNoticeAddress": null,
+      "batteryTypes": { "isPortable": true, "isIndustrial": true, "isAutomotive": false },
+      "sites": [{ "id": "44444444-0001-4000-a000-000000000004", "name": "Northfield Treatment Facility", "address": { "line1": "Northfield Works", "line2": "Station Road", "line3": null, "line4": null, "town": "Birmingham", "postcode": "B31 2JT", "countryCode": "GB" }, "batteryTypes": { "isPortable": true, "isIndustrial": true, "isAutomotive": false }, "operationsDescription": "Sorting, shredding, and hydrometallurgical processing of portable and industrial batteries." }],
+      "agencyCode": "EA",
+      "compliancePeriod": "2026",
+      "contactEmail": "approvals@northfieldbp.co.uk",
+      "createdAt": "2026-04-18T00:00:00Z",
+      "updatedAt": "2026-04-20T00:00:00Z"
     }
   ]
 }

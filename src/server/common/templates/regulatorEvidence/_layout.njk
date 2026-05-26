@@ -1,0 +1,19 @@
+{% extends 'layouts/page.njk' %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l" data-testid="evidence-heading">{{ heading }}</h1>
+      {% if intro %}<p class="govuk-body">{{ intro }}</p>{% endif %}
+
+      {% block stepBody %}{% endblock %}
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('regulatorEvidence.js') }}"></script>
+{% endblock %}

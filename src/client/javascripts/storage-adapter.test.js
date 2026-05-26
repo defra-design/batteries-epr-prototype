@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 import {
   STORAGE_KEYS,
+  AGENCIES,
   createProducer,
   createRegistration,
   createSubmission,
@@ -2146,5 +2147,184 @@ describe('operator quarterly return storage functions', () => {
     })
     expect(updated.status).toBe('submitted')
     expect(updated.submittedOn).toBe('2026-12-01T00:00:00Z')
+  })
+})
+
+describe('agency functions', () => {
+  test('getAgencies returns 4 agencies', () => {
+    expect(storage.getAgencies()).toHaveLength(4)
+    expect(storage.getAgencies()).toBe(AGENCIES)
+  })
+
+  test('currentAgency returns null when no agency selected', () => {
+    expect(storage.currentAgency()).toBeNull()
+  })
+
+  test('setCurrentAgencyCode and currentAgency round-trip', () => {
+    storage.setCurrentAgencyCode('NRW')
+    expect(storage.getCurrentAgencyCode()).toBe('NRW')
+    const agency = storage.currentAgency()
+    expect(agency.code).toBe('NRW')
+    expect(agency.name).toBe('Natural Resources Wales')
+  })
+
+  test('clearCurrentAgencyCode clears', () => {
+    storage.setCurrentAgencyCode('SEPA')
+    storage.clearCurrentAgencyCode()
+    expect(storage.getCurrentAgencyCode()).toBeNull()
+    expect(storage.currentAgency()).toBeNull()
+  })
+
+  test('currentAgency returns null for unknown code', () => {
+    storage.setCurrentAgencyCode('UNKNOWN')
+    expect(storage.currentAgency()).toBeNull()
+  })
+})
+
+describe('listAllProducers', () => {
+  test('returns all producers', () => {
+    storage.seedDemoData()
+    const producers = storage.listAllProducers()
+    expect(producers.length).toBeGreaterThan(0)
+  })
+})
+
+describe('listAllEvidence', () => {
+  test('returns all evidence without year filter', () => {
+    storage.seedDemoData()
+    const evidence = storage.listAllEvidence()
+    expect(Array.isArray(evidence)).toBe(true)
+  })
+
+  test('returns filtered evidence with year filter', () => {
+    const ev = createEvidence({ compliancePeriodYear: '2026', tonnes: '1.000' })
+    storage.saveEvidence(ev)
+    const ev2 = createEvidence({ compliancePeriodYear: '2025', tonnes: '2.000' })
+    storage.saveEvidence(ev2)
+    const filtered = storage.listAllEvidence('2026')
+    expect(filtered.every((e) => e.compliancePeriodYear === '2026')).toBe(true)
+    const all = storage.listAllEvidence()
+    expect(all.length).toBeGreaterThanOrEqual(2)
+  })
+})
+
+describe('approveScheme', () => {
+  test('sets status to approved with approval number', () => {
+    storage.seedDemoData()
+    const schemes = storage.listSchemes()
+    const submitted = schemes.find((s) => s.approvalStatus === 'submitted')
+    expect(submitted).toBeTruthy()
+    const result = storage.approveScheme(submitted.id, 'BCS-APPROVE-001')
+    expect(result.approvalStatus).toBe('approved')
+    expect(result.approvalNumber).toBe('BCS-APPROVE-001')
+    expect(result.approvedOn).toBeTruthy()
+  })
+
+  test('returns null for nonexistent scheme', () => {
+    expect(storage.approveScheme('nonexistent', 'X')).toBeNull()
+  })
+})
+
+describe('rejectScheme', () => {
+  test('sets status to rejected', () => {
+    storage.seedDemoData()
+    const schemes = storage.listSchemes()
+    const submitted = schemes.find((s) => s.approvalStatus === 'submitted')
+    expect(submitted).toBeTruthy()
+    const result = storage.rejectScheme(submitted.id)
+    expect(result.approvalStatus).toBe('rejected')
+  })
+
+  test('returns null for nonexistent scheme', () => {
+    expect(storage.rejectScheme('nonexistent')).toBeNull()
+  })
+})
+
+describe('approveOperator', () => {
+  test('sets status to approved with approval number', () => {
+    storage.seedDemoData()
+    const operators = storage.listOperators()
+    const submitted = operators.find((o) => o.approvalStatus === 'submitted')
+    expect(submitted).toBeTruthy()
+    const result = storage.approveOperator(submitted.id, 'ABTO-APPROVE-001')
+    expect(result.approvalStatus).toBe('approved')
+    expect(result.approvalNumber).toBe('ABTO-APPROVE-001')
+    expect(result.approvedOn).toBeTruthy()
+  })
+
+  test('returns null for nonexistent operator', () => {
+    expect(storage.approveOperator('nonexistent', 'X')).toBeNull()
+  })
+})
+
+describe('rejectOperator', () => {
+  test('sets status to rejected', () => {
+    storage.seedDemoData()
+    const operators = storage.listOperators()
+    const submitted = operators.find((o) => o.approvalStatus === 'submitted')
+    expect(submitted).toBeTruthy()
+    const result = storage.rejectOperator(submitted.id)
+    expect(result.approvalStatus).toBe('rejected')
+  })
+
+  test('returns null for nonexistent operator', () => {
+    expect(storage.rejectOperator('nonexistent')).toBeNull()
+  })
+})
+
+describe('withdraw functions', () => {
+  test('withdrawSchemeApproval sets status to withdrawn', () => {
+    const scheme = storage.saveScheme(
+      createScheme({ name: 'Test', approvalStatus: 'approved' })
+    )
+    const result = storage.withdrawSchemeApproval(scheme.id, 'Non-compliance')
+    expect(result.approvalStatus).toBe('withdrawn')
+    expect(result.withdrawalReason).toBe('Non-compliance')
+    expect(result.withdrawnOn).toBeTruthy()
+  })
+
+  test('withdrawSchemeApproval returns null for nonexistent', () => {
+    expect(storage.withdrawSchemeApproval('missing', 'reason')).toBeNull()
+  })
+
+  test('withdrawOperatorApproval sets status to withdrawn', () => {
+    const op = storage.saveOperator(
+      createOperator({ name: 'Test Op', approvalStatus: 'approved' })
+    )
+    const result = storage.withdrawOperatorApproval(op.id, 'Breach')
+    expect(result.approvalStatus).toBe('withdrawn')
+    expect(result.withdrawalReason).toBe('Breach')
+    expect(result.withdrawnOn).toBeTruthy()
+  })
+
+  test('withdrawOperatorApproval returns null for nonexistent', () => {
+    expect(storage.withdrawOperatorApproval('missing', 'reason')).toBeNull()
+  })
+})
+
+describe('list-all submission functions', () => {
+  test('listAllQuarterlySubmissions returns all', () => {
+    const result = storage.listAllQuarterlySubmissions('2026')
+    expect(Array.isArray(result)).toBe(true)
+  })
+
+  test('listAllQuarterlySubmissions without year returns all', () => {
+    const result = storage.listAllQuarterlySubmissions()
+    expect(Array.isArray(result)).toBe(true)
+  })
+
+  test('listAllIaSubmissions returns all', () => {
+    expect(Array.isArray(storage.listAllIaSubmissions('2026'))).toBe(true)
+    expect(Array.isArray(storage.listAllIaSubmissions())).toBe(true)
+  })
+
+  test('listAllOperatorQuarterlyReturns returns all', () => {
+    expect(Array.isArray(storage.listAllOperatorQuarterlyReturns('2026'))).toBe(true)
+    expect(Array.isArray(storage.listAllOperatorQuarterlyReturns())).toBe(true)
+  })
+
+  test('listAllOperatorAnnualReturns returns all', () => {
+    expect(Array.isArray(storage.listAllOperatorAnnualReturns('2026'))).toBe(true)
+    expect(Array.isArray(storage.listAllOperatorAnnualReturns())).toBe(true)
   })
 })
