@@ -55,8 +55,7 @@ const URLS = {
   evidence: '/operator/evidence',
   evidenceIssue: '/operator/evidence/issue/scheme',
   quarterly: '/operator/quarterly/{quarter}/{step}',
-  annualReturn: '/operator/annual-return/{step}',
-  quarterly: '/operator/quarterly/{quarter}/{step}'
+  annualReturn: '/operator/annual-return/{step}'
 }
 
 const PAYLOAD = {

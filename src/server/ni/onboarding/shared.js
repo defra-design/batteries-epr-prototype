@@ -10,6 +10,9 @@ export const NI_STEPS = [
   { id: 'batteryCategories', path: paths.niOnboardingBatteryCategories },
   { id: 'brandNames', path: paths.niOnboardingBrandNames },
   { id: 'producerRoute', path: paths.niOnboardingProducerRoute },
+  { id: 'carbonFootprint', path: paths.niOnboardingCarbonFootprint },
+  { id: 'batteryPassport', path: paths.niOnboardingBatteryPassport },
+  { id: 'dueDiligence', path: paths.niOnboardingDueDiligence },
   { id: 'declaration', path: paths.niOnboardingDeclaration },
   { id: 'confirmation', path: paths.niOnboardingConfirmation }
 ]

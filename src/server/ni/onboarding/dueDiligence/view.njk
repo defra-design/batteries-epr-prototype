@@ -1,0 +1,46 @@
+{% extends 'ni/onboarding/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="ni-onboarding-form">
+    {% call eubrAnnotation('dueDiligenceScope') %}
+      {{ govukRadios({
+        idPrefix: "aboveThreshold",
+        name: "aboveThreshold",
+        fieldset: { legend: { text: labels.thresholdLegend } },
+        classes: "govuk-radios--inline",
+        errorMessage: { text: errors.aboveThreshold } if errors.aboveThreshold,
+        items: [
+          { value: "yes", text: labels.thresholdYes, checked: formValues.aboveThreshold == "yes" },
+          { value: "no", text: labels.thresholdNo, checked: formValues.aboveThreshold == "no" }
+        ]
+      }) }}
+    {% endcall %}
+
+    {% call eubrAnnotation('dueDiligence') %}
+      <h2 class="govuk-heading-m">{{ labels.policyHeading }}</h2>
+      <p class="govuk-body">{{ labels.policyIntro }}</p>
+
+      {{ govukCheckboxes({
+        idPrefix: "policy",
+        name: "policy",
+        errorMessage: { text: errors.policyConfirm } if errors.policyConfirm,
+        items: [
+          { value: "on", name: "policyConfirm", id: "policyConfirm", text: labels.policyConfirmLabel, checked: formValues.policyConfirm },
+          { value: "on", name: "verifiedConfirm", id: "verifiedConfirm", text: labels.verifiedConfirmLabel, checked: formValues.verifiedConfirm }
+        ]
+      }) }}
+
+      {{ govukInput({
+        label: { text: labels.referenceLabel },
+        id: "policyReference",
+        name: "policyReference",
+        value: formValues.policyReference
+      }) }}
+    {% endcall %}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "ni-onboarding-continue" }
+    }) }}
+  </form>
+{% endblock %}

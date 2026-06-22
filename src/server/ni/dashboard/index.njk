@@ -35,6 +35,11 @@
             </div>
             <div class="govuk-summary-card__content">
               <p class="govuk-body">{{ card.body }}</p>
+              {% if cardLinks[card.eubrKey] %}
+                <p class="govuk-body">
+                  <a class="govuk-link" href="{{ cardLinks[card.eubrKey].href }}" data-testid="ni-card-{{ card.eubrKey }}-link">{{ cardLinks[card.eubrKey].text }}</a>
+                </p>
+              {% endif %}
             </div>
           </div>
         {% endcall %}

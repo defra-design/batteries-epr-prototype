@@ -1,0 +1,84 @@
+{% extends 'ni/onboarding/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="ni-onboarding-form">
+    {% call eubrAnnotation('carbonFootprint') %}
+      {{ govukInput({
+        label: { text: labels.valueLabel },
+        hint: { text: labels.valueHint },
+        id: "carbonFootprintValue",
+        name: "carbonFootprintValue",
+        classes: "govuk-input--width-10",
+        value: formValues.carbonFootprintValue,
+        errorMessage: { text: errors.carbonFootprintValue } if errors.carbonFootprintValue,
+        attributes: { "data-testid": "ni-carbon-value" }
+      }) }}
+
+      {{ govukRadios({
+        idPrefix: "performanceClass",
+        name: "performanceClass",
+        fieldset: { legend: { text: labels.classLegend } },
+        hint: { text: labels.classHint },
+        classes: "govuk-radios--inline",
+        errorMessage: { text: errors.performanceClass } if errors.performanceClass,
+        items: [
+          { value: "A", text: "A", checked: formValues.performanceClass == "A" },
+          { value: "B", text: "B", checked: formValues.performanceClass == "B" },
+          { value: "C", text: "C", checked: formValues.performanceClass == "C" },
+          { value: "D", text: "D", checked: formValues.performanceClass == "D" },
+          { value: "E", text: "E", checked: formValues.performanceClass == "E" }
+        ]
+      }) }}
+    {% endcall %}
+
+    {% call eubrAnnotation('recycledContent') %}
+      <h2 class="govuk-heading-m">{{ labels.recycledHeading }}</h2>
+      <p class="govuk-body">{{ labels.recycledIntro }}</p>
+
+      {{ govukInput({
+        label: { text: labels.cobaltLabel },
+        id: "recycledCobalt",
+        name: "recycledCobalt",
+        classes: "govuk-input--width-5",
+        suffix: { text: "%" },
+        value: formValues.recycledCobalt,
+        errorMessage: { text: errors.recycledCobalt } if errors.recycledCobalt
+      }) }}
+
+      {{ govukInput({
+        label: { text: labels.lithiumLabel },
+        id: "recycledLithium",
+        name: "recycledLithium",
+        classes: "govuk-input--width-5",
+        suffix: { text: "%" },
+        value: formValues.recycledLithium,
+        errorMessage: { text: errors.recycledLithium } if errors.recycledLithium
+      }) }}
+
+      {{ govukInput({
+        label: { text: labels.nickelLabel },
+        id: "recycledNickel",
+        name: "recycledNickel",
+        classes: "govuk-input--width-5",
+        suffix: { text: "%" },
+        value: formValues.recycledNickel,
+        errorMessage: { text: errors.recycledNickel } if errors.recycledNickel
+      }) }}
+
+      {{ govukInput({
+        label: { text: labels.leadLabel },
+        id: "recycledLead",
+        name: "recycledLead",
+        classes: "govuk-input--width-5",
+        suffix: { text: "%" },
+        value: formValues.recycledLead,
+        errorMessage: { text: errors.recycledLead } if errors.recycledLead
+      }) }}
+    {% endcall %}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "ni-onboarding-continue" }
+    }) }}
+  </form>
+{% endblock %}

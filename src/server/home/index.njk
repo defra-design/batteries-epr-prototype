@@ -106,4 +106,31 @@
       </div>
     </div>
   </div>
+
+  <div class="govuk-grid-row" data-testid="home-journeys-row-3">
+    <div class="govuk-grid-column-full">
+      <div class="govuk-summary-card" data-testid="home-journey-ni">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">{{ niJourney.title }}</h2>
+          <div class="app-task-cards__status">
+            {{ govukTag({ text: "EU Batteries Regulation" }) }}
+          </div>
+        </div>
+        <div class="govuk-summary-card__content">
+          <p class="govuk-body">{{ niJourney.description }}</p>
+          <ul class="govuk-list govuk-list--bullet">
+            {% for item in niJourney.bullets %}
+              <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+          {{ govukButton({
+            text: niJourney.primaryAction,
+            href: niSignInUrl,
+            isStartButton: true,
+            attributes: { "data-testid": "home-journey-ni-cta" }
+          }) }}
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}

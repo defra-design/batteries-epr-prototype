@@ -28,6 +28,20 @@
   outline-width: 3px;
 }
 
+.app-qr-placeholder {
+  display: inline-block;
+  margin: 0 0 govuk-spacing(4);
+  padding: govuk-spacing(2);
+  border: 1px solid govuk-colour("mid-grey");
+  text-align: center;
+}
+
+.app-qr-placeholder figcaption {
+  max-width: 120px;
+  margin-top: govuk-spacing(1);
+  color: govuk-colour("dark-grey");
+}
+
 .app-eubr-tooltip {
   position: absolute;
   z-index: 100;

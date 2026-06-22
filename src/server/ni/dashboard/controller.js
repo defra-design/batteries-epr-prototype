@@ -10,7 +10,29 @@ export const niDashboardController = {
       heading: pageContent.heading,
       intro: pageContent.intro,
       cards: pageContent.cards,
-      startUrl: paths.niOnboardingCompanyDetails
+      startUrl: paths.niOnboardingCompanyDetails,
+      cardLinks: {
+        registration: {
+          href: paths.niOnboardingCompanyDetails,
+          text: 'Start registration'
+        },
+        carbonFootprint: {
+          href: paths.niOnboardingCarbonFootprint,
+          text: 'Declare carbon footprint'
+        },
+        batteryPassport: {
+          href: paths.niOnboardingBatteryPassport,
+          text: 'Battery passport and labelling'
+        },
+        dueDiligence: {
+          href: paths.niOnboardingDueDiligence,
+          text: 'Complete due diligence'
+        },
+        reporting: {
+          href: paths.niAnnualReturnCategories,
+          text: 'Start annual return'
+        }
+      }
     })
   }
 }

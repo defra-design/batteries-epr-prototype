@@ -1,0 +1,25 @@
+{% extends 'ni/annualReturn/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="ni-annual-return-form">
+    {% call eubrAnnotation('reporting') %}
+      {{ govukCheckboxes({
+        idPrefix: "categories",
+        name: "categories",
+        errorMessage: { text: errors.isPortable } if errors.isPortable,
+        items: [
+          { value: "on", name: "isPortable", id: "isPortable", text: labels.portableLabel, checked: formValues.isPortable },
+          { value: "on", name: "isLmt", id: "isLmt", text: labels.lmtLabel, checked: formValues.isLmt },
+          { value: "on", name: "isIndustrial", id: "isIndustrial", text: labels.industrialLabel, checked: formValues.isIndustrial },
+          { value: "on", name: "isElectricVehicle", id: "isElectricVehicle", text: labels.electricVehicleLabel, checked: formValues.isElectricVehicle },
+          { value: "on", name: "isSli", id: "isSli", text: labels.sliLabel, checked: formValues.isSli }
+        ]
+      }) }}
+    {% endcall %}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "ni-annual-return-continue" }
+    }) }}
+  </form>
+{% endblock %}

@@ -1,4 +1,5 @@
 import { content } from '../../config/content.js'
+import { niContent } from '../../config/ni-content.js'
 import { paths } from '../../config/paths.js'
 
 export const homeController = {
@@ -15,7 +16,9 @@ export const homeController = {
       publicRegisterUrl: paths.publicRegisterSearch,
       complianceSchemeSignInUrl: paths.complianceSchemeSignIn,
       operatorSignInUrl: paths.operatorSignIn,
-      regulatorSignInUrl: paths.regulatorSignIn
+      regulatorSignInUrl: paths.regulatorSignIn,
+      niJourney: niContent.home,
+      niSignInUrl: paths.niSignIn
     })
   }
 }

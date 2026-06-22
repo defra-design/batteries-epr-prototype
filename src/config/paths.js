@@ -38,7 +38,12 @@ export const paths = {
   niOnboardingDueDiligence: '/ni/onboarding/due-diligence',
   niOnboardingDeclaration: '/ni/onboarding/declaration',
   niOnboardingConfirmation: '/ni/onboarding/confirmation',
-  niAnnualReturn: '/ni/annual-return/{step}',
+  niAnnualReturnCategories: '/ni/annual-return/categories',
+  niAnnualReturnPlaced: '/ni/annual-return/placed-on-market',
+  niAnnualReturnCollection: '/ni/annual-return/collection',
+  niAnnualReturnRecycling: '/ni/annual-return/recycling-efficiency',
+  niAnnualReturnDeclaration: '/ni/annual-return/declaration',
+  niAnnualReturnConfirmation: '/ni/annual-return/confirmation',
 
   onboarding: '/onboarding/{step}',
   onboardingCompanyDetails: '/onboarding/company-details',

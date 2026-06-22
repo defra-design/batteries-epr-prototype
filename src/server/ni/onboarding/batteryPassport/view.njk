@@ -1,0 +1,60 @@
+{% extends 'ni/onboarding/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="ni-onboarding-form">
+    {% call eubrAnnotation('batteryPassport') %}
+      <figure class="app-qr-placeholder" data-testid="ni-qr-placeholder">
+        <svg width="120" height="120" viewBox="0 0 25 25" role="img" aria-label="{{ labels.qrCaption }}" focusable="false">
+          <rect width="25" height="25" fill="#ffffff"/>
+          <path fill="#0b0c0c" d="M0 0h7v7H0zM2 2h3v3H2z" fill-rule="evenodd"/>
+          <path fill="#0b0c0c" d="M18 0h7v7h-7zM20 2h3v3h-3z" fill-rule="evenodd"/>
+          <path fill="#0b0c0c" d="M0 18h7v7H0zM2 20h3v3H2z" fill-rule="evenodd"/>
+          <path fill="#0b0c0c" d="M9 0h2v2H9zM13 1h2v2h-2zM10 4h3v2h-3zM0 9h2v2H0zM4 9h3v2H4zM9 9h2v3H9zM13 9h3v2h-3zM18 9h2v2h-2zM22 10h2v3h-2zM9 13h2v2H9zM13 13h3v3h-3zM18 13h2v2h-2zM9 18h2v3H9zM13 19h3v2h-3zM18 18h3v2h-3zM12 22h2v2h-2zM18 22h2v2h-2z"/>
+        </svg>
+        <figcaption class="govuk-body-s">{{ labels.qrCaption }}</figcaption>
+      </figure>
+
+      {{ govukInput({
+        label: { text: labels.carrierLabel },
+        hint: { text: labels.carrierHint },
+        id: "passportCarrierId",
+        name: "passportCarrierId",
+        value: formValues.passportCarrierId,
+        attributes: { "data-testid": "ni-passport-carrier" }
+      }) }}
+    {% endcall %}
+
+    {% call eubrAnnotation('labelling') %}
+      {{ govukCheckboxes({
+        idPrefix: "labelling",
+        name: "labelling",
+        fieldset: { legend: { text: labels.labelLegend } },
+        items: [
+          { value: "on", name: "separateCollection", id: "separateCollection", text: labels.separateCollectionLabel, checked: formValues.separateCollection },
+          { value: "on", name: "capacity", id: "capacity", text: labels.capacityLabel, checked: formValues.capacity },
+          { value: "on", name: "ce", id: "ce", text: labels.ceLabel, checked: formValues.ce },
+          { value: "on", name: "hazardous", id: "hazardous", text: labels.hazardousLabel, checked: formValues.hazardous }
+        ]
+      }) }}
+    {% endcall %}
+
+    {% call eubrAnnotation('removability') %}
+      {{ govukRadios({
+        idPrefix: "removability",
+        name: "removability",
+        fieldset: { legend: { text: labels.removabilityLegend } },
+        errorMessage: { text: errors.removability } if errors.removability,
+        items: [
+          { value: "yes", text: labels.removabilityYes, checked: formValues.removability == "yes" },
+          { value: "no", text: labels.removabilityNo, checked: formValues.removability == "no" },
+          { value: "na", text: labels.removabilityNa, checked: formValues.removability == "na" }
+        ]
+      }) }}
+    {% endcall %}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "ni-onboarding-continue" }
+    }) }}
+  </form>
+{% endblock %}

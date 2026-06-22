@@ -48,6 +48,30 @@ describe('runRegulatorEvidenceList', () => {
     expect(empty.hidden).toBe(false)
   })
 
+  test('excludes evidence that does not belong to the current agency', () => {
+    storage.resetAllData()
+    storage.setCurrentAgencyCode('EA')
+    storage.saveEvidence({
+      compliancePeriodYear: '2026',
+      recipientName: 'Operator outside agency',
+      tonnes: '1.000',
+      category: 'portable',
+      status: 'awaiting-acceptance',
+      direction: 'operator-to-scheme',
+      issuedByOperatorId: 'operator-not-in-agency'
+    })
+    storage.saveEvidence({
+      compliancePeriodYear: '2026',
+      recipientName: 'No scheme or operator',
+      tonnes: '2.000',
+      category: 'industrial',
+      status: 'accepted'
+    })
+    document.body.innerHTML = listHtml(defaultPayload)
+    const result = runRegulatorEvidenceList(document, { assign: assignSpy })
+    expect(result).toBe('rendered-empty')
+  })
+
   test('renders evidence rows when evidence exists', () => {
     const scheme = storage.listSchemes()[0]
     if (!scheme) return

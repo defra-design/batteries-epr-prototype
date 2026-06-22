@@ -1,0 +1,46 @@
+{% extends 'ni/annualReturn/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="ni-annual-return-form">
+    {% call eubrAnnotation('recyclingEfficiency') %}
+      {{ govukInput({
+        label: { text: labels.leadAcidLabel },
+        id: "reLeadAcid",
+        name: "reLeadAcid",
+        classes: "govuk-input--width-5",
+        suffix: { text: "%" },
+        value: formValues.reLeadAcid,
+        errorMessage: { text: errors.reLeadAcid } if errors.reLeadAcid
+      }) }}
+
+      {{ govukInput({
+        label: { text: labels.lithiumLabel },
+        id: "reLithium",
+        name: "reLithium",
+        classes: "govuk-input--width-5",
+        suffix: { text: "%" },
+        value: formValues.reLithium,
+        errorMessage: { text: errors.reLithium } if errors.reLithium
+      }) }}
+
+      {{ govukInput({
+        label: { text: labels.nickelCadmiumLabel },
+        id: "reNickelCadmium",
+        name: "reNickelCadmium",
+        classes: "govuk-input--width-5",
+        suffix: { text: "%" },
+        value: formValues.reNickelCadmium,
+        errorMessage: { text: errors.reNickelCadmium } if errors.reNickelCadmium
+      }) }}
+
+      {{ govukInsetText({
+        html: "<strong>" + labels.recoveryHeading + "</strong><p class=\"govuk-body\">" + labels.recoveryBody + "</p>"
+      }) }}
+    {% endcall %}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "ni-annual-return-continue" }
+    }) }}
+  </form>
+{% endblock %}

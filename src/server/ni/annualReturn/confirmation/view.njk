@@ -1,0 +1,35 @@
+{% extends 'ni/_layout.njk' %}
+
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "eubr-annotation/macro.njk" import eubrAnnotation %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% call eubrAnnotation('reporting') %}
+        {{ govukPanel({
+          titleText: labels.panelTitle,
+          html: labels.panelBody + "<br><strong data-testid=\"ni-ar-reference\">" + reference + "</strong>"
+        }) }}
+      {% endcall %}
+
+      {{ govukSummaryList({
+        rows: [
+          { key: { text: labels.periodLabel }, value: { text: period } },
+          { key: { text: labels.regulatorLabel }, value: { text: labels.regulatorValue } }
+        ]
+      }) }}
+
+      <h2 class="govuk-heading-m">{{ labels.nextHeading }}</h2>
+      <p class="govuk-body">{{ labels.nextBody }}</p>
+
+      {{ govukButton({
+        text: labels.continueAction,
+        href: dashboardUrl,
+        attributes: { "data-testid": "ni-ar-confirmation-continue" }
+      }) }}
+    </div>
+  </div>
+{% endblock %}

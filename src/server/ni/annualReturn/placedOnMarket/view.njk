@@ -1,0 +1,42 @@
+{% extends 'ni/annualReturn/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="ni-annual-return-form">
+    {% call eubrAnnotation('reporting') %}
+      {{ govukInput({
+        label: { text: labels.portableLabel },
+        id: "pomPortable",
+        name: "pomPortable",
+        classes: "govuk-input--width-5",
+        suffix: { text: labels.tonnesSuffix },
+        value: formValues.pomPortable,
+        errorMessage: { text: errors.pomPortable } if errors.pomPortable
+      }) }}
+
+      {{ govukInput({
+        label: { text: labels.industrialLabel },
+        id: "pomIndustrial",
+        name: "pomIndustrial",
+        classes: "govuk-input--width-5",
+        suffix: { text: labels.tonnesSuffix },
+        value: formValues.pomIndustrial,
+        errorMessage: { text: errors.pomIndustrial } if errors.pomIndustrial
+      }) }}
+
+      {{ govukInput({
+        label: { text: labels.automotiveLabel },
+        id: "pomAutomotive",
+        name: "pomAutomotive",
+        classes: "govuk-input--width-5",
+        suffix: { text: labels.tonnesSuffix },
+        value: formValues.pomAutomotive,
+        errorMessage: { text: errors.pomAutomotive } if errors.pomAutomotive
+      }) }}
+    {% endcall %}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "ni-annual-return-continue" }
+    }) }}
+  </form>
+{% endblock %}

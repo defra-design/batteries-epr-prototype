@@ -249,8 +249,7 @@ export const runOperatorEvidencePage = (
     renderList(doc, payload, operator)
     return 'list'
   }
-  if (payload.view === 'issue')
-    return runIssueView(doc, loc, payload, operator)
+  if (payload.view === 'issue') return runIssueView(doc, loc, payload, operator)
   if (payload.view === 'detail') return runDetailView(doc, payload, operator)
   return 'hydrated'
 }

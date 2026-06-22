@@ -1,0 +1,46 @@
+{% extends 'ni/annualReturn/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="ni-annual-return-form">
+    {% call eubrAnnotation('collectionTargets') %}
+      {{ govukInsetText({
+        html: "<strong>" + labels.targetsHeading + "</strong><p class=\"govuk-body\">" + labels.targetsBody + "</p>"
+      }) }}
+
+      {{ govukInput({
+        label: { text: labels.portableLabel },
+        id: "colPortable",
+        name: "colPortable",
+        classes: "govuk-input--width-5",
+        suffix: { text: labels.tonnesSuffix },
+        value: formValues.colPortable,
+        errorMessage: { text: errors.colPortable } if errors.colPortable
+      }) }}
+
+      {{ govukInput({
+        label: { text: labels.industrialLabel },
+        id: "colIndustrial",
+        name: "colIndustrial",
+        classes: "govuk-input--width-5",
+        suffix: { text: labels.tonnesSuffix },
+        value: formValues.colIndustrial,
+        errorMessage: { text: errors.colIndustrial } if errors.colIndustrial
+      }) }}
+
+      {{ govukInput({
+        label: { text: labels.automotiveLabel },
+        id: "colAutomotive",
+        name: "colAutomotive",
+        classes: "govuk-input--width-5",
+        suffix: { text: labels.tonnesSuffix },
+        value: formValues.colAutomotive,
+        errorMessage: { text: errors.colAutomotive } if errors.colAutomotive
+      }) }}
+    {% endcall %}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "ni-annual-return-continue" }
+    }) }}
+  </form>
+{% endblock %}
