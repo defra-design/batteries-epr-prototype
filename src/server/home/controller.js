@@ -18,7 +18,8 @@ export const homeController = {
       operatorSignInUrl: paths.operatorSignIn,
       regulatorSignInUrl: paths.regulatorSignIn,
       niJourney: niContent.home,
-      niSignInUrl: paths.niSignIn
+      niSignInUrl: paths.niSignIn,
+      showNi: request.query.eubr !== undefined
     })
   }
 }
