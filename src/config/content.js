@@ -13,12 +13,12 @@ export const content = {
   home: (request) =>
     getContentForLanguage(request, {
       en: {
-        title: 'Battery EPR prototype',
-        heading: 'Battery EPR prototype',
+        title: 'Battery EPR Playground',
+        heading: 'Battery EPR Playground',
         intro:
           'A walkthrough of the new Battery Extended Producer Responsibility service journeys.',
         prototypeBanner:
-          'This is a prototype. All data is stored in your browser. Choose a journey to begin.',
+          'This is a playground. All data is stored in your browser. Choose a journey to begin.',
         journeys: {
           producer: {
             title: 'I am a producer',
@@ -103,8 +103,8 @@ export const content = {
     getContentForLanguage(request, {
       en: {
         title: 'About',
-        heading: heading('About this prototype', null, null),
-        body: 'This is a prototype Defra service. Data you enter is stored only in your browser and is not shared with anyone else.'
+        heading: heading('About this playground', null, null),
+        body: 'This is a playground Defra service. Data you enter is stored only in your browser and is not shared with anyone else.'
       },
       cy: {
         title: 'About',
@@ -118,7 +118,7 @@ export const content = {
         title: 'Cookies',
         heading: 'Cookies on this service',
         introParagraph:
-          'This is a prototype service. The only persistent storage we use is your browser local storage. We use one essential cookie to keep you signed in during your session.',
+          'This is a playground service. The only persistent storage we use is your browser local storage. We use one essential cookie to keep you signed in during your session.',
         essentialCookiesHeading: 'Essential cookies',
         essentialCookiesDescription:
           'We use one essential cookie. You cannot turn it off because the service will not work without it.',
@@ -149,9 +149,9 @@ export const content = {
         title: 'Terms',
         heading: 'Terms and conditions',
         leadParagraph:
-          'These terms and conditions apply to your use of this prototype service.',
+          'These terms and conditions apply to your use of this playground service.',
         conditions: [
-          'This is a prototype. Do not enter sensitive personal data.',
+          'This is a playground. Do not enter sensitive personal data.',
           'Data is stored only in your browser and may be cleared at any time.',
           'You agree not to use this service for any unlawful purpose.'
         ],
@@ -177,11 +177,11 @@ export const content = {
         title: 'Privacy notice',
         heading: 'Privacy notice',
         introParagraph:
-          'This is a prototype Defra service. We do not collect or process any personal data on a server. All data you enter is stored only in your browser.',
+          'This is a playground Defra service. We do not collect or process any personal data on a server. All data you enter is stored only in your browser.',
         sections: [
           {
             heading: 'Who collects your personal data',
-            body: 'No personal data is collected by Defra through this prototype. The data you enter stays in your browser local storage.'
+            body: 'No personal data is collected by Defra through this playground. The data you enter stays in your browser local storage.'
           },
           {
             heading: 'How long data is kept',
@@ -202,7 +202,7 @@ export const content = {
         title: 'Accessibility statement',
         heading: 'Accessibility statement',
         introParagraph:
-          'This service is being designed to meet WCAG 2.2 AA. As a prototype, accessibility issues may exist; please report them via the feedback link.'
+          'This service is being designed to meet WCAG 2.2 AA. As a playground, accessibility issues may exist; please report them via the feedback link.'
       },
       cy: {
         title: 'Accessibility statement',
@@ -216,7 +216,7 @@ export const content = {
         title: 'Sign in',
         heading: 'Sign in',
         intro:
-          'Enter the email address you would like to register with. This prototype does not require a password.',
+          'Enter the email address you would like to register with. This playground does not require a password.',
         emailLabel: 'Email address',
         continueAction: 'Continue',
         error: {
@@ -293,13 +293,13 @@ export const content = {
   devReset: (request) =>
     getContentForLanguage(request, {
       en: {
-        title: 'Reset prototype data',
-        heading: 'Reset prototype data',
-        body: 'Clearing prototype data removes everything stored in your browser for this service and reloads the demo seed records.',
+        title: 'Reset playground data',
+        heading: 'Reset playground data',
+        body: 'Clearing playground data removes everything stored in your browser for this service and reloads the demo seed records.',
         confirmAction: 'Reset and reload'
       },
       cy: {
-        title: 'Reset prototype data',
+        title: 'Reset playground data',
         heading: 'TODO welsh',
         body: 'TODO welsh',
         confirmAction: 'TODO welsh'
@@ -310,7 +310,7 @@ export const content = {
       en: {
         title: 'Time travel',
         heading: 'Time travel',
-        body: 'Set the year the prototype should pretend it is. The dashboard, compliance period and any new records you create will be tagged with this year, and the activity log will date events accordingly. Existing records keep the period they were submitted under. Clear to return to real time.',
+        body: 'Set the year the playground should pretend it is. The dashboard, compliance period and any new records you create will be tagged with this year, and the activity log will date events accordingly. Existing records keep the period they were submitted under. Clear to return to real time.',
         yearLabel: 'Target year',
         yearHint: 'Enter a four-digit year (for example, 2027).',
         confirmAction: 'Travel'
@@ -697,7 +697,7 @@ export const content = {
         periodLabel: 'Compliance period',
         emailNoticeHeading: 'What happens next',
         emailNoticeBody:
-          'In a real service we would email you a confirmation. For this prototype we have simply recorded the submission in your browser.',
+          'In a real service we would email you a confirmation. For this playground we have simply recorded the submission in your browser.',
         continueAction: 'Continue to your dashboard'
       },
       cy: {
@@ -1308,9 +1308,9 @@ export const content = {
             periodLabel: 'Compliance period'
           },
           reset: {
-            title: 'Prototype data',
-            body: 'This is a prototype. Use the button below to clear all data stored in your browser and reload demo seed records.',
-            confirmAction: 'Reset prototype data'
+            title: 'Playground data',
+            body: 'This is a playground. Use the button below to clear all data stored in your browser and reload demo seed records.',
+            confirmAction: 'Reset playground data'
           }
         }
       },
@@ -1461,7 +1461,7 @@ export const content = {
           'Choose which approved battery compliance scheme you are operating as. You can switch later.',
         legend: 'Compliance scheme',
         continueAction: 'Continue',
-        cancelAction: 'Cancel and return to the prototype home',
+        cancelAction: 'Cancel and return to the playground home',
         error: {
           title: 'There is a problem',
           choice: 'Select a compliance scheme to continue'
@@ -1748,7 +1748,7 @@ export const content = {
           backToDashboardAction: 'Back to compliance scheme dashboard',
           methodologyHeading: 'How this is calculated',
           methodology:
-            'For each category, the obligation is the total tonnes placed on the UK market across all four quarters multiplied by the recycling target. Accepted evidence reduces the outstanding obligation. This is a prototype calculation — production maths will be more nuanced.',
+            'For each category, the obligation is the total tonnes placed on the UK market across all four quarters multiplied by the recycling target. Accepted evidence reduces the outstanding obligation. This is a playground calculation — production maths will be more nuanced.',
           columns: {
             category: 'Category',
             placed: 'Placed on market (tonnes)',
@@ -2007,7 +2007,7 @@ export const content = {
                 'Summarise how the scheme will operate, including collection and treatment routes.',
               operationalPlanLabel: 'Operational plan',
               operationalPlanHint:
-                'A few sentences is fine for the prototype.',
+                'A few sentences is fine for the playground.',
               error: { operationalPlan: 'Enter the operational plan summary' }
             },
             partners: {
@@ -2040,7 +2040,7 @@ export const content = {
                 'List the supporting documents you would attach in the live service.',
               additionalFilesLabel: 'Supporting files',
               additionalFilesHint:
-                'Enter one filename per line (prototype only — no real upload).'
+                'Enter one filename per line (playground only — no real upload).'
             },
             declaration: {
               title: 'Declaration',
@@ -2606,7 +2606,7 @@ export const content = {
         intro: 'Choose which environment agency you are signing in as.',
         legend: 'Environment agency',
         continueAction: 'Continue',
-        cancelAction: 'Cancel and return to the prototype home',
+        cancelAction: 'Cancel and return to the playground home',
         error: {
           title: 'There is a problem',
           choice: 'Select an environment agency to continue'
@@ -3015,7 +3015,7 @@ export const content = {
           'Choose which approved battery treatment operator or exporter you are operating as. You can switch later.',
         legend: 'Operator',
         continueAction: 'Continue',
-        cancelAction: 'Cancel and return to the prototype home',
+        cancelAction: 'Cancel and return to the playground home',
         error: {
           title: 'There is a problem',
           choice: 'Select an operator to continue'

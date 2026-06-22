@@ -14,7 +14,7 @@ export const niContent = {
     title: 'Sign in — Northern Ireland producer',
     heading: 'Sign in to register as a Northern Ireland battery producer',
     intro:
-      'Northern Ireland producers comply with the EU Batteries Regulation (EU) 2023/1542. Enter the email address you would like to register with. This prototype does not require a password.',
+      'Northern Ireland producers comply with the EU Batteries Regulation (EU) 2023/1542. Enter the email address you would like to register with. This playground does not require a password.',
     emailLabel: 'Email address',
     continueAction: 'Continue',
     error: {
@@ -267,7 +267,7 @@ export const niContent = {
       regulatorValue: 'DAERA (Northern Ireland)',
       nextHeading: 'What happens next',
       nextBody:
-        'In a real service we would email you a confirmation. For this prototype the submission is recorded in your browser session.',
+        'In a real service we would email you a confirmation. For this playground the submission is recorded in your browser session.',
       continueAction: 'Continue to your dashboard'
     }
   },
@@ -368,7 +368,7 @@ export const niContent = {
       regulatorValue: 'DAERA (Northern Ireland)',
       nextHeading: 'What happens next',
       nextBody:
-        'In a real service your competent authority would acknowledge your return. For this prototype the submission is recorded in your browser session.',
+        'In a real service your competent authority would acknowledge your return. For this playground the submission is recorded in your browser session.',
       continueAction: 'Back to your dashboard'
     }
   }
