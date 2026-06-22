@@ -1,0 +1,28 @@
+{% extends 'layouts/page.njk' %}
+
+{% block beforeContent %}
+  {{ super() }}
+
+  <div class="app-ni-banner" data-testid="ni-banner">
+    <p class="govuk-body govuk-!-margin-bottom-1">
+      <strong>Northern Ireland producer</strong> · EU Batteries Regulation (EU) 2023/1542
+    </p>
+    <p class="govuk-body-s govuk-!-margin-bottom-2">
+      Applies in Northern Ireland from 18 February 2024 under the Windsor Framework. Turn on EUBR mode, then hover or focus a highlighted area to see the legislation it implements.
+    </p>
+    <button
+      type="button"
+      class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
+      data-eubr-toggle
+      aria-pressed="false"
+      data-testid="eubr-toggle"
+    >
+      Turn on EUBR mode
+    </button>
+  </div>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('niEubr.js') }}"></script>
+{% endblock %}

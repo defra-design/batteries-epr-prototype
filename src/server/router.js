@@ -49,6 +49,9 @@ import { operatorApplication } from './operator/application/index.js'
 import { operatorEvidence } from './operator/evidence/index.js'
 import { operatorQuarterly } from './operator/quarterly/index.js'
 import { operatorAnnualReturn } from './operator/annualReturn/index.js'
+import { niSignIn } from './ni/signIn/index.js'
+import { niDashboard } from './ni/dashboard/index.js'
+import { niOnboarding } from './ni/onboarding/index.js'
 import { serveStaticFiles } from './common/helpers/serve-static-files.js'
 
 const createPlugin = (plugins, [item, routes]) => {
@@ -118,7 +121,10 @@ export const router = {
         operatorApplication: operatorApplication.openRoutes,
         operatorEvidence: operatorEvidence.openRoutes,
         operatorQuarterly: operatorQuarterly.openRoutes,
-        operatorAnnualReturn: operatorAnnualReturn.openRoutes
+        operatorAnnualReturn: operatorAnnualReturn.openRoutes,
+        niSignIn: niSignIn.openRoutes,
+        niDashboard: niDashboard.openRoutes,
+        niOnboarding: niOnboarding.openRoutes
       }).reduce((p, entry) => createPlugin(p, entry), [])
 
       await server.register(plugins)

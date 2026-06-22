@@ -1,0 +1,22 @@
+{% extends 'ni/onboarding/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="ni-onboarding-form">
+    {% call eubrAnnotation('registration') %}
+      {{ govukTextarea({
+        label: { text: labels.textareaLabel },
+        hint: { text: labels.textareaHint },
+        id: "brandNames",
+        name: "brandNames",
+        value: textareaValue,
+        errorMessage: { text: errors.brandNames } if errors.brandNames,
+        attributes: { "data-testid": "ni-brand-names" }
+      }) }}
+    {% endcall %}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "ni-onboarding-continue" }
+    }) }}
+  </form>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'ni/_layout.njk' %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorMessage %}
+        {{ govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: [{ text: errorMessage, href: "#email" }],
+          attributes: { "data-testid": "ni-sign-in-error-summary" }
+        }) }}
+      {% endif %}
+
+      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      <p class="govuk-body">{{ intro }}</p>
+
+      <form method="post" action="{{ action }}" novalidate>
+        {{ govukInput({
+          label: { text: emailLabel },
+          id: "email",
+          name: "email",
+          type: "email",
+          value: emailValue,
+          errorMessage: { text: errorMessage } if errorMessage,
+          attributes: { "data-testid": "ni-email-input" }
+        }) }}
+
+        {{ govukButton({
+          text: continueAction,
+          attributes: { "data-testid": "ni-sign-in-submit" }
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

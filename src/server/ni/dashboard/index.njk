@@ -1,0 +1,44 @@
+{% extends 'ni/_layout.njk' %}
+
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "eubr-annotation/macro.njk" import eubrAnnotation %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      <p class="govuk-body">{{ intro }}</p>
+      {{ govukButton({
+        text: "Start registration",
+        href: startUrl,
+        attributes: { "data-testid": "ni-start-registration" }
+      }) }}
+    </div>
+  </div>
+
+  <div class="govuk-grid-row govuk-!-margin-top-4" data-testid="ni-dashboard-cards">
+    {% for card in cards %}
+      <div class="govuk-grid-column-{{ card.column }}">
+        {% call eubrAnnotation(card.eubrKey) %}
+          <div class="govuk-summary-card govuk-!-margin-bottom-4">
+            <div class="govuk-summary-card__title-wrapper">
+              <div>
+                <h2 class="govuk-summary-card__title" data-testid="ni-card-{{ card.eubrKey }}-title">
+                  {{ card.title }}
+                </h2>
+                <p class="govuk-body-s govuk-!-margin-bottom-0">{{ card.description }}</p>
+              </div>
+              <div class="app-task-cards__status">
+                {{ govukTag({ text: card.status.text, classes: card.status.classes }) }}
+              </div>
+            </div>
+            <div class="govuk-summary-card__content">
+              <p class="govuk-body">{{ card.body }}</p>
+            </div>
+          </div>
+        {% endcall %}
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

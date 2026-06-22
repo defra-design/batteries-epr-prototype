@@ -78,7 +78,8 @@ export default {
     operatorApplication: './javascripts/operator/application/entry.js',
     operatorEvidence: './javascripts/operator/evidence/entry.js',
     operatorQuarterly: './javascripts/operator/quarterly/entry.js',
-    operatorAnnualReturn: './javascripts/operator/annualReturn/entry.js'
+    operatorAnnualReturn: './javascripts/operator/annualReturn/entry.js',
+    niEubr: './javascripts/ni/eubr/entry.js'
   },
   experiments: {
     outputModule: true

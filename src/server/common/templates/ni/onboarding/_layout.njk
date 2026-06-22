@@ -1,0 +1,29 @@
+{% extends 'ni/_layout.njk' %}
+
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "eubr-annotation/macro.njk" import eubrAnnotation %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorSummary and errorSummary.length %}
+        {{ govukErrorSummary({
+          titleText: errorTitle or "There is a problem",
+          errorList: errorSummary,
+          attributes: { "data-testid": "ni-onboarding-error-summary" }
+        }) }}
+      {% endif %}
+
+      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      {% if intro %}<p class="govuk-body">{{ intro }}</p>{% endif %}
+
+      {% block stepBody %}{% endblock %}
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'ni/onboarding/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="ni-onboarding-form">
+    {% call eubrAnnotation('batteryCategories') %}
+      {{ govukCheckboxes({
+        idPrefix: "batteryCategories",
+        name: "batteryCategories",
+        errorMessage: { text: errors.isPortable } if errors.isPortable,
+        items: [
+          { value: "on", name: "isPortable", id: "isPortable", text: labels.portableLabel, hint: { text: labels.portableHint }, checked: formValues.isPortable },
+          { value: "on", name: "isLmt", id: "isLmt", text: labels.lmtLabel, hint: { text: labels.lmtHint }, checked: formValues.isLmt },
+          { value: "on", name: "isIndustrial", id: "isIndustrial", text: labels.industrialLabel, hint: { text: labels.industrialHint }, checked: formValues.isIndustrial },
+          { value: "on", name: "isElectricVehicle", id: "isElectricVehicle", text: labels.electricVehicleLabel, hint: { text: labels.electricVehicleHint }, checked: formValues.isElectricVehicle },
+          { value: "on", name: "isSli", id: "isSli", text: labels.sliLabel, hint: { text: labels.sliHint }, checked: formValues.isSli }
+        ]
+      }) }}
+    {% endcall %}
+
+    {% call eubrAnnotation('restrictedSubstances') %}
+      {{ govukInsetText({
+        html: "<strong>" + labels.restrictedHeading + "</strong><p class=\"govuk-body\">" + labels.restrictedBody + "</p>"
+      }) }}
+    {% endcall %}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "ni-onboarding-continue" }
+    }) }}
+  </form>
+{% endblock %}

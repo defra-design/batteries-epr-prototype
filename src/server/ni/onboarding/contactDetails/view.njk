@@ -1,0 +1,55 @@
+{% extends 'ni/onboarding/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="ni-onboarding-form">
+    {% call eubrAnnotation('registration') %}
+      {{ govukInput({
+        label: { text: labels.firstNameLabel },
+        id: "firstName",
+        name: "firstName",
+        value: formValues.firstName,
+        errorMessage: { text: errors.firstName } if errors.firstName
+      }) }}
+
+      {{ govukInput({
+        label: { text: labels.lastNameLabel },
+        id: "lastName",
+        name: "lastName",
+        value: formValues.lastName,
+        errorMessage: { text: errors.lastName } if errors.lastName
+      }) }}
+
+      {{ govukInput({
+        label: { text: labels.positionLabel },
+        id: "position",
+        name: "position",
+        value: formValues.position,
+        errorMessage: { text: errors.position } if errors.position
+      }) }}
+
+      {{ govukInput({
+        label: { text: labels.emailLabel },
+        id: "email",
+        name: "email",
+        type: "email",
+        value: formValues.email,
+        errorMessage: { text: errors.email } if errors.email
+      }) }}
+
+      {{ govukInput({
+        label: { text: labels.phoneLabel },
+        id: "phone",
+        name: "phone",
+        type: "tel",
+        classes: "govuk-input--width-20",
+        value: formValues.phone,
+        errorMessage: { text: errors.phone } if errors.phone
+      }) }}
+    {% endcall %}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "ni-onboarding-continue" }
+    }) }}
+  </form>
+{% endblock %}

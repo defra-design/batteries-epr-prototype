@@ -1,0 +1,14 @@
+{% macro eubrAnnotation(key) %}
+  {% set article = eubr[key] %}
+  <div
+    class="app-eubr-annotation"
+    data-eubr="{{ key }}"
+    data-eubr-articles="{{ article.articles }}"
+    data-eubr-title="{{ article.title }}"
+    data-eubr-summary="{{ article.summary }}"
+    data-eubr-applies-from="{{ article.appliesFrom }}"
+    aria-label="EU Batteries Regulation {{ article.articles }} — {{ article.title }}"
+  >
+    {{ caller() }}
+  </div>
+{% endmacro %}

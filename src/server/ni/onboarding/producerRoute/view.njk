@@ -1,0 +1,22 @@
+{% extends 'ni/onboarding/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="ni-onboarding-form">
+    {% call eubrAnnotation('epr') %}
+      {{ govukRadios({
+        idPrefix: "producerRoute",
+        name: "producerRoute",
+        errorMessage: { text: errors.producerRoute } if errors.producerRoute,
+        items: [
+          { value: "self", text: labels.selfLabel, hint: { text: labels.selfHint }, checked: formValues.producerRoute == "self", attributes: { "data-testid": "ni-route-self" } },
+          { value: "pro", text: labels.proLabel, hint: { text: labels.proHint }, checked: formValues.producerRoute == "pro", attributes: { "data-testid": "ni-route-pro" } }
+        ]
+      }) }}
+    {% endcall %}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "ni-onboarding-continue" }
+    }) }}
+  </form>
+{% endblock %}
