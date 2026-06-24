@@ -1,5 +1,35 @@
 import { storage } from '../storage.js'
 
+const COMPLETED = { text: 'Completed', classes: 'govuk-tag--green' }
+const SUBMITTED = { text: 'Submitted', classes: 'govuk-tag--blue' }
+const NOT_STARTED = { text: 'Not started', classes: 'govuk-tag--grey' }
+
+const ANNUAL_RETURN_CARDS = new Set(['reporting', 'collectionTargets'])
+
+const statusFor = (key, registration, hasReturnThisYear) => {
+  if (ANNUAL_RETURN_CARDS.has(key)) {
+    return hasReturnThisYear ? SUBMITTED : NOT_STARTED
+  }
+  return registration ? COMPLETED : NOT_STARTED
+}
+
+const setCardStatus = (doc, wrapper, status) => {
+  const tag = doc.createElement('strong')
+  tag.className = `govuk-tag ${status.classes}`
+  tag.textContent = status.text
+  wrapper.replaceChildren(tag)
+}
+
+const applyCardStatuses = (doc, registration, returns, currentPeriod) => {
+  const hasReturnThisYear = returns.some(
+    (entry) => entry.period === currentPeriod
+  )
+  doc.querySelectorAll('[data-ni-card-status]').forEach((wrapper) => {
+    const key = wrapper.getAttribute('data-ni-card-status')
+    setCardStatus(doc, wrapper, statusFor(key, registration, hasReturnThisYear))
+  })
+}
+
 const cell = (doc, text) => {
   const td = doc.createElement('td')
   td.className = 'govuk-table__cell'
@@ -36,4 +66,8 @@ export const initNiDashboard = (doc = globalThis.document) => {
 
   const returns = storage.listAnnualReturns()
   if (returns.length > 0) renderAnnualReturns(doc, returns)
+
+  const cards = doc.querySelector('[data-testid="ni-dashboard-cards"]')
+  const currentPeriod = cards.getAttribute('data-ni-current-period')
+  applyCardStatuses(doc, registration, returns, currentPeriod)
 }

@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { performReset, wireResetButton } from './index.js'
 import { storage } from '../storage-adapter.js'
+import { storage as niStorage } from '../ni/storage.js'
 
 let assignSpy
 let location
@@ -26,11 +27,16 @@ describe('performReset', () => {
       companyName: 'Acme',
       registeredAddress: { postcode: 'M1 4AA' }
     })
+    niStorage.saveRegistration({ bprn: 'NIP1234567' })
+    niStorage.saveAnnualReturn({ period: '2026', reference: 'NI-AR-1' })
     expect(storage.getCurrentUser()).not.toBeNull()
+    expect(niStorage.getRegistration()).not.toBeNull()
 
     performReset(location)
 
     expect(storage.getCurrentUser()).toBeNull()
+    expect(niStorage.getRegistration()).toBeNull()
+    expect(niStorage.listAnnualReturns()).toEqual([])
     expect(assignSpy).toHaveBeenCalledWith('/')
     const seededProducers = JSON.parse(
       globalThis.localStorage.getItem('npwd-batteries:producers')

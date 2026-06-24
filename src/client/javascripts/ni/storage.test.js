@@ -123,6 +123,22 @@ describe('ni storage — readJsonScript', () => {
   })
 })
 
+describe('ni storage — resetAllData', () => {
+  test('removes only ni-batteries keys', () => {
+    saveRegistration({ bprn: 'NIP1234567' })
+    saveAnnualReturn({ period: '2026', reference: 'NI-AR-1' })
+    globalThis.localStorage.setItem('npwd-batteries:producers', '{}')
+
+    storage.resetAllData()
+
+    expect(getRegistration()).toBeNull()
+    expect(listAnnualReturns()).toEqual([])
+    expect(globalThis.localStorage.getItem('npwd-batteries:producers')).toBe(
+      '{}'
+    )
+  })
+})
+
 describe('ni storage — bundled object', () => {
   test('exposes every helper', () => {
     expect(Object.keys(storage).sort()).toEqual(
@@ -131,6 +147,7 @@ describe('ni storage — bundled object', () => {
         'getRegistration',
         'listAnnualReturns',
         'readJsonScript',
+        'resetAllData',
         'saveAnnualReturn',
         'saveRegistration'
       ].sort()

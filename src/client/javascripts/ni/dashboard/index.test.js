@@ -10,7 +10,18 @@ const DASHBOARD_MARKUP = `
   <table data-ni-annual-returns-table hidden>
     <tbody data-ni-annual-returns-body></tbody>
   </table>
+  <div data-testid="ni-dashboard-cards" data-ni-current-period="2026">
+    <div data-ni-card-status="registration">
+      <strong class="govuk-tag govuk-tag--grey">Not started</strong>
+    </div>
+    <div data-ni-card-status="reporting">
+      <strong class="govuk-tag govuk-tag--grey">Not started</strong>
+    </div>
+  </div>
 `
+
+const cardTag = (key) =>
+  globalThis.document.querySelector(`[data-ni-card-status="${key}"] .govuk-tag`)
 
 beforeEach(() => {
   globalThis.localStorage.clear()
@@ -38,6 +49,10 @@ describe('initNiDashboard', () => {
     expect(status.textContent).toContain('No registration')
     expect(empty.hidden).toBe(false)
     expect(table.hidden).toBe(true)
+
+    expect(cardTag('registration').textContent).toBe('Not started')
+    expect(cardTag('registration').className).toContain('govuk-tag--grey')
+    expect(cardTag('reporting').textContent).toBe('Not started')
   })
 
   test('renders the registration and the annual returns from the store', () => {
@@ -65,5 +80,10 @@ describe('initNiDashboard', () => {
     expect(table.hidden).toBe(false)
     expect(rows).toHaveLength(1)
     expect(rows[0].textContent).toContain('NI-AR-100001')
+
+    expect(cardTag('registration').textContent).toBe('Completed')
+    expect(cardTag('registration').className).toContain('govuk-tag--green')
+    expect(cardTag('reporting').textContent).toBe('Submitted')
+    expect(cardTag('reporting').className).toContain('govuk-tag--blue')
   })
 })

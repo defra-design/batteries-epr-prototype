@@ -40,7 +40,7 @@
     </div>
   </div>
 
-  <div class="govuk-grid-row govuk-!-margin-top-4" data-testid="ni-dashboard-cards">
+  <div class="govuk-grid-row govuk-!-margin-top-4" data-testid="ni-dashboard-cards" data-ni-current-period="{{ currentPeriod }}">
     {% for card in cards %}
       <div class="govuk-grid-column-{{ card.column }}">
         {% call eubrAnnotation(card.eubrKey) %}
@@ -52,7 +52,7 @@
                 </h2>
                 <p class="govuk-body-s govuk-!-margin-bottom-0">{{ card.description }}</p>
               </div>
-              <div class="app-task-cards__status">
+              <div class="app-task-cards__status" data-ni-card-status="{{ card.eubrKey }}">
                 {{ govukTag({ text: card.status.text, classes: card.status.classes }) }}
               </div>
             </div>

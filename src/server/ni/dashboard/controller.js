@@ -1,5 +1,6 @@
 import { niContent } from '../../../config/ni-content.js'
 import { paths } from '../../../config/paths.js'
+import { getCompliancePeriod } from '../../../config/compliance-period.js'
 
 export const niDashboardController = {
   handler(request, h) {
@@ -10,6 +11,7 @@ export const niDashboardController = {
       heading: pageContent.heading,
       intro: pageContent.intro,
       cards: pageContent.cards,
+      currentPeriod: getCompliancePeriod(request),
       startUrl: paths.niOnboardingCompanyDetails,
       cardLinks: {
         registration: {

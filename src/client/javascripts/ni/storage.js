@@ -64,11 +64,21 @@ export const readJsonScript = (doc, id) => {
   return safeParse(element.textContent)
 }
 
+export const resetAllData = () => {
+  const keys = []
+  for (let index = 0; index < globalThis.localStorage.length; index += 1) {
+    const key = globalThis.localStorage.key(index)
+    if (key.startsWith(KEY_PREFIX)) keys.push(key)
+  }
+  keys.forEach((key) => globalThis.localStorage.removeItem(key))
+}
+
 export const storage = {
   saveRegistration,
   getRegistration,
   saveAnnualReturn,
   listAnnualReturns,
   getAnnualReturn,
-  readJsonScript
+  readJsonScript,
+  resetAllData
 }

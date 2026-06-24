@@ -1,7 +1,9 @@
 import { storage } from '../storage-adapter.js'
+import { storage as niStorage } from '../ni/storage.js'
 
 export const performReset = (loc = globalThis.location) => {
   storage.resetAllData()
+  niStorage.resetAllData()
   storage.seedDemoData()
   loc.assign('/')
 }
