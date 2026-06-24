@@ -18,6 +18,16 @@
       }) }}
 
       {{ govukInput({
+        label: { text: labels.lmtLabel },
+        id: "colLmt",
+        name: "colLmt",
+        classes: "govuk-input--width-5",
+        suffix: { text: labels.tonnesSuffix },
+        value: formValues.colLmt,
+        errorMessage: { text: errors.colLmt } if errors.colLmt
+      }) }}
+
+      {{ govukInput({
         label: { text: labels.industrialLabel },
         id: "colIndustrial",
         name: "colIndustrial",
@@ -25,6 +35,16 @@
         suffix: { text: labels.tonnesSuffix },
         value: formValues.colIndustrial,
         errorMessage: { text: errors.colIndustrial } if errors.colIndustrial
+      }) }}
+
+      {{ govukInput({
+        label: { text: labels.evLabel },
+        id: "colEv",
+        name: "colEv",
+        classes: "govuk-input--width-5",
+        suffix: { text: labels.tonnesSuffix },
+        value: formValues.colEv,
+        errorMessage: { text: errors.colEv } if errors.colEv
       }) }}
 
       {{ govukInput({

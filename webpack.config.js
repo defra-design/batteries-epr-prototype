@@ -79,7 +79,11 @@ export default {
     operatorEvidence: './javascripts/operator/evidence/entry.js',
     operatorQuarterly: './javascripts/operator/quarterly/entry.js',
     operatorAnnualReturn: './javascripts/operator/annualReturn/entry.js',
-    niEubr: './javascripts/ni/eubr/entry.js'
+    niEubr: './javascripts/ni/eubr/entry.js',
+    niOnboardingPersist: './javascripts/ni/onboarding/persist/entry.js',
+    niAnnualReturnPersist: './javascripts/ni/annualReturn/persist/entry.js',
+    niDashboard: './javascripts/ni/dashboard/entry.js',
+    niObligation: './javascripts/ni/obligation/entry.js'
   },
   experiments: {
     outputModule: true

@@ -1,5 +1,6 @@
 import { niContent } from '../../../../config/ni-content.js'
 import { paths } from '../../../../config/paths.js'
+import { getCompliancePeriod } from '../../../../config/compliance-period.js'
 import { readData, saveData } from '../shared.js'
 
 const allocateBprn = (request) => {
@@ -14,11 +15,17 @@ const allocateBprn = (request) => {
 export const confirmationController = {
   handler(request, h) {
     const pageContent = niContent.onboarding.confirmation
+    const bprn = allocateBprn(request)
 
     return h.view('ni/onboarding/confirmation/view', {
       pageTitle: pageContent.title,
       labels: pageContent,
-      bprn: allocateBprn(request),
+      bprn,
+      persistPayload: {
+        ...readData(request),
+        period: getCompliancePeriod(request),
+        status: 'Registered'
+      },
       dashboardUrl: paths.niDashboard
     })
   }

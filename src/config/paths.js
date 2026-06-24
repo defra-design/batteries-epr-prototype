@@ -44,6 +44,7 @@ export const paths = {
   niAnnualReturnRecycling: '/ni/annual-return/recycling-efficiency',
   niAnnualReturnDeclaration: '/ni/annual-return/declaration',
   niAnnualReturnConfirmation: '/ni/annual-return/confirmation',
+  niObligation: '/ni/obligation',
 
   onboarding: '/onboarding/{step}',
   onboardingCompanyDetails: '/onboarding/company-details',

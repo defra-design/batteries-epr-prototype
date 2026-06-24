@@ -14,14 +14,22 @@ import {
 } from '../shared.js'
 
 const STEP_ID = 'placedOnMarket'
-const FIELDS = ['pomPortable', 'pomIndustrial', 'pomAutomotive']
+const FIELDS = [
+  'pomPortable',
+  'pomLmt',
+  'pomIndustrial',
+  'pomEv',
+  'pomAutomotive'
+]
 
 const tonnes = joi.number().min(0).allow('')
 
 const schema = joi
   .object({
     pomPortable: tonnes,
+    pomLmt: tonnes,
     pomIndustrial: tonnes,
+    pomEv: tonnes,
     pomAutomotive: tonnes
   })
   .custom((value, helpers) => {
@@ -63,7 +71,9 @@ export const placedOnMarketController = {
           const pageContent = niContent.annualReturn.placedOnMarket
           const list = collectErrors(err, {
             pomPortable: pageContent.error.number,
+            pomLmt: pageContent.error.number,
             pomIndustrial: pageContent.error.number,
+            pomEv: pageContent.error.number,
             pomAutomotive: pageContent.error.number
           })
           if (!list.length && err.details.some((d) => d.type === 'atLeastOne')) {

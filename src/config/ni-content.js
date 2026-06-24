@@ -66,8 +66,26 @@ export const niContent = {
         description: 'Report batteries placed on the market and collected.',
         status: { text: 'Not started', classes: 'govuk-tag--grey' },
         body: 'Report your placed-on-market, collection and recycling data to the competent authority each year.'
+      },
+      {
+        eubrKey: 'collectionTargets',
+        column: 'full',
+        title: 'Collection and recycling obligation',
+        description: 'See the obligation calculated from your annual returns.',
+        status: { text: 'Not started', classes: 'govuk-tag--grey' },
+        body: 'View your collection targets and recycling efficiency, calculated from the annual returns you have submitted.'
       }
     ]
+  },
+  obligation: {
+    title: 'Your obligation — Northern Ireland producer',
+    heading: 'Your collection and recycling obligation',
+    intro:
+      'This obligation is calculated from the annual returns you have submitted. Portable batteries have a percentage collection target under Article 59, measured against the average tonnage placed on the market over the reporting year and the two preceding years; recycling efficiency follows Annex XII of the EU Batteries Regulation.',
+    note:
+      'Industrial, automotive and EV batteries have a take-back obligation under Article 61: you must accept all returned waste batteries free of charge, so there is no percentage collection target for these streams.',
+    empty:
+      'Submit an annual return to see your calculated collection and recycling obligation.'
   },
   onboarding: {
     companyDetails: {
@@ -294,8 +312,10 @@ export const niContent = {
       intro:
         'Enter the total weight of batteries you placed on the Northern Ireland market during the reporting period.',
       portableLabel: 'Portable batteries',
+      lmtLabel: 'Light means of transport (LMT) batteries',
       industrialLabel: 'Industrial batteries',
-      automotiveLabel: 'Automotive and EV batteries',
+      evLabel: 'Electric vehicle (EV) batteries',
+      automotiveLabel: 'Automotive (SLI) batteries',
       tonnesSuffix: 'tonnes',
       continueAction: 'Continue',
       error: {
@@ -313,8 +333,10 @@ export const niContent = {
       targetsBody:
         'Producers must meet rising collection targets for portable batteries (45% rising to 73%) and LMT batteries, and take back industrial, automotive and EV batteries free of charge.',
       portableLabel: 'Portable batteries collected',
+      lmtLabel: 'LMT batteries collected',
       industrialLabel: 'Industrial batteries taken back',
-      automotiveLabel: 'Automotive and EV batteries taken back',
+      evLabel: 'Electric vehicle (EV) batteries taken back',
+      automotiveLabel: 'Automotive (SLI) batteries taken back',
       tonnesSuffix: 'tonnes',
       continueAction: 'Continue',
       error: {

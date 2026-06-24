@@ -20,7 +20,9 @@ const tonnes = joi.number().min(0).allow('')
 const schema = joi
   .object({
     colPortable: tonnes,
+    colLmt: tonnes,
     colIndustrial: tonnes,
+    colEv: tonnes,
     colAutomotive: tonnes
   })
   .options({ stripUnknown: true })
@@ -56,7 +58,9 @@ export const collectionController = {
           const pageContent = niContent.annualReturn.collection
           const list = collectErrors(err, {
             colPortable: pageContent.error.number,
+            colLmt: pageContent.error.number,
             colIndustrial: pageContent.error.number,
+            colEv: pageContent.error.number,
             colAutomotive: pageContent.error.number
           })
           flashErrors(request, STEP_ID, list, request.payload)

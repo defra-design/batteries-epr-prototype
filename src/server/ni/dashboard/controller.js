@@ -31,6 +31,10 @@ export const niDashboardController = {
         reporting: {
           href: paths.niAnnualReturnCategories,
           text: 'Start annual return'
+        },
+        collectionTargets: {
+          href: paths.niObligation,
+          text: 'View your obligation'
         }
       }
     })

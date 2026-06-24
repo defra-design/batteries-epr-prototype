@@ -17,6 +17,29 @@
     </div>
   </div>
 
+  <div class="govuk-grid-row" data-testid="ni-registration-status">
+    <div class="govuk-grid-column-two-thirds">
+      <p class="govuk-body" data-ni-registration-status>No registration submitted yet.</p>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row" data-testid="ni-annual-returns">
+    <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-m">Annual returns</h2>
+      <p class="govuk-body" data-ni-annual-returns-empty>No annual returns submitted yet.</p>
+      <table class="govuk-table" data-ni-annual-returns-table hidden>
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Compliance period</th>
+            <th scope="col" class="govuk-table__header">Reference</th>
+            <th scope="col" class="govuk-table__header">Submitted</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body" data-ni-annual-returns-body></tbody>
+      </table>
+    </div>
+  </div>
+
   <div class="govuk-grid-row govuk-!-margin-top-4" data-testid="ni-dashboard-cards">
     {% for card in cards %}
       <div class="govuk-grid-column-{{ card.column }}">
@@ -46,4 +69,9 @@
       </div>
     {% endfor %}
   </div>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('niDashboard.js') }}"></script>
 {% endblock %}

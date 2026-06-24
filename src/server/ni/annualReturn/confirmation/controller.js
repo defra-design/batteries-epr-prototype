@@ -15,12 +15,19 @@ const allocateReference = (request) => {
 export const confirmationController = {
   handler(request, h) {
     const pageContent = niContent.annualReturn.confirmation
+    const reference = allocateReference(request)
+    const period = getCompliancePeriod(request)
 
     return h.view('ni/annualReturn/confirmation/view', {
       pageTitle: pageContent.title,
       labels: pageContent,
-      reference: allocateReference(request),
-      period: getCompliancePeriod(request),
+      reference,
+      period,
+      persistPayload: {
+        ...readData(request),
+        period,
+        status: 'Submitted'
+      },
       dashboardUrl: paths.niDashboard
     })
   }

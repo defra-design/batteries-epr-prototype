@@ -32,4 +32,11 @@
       }) }}
     </div>
   </div>
+
+  <script type="application/json" id="ni-persist-payload">{{ persistPayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('niOnboardingPersist.js') }}"></script>
 {% endblock %}
