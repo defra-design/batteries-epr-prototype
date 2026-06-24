@@ -72,13 +72,51 @@ describe('initNiObligation', () => {
     )
     expect(lmt.textContent).toContain('Not yet in force')
 
+    const portableTargetAnnotation = portable.querySelector('[data-eubr]')
+    expect(portableTargetAnnotation.className).toBe('app-eubr-annotation')
+    expect(portableTargetAnnotation.getAttribute('data-eubr-articles')).toBe(
+      'Article 59'
+    )
+    expect(portableTargetAnnotation.getAttribute('data-eubr-title')).toContain(
+      'Separate collection target'
+    )
+
+    const recyclingAnnotation = results.querySelector(
+      '[data-eubr-articles="Article 71 and Annex XII"]'
+    )
+    expect(recyclingAnnotation).not.toBeNull()
+
+    expect(
+      portable.querySelector('[data-eubr="portable-avg"]').getAttribute(
+        'data-eubr-articles'
+      )
+    ).toBe('Article 59(3)')
+    expect(
+      portable.querySelector('[data-eubr="portable-required"]')
+    ).not.toBeNull()
+    expect(portable.querySelectorAll('[data-eubr]')).toHaveLength(3)
+
     const industrial = globalThis.document.querySelector(
       '[data-ni-obligation-stream="industrial"]'
     )
     expect(industrial.textContent).toContain('Take-back')
+    expect(industrial.querySelectorAll('[data-eubr]')).toHaveLength(1)
     expect(industrial.textContent).toContain('All returned')
     expect(industrial.textContent).toContain('—')
 
     expect(results.textContent).toContain('Met')
+  })
+
+  test('seeds sample data when the seed query param is present', () => {
+    const result = initNiObligation(globalThis.document, {
+      location: { search: '?seed' }
+    })
+
+    expect(result.hasData).toBe(true)
+    expect(result.bprn).toBe('NIP1000001')
+    expect(result.periods.map((p) => p.period)).toEqual(['2028', '2027', '2026'])
+    expect(
+      globalThis.document.querySelector('[data-ni-obligation-results]').hidden
+    ).toBe(false)
   })
 })

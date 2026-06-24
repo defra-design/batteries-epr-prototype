@@ -100,12 +100,20 @@ describe('calculatePeriod', () => {
     expect(portable.shortfall).toBe(35)
     expect(portable.status).toBe('shortfall')
 
+    expect(portable.legislation.articles).toBe('Article 59')
+    expect(portable.averageLegislation.articles).toBe('Article 59(3)')
+    expect(portable.requiredLegislation.articles).toBe('Article 59')
+    expect(portable.requiredLegislation.summary).toContain('45%')
+
     const lmt = result.streams.find((s) => s.key === 'lmt')
     expect(lmt.model).toBe('collection-target')
     expect(lmt.status).toBe('not-yet')
     expect(lmt.targetLabel).toBe('Not yet in force')
     expect(lmt.requiredCollection).toBeNull()
     expect(lmt.shortfall).toBeNull()
+    expect(lmt.legislation.articles).toBe('Article 60')
+    expect(lmt.averageLegislation.articles).toBe('Article 60(3)')
+    expect(lmt.requiredLegislation).toBeNull()
 
     const industrial = result.streams.find((s) => s.key === 'industrial')
     expect(industrial.model).toBe('take-back')
@@ -113,13 +121,17 @@ describe('calculatePeriod', () => {
     expect(industrial.requiredCollection).toBeNull()
     expect(industrial.shortfall).toBeNull()
     expect(industrial.status).toBe('take-back')
+    expect(industrial.averageLegislation).toBeNull()
+    expect(industrial.requiredLegislation).toBeNull()
 
     const ev = result.streams.find((s) => s.key === 'electricVehicle')
     expect(ev.model).toBe('take-back')
     expect(ev.status).toBe('take-back')
+    expect(ev.legislation.articles).toBe('Article 61')
 
     const lithium = result.recycling.find((r) => r.key === 'lithium')
     expect(lithium.status).toBe('shortfall')
+    expect(lithium.legislation.articles).toBe('Article 71 and Annex XII')
 
     expect(result.totals.requiredCollection).toBe(45)
     expect(result.totals.shortfall).toBe(35)

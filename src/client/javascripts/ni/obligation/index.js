@@ -1,5 +1,6 @@
 import { storage } from '../storage.js'
 import { calculateObligation } from './calculator.js'
+import { seedSampleData } from './seed.js'
 
 const TAG_BY_STATUS = {
   met: { className: 'govuk-tag govuk-tag--green', text: 'Met' },
@@ -17,6 +18,30 @@ const cell = (doc, content) => {
   td.textContent = content
   return td
 }
+
+const annotatedCell = (doc, content, key, legislation) => {
+  const td = doc.createElement('td')
+  td.className = 'govuk-table__cell'
+  const annotation = doc.createElement('span')
+  annotation.className = 'app-eubr-annotation'
+  annotation.setAttribute('data-eubr', key)
+  annotation.setAttribute('data-eubr-articles', legislation.articles)
+  annotation.setAttribute('data-eubr-title', legislation.title)
+  annotation.setAttribute('data-eubr-summary', legislation.summary)
+  annotation.setAttribute('data-eubr-applies-from', legislation.appliesFrom)
+  annotation.setAttribute(
+    'aria-label',
+    `EU Batteries Regulation ${legislation.articles} — ${legislation.title}`
+  )
+  annotation.textContent = content
+  td.appendChild(annotation)
+  return td
+}
+
+const maybeAnnotatedCell = (doc, content, key, legislation) =>
+  legislation
+    ? annotatedCell(doc, content, key, legislation)
+    : cell(doc, content)
 
 const statusCell = (doc, status) => {
   const td = doc.createElement('td')
@@ -61,10 +86,26 @@ const collectionRow = (doc, stream) => {
   tr.className = 'govuk-table__row'
   tr.setAttribute('data-ni-obligation-stream', stream.key)
   tr.appendChild(cell(doc, stream.label))
-  tr.appendChild(cell(doc, stream.targetLabel))
+  tr.appendChild(
+    annotatedCell(doc, stream.targetLabel, stream.key, stream.legislation)
+  )
   tr.appendChild(cell(doc, formatTonnes(stream.placedOnMarket)))
-  tr.appendChild(cell(doc, formatTonnes(stream.averagePlacedOnMarket)))
-  tr.appendChild(cell(doc, formatTonnes(stream.requiredCollection)))
+  tr.appendChild(
+    maybeAnnotatedCell(
+      doc,
+      formatTonnes(stream.averagePlacedOnMarket),
+      `${stream.key}-avg`,
+      stream.averageLegislation
+    )
+  )
+  tr.appendChild(
+    maybeAnnotatedCell(
+      doc,
+      formatTonnes(stream.requiredCollection),
+      `${stream.key}-required`,
+      stream.requiredLegislation
+    )
+  )
   tr.appendChild(cell(doc, formatTonnes(stream.actualCollection)))
   tr.appendChild(cell(doc, formatTonnes(stream.shortfall)))
   tr.appendChild(statusCell(doc, stream.status))
@@ -76,7 +117,9 @@ const recyclingRow = (doc, row) => {
   tr.className = 'govuk-table__row'
   tr.appendChild(cell(doc, row.label))
   tr.appendChild(cell(doc, formatPercent(row.achievedPercent)))
-  tr.appendChild(cell(doc, formatPercent(row.targetPercent)))
+  tr.appendChild(
+    annotatedCell(doc, formatPercent(row.targetPercent), row.key, row.legislation)
+  )
   tr.appendChild(statusCell(doc, row.status))
   return tr
 }
@@ -138,7 +181,13 @@ const renderResults = (doc, result) => {
   )
 }
 
-export const initNiObligation = (doc = globalThis.document) => {
+export const initNiObligation = (
+  doc = globalThis.document,
+  win = globalThis.window
+) => {
+  if (new URLSearchParams(win.location.search).has('seed')) {
+    seedSampleData(storage)
+  }
   const result = calculateObligation({
     registration: storage.getRegistration(),
     annualReturns: storage.listAnnualReturns()

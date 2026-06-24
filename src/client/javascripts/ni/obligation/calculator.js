@@ -41,6 +41,14 @@ export const averagePlacedOnMarket = (pomIndex, field, year) => {
   }
 }
 
+const averageLegislationFor = (stream) => ({
+  articles: stream.calculationArticles,
+  title: 'Three-year average placed on the market',
+  summary:
+    'The collection rate is measured against the average annual tonnage placed on the market in the reporting year and the two preceding years.',
+  appliesFrom: stream.legislation.appliesFrom
+})
+
 const collectionTargetResult = (stream, year, pomIndex, actualCollection) => {
   const rate = collectionRate(stream.thresholds, year)
   const { average, yearsAveraged } = averagePlacedOnMarket(
@@ -48,13 +56,16 @@ const collectionTargetResult = (stream, year, pomIndex, actualCollection) => {
     stream.pomField,
     year
   )
+  const averageLegislation = averageLegislationFor(stream)
   if (rate === null) {
     return {
       targetLabel: 'Not yet in force',
       ratePercent: null,
       averagePlacedOnMarket: average,
       yearsAveraged,
+      averageLegislation,
       requiredCollection: null,
+      requiredLegislation: null,
       shortfall: null,
       status: 'not-yet'
     }
@@ -67,7 +78,14 @@ const collectionTargetResult = (stream, year, pomIndex, actualCollection) => {
     ratePercent,
     averagePlacedOnMarket: average,
     yearsAveraged,
+    averageLegislation,
     requiredCollection,
+    requiredLegislation: {
+      articles: stream.legislation.articles,
+      title: 'Required collection',
+      summary: `Calculated as the ${ratePercent}% collection target applied to the three-year average placed on the market.`,
+      appliesFrom: stream.legislation.appliesFrom
+    },
     shortfall,
     status: shortfall === 0 ? 'met' : 'shortfall'
   }
@@ -78,7 +96,9 @@ const takeBackResult = () => ({
   ratePercent: null,
   averagePlacedOnMarket: null,
   yearsAveraged: null,
+  averageLegislation: null,
   requiredCollection: null,
+  requiredLegislation: null,
   shortfall: null,
   status: 'take-back'
 })
@@ -95,6 +115,7 @@ const calculateStream = (stream, year, placed, pomIndex, collected) => {
     label: stream.label,
     model: stream.model,
     basis: stream.basis,
+    legislation: stream.legislation,
     placedOnMarket,
     actualCollection,
     ...outcome
@@ -120,6 +141,7 @@ export const calculatePeriod = (
     return {
       key: stream.key,
       label: stream.label,
+      legislation: stream.legislation,
       targetPercent: stream.targetPercent,
       achievedPercent,
       met,
