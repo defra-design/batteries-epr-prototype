@@ -2,7 +2,30 @@ const SAMPLE_REGISTRATION = {
   bprn: 'NIP1000001',
   companyName: 'Demo Batteries Ltd',
   producerRoute: 'self',
-  status: 'Registered'
+  status: 'Registered',
+  batteryCategories: {
+    isPortable: true,
+    isLmt: true,
+    isIndustrial: true,
+    isElectricVehicle: true,
+    isSli: false
+  },
+  carbonFootprint: {
+    carbonFootprintValue: '12.4',
+    performanceClass: 'B',
+    recycledCobalt: '18',
+    recycledLithium: '4',
+    recycledNickel: '7',
+    recycledLead: '90'
+  },
+  batteryPassport: {
+    passportCarrierId: 'BP-NI-000123',
+    separateCollection: true,
+    capacity: true,
+    ce: true,
+    hazardous: false,
+    removability: 'na'
+  }
 }
 
 const SAMPLE_RETURNS = [

@@ -54,6 +54,7 @@ import { niDashboard } from './ni/dashboard/index.js'
 import { niOnboarding } from './ni/onboarding/index.js'
 import { niAnnualReturn } from './ni/annualReturn/index.js'
 import { niObligation } from './ni/obligation/index.js'
+import { niProductRequirements } from './ni/productRequirements/index.js'
 import { serveStaticFiles } from './common/helpers/serve-static-files.js'
 
 const createPlugin = (plugins, [item, routes]) => {
@@ -128,7 +129,8 @@ export const router = {
         niDashboard: niDashboard.openRoutes,
         niOnboarding: niOnboarding.openRoutes,
         niAnnualReturn: niAnnualReturn.openRoutes,
-        niObligation: niObligation.openRoutes
+        niObligation: niObligation.openRoutes,
+        niProductRequirements: niProductRequirements.openRoutes
       }).reduce((p, entry) => createPlugin(p, entry), [])
 
       await server.register(plugins)

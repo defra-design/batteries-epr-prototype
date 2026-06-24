@@ -1,6 +1,6 @@
 import { storage } from '../storage.js'
 import { calculateObligation } from './calculator.js'
-import { seedSampleData } from './seed.js'
+import { seedSampleData } from '../seed.js'
 
 const TAG_BY_STATUS = {
   met: { className: 'govuk-tag govuk-tag--green', text: 'Met' },

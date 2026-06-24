@@ -74,8 +74,24 @@ export const niContent = {
         description: 'See the obligation calculated from your annual returns.',
         status: { text: 'Not started', classes: 'govuk-tag--grey' },
         body: 'View your collection targets and recycling efficiency, calculated from the annual returns you have submitted.'
+      },
+      {
+        eubrKey: 'recycledContent',
+        column: 'full',
+        title: 'Battery product requirements',
+        description: 'Carbon footprint, recycled content and battery passport.',
+        status: { text: 'Not started', classes: 'govuk-tag--grey' },
+        body: 'See which carbon footprint, recycled-content and battery-passport requirements apply to your batteries, based on your registration.'
       }
     ]
+  },
+  productRequirements: {
+    title: 'Battery product requirements — Northern Ireland producer',
+    heading: 'Your battery product requirements',
+    intro:
+      'These EU Batteries Regulation product obligations apply to electric-vehicle, LMT and industrial batteries. Status is calculated from the details you gave during registration. Turn on EUBR mode and hover a heading to see the legislation it comes from.',
+    empty:
+      'Complete your registration to see which carbon footprint, recycled content and battery passport requirements apply to you.'
   },
   obligation: {
     title: 'Your obligation — Northern Ireland producer',

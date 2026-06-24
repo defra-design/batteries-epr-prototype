@@ -35,6 +35,10 @@ export const niDashboardController = {
         collectionTargets: {
           href: paths.niObligation,
           text: 'View your obligation'
+        },
+        recycledContent: {
+          href: paths.niProductRequirements,
+          text: 'View product requirements'
         }
       }
     })

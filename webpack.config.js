@@ -83,7 +83,8 @@ export default {
     niOnboardingPersist: './javascripts/ni/onboarding/persist/entry.js',
     niAnnualReturnPersist: './javascripts/ni/annualReturn/persist/entry.js',
     niDashboard: './javascripts/ni/dashboard/entry.js',
-    niObligation: './javascripts/ni/obligation/entry.js'
+    niObligation: './javascripts/ni/obligation/entry.js',
+    niProductRequirements: './javascripts/ni/productRequirements/entry.js'
   },
   experiments: {
     outputModule: true

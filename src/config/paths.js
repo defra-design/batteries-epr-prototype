@@ -45,6 +45,7 @@ export const paths = {
   niAnnualReturnDeclaration: '/ni/annual-return/declaration',
   niAnnualReturnConfirmation: '/ni/annual-return/confirmation',
   niObligation: '/ni/obligation',
+  niProductRequirements: '/ni/product-requirements',
 
   onboarding: '/onboarding/{step}',
   onboardingCompanyDetails: '/onboarding/company-details',
