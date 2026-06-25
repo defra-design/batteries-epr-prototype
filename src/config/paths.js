@@ -126,7 +126,8 @@ export const paths = {
 
   devReset: '/dev/reset',
   devTimeTravel: '/dev/time-travel',
-  devSchemes: '/dev/schemes'
+  devSchemes: '/dev/schemes',
+  devData: '/dev/data'
 }
 /* v8 ignore stop */
 

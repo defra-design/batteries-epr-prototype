@@ -22,6 +22,7 @@ import { leaveScheme } from './leaveScheme/index.js'
 import { devReset } from './devReset/index.js'
 import { devTimeTravel } from './devTimeTravel/index.js'
 import { devSchemes } from './devSchemes/index.js'
+import { devData } from './devData/index.js'
 import { complianceSchemeDashboard } from './complianceScheme/dashboard/index.js'
 import { complianceSchemeSignIn } from './complianceScheme/signIn/index.js'
 import { complianceSchemeApplication } from './complianceScheme/application/index.js'
@@ -98,6 +99,7 @@ export const router = {
         devReset: devReset.openRoutes,
         devTimeTravel: devTimeTravel.openRoutes,
         devSchemes: devSchemes.openRoutes,
+        devData: devData.openRoutes,
         complianceSchemeDashboard: complianceSchemeDashboard.openRoutes,
         complianceSchemeSignIn: complianceSchemeSignIn.openRoutes,
         complianceSchemeApplication: complianceSchemeApplication.openRoutes,

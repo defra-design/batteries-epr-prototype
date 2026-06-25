@@ -305,6 +305,19 @@ export const content = {
         confirmAction: 'TODO welsh'
       }
     }),
+  devData: (request) =>
+    getContentForLanguage(request, {
+      en: {
+        title: 'Playground data',
+        heading: 'Playground data',
+        body: 'A read-only view of everything stored in your browser for this service, grouped by journey, with the schema of each record.'
+      },
+      cy: {
+        title: 'Playground data',
+        heading: 'TODO welsh',
+        body: 'TODO welsh'
+      }
+    }),
   devTimeTravel: (request) =>
     getContentForLanguage(request, {
       en: {

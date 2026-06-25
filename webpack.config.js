@@ -51,6 +51,7 @@ export default {
     accountScheme: './javascripts/account/scheme/entry.js',
     leaveScheme: './javascripts/leaveScheme/entry.js',
     devReset: './javascripts/devReset/entry.js',
+    devData: './javascripts/devData/entry.js',
     devTimeTravel: './javascripts/devTimeTravel/entry.js',
     timeTravelShim: './javascripts/timeTravelShim/entry.js',
     complianceSchemeDashboard: './javascripts/complianceScheme/entry.js',
