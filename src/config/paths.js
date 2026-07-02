@@ -9,6 +9,8 @@ export const paths = {
 
   health: '/health',
 
+  password: '/password',
+
   signIn: '/sign-in',
   signinOidc: '/signin-oidc',
   signOut: '/sign-out',

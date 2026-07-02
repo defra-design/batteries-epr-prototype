@@ -1,1 +1,14 @@
 // custom partial styles
+
+.app-prototype-password {
+  .govuk-heading-xl,
+  .govuk-body,
+  .govuk-label,
+  .govuk-button,
+  .govuk-error-summary__title,
+  .govuk-error-summary__body,
+  .govuk-error-summary__list a,
+  .govuk-error-message {
+    font-family: sans-serif;
+  }
+}

@@ -1,0 +1,67 @@
+{% extends "govuk/template.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set bodyClasses = "app-prototype-password" %}
+
+{% block pageTitle %}{{ pageTitle }}{% endblock %}
+
+{% block head %}
+  <link
+    href="{{ getAssetPath('stylesheets/application.scss') }}"
+    rel="stylesheet"
+  />
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+  <form method="post" action="{{ action }}" novalidate>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds-from-desktop">
+        {% if errorMessage %}
+          {{
+            govukErrorSummary({
+              titleText: "There is a problem",
+              errorList: [{ text: errorMessage, href: "#password" }],
+              attributes: { "data-testid": "password-error-summary" }
+            })
+          }}
+        {% endif %}
+
+        <h1 class="govuk-heading-xl">{{ heading }}</h1>
+        <p class="govuk-body">{{ intro }}</p>
+
+        <input type="hidden" name="returnURL" value="{{ returnURL }}" />
+
+        {{
+          govukInput({
+            label: { text: passwordLabel },
+            id: "password",
+            name: "password",
+            type: "password",
+            classes: "govuk-input--width-10",
+            errorMessage: { text: errorMessage } if errorMessage,
+            attributes: { "data-testid": "password-input" }
+          })
+        }}
+
+        {{
+          govukButton({
+            text: continueAction,
+            attributes: { "data-testid": "password-submit" }
+          })
+        }}
+      </div>
+    </div>
+  </form>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="{{ getAssetPath('application.js') }}"></script>
+{% endblock %}

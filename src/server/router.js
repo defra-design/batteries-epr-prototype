@@ -7,6 +7,7 @@ import { terms } from './terms/index.js'
 import { privacy } from './privacy/index.js'
 import { accessibility } from './accessibility/index.js'
 import { health } from './health/index.js'
+import { password } from './password/index.js'
 import { signIn } from './signIn/index.js'
 import { signOut } from './signOut/index.js'
 import { signedOut } from './signedOut/index.js'
@@ -84,6 +85,7 @@ export const router = {
         privacy: privacy.openRoutes,
         accessibility: accessibility.openRoutes,
         health: health.openRoutes,
+        password: password.openRoutes,
         signIn: signIn.openRoutes,
         signOut: signOut.openRoutes,
         signedOut: signedOut.openRoutes,

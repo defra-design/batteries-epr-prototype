@@ -210,6 +210,29 @@ export const content = {
         introParagraph: 'TODO welsh'
       }
     }),
+  password: (request) =>
+    getContentForLanguage(request, {
+      en: {
+        title: 'Sign in',
+        heading: 'This is a prototype used for research',
+        intro:
+          'It is not a real service. You should only continue if you have been invited to test this prototype.',
+        passwordLabel: 'Password',
+        continueAction: 'Continue',
+        error: {
+          title: 'There is a problem',
+          message: 'The password is not correct'
+        }
+      },
+      cy: {
+        title: 'Sign in',
+        heading: 'TODO welsh',
+        intro: 'TODO welsh',
+        passwordLabel: 'TODO welsh',
+        continueAction: 'TODO welsh',
+        error: { title: 'TODO welsh', message: 'TODO welsh' }
+      }
+    }),
   signIn: (request) =>
     getContentForLanguage(request, {
       en: {

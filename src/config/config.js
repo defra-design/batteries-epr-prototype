@@ -83,6 +83,13 @@ export const config = convict({
     format: Boolean,
     default: isTest
   },
+  password: {
+    doc: 'Shared password gating access to the prototype',
+    format: String,
+    default: 'batteries',
+    env: 'PASSWORD',
+    sensitive: true
+  },
   links: {
     feedback: {
       doc: 'Feedback link',
