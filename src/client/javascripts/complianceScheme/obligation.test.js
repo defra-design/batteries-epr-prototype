@@ -1,8 +1,18 @@
+// @vitest-environment jsdom
+import { beforeEach, describe, expect, test } from 'vitest'
+
 import {
   CATEGORIES,
   TARGET_PERCENTAGES,
-  buildObligation
+  COLLECTION_TARGET_PERCENTAGES,
+  buildObligation,
+  resolveTargets
 } from './obligation.js'
+import { storage } from '../storage-adapter.js'
+
+beforeEach(() => {
+  globalThis.localStorage.clear()
+})
 
 describe('obligation', () => {
   test('CATEGORIES are portable/industrial/automotive in order', () => {
@@ -13,6 +23,13 @@ describe('obligation', () => {
     for (const c of CATEGORIES) {
       expect(TARGET_PERCENTAGES[c]).toBeGreaterThan(0)
       expect(TARGET_PERCENTAGES[c]).toBeLessThanOrEqual(1)
+    }
+  })
+
+  test('COLLECTION_TARGET_PERCENTAGES holds a percentage for each category', () => {
+    for (const c of CATEGORIES) {
+      expect(COLLECTION_TARGET_PERCENTAGES[c]).toBeGreaterThan(0)
+      expect(COLLECTION_TARGET_PERCENTAGES[c]).toBeLessThanOrEqual(1)
     }
   })
 
@@ -58,6 +75,44 @@ describe('obligation', () => {
     expect(automotive.obligation).toBeCloseTo(100 * 0.5)
   })
 
+  test('applies the collection target alongside the recycling target', () => {
+    const quarterly = [
+      {
+        memberData: [
+          { memberId: 'm-1', marketData: { portable: '150', industrial: '0', automotive: '0' } }
+        ]
+      }
+    ]
+    const { rows } = buildObligation({ quarterly, evidence: [] })
+    const portable = rows.find((r) => r.category === 'portable')
+
+    expect(portable.collectionTargetPercent).toBe(45)
+    expect(portable.collectionObligation).toBeCloseTo(150 * 0.45)
+    expect(portable.targetPercent).toBe(45)
+    expect(portable.obligation).toBeCloseTo(150 * 0.45)
+  })
+
+  test('uses supplied targets in place of the defaults', () => {
+    const quarterly = [
+      {
+        memberData: [
+          { memberId: 'm-1', marketData: { portable: '100', industrial: '0', automotive: '0' } }
+        ]
+      }
+    ]
+    const targets = {
+      recycling: { portable: 0.6, industrial: 0.5, automotive: 0.5 },
+      collection: { portable: 0.3, industrial: 1, automotive: 1 }
+    }
+    const { rows } = buildObligation({ quarterly, evidence: [], targets })
+    const portable = rows.find((r) => r.category === 'portable')
+
+    expect(portable.targetPercent).toBe(60)
+    expect(portable.obligation).toBeCloseTo(100 * 0.6)
+    expect(portable.collectionTargetPercent).toBe(30)
+    expect(portable.collectionObligation).toBeCloseTo(100 * 0.3)
+  })
+
   test('only accepted evidence counts toward fulfilment', () => {
     const quarterly = [
       { memberData: [{ memberId: 'm-1', marketData: { portable: '100', industrial: '0', automotive: '0' } }] }
@@ -81,5 +136,32 @@ describe('obligation', () => {
     const portable = rows.find((r) => r.category === 'portable')
     expect(portable.placed).toBe(0)
     expect(portable.accepted).toBe(0)
+  })
+})
+
+describe('resolveTargets', () => {
+  test('falls back to the default constants when no agency is given', () => {
+    expect(resolveTargets(null)).toEqual({
+      recycling: TARGET_PERCENTAGES,
+      collection: COLLECTION_TARGET_PERCENTAGES
+    })
+  })
+
+  test('falls back to defaults when the agency has no stored targets', () => {
+    expect(resolveTargets('EA')).toEqual({
+      recycling: TARGET_PERCENTAGES,
+      collection: COLLECTION_TARGET_PERCENTAGES
+    })
+  })
+
+  test('converts a regulator\'s stored whole-percent targets to fractions', () => {
+    storage.saveRegulatorTargets('EA', {
+      collection: { portable: 45, industrial: 100, automotive: 100 },
+      recycling: { portable: 60, industrial: 50, automotive: 50 }
+    })
+    expect(resolveTargets('EA')).toEqual({
+      collection: { portable: 0.45, industrial: 1, automotive: 1 },
+      recycling: { portable: 0.6, industrial: 0.5, automotive: 0.5 }
+    })
   })
 })

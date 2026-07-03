@@ -1,5 +1,7 @@
 {% extends 'layouts/page.njk' %}
 
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -34,8 +36,65 @@
         </tfoot>
       </table>
 
-      <h2 class="govuk-heading-s">{{ labels.methodologyHeading }}</h2>
-      <p class="govuk-body" data-testid="obligation-methodology">{{ labels.methodology }}</p>
+      <h2 class="govuk-heading-m" data-testid="obligation-calc-heading">{{ labels.calcHeading }}</h2>
+      <p class="govuk-body">{{ labels.calcIntro }}</p>
+
+      {% set formulaTypes = [
+        {
+          key: 'collection',
+          heading: labels.formula.collectionHeading,
+          targetTerm: labels.formula.collectionTargetTerm,
+          resultLabel: labels.formula.collectionResultLabel
+        },
+        {
+          key: 'recycling',
+          heading: labels.formula.recyclingHeading,
+          targetTerm: labels.formula.recyclingTargetTerm,
+          resultLabel: labels.formula.recyclingResultLabel
+        }
+      ] %}
+
+      {% for category, categoryLabel in labels.categories %}
+        <details class="govuk-details" data-testid="obligation-calc-{{ category }}">
+          <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">{{ categoryLabel }}</span>
+          </summary>
+          <div class="govuk-details__text">
+            {% for type in formulaTypes %}
+              <h3 class="govuk-heading-s">{{ type.heading }}</h3>
+              <p class="govuk-body"><strong>{{ labels.formulaEquation }}</strong></p>
+              <ul class="govuk-list govuk-list--bullet">
+                <li>
+                  <strong>X</strong> is
+                  <span data-testid="obligation-calc-{{ category }}-{{ type.key }}-placed">0.000</span>
+                  {{ labels.formula.tonnesUnit }} ({{ labels.formula.placedTerm }})
+                </li>
+                <li>
+                  <strong>Y</strong> is
+                  <span data-testid="obligation-calc-{{ category }}-{{ type.key }}-target">0</span>%
+                  ({{ type.targetTerm }})
+                </li>
+              </ul>
+              <p class="govuk-body">
+                {{ type.resultLabel }}<br>
+                <strong>
+                  <span data-testid="obligation-calc-{{ category }}-{{ type.key }}-placed">0.000</span>
+                  {{ labels.formula.tonnesUnit }} ×
+                  <span data-testid="obligation-calc-{{ category }}-{{ type.key }}-target">0</span>% =
+                  <span data-testid="obligation-calc-{{ category }}-{{ type.key }}-obligation">0.000</span>
+                  {{ labels.formula.tonnesUnit }}
+                </strong>
+              </p>
+            {% endfor %}
+          </div>
+        </details>
+      {% endfor %}
+
+      {{ govukWarningText({
+        text: labels.warningText,
+        iconFallbackText: "Warning",
+        attributes: { "data-testid": "obligation-calc-warning" }
+      }) }}
 
       <p class="govuk-body">
         <a class="govuk-link" href="{{ dashboardUrl }}" data-testid="obligation-back-link">{{ labels.backToDashboardAction }}</a>

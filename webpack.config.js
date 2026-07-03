@@ -69,6 +69,7 @@ export default {
       './javascripts/complianceScheme/obligationPage/entry.js',
     regulatorSignIn: './javascripts/regulator/signIn/entry.js',
     regulatorDashboard: './javascripts/regulator/dashboard/entry.js',
+    regulatorTargets: './javascripts/regulator/targets/entry.js',
     regulatorSchemes: './javascripts/regulator/schemes/entry.js',
     regulatorOperators: './javascripts/regulator/operators/entry.js',
     regulatorProducers: './javascripts/regulator/producers/entry.js',

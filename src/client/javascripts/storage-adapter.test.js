@@ -2181,6 +2181,41 @@ describe('agency functions', () => {
   })
 })
 
+describe('regulator targets', () => {
+  test('getRegulatorTargets returns null before anything is stored', () => {
+    expect(storage.getRegulatorTargets('EA')).toBeNull()
+  })
+
+  test('saveRegulatorTargets stores per agency and round-trips', () => {
+    const targets = {
+      collection: { portable: 45, industrial: 100, automotive: 100 },
+      recycling: { portable: 45, industrial: 50, automotive: 50 }
+    }
+    expect(storage.saveRegulatorTargets('EA', targets)).toBe(targets)
+    expect(storage.getRegulatorTargets('EA')).toEqual(targets)
+    expect(storage.getRegulatorTargets('NRW')).toBeNull()
+  })
+
+  test('seedDemoData seeds default targets for every agency', () => {
+    storage.seedDemoData()
+    for (const { code } of AGENCIES) {
+      expect(storage.getRegulatorTargets(code)).toEqual(
+        seedData.regulatorTargets[code]
+      )
+    }
+  })
+
+  test('seedDemoData does not overwrite existing targets', () => {
+    const custom = {
+      collection: { portable: 10, industrial: 20, automotive: 30 },
+      recycling: { portable: 40, industrial: 50, automotive: 60 }
+    }
+    storage.saveRegulatorTargets('EA', custom)
+    storage.seedDemoData()
+    expect(storage.getRegulatorTargets('EA')).toEqual(custom)
+  })
+})
+
 describe('listAllProducers', () => {
   test('returns all producers', () => {
     storage.seedDemoData()

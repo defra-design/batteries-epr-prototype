@@ -14,7 +14,7 @@ describe('#obligationController', () => {
     await server.stop({ timeout: 0 })
   })
 
-  test('renders the obligation table shell with period + methodology', async () => {
+  test('renders the obligation table shell with period + calculation section', async () => {
     const { result, statusCode } = await server.inject({
       method: 'GET',
       url: paths.complianceSchemeObligation
@@ -22,6 +22,7 @@ describe('#obligationController', () => {
     expect(statusCode).toBe(statusCodes.ok)
     const pageContent = content.complianceScheme({}).obligationPage
     expect(result).toEqual(expect.stringContaining(pageContent.heading))
+    expect(result).toEqual(expect.stringContaining(pageContent.calcHeading))
     for (const id of [
       'obligation-body',
       'obligation-foot',
@@ -29,7 +30,12 @@ describe('#obligationController', () => {
       'obligation-total-obligation',
       'obligation-total-accepted',
       'obligation-total-outstanding',
-      'obligation-methodology',
+      'obligation-calc-heading',
+      'obligation-calc-warning',
+      'obligation-calc-portable-collection-placed',
+      'obligation-calc-portable-collection-target',
+      'obligation-calc-portable-collection-obligation',
+      'obligation-calc-portable-recycling-obligation',
       'obligation-period',
       'obligation-back-link'
     ]) {

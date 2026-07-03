@@ -20,7 +20,8 @@ export const STORAGE_KEYS = {
   currentOperatorId: `${KEY_PREFIX}currentOperatorId`,
   operatorQuarterlyReturns: `${KEY_PREFIX}operatorQuarterlyReturns`,
   operatorAnnualReturns: `${KEY_PREFIX}operatorAnnualReturns`,
-  currentAgencyCode: `${KEY_PREFIX}currentAgencyCode`
+  currentAgencyCode: `${KEY_PREFIX}currentAgencyCode`,
+  regulatorTargets: `${KEY_PREFIX}regulatorTargets`
 }
 
 const bprnSequenceKey = (agencyCode, compliancePeriod) =>
@@ -1193,6 +1194,16 @@ const currentAgency = () => {
   return code ? AGENCIES.find((a) => a.code === code) ?? null : null
 }
 
+const getRegulatorTargets = (agencyCode) =>
+  readMap(STORAGE_KEYS.regulatorTargets)[agencyCode] ?? null
+
+const saveRegulatorTargets = (agencyCode, targets) => {
+  const all = readMap(STORAGE_KEYS.regulatorTargets)
+  all[agencyCode] = targets
+  writeJson(STORAGE_KEYS.regulatorTargets, all)
+  return targets
+}
+
 const listAllProducers = () => Object.values(readMap(STORAGE_KEYS.producers))
 
 const listAllEvidence = (compliancePeriodYear) => {
@@ -1341,6 +1352,12 @@ const seedDemoData = () => {
   }
   writeJson(STORAGE_KEYS.operators, operators)
 
+  const regulatorTargets = readMap(STORAGE_KEYS.regulatorTargets)
+  for (const [code, targets] of Object.entries(seedData.regulatorTargets)) {
+    if (!regulatorTargets[code]) regulatorTargets[code] = targets
+  }
+  writeJson(STORAGE_KEYS.regulatorTargets, regulatorTargets)
+
   globalThis.localStorage.setItem(
     STORAGE_KEYS.seedVersion,
     String(seedData.seedVersion)
@@ -1432,6 +1449,8 @@ export const storage = {
   setCurrentAgencyCode,
   clearCurrentAgencyCode,
   currentAgency,
+  getRegulatorTargets,
+  saveRegulatorTargets,
   listAllProducers,
   listAllEvidence,
   approveScheme,

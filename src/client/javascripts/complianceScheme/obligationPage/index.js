@@ -1,6 +1,6 @@
 import { storage } from '../../storage-adapter.js'
 import { readPagePayload } from '../../page-payload.js'
-import { buildObligation } from '../obligation.js'
+import { buildObligation, resolveTargets } from '../obligation.js'
 
 const HTML_ENTITIES = {
   '&': '&amp;',
@@ -17,6 +17,12 @@ const setText = (doc, selector, text) => {
   doc.querySelector(selector).textContent = text
 }
 
+const setAll = (doc, selector, text) => {
+  for (const node of doc.querySelectorAll(selector)) {
+    node.textContent = text
+  }
+}
+
 const ensureScheme = (loc) => {
   storage.seedDemoData()
   const scheme = storage.currentScheme()
@@ -29,6 +35,27 @@ const ensureScheme = (loc) => {
 
 const fmt = (value) => value.toFixed(3)
 
+const setCalcFigures = (doc, row) => {
+  const formulas = {
+    collection: {
+      targetPercent: row.collectionTargetPercent,
+      obligation: row.collectionObligation
+    },
+    recycling: {
+      targetPercent: row.targetPercent,
+      obligation: row.obligation
+    }
+  }
+  for (const [type, { targetPercent, obligation }] of Object.entries(
+    formulas
+  )) {
+    const prefix = `[data-testid="obligation-calc-${row.category}-${type}`
+    setAll(doc, `${prefix}-placed"]`, fmt(row.placed))
+    setAll(doc, `${prefix}-target"]`, String(targetPercent))
+    setAll(doc, `${prefix}-obligation"]`, fmt(obligation))
+  }
+}
+
 export const runObligationPage = (
   doc = globalThis.document,
   loc = globalThis.location
@@ -40,7 +67,8 @@ export const runObligationPage = (
 
   const quarterly = storage.listQuarterlySubmissions(scheme.id, year)
   const evidence = storage.listEvidence(scheme.id, year)
-  const { rows, totals } = buildObligation({ quarterly, evidence })
+  const targets = resolveTargets(scheme.agencyCode)
+  const { rows, totals } = buildObligation({ quarterly, evidence, targets })
 
   const body = doc.querySelector('[data-testid="obligation-body"]')
   body.innerHTML = rows
@@ -56,6 +84,10 @@ export const runObligationPage = (
         </tr>`
     )
     .join('')
+
+  for (const row of rows) {
+    setCalcFigures(doc, row)
+  }
 
   setText(doc, '[data-testid="obligation-total-placed"]', fmt(totals.placed))
   setText(

@@ -1,5 +1,23 @@
 {
-  "seedVersion": 9,
+  "seedVersion": 10,
+  "regulatorTargets": {
+    "EA": {
+      "collection": { "portable": 45, "industrial": 100, "automotive": 100 },
+      "recycling": { "portable": 45, "industrial": 50, "automotive": 50 }
+    },
+    "NRW": {
+      "collection": { "portable": 45, "industrial": 100, "automotive": 100 },
+      "recycling": { "portable": 45, "industrial": 50, "automotive": 50 }
+    },
+    "SEPA": {
+      "collection": { "portable": 45, "industrial": 100, "automotive": 100 },
+      "recycling": { "portable": 45, "industrial": 50, "automotive": 50 }
+    },
+    "NIEA": {
+      "collection": { "portable": 45, "industrial": 100, "automotive": 100 },
+      "recycling": { "portable": 45, "industrial": 50, "automotive": 50 }
+    }
+  },
   "schemes": [
     {
       "id": "22222222-0001-4000-a000-000000000001",

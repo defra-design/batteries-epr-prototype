@@ -23,6 +23,12 @@ const buildDom = (payload = PAYLOAD) => {
     <dd data-testid="obligation-total-obligation"></dd>
     <dd data-testid="obligation-total-accepted"></dd>
     <dd data-testid="obligation-total-outstanding"></dd>
+    <span data-testid="obligation-calc-portable-collection-placed"></span>
+    <span data-testid="obligation-calc-portable-collection-placed"></span>
+    <span data-testid="obligation-calc-portable-collection-target"></span>
+    <span data-testid="obligation-calc-portable-collection-obligation"></span>
+    <span data-testid="obligation-calc-portable-recycling-target"></span>
+    <span data-testid="obligation-calc-portable-recycling-obligation"></span>
     <script id="page-payload" type="application/json">${JSON.stringify(payload)}</script>
   `
 }
@@ -118,6 +124,47 @@ describe('runObligationPage', () => {
       document.querySelector('[data-testid="obligation-total-obligation"]')
         .textContent
     ).toBe('95.000')
+  })
+
+  test('populates the collection and recycling formula figures', () => {
+    const [scheme] = storage.listSchemes()
+    storage.saveQuarterlySubmission({
+      schemeId: scheme.id,
+      compliancePeriodYear: '2026',
+      quarter: 'Q1',
+      status: 'submitted',
+      memberData: [{ memberId: 'm-1', marketData: { portable: '100', industrial: '0', automotive: '0' } }]
+    })
+    buildDom()
+    runObligationPage(document)
+
+    const placedSpans = document.querySelectorAll(
+      '[data-testid="obligation-calc-portable-collection-placed"]'
+    )
+    expect(placedSpans).toHaveLength(2)
+    for (const span of placedSpans) {
+      expect(span.textContent).toBe('100.000')
+    }
+    expect(
+      document.querySelector(
+        '[data-testid="obligation-calc-portable-collection-target"]'
+      ).textContent
+    ).toBe('45')
+    expect(
+      document.querySelector(
+        '[data-testid="obligation-calc-portable-collection-obligation"]'
+      ).textContent
+    ).toBe('45.000')
+    expect(
+      document.querySelector(
+        '[data-testid="obligation-calc-portable-recycling-target"]'
+      ).textContent
+    ).toBe('45')
+    expect(
+      document.querySelector(
+        '[data-testid="obligation-calc-portable-recycling-obligation"]'
+      ).textContent
+    ).toBe('45.000')
   })
 
   test('scopes data to the active compliance period', () => {

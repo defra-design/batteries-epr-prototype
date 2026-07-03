@@ -25,7 +25,9 @@ export const dashboardController = {
       heading: pageContent.heading,
       introParagraph: pageContent.introParagraph,
       switchAgencyAction: pageContent.switchAgencyAction,
+      targetsAction: pageContent.targetsAction,
       regulatorSignInUrl: paths.regulatorSignIn,
+      regulatorTargetsUrl: paths.regulatorTargets,
       pagePayload
     })
   }

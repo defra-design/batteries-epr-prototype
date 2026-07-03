@@ -30,10 +30,12 @@ describe('#regulatorDashboardController', () => {
       'tile-schemes-count',
       'tile-operators-count',
       'tile-producers-count',
-      'tile-evidence-count'
+      'tile-evidence-count',
+      'regulator-targets-link'
     ]) {
       expect(result).toEqual(expect.stringContaining(`data-testid="${id}"`))
     }
+    expect(result).toEqual(expect.stringContaining(paths.regulatorTargets))
   })
 
   test('emits a page-payload with copy', async () => {

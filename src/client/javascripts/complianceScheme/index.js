@@ -1,7 +1,7 @@
 import { storage } from '../storage-adapter.js'
 import { readPagePayload } from '../page-payload.js'
 import { buildDashboardViewModel } from './tile-builders.js'
-import { buildObligation } from './obligation.js'
+import { buildObligation, resolveTargets } from './obligation.js'
 
 const HTML_ENTITIES = {
   '&': '&amp;',
@@ -190,7 +190,8 @@ export const initComplianceSchemeDashboard = (
   const activeMembers = storage.membersForYear(schemeId, year).active
   const quarterly = storage.listQuarterlySubmissions(schemeId, year)
   const evidence = storage.listEvidence(schemeId, year)
-  const obligation = buildObligation({ quarterly, evidence })
+  const targets = resolveTargets(scheme.agencyCode)
+  const obligation = buildObligation({ quarterly, evidence, targets })
   const viewModel = buildDashboardViewModel({
     scheme,
     members: activeMembers,

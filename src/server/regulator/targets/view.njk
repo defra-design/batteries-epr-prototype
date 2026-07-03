@@ -1,0 +1,69 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l" data-testid="regulator-targets-heading">{{ heading }}</h1>
+      <p class="govuk-body" data-testid="regulator-targets-agency" hidden></p>
+      <p class="govuk-body">{{ intro }}</p>
+
+      <form method="post" novalidate data-testid="regulator-targets-form">
+        <h2 class="govuk-heading-m">{{ labels.collectionHeading }}</h2>
+        <p class="govuk-hint">{{ labels.collectionHint }}</p>
+        {% for category in categories %}
+          {{ govukInput({
+            id: "collection" + (category | capitalize),
+            name: "collection" + (category | capitalize),
+            classes: "govuk-input--width-3",
+            label: { text: labels.categoryLabels[category] },
+            suffix: { text: labels.suffix },
+            inputmode: "numeric",
+            spellcheck: false,
+            attributes: { "data-testid": "regulator-targets-collection-" + category }
+          }) }}
+        {% endfor %}
+
+        <h2 class="govuk-heading-m">{{ labels.recyclingHeading }}</h2>
+        <p class="govuk-hint">{{ labels.recyclingHint }}</p>
+        {% for category in categories %}
+          {{ govukInput({
+            id: "recycling" + (category | capitalize),
+            name: "recycling" + (category | capitalize),
+            classes: "govuk-input--width-3",
+            label: { text: labels.categoryLabels[category] },
+            suffix: { text: labels.suffix },
+            inputmode: "numeric",
+            spellcheck: false,
+            attributes: { "data-testid": "regulator-targets-recycling-" + category }
+          }) }}
+        {% endfor %}
+
+        {{ govukDetails({
+          summaryText: labels.explanationSummary,
+          html: labels.explanationHtml,
+          attributes: { "data-testid": "regulator-targets-explanation" }
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: labels.saveAction,
+            type: "submit",
+            attributes: { "data-testid": "regulator-targets-save" }
+          }) }}
+          <a class="govuk-link" href="{{ dashboardUrl }}" data-testid="regulator-targets-cancel">{{ labels.backToDashboardAction }}</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('regulatorTargets.js') }}"></script>
+{% endblock %}

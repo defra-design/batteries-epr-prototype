@@ -1782,9 +1782,25 @@ export const content = {
           tableCaption: 'Obligation by battery category',
           totalsLabel: 'Total',
           backToDashboardAction: 'Back to compliance scheme dashboard',
-          methodologyHeading: 'How this is calculated',
-          methodology:
-            'For each category, the obligation is the total tonnes placed on the UK market across all four quarters multiplied by the recycling target. Accepted evidence reduces the outstanding obligation. This is a playground calculation — production maths will be more nuanced.',
+          calcHeading: 'How we calculated your collection and recycling obligations',
+          calcIntro:
+            'We used the total tonnes placed on the UK market across all four quarters, together with the collection and recycling targets set for each battery category, to calculate your obligations. Accepted evidence reduces your outstanding obligation. This is a playground calculation — production maths will be more nuanced.',
+          formulaEquation: 'X × Y = Z',
+          formula: {
+            collectionHeading: 'Collection obligation',
+            recyclingHeading: 'Recycling obligation',
+            placedTerm:
+              'the total tonnes placed on the UK market for this category, reported to the nearest tonne',
+            collectionTargetTerm: 'the collection target for this category',
+            recyclingTargetTerm: 'the recycling target for this category',
+            collectionResultLabel:
+              'Your collection obligation (Z) for this category is:',
+            recyclingResultLabel:
+              'Your recycling obligation (Z) for this category is:',
+            tonnesUnit: 'tonnes'
+          },
+          warningText:
+            'If you believe your data is incorrect, contact your regulator immediately.',
           columns: {
             category: 'Category',
             placed: 'Placed on market (tonnes)',
@@ -2345,8 +2361,20 @@ export const content = {
           tableCaption: 'TODO welsh',
           totalsLabel: 'TODO welsh',
           backToDashboardAction: 'TODO welsh',
-          methodologyHeading: 'TODO welsh',
-          methodology: 'TODO welsh',
+          calcHeading: 'TODO welsh',
+          calcIntro: 'TODO welsh',
+          formulaEquation: 'TODO welsh',
+          formula: {
+            collectionHeading: 'TODO welsh',
+            recyclingHeading: 'TODO welsh',
+            placedTerm: 'TODO welsh',
+            collectionTargetTerm: 'TODO welsh',
+            recyclingTargetTerm: 'TODO welsh',
+            collectionResultLabel: 'TODO welsh',
+            recyclingResultLabel: 'TODO welsh',
+            tonnesUnit: 'TODO welsh'
+          },
+          warningText: 'TODO welsh',
           columns: {
             category: 'TODO welsh',
             placed: 'TODO welsh',
@@ -2666,6 +2694,7 @@ export const content = {
         introParagraph:
           'Review applications, monitor compliance, and manage approvals for battery producers, compliance schemes, and operators.',
         switchAgencyAction: 'Switch agency',
+        targetsAction: 'Manage collection and recycling targets',
         tiles: {
           schemes: {
             heading: 'Compliance schemes',
@@ -2849,6 +2878,30 @@ export const content = {
             operatorAnnual: 'Operator annual'
           },
           statuses: { 'not-started': 'Not started', 'in-progress': 'In progress', submitted: 'Submitted' }
+        },
+        targetsPage: {
+          title: 'Collection and recycling targets',
+          heading: 'Collection and recycling targets',
+          intro:
+            'Set the collection and recycling targets that compliance schemes regulated by your agency use to calculate their obligations. Values default to those set out in the regulations and can be changed for this playground.',
+          collectionHeading: 'Collection targets',
+          collectionHint:
+            'The percentage of batteries placed on the market that must be collected, by category.',
+          recyclingHeading: 'Recycling targets',
+          recyclingHint:
+            'The percentage of collected batteries that must be recycled, by category.',
+          categoryLabels: {
+            portable: 'Portable',
+            industrial: 'Industrial',
+            automotive: 'Automotive'
+          },
+          suffix: '%',
+          explanationSummary: 'Where these targets come from',
+          explanationHtml:
+            '<p class="govuk-body">Recycling efficiencies are set by the Waste Batteries and Accumulators Regulations 2009, Schedule 4, Part 2, paragraph 10(3)(c): lead-acid 65%, nickel-cadmium 75% and other batteries 50% by average weight.</p><p class="govuk-body">The 45% portable collection target derives from the retained EU Batteries Directive 2006/66/EC, Article 10; regulation 70 defines the collection rate but sets no numeric target. Industrial and automotive batteries are subject to take-back (collect all returned batteries) under Parts 4 and 7, shown here as 100%.</p>',
+          saveAction: 'Save targets',
+          savedMessage: 'Targets saved.',
+          backToDashboardAction: 'Back to regulator dashboard'
         }
       },
       cy: {
@@ -2856,6 +2909,7 @@ export const content = {
         heading: heading('TODO welsh', 'TODO welsh', null),
         introParagraph: 'TODO welsh',
         switchAgencyAction: 'TODO welsh',
+        targetsAction: 'TODO welsh',
         tiles: {
           schemes: {
             heading: 'TODO welsh',
@@ -3039,6 +3093,26 @@ export const content = {
             operatorAnnual: 'TODO welsh'
           },
           statuses: { 'not-started': 'TODO welsh', 'in-progress': 'TODO welsh', submitted: 'TODO welsh' }
+        },
+        targetsPage: {
+          title: 'TODO welsh',
+          heading: 'TODO welsh',
+          intro: 'TODO welsh',
+          collectionHeading: 'TODO welsh',
+          collectionHint: 'TODO welsh',
+          recyclingHeading: 'TODO welsh',
+          recyclingHint: 'TODO welsh',
+          categoryLabels: {
+            portable: 'TODO welsh',
+            industrial: 'TODO welsh',
+            automotive: 'TODO welsh'
+          },
+          suffix: '%',
+          explanationSummary: 'TODO welsh',
+          explanationHtml: 'TODO welsh',
+          saveAction: 'TODO welsh',
+          savedMessage: 'TODO welsh',
+          backToDashboardAction: 'TODO welsh'
         }
       }
     }),
