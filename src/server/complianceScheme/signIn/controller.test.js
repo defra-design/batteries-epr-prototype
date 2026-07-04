@@ -28,6 +28,14 @@ describe('#complianceSchemeSignIn', () => {
       expect.stringContaining('data-testid="compliance-scheme-sign-in-cancel"')
     )
     expect(result).toEqual(expect.stringContaining(`href="${paths.home}"`))
+    expect(result).toEqual(
+      expect.stringContaining(
+        'data-testid="compliance-scheme-sign-in-register"'
+      )
+    )
+    expect(result).toEqual(
+      expect.stringContaining(`href="${paths.complianceSchemeRegister}"`)
+    )
   })
 
   test('POST with a valid schemeId renders a setCurrentSchemeId payload', async () => {

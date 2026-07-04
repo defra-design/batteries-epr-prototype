@@ -1498,9 +1498,39 @@ export const content = {
         legend: 'Compliance scheme',
         continueAction: 'Continue',
         cancelAction: 'Cancel and return to the playground home',
+        registerAction: 'Register a new compliance scheme',
         error: {
           title: 'There is a problem',
           choice: 'Select a compliance scheme to continue'
+        }
+      },
+      cy: {
+        title: 'TODO welsh',
+        heading: 'TODO welsh',
+        intro: 'TODO welsh',
+        legend: 'TODO welsh',
+        continueAction: 'TODO welsh',
+        cancelAction: 'TODO welsh',
+        registerAction: 'TODO welsh',
+        error: {
+          title: 'TODO welsh',
+          choice: 'TODO welsh'
+        }
+      }
+    }),
+  complianceSchemeRegister: (request) =>
+    getContentForLanguage(request, {
+      en: {
+        title: 'Register a new compliance scheme',
+        heading: 'Register a new compliance scheme',
+        intro:
+          'Choose the environmental regulator that will approve your compliance scheme. You will then complete your application. Your scheme becomes available to sign in to once your regulator approves it.',
+        legend: 'Which regulator regulates your compliance scheme?',
+        continueAction: 'Continue',
+        cancelAction: 'Cancel and return to sign in',
+        error: {
+          title: 'There is a problem',
+          choice: 'Select a regulator to continue'
         }
       },
       cy: {

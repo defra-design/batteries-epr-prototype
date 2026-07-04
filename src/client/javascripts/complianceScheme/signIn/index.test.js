@@ -2,11 +2,19 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { runSchemeSignIn } from './index.js'
-import { storage } from '../../storage-adapter.js'
+import { storage, createScheme } from '../../storage-adapter.js'
+
+const OPTIONS_TESTID = 'compliance-scheme-sign-in-options'
 
 const installPayload = (payload) => {
-  document.body.innerHTML = `<script id="page-payload" type="application/json">${JSON.stringify(payload)}</script>`
+  document.body.innerHTML = `
+    <div data-testid="${OPTIONS_TESTID}"></div>
+    <script id="page-payload" type="application/json">${JSON.stringify(payload)}</script>
+  `
 }
+
+const radioTestId = (schemeId) =>
+  `[data-testid="compliance-scheme-sign-in-radio-${schemeId}"]`
 
 let assignSpy
 
@@ -33,10 +41,41 @@ describe('runSchemeSignIn', () => {
     expect(assignSpy).toHaveBeenCalledWith('/compliance-scheme')
   })
 
-  test('on hydrate target, does nothing observable', () => {
+  test('on hydrate, lists only approved schemes from storage', () => {
     installPayload({ target: 'hydrate' })
+    const approvedNoOperator = storage.saveScheme(
+      createScheme({
+        name: 'Freshly & Approved Ltd',
+        agencyCode: 'NRW',
+        approvalStatus: 'approved',
+        operator: null
+      })
+    )
+    const notApproved = storage.saveScheme(
+      createScheme({
+        name: 'Still Pending Ltd',
+        agencyCode: 'NRW',
+        approvalStatus: 'submitted'
+      })
+    )
+
     expect(runSchemeSignIn(document, { assign: assignSpy })).toBe('hydrated')
-    expect(storage.getCurrentSchemeId()).toBeNull()
+
+    expect(
+      document.querySelector(
+        radioTestId('22222222-0001-4000-a000-000000000001')
+      )
+    ).not.toBeNull()
+    expect(
+      document.querySelector(radioTestId(approvedNoOperator.id))
+    ).not.toBeNull()
+    expect(document.querySelector(radioTestId(notApproved.id))).toBeNull()
+
+    const container = document.querySelector(
+      `[data-testid="${OPTIONS_TESTID}"]`
+    )
+    expect(container.innerHTML).toContain('Freshly &amp; Approved Ltd')
+    expect(container.innerHTML).toContain('govuk-radios__hint')
     expect(assignSpy).not.toHaveBeenCalled()
   })
 })

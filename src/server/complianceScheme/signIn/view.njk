@@ -35,13 +35,18 @@
           name: "schemeId",
           fieldset: { legend: { text: labels.legend } },
           errorMessage: { text: errors.schemeId } if errors.schemeId,
-          items: schemeItems
+          items: schemeItems,
+          attributes: { "data-testid": "compliance-scheme-sign-in-options" }
         }) }}
 
         {{ govukButton({
           text: labels.continueAction,
           attributes: { "data-testid": "compliance-scheme-sign-in-continue" }
         }) }}
+
+        <p class="govuk-body">
+          <a class="govuk-link" href="{{ registerUrl }}" data-testid="compliance-scheme-sign-in-register">{{ labels.registerAction }}</a>
+        </p>
 
         <p class="govuk-body">
           <a class="govuk-link" href="{{ cancelUrl }}" data-testid="compliance-scheme-sign-in-cancel">{{ labels.cancelAction }}</a>

@@ -26,6 +26,7 @@ import { devSchemes } from './devSchemes/index.js'
 import { devData } from './devData/index.js'
 import { complianceSchemeDashboard } from './complianceScheme/dashboard/index.js'
 import { complianceSchemeSignIn } from './complianceScheme/signIn/index.js'
+import { complianceSchemeRegister } from './complianceScheme/register/index.js'
 import { complianceSchemeApplication } from './complianceScheme/application/index.js'
 import { complianceSchemeMembers } from './complianceScheme/members/index.js'
 import { complianceSchemeQuarterly } from './complianceScheme/quarterly/index.js'
@@ -105,6 +106,7 @@ export const router = {
         devData: devData.openRoutes,
         complianceSchemeDashboard: complianceSchemeDashboard.openRoutes,
         complianceSchemeSignIn: complianceSchemeSignIn.openRoutes,
+        complianceSchemeRegister: complianceSchemeRegister.openRoutes,
         complianceSchemeApplication: complianceSchemeApplication.openRoutes,
         complianceSchemeMembers: complianceSchemeMembers.openRoutes,
         complianceSchemeQuarterly: complianceSchemeQuarterly.openRoutes,

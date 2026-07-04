@@ -84,6 +84,7 @@ export const paths = {
 
   complianceSchemeDashboard: '/compliance-scheme',
   complianceSchemeSignIn: '/compliance-scheme/sign-in',
+  complianceSchemeRegister: '/compliance-scheme/register',
   complianceSchemeApplication: '/compliance-scheme/application/{step}',
   complianceSchemeMembers: '/compliance-scheme/members',
   complianceSchemeMembersAdd: '/compliance-scheme/members/add',

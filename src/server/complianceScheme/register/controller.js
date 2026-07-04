@@ -1,46 +1,48 @@
-import { createRequire } from 'node:module'
-
 import joi from 'joi'
 
 import { content } from '../../../config/content.js'
 import { paths } from '../../../config/paths.js'
 
-const seedData = createRequire(import.meta.url)(
-  '../../../client/javascripts/storage-seed.json'
-)
+const AGENCIES = [
+  { code: 'EA', name: 'Environment Agency' },
+  { code: 'NRW', name: 'Natural Resources Wales' },
+  { code: 'SEPA', name: 'Scottish Environment Protection Agency' },
+  { code: 'NIEA', name: 'Northern Ireland Environment Agency' }
+]
 
 const schema = joi
   .object({
-    schemeId: joi.string().uuid().required()
+    agencyCode: joi.string().valid('EA', 'NRW', 'SEPA', 'NIEA').required()
   })
   .options({ stripUnknown: true })
 
-const approvedSchemes = () =>
-  seedData.schemes.filter((s) => s.approvalStatus === 'approved')
+const schemeDetailsUrl = paths.complianceSchemeApplication.replace(
+  '{step}',
+  'scheme-details'
+)
 
 const renderView = (h, request, viewModel) => {
-  const pageContent = content.complianceSchemeSignIn(request)
-  return h.view('complianceScheme/signIn/view', {
+  const pageContent = content.complianceSchemeRegister(request)
+  return h.view('complianceScheme/register/view', {
     pageTitle: pageContent.title,
     heading: pageContent.heading,
     intro: pageContent.intro,
     labels: pageContent,
     errorTitle: pageContent.error.title,
-    action: paths.complianceSchemeSignIn,
-    cancelUrl: paths.home,
-    registerUrl: paths.complianceSchemeRegister,
+    action: paths.complianceSchemeRegister,
+    cancelUrl: paths.complianceSchemeSignIn,
+    agencies: AGENCIES,
     ...viewModel
   })
 }
 
-export const signInController = {
+export const registerController = {
   get: {
     handler(request, h) {
       return renderView(h, request, {
         errorSummary: [],
         errors: {},
         formValues: {},
-        schemes: approvedSchemes(),
         pagePayload: { target: 'hydrate' }
       })
     }
@@ -50,12 +52,13 @@ export const signInController = {
       validate: {
         payload: schema,
         failAction(request, h, _err) {
-          const pageContent = content.complianceSchemeSignIn(request)
+          const pageContent = content.complianceSchemeRegister(request)
           return renderView(h, request, {
-            errorSummary: [{ text: pageContent.error.choice, href: '#schemeId' }],
-            errors: { schemeId: pageContent.error.choice },
+            errorSummary: [
+              { text: pageContent.error.choice, href: '#agencyCode' }
+            ],
+            errors: { agencyCode: pageContent.error.choice },
             formValues: request.payload,
-            schemes: approvedSchemes(),
             pagePayload: { target: 'hydrate' }
           }).takeover()
         }
@@ -66,11 +69,10 @@ export const signInController = {
         errorSummary: [],
         errors: {},
         formValues: request.payload,
-        schemes: approvedSchemes(),
         pagePayload: {
-          target: 'setCurrentSchemeId',
-          schemeId: request.payload.schemeId,
-          nextStep: paths.complianceSchemeDashboard
+          target: 'create',
+          agencyCode: request.payload.agencyCode,
+          nextStep: schemeDetailsUrl
         }
       })
     }
