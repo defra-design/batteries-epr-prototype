@@ -67,6 +67,8 @@ export default {
       './javascripts/complianceScheme/evidence/entry.js',
     complianceSchemeObligation:
       './javascripts/complianceScheme/obligationPage/entry.js',
+    complianceSchemeOperators:
+      './javascripts/complianceScheme/operators/entry.js',
     complianceSchemeRegister:
       './javascripts/complianceScheme/register/entry.js',
     regulatorSignIn: './javascripts/regulator/signIn/entry.js',
@@ -78,6 +80,7 @@ export default {
     regulatorEvidence: './javascripts/regulator/evidence/entry.js',
     regulatorSubmissions: './javascripts/regulator/submissions/entry.js',
     operatorSignIn: './javascripts/operator/signIn/entry.js',
+    operatorRegister: './javascripts/operator/register/entry.js',
     operatorDashboard: './javascripts/operator/dashboard/entry.js',
     operatorApplication: './javascripts/operator/application/entry.js',
     operatorEvidence: './javascripts/operator/evidence/entry.js',

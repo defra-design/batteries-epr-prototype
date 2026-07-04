@@ -937,6 +937,8 @@ describe('compliance scheme factories and storage', () => {
     const op = createOperator()
     expect(op.approvalType).toBe('abto')
     expect(op.approvalStatus).toBe('not-started')
+    expect(op.schemeId).toBeNull()
+    expect(op.schemeApprovalStatus).toBeNull()
     expect(op.batteryTypes).toEqual({
       isPortable: false,
       isIndustrial: false,
@@ -951,6 +953,90 @@ describe('compliance scheme factories and storage', () => {
     expect(operators.length).toBeGreaterThanOrEqual(3)
     expect(operators.some((o) => o.approvalType === 'abto')).toBe(true)
     expect(operators.some((o) => o.approvalType === 'abe')).toBe(true)
+  })
+
+  test('approveOperatorForScheme / rejectOperatorForScheme set the scheme approval', () => {
+    const op = storage.saveOperator(
+      createOperator({ schemeId: 's-1', schemeApprovalStatus: 'pending' })
+    )
+    expect(storage.approveOperatorForScheme(op.id).schemeApprovalStatus).toBe(
+      'approved'
+    )
+    expect(storage.rejectOperatorForScheme(op.id).schemeApprovalStatus).toBe(
+      'rejected'
+    )
+    expect(storage.approveOperatorForScheme('missing')).toBeNull()
+    expect(storage.rejectOperatorForScheme('missing')).toBeNull()
+  })
+
+  test('listPendingOperatorsForScheme returns submitted/approved pending operators for the scheme', () => {
+    const pending = storage.saveOperator(
+      createOperator({
+        schemeId: 's-1',
+        schemeApprovalStatus: 'pending',
+        approvalStatus: 'submitted'
+      })
+    )
+    storage.saveOperator(
+      createOperator({
+        schemeId: 's-1',
+        schemeApprovalStatus: 'pending',
+        approvalStatus: 'in-progress'
+      })
+    )
+    storage.saveOperator(
+      createOperator({
+        schemeId: 's-2',
+        schemeApprovalStatus: 'pending',
+        approvalStatus: 'submitted'
+      })
+    )
+    const rows = storage.listPendingOperatorsForScheme('s-1')
+    expect(rows).toHaveLength(1)
+    expect(rows[0].id).toBe(pending.id)
+  })
+
+  test('listApprovedOperatorsForScheme returns scheme-approved operators for the scheme', () => {
+    const approved = storage.saveOperator(
+      createOperator({ schemeId: 's-1', schemeApprovalStatus: 'approved' })
+    )
+    storage.saveOperator(
+      createOperator({ schemeId: 's-1', schemeApprovalStatus: 'pending' })
+    )
+    const rows = storage.listApprovedOperatorsForScheme('s-1')
+    expect(rows).toHaveLength(1)
+    expect(rows[0].id).toBe(approved.id)
+  })
+
+  test('listApprovedOperators requires regulator approval and no pending/rejected scheme approval', () => {
+    const seeded = storage.saveOperator(
+      createOperator({ name: 'Seeded', approvalStatus: 'approved' })
+    )
+    const dualApproved = storage.saveOperator(
+      createOperator({
+        name: 'Dual',
+        approvalStatus: 'approved',
+        schemeApprovalStatus: 'approved'
+      })
+    )
+    storage.saveOperator(
+      createOperator({
+        name: 'Scheme pending',
+        approvalStatus: 'approved',
+        schemeApprovalStatus: 'pending'
+      })
+    )
+    storage.saveOperator(
+      createOperator({
+        name: 'Regulator pending',
+        approvalStatus: 'submitted',
+        schemeApprovalStatus: 'approved'
+      })
+    )
+    const ids = storage.listApprovedOperators().map((o) => o.id)
+    expect(ids).toContain(seeded.id)
+    expect(ids).toContain(dualApproved.id)
+    expect(ids).toHaveLength(2)
   })
 
   test('createEvidence includes operator fields', () => {

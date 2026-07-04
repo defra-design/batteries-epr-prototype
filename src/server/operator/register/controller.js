@@ -1,46 +1,40 @@
-import { createRequire } from 'node:module'
-
 import joi from 'joi'
 
 import { content } from '../../../config/content.js'
 import { paths } from '../../../config/paths.js'
 
-const seedData = createRequire(import.meta.url)(
-  '../../../client/javascripts/storage-seed.json'
-)
-
 const schema = joi
   .object({
-    operatorId: joi.string().uuid().required()
+    schemeId: joi.string().uuid().required()
   })
   .options({ stripUnknown: true })
 
-const approvedOperators = () =>
-  seedData.operators.filter((o) => o.approvalStatus === 'approved')
+const operatorDetailsUrl = paths.operatorApplication.replace(
+  '{step}',
+  'operator-details'
+)
 
 const renderView = (h, request, viewModel) => {
-  const pageContent = content.operatorSignIn(request)
-  return h.view('operator/signIn/view', {
+  const pageContent = content.operatorRegister(request)
+  return h.view('operator/register/view', {
     pageTitle: pageContent.title,
     heading: pageContent.heading,
     intro: pageContent.intro,
     labels: pageContent,
     errorTitle: pageContent.error.title,
-    action: paths.operatorSignIn,
-    cancelUrl: paths.home,
-    registerUrl: paths.operatorRegister,
+    action: paths.operatorRegister,
+    cancelUrl: paths.operatorSignIn,
     ...viewModel
   })
 }
 
-export const signInController = {
+export const registerController = {
   get: {
     handler(request, h) {
       return renderView(h, request, {
         errorSummary: [],
         errors: {},
         formValues: {},
-        operators: approvedOperators(),
         pagePayload: { target: 'hydrate' }
       })
     }
@@ -50,14 +44,13 @@ export const signInController = {
       validate: {
         payload: schema,
         failAction(request, h, _err) {
-          const pageContent = content.operatorSignIn(request)
+          const pageContent = content.operatorRegister(request)
           return renderView(h, request, {
             errorSummary: [
-              { text: pageContent.error.choice, href: '#operatorId' }
+              { text: pageContent.error.choice, href: '#schemeId' }
             ],
-            errors: { operatorId: pageContent.error.choice },
+            errors: { schemeId: pageContent.error.choice },
             formValues: request.payload,
-            operators: approvedOperators(),
             pagePayload: { target: 'hydrate' }
           }).takeover()
         }
@@ -68,11 +61,10 @@ export const signInController = {
         errorSummary: [],
         errors: {},
         formValues: request.payload,
-        operators: approvedOperators(),
         pagePayload: {
-          target: 'setCurrentOperatorId',
-          operatorId: request.payload.operatorId,
-          nextStep: paths.operatorDashboard
+          target: 'create',
+          schemeId: request.payload.schemeId,
+          nextStep: operatorDetailsUrl
         }
       })
     }

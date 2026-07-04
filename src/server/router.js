@@ -48,6 +48,8 @@ import { regulatorSubmissions } from './regulator/submissions/index.js'
 import { regulatorSchemeWithdraw } from './regulator/schemes/withdraw/index.js'
 import { regulatorOperatorWithdraw } from './regulator/operators/withdraw/index.js'
 import { operatorSignIn } from './operator/signIn/index.js'
+import { operatorRegister } from './operator/register/index.js'
+import { complianceSchemeOperators } from './complianceScheme/operators/index.js'
 import { operatorDashboard } from './operator/dashboard/index.js'
 import { operatorApplication } from './operator/application/index.js'
 import { operatorEvidence } from './operator/evidence/index.js'
@@ -128,6 +130,8 @@ export const router = {
         regulatorSchemeWithdraw: regulatorSchemeWithdraw.openRoutes,
         regulatorOperatorWithdraw: regulatorOperatorWithdraw.openRoutes,
         operatorSignIn: operatorSignIn.openRoutes,
+        operatorRegister: operatorRegister.openRoutes,
+        complianceSchemeOperators: complianceSchemeOperators.openRoutes,
         operatorDashboard: operatorDashboard.openRoutes,
         operatorApplication: operatorApplication.openRoutes,
         operatorEvidence: operatorEvidence.openRoutes,

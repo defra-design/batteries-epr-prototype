@@ -42,6 +42,8 @@ export const dashboardController = {
       introParagraph: pageContent.introParagraph,
       switchSchemeAction: pageContent.switchSchemeAction,
       switchSchemeUrl: paths.complianceSchemeSignIn,
+      operatorsAction: pageContent.operatorsAction,
+      operatorsUrl: paths.complianceSchemeOperators,
       pagePayload
     })
   }

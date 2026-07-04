@@ -28,6 +28,12 @@ describe('#operatorSignIn', () => {
       expect.stringContaining('data-testid="operator-sign-in-cancel"')
     )
     expect(result).toEqual(expect.stringContaining(`href="${paths.home}"`))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="operator-sign-in-register"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining(`href="${paths.operatorRegister}"`)
+    )
   })
 
   test('POST with a valid operatorId renders a setCurrentOperatorId payload', async () => {

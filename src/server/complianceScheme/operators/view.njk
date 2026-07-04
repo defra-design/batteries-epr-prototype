@@ -1,0 +1,50 @@
+{% extends 'layouts/page.njk' %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l" data-testid="operators-heading">{{ heading }}</h1>
+      <p class="govuk-body">{{ intro }}</p>
+      <p class="govuk-body govuk-!-margin-bottom-2">
+        <strong>Compliance period:</strong> <span data-testid="operators-period">{{ compliancePeriodYear }}</span>
+      </p>
+
+      <h2 class="govuk-heading-m" data-testid="operators-pending-heading">{{ labels.pendingHeading }}</h2>
+      <table class="govuk-table" data-testid="operators-pending-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">{{ labels.columns.name }}</th>
+            <th scope="col" class="govuk-table__header">{{ labels.columns.type }}</th>
+            <th scope="col" class="govuk-table__header">{{ labels.columns.actions }}</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body" data-testid="operators-pending-body"></tbody>
+      </table>
+      <p class="govuk-body" data-testid="operators-pending-empty" hidden>{{ labels.pendingEmpty }}</p>
+
+      <h2 class="govuk-heading-m">{{ labels.approvedHeading }}</h2>
+      <table class="govuk-table" data-testid="operators-approved-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">{{ labels.columns.name }}</th>
+            <th scope="col" class="govuk-table__header">{{ labels.columns.type }}</th>
+            <th scope="col" class="govuk-table__header">{{ labels.columns.approvalNumber }}</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body" data-testid="operators-approved-body"></tbody>
+      </table>
+      <p class="govuk-body" data-testid="operators-approved-empty" hidden>{{ labels.approvedEmpty }}</p>
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="{{ pagePayload.urls.dashboard }}" data-testid="operators-back-link">{{ labels.backToDashboardAction }}</a>
+      </p>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('complianceSchemeOperators.js') }}"></script>
+{% endblock %}

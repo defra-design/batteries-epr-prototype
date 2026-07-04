@@ -103,9 +103,11 @@ export const paths = {
   complianceSchemeEvidenceAvailability:
     '/compliance-scheme/evidence/availability',
   complianceSchemeObligation: '/compliance-scheme/obligation',
+  complianceSchemeOperators: '/compliance-scheme/operators',
 
   operatorDashboard: '/operator',
   operatorSignIn: '/operator/sign-in',
+  operatorRegister: '/operator/register',
   operatorApplication: '/operator/application/{step}',
   operatorEvidence: '/operator/evidence',
   operatorEvidenceIssue: '/operator/evidence/issue/{step}',

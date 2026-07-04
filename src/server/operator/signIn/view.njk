@@ -36,13 +36,18 @@
           name: "operatorId",
           fieldset: { legend: { text: labels.legend } },
           errorMessage: { text: errors.operatorId } if errors.operatorId,
-          items: operatorItems
+          items: operatorItems,
+          attributes: { "data-testid": "operator-sign-in-options" }
         }) }}
 
         {{ govukButton({
           text: labels.continueAction,
           attributes: { "data-testid": "operator-sign-in-continue" }
         }) }}
+
+        <p class="govuk-body">
+          <a class="govuk-link" href="{{ registerUrl }}" data-testid="operator-sign-in-register">{{ labels.registerAction }}</a>
+        </p>
 
         <p class="govuk-body">
           <a class="govuk-link" href="{{ cancelUrl }}" data-testid="operator-sign-in-cancel">{{ labels.cancelAction }}</a>

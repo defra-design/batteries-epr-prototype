@@ -189,6 +189,8 @@ export const createOperator = (input = {}) => ({
   },
   sites: input.sites ?? [],
   agencyCode: input.agencyCode ?? null,
+  schemeId: input.schemeId ?? null,
+  schemeApprovalStatus: input.schemeApprovalStatus ?? null,
   compliancePeriod: input.compliancePeriod ?? null,
   contactEmail: input.contactEmail ?? null,
   createdAt: input.createdAt ?? now(),
@@ -1247,6 +1249,39 @@ const rejectOperator = (operatorId) => {
   return saveOperator({ ...operator, approvalStatus: 'rejected' })
 }
 
+const approveOperatorForScheme = (operatorId) => {
+  const operator = getOperator(operatorId)
+  if (!operator) return null
+  return saveOperator({ ...operator, schemeApprovalStatus: 'approved' })
+}
+
+const rejectOperatorForScheme = (operatorId) => {
+  const operator = getOperator(operatorId)
+  if (!operator) return null
+  return saveOperator({ ...operator, schemeApprovalStatus: 'rejected' })
+}
+
+const listPendingOperatorsForScheme = (schemeId) =>
+  listOperators().filter(
+    (o) =>
+      o.schemeId === schemeId &&
+      o.schemeApprovalStatus === 'pending' &&
+      (o.approvalStatus === 'submitted' || o.approvalStatus === 'approved')
+  )
+
+const listApprovedOperatorsForScheme = (schemeId) =>
+  listOperators().filter(
+    (o) => o.schemeId === schemeId && o.schemeApprovalStatus === 'approved'
+  )
+
+const listApprovedOperators = () =>
+  listOperators().filter(
+    (o) =>
+      o.approvalStatus === 'approved' &&
+      o.schemeApprovalStatus !== 'pending' &&
+      o.schemeApprovalStatus !== 'rejected'
+  )
+
 const listAllQuarterlySubmissions = (compliancePeriodYear) => {
   const items = Object.values(readMap(STORAGE_KEYS.quarterlySubmissions))
   return compliancePeriodYear
@@ -1457,6 +1492,11 @@ export const storage = {
   rejectScheme,
   approveOperator,
   rejectOperator,
+  approveOperatorForScheme,
+  rejectOperatorForScheme,
+  listPendingOperatorsForScheme,
+  listApprovedOperatorsForScheme,
+  listApprovedOperators,
   listAllQuarterlySubmissions,
   listAllIaSubmissions,
   listAllOperatorQuarterlyReturns,

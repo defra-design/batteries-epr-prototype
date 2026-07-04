@@ -1554,6 +1554,7 @@ export const content = {
         introParagraph:
           'Manage your battery compliance scheme: apply for approval, manage your members, submit quarterly and annual returns, and issue evidence.',
         switchSchemeAction: 'Switch scheme',
+        operatorsAction: 'Approve operators (ABTOs and ABEs)',
         navLabel: 'Compliance scheme',
         tiles: {
           approval: {
@@ -1803,6 +1804,27 @@ export const content = {
             confirmAction: 'Change availability',
             cancelAction: 'Cancel'
           }
+        },
+        operatorsPage: {
+          title: 'Approve operators (ABTOs and ABEs)',
+          heading: 'Approve operators (ABTOs and ABEs)',
+          intro:
+            'Approve or reject the ABTOs and ABEs that have applied to operate under your compliance scheme. Each operator also needs approval from its regulator before it can sign in.',
+          pendingHeading: 'Awaiting your approval',
+          approvedHeading: 'Approved by your scheme',
+          columns: {
+            name: 'Operator',
+            type: 'Type',
+            approvalNumber: 'Approval number',
+            actions: 'Actions'
+          },
+          acceptAction: 'Approve',
+          rejectAction: 'Reject',
+          acceptConfirm: 'Approve this operator to operate under your scheme?',
+          rejectConfirm: 'Reject this operator?',
+          pendingEmpty: 'No operators are awaiting your approval.',
+          approvedEmpty: 'You have not approved any operators yet.',
+          backToDashboardAction: 'Back to compliance scheme dashboard'
         },
         obligationPage: {
           title: 'Obligation breakdown',
@@ -2148,6 +2170,7 @@ export const content = {
         heading: heading('TODO welsh', 'TODO welsh', null),
         introParagraph: 'TODO welsh',
         switchSchemeAction: 'TODO welsh',
+        operatorsAction: 'TODO welsh',
         navLabel: 'TODO welsh',
         tiles: {
           approval: {
@@ -2383,6 +2406,26 @@ export const content = {
             confirmAction: 'TODO welsh',
             cancelAction: 'TODO welsh'
           }
+        },
+        operatorsPage: {
+          title: 'TODO welsh',
+          heading: 'TODO welsh',
+          intro: 'TODO welsh',
+          pendingHeading: 'TODO welsh',
+          approvedHeading: 'TODO welsh',
+          columns: {
+            name: 'TODO welsh',
+            type: 'TODO welsh',
+            approvalNumber: 'TODO welsh',
+            actions: 'TODO welsh'
+          },
+          acceptAction: 'TODO welsh',
+          rejectAction: 'TODO welsh',
+          acceptConfirm: 'TODO welsh',
+          rejectConfirm: 'TODO welsh',
+          pendingEmpty: 'TODO welsh',
+          approvedEmpty: 'TODO welsh',
+          backToDashboardAction: 'TODO welsh'
         },
         obligationPage: {
           title: 'TODO welsh',
@@ -3156,9 +3199,39 @@ export const content = {
         legend: 'Operator',
         continueAction: 'Continue',
         cancelAction: 'Cancel and return to the playground home',
+        registerAction: 'Register a new ABTO or ABE',
         error: {
           title: 'There is a problem',
           choice: 'Select an operator to continue'
+        }
+      },
+      cy: {
+        title: 'TODO welsh',
+        heading: 'TODO welsh',
+        intro: 'TODO welsh',
+        legend: 'TODO welsh',
+        continueAction: 'TODO welsh',
+        cancelAction: 'TODO welsh',
+        registerAction: 'TODO welsh',
+        error: {
+          title: 'TODO welsh',
+          choice: 'TODO welsh'
+        }
+      }
+    }),
+  operatorRegister: (request) =>
+    getContentForLanguage(request, {
+      en: {
+        title: 'Register a new ABTO or ABE',
+        heading: 'Register a new ABTO or ABE',
+        intro:
+          'Choose the compliance scheme you will operate under. Its regulator will also need to approve your application. Your operator becomes available to sign in to once both the compliance scheme and its regulator approve it.',
+        legend: 'Which compliance scheme will you operate under?',
+        continueAction: 'Continue',
+        cancelAction: 'Cancel and return to sign in',
+        error: {
+          title: 'There is a problem',
+          choice: 'Select a compliance scheme to continue'
         }
       },
       cy: {
