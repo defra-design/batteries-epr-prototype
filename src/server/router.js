@@ -6,6 +6,7 @@ import { cookies } from './cookies/index.js'
 import { terms } from './terms/index.js'
 import { privacy } from './privacy/index.js'
 import { accessibility } from './accessibility/index.js'
+import { npwdPackagingComparison } from './npwdPackagingComparison/index.js'
 import { health } from './health/index.js'
 import { password } from './password/index.js'
 import { signIn } from './signIn/index.js'
@@ -88,6 +89,7 @@ export const router = {
         terms: terms.openRoutes,
         privacy: privacy.openRoutes,
         accessibility: accessibility.openRoutes,
+        npwdPackagingComparison: npwdPackagingComparison.openRoutes,
         health: health.openRoutes,
         password: password.openRoutes,
         signIn: signIn.openRoutes,

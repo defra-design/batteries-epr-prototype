@@ -135,4 +135,16 @@
     </div>
   </div>
   {% endif %}
+
+  {% if reference %}
+  <div class="govuk-grid-row" data-testid="home-reference">
+    <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-m">{{ reference.heading }}</h2>
+      <p class="govuk-body">{{ reference.description }}</p>
+      <p class="govuk-body">
+        <a class="govuk-link" href="{{ npwdPackagingComparisonUrl }}" data-testid="home-npwd-comparison-link">{{ reference.npwdComparisonLinkText }}</a>
+      </p>
+    </div>
+  </div>
+  {% endif %}
 {% endblock %}

@@ -63,6 +63,12 @@ export const content = {
             ],
             primaryAction: 'Sign in as a regulator'
           }
+        },
+        reference: {
+          heading: 'Reference',
+          description: 'Background analysis used to shape these journeys.',
+          npwdComparisonLinkText:
+            'NPWD vs Packaging — user account data comparison'
         }
       },
       cy: {
@@ -96,6 +102,11 @@ export const content = {
             bullets: [],
             primaryAction: 'TODO welsh'
           }
+        },
+        reference: {
+          heading: 'TODO welsh',
+          description: 'TODO welsh',
+          npwdComparisonLinkText: 'TODO welsh'
         }
       }
     }),
