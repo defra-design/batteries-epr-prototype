@@ -17,7 +17,9 @@ describe('#niObligation', () => {
       url: paths.niObligation
     })
     expect(statusCode).toBe(statusCodes.ok)
-    expect(result).toEqual(expect.stringContaining('data-testid="ni-obligation"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="ni-obligation"')
+    )
     expect(result).toEqual(
       expect.stringContaining('data-ni-obligation-results')
     )

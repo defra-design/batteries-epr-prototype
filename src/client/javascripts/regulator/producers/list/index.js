@@ -27,7 +27,9 @@ const formatBatteryTypes = (batteryTypes) => {
 export const runRegulatorProducerList = (doc, loc) => {
   const payload = readPagePayload(doc)
   const agency = storage.currentAgency()
-  const producers = storage.listAllProducers().filter((p) => p.agencyCode === agency?.code)
+  const producers = storage
+    .listAllProducers()
+    .filter((p) => p.agencyCode === agency?.code)
   const body = doc.querySelector('[data-testid="producers-body"]')
   const empty = doc.querySelector('[data-testid="producers-empty"]')
 
@@ -41,7 +43,10 @@ export const runRegulatorProducerList = (doc, loc) => {
   body.innerHTML = producers
     /* v8 ignore start */
     .map((producer) => {
-      const detailHref = payload.urls.detailTemplate.replace('{producerId}', producer.id)
+      const detailHref = payload.urls.detailTemplate.replace(
+        '{producerId}',
+        producer.id
+      )
       return `<tr class="govuk-table__row" data-testid="producer-row">
         <td class="govuk-table__cell" data-testid="producer-row-bprn">${escape(producer.bprn ?? '—')}</td>
         <td class="govuk-table__cell" data-testid="producer-row-company-name">${escape(producer.companyName ?? '—')}</td>

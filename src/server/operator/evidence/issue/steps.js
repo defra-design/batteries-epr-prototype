@@ -44,7 +44,10 @@ export const STEPS = {
       .options({ stripUnknown: true }),
     fieldMessages: (errorContent) => ({
       category: { required: errorContent.category },
-      tonnes: { required: errorContent.tonnes, format: errorContent.tonnesFormat },
+      tonnes: {
+        required: errorContent.tonnes,
+        format: errorContent.tonnesFormat
+      },
       wasteReceivedFrom: {
         required: errorContent.wasteReceivedFrom,
         format: errorContent.wasteReceivedFromFormat

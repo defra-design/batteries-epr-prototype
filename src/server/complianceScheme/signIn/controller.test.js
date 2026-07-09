@@ -64,9 +64,13 @@ describe('#complianceSchemeSignIn', () => {
     })
     expect(statusCode).toBe(statusCodes.ok)
     expect(result).toEqual(
-      expect.stringContaining('data-testid="compliance-scheme-sign-in-error-summary"')
+      expect.stringContaining(
+        'data-testid="compliance-scheme-sign-in-error-summary"'
+      )
     )
-    expect(result).toEqual(expect.stringContaining('Select a compliance scheme'))
+    expect(result).toEqual(
+      expect.stringContaining('Select a compliance scheme')
+    )
   })
 
   test('POST with a non-uuid schemeId renders the error summary', async () => {
@@ -77,7 +81,9 @@ describe('#complianceSchemeSignIn', () => {
     })
     expect(statusCode).toBe(statusCodes.ok)
     expect(result).toEqual(
-      expect.stringContaining('data-testid="compliance-scheme-sign-in-error-summary"')
+      expect.stringContaining(
+        'data-testid="compliance-scheme-sign-in-error-summary"'
+      )
     )
   })
 })

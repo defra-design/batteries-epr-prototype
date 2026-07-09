@@ -1,0 +1,7 @@
+packages:
+  - .
+
+allowBuilds:
+  '@defra/hapi-secure-context': true
+  '@defra/hapi-tracing': true
+  esbuild: true

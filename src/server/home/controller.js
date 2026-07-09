@@ -19,6 +19,8 @@ export const homeController = {
       regulatorSignInUrl: paths.regulatorSignIn,
       niJourney: niContent.home,
       niSignInUrl: paths.niSignIn,
+      reference: pageContent.reference,
+      npwdPackagingComparisonUrl: paths.npwdPackagingComparison,
       showNi: request.query.eubr !== undefined
     })
   }

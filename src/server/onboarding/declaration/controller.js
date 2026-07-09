@@ -32,8 +32,7 @@ const fieldMessages = (errorContent) => ({
   declarationConfirm: errorContent.confirm
 })
 
-const isSchemeRoute = (request) =>
-  request.query?.route === 'complianceScheme'
+const isSchemeRoute = (request) => request.query?.route === 'complianceScheme'
 
 const actionFor = (request) =>
   isSchemeRoute(request)

@@ -57,9 +57,11 @@ describe('initNiProductRequirements', () => {
     const cf = globalThis.document.querySelector(
       '[data-ni-requirements-section="carbonFootprint"]'
     )
-    expect(cf.querySelector('[data-eubr-articles]').getAttribute(
-      'data-eubr-articles'
-    )).toBe('Articles 7 to 10')
+    expect(
+      cf
+        .querySelector('[data-eubr-articles]')
+        .getAttribute('data-eubr-articles')
+    ).toBe('Articles 7 to 10')
     expect(cf.textContent).toContain('12.4 kg CO2e/kWh')
 
     const recycled = globalThis.document.querySelector(

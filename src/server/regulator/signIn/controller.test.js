@@ -45,9 +45,7 @@ describe('#regulatorSignIn', () => {
     expect(result).toEqual(
       expect.stringContaining('"target":"setCurrentAgencyCode"')
     )
-    expect(result).toEqual(
-      expect.stringContaining('"agencyCode":"EA"')
-    )
+    expect(result).toEqual(expect.stringContaining('"agencyCode":"EA"'))
     expect(result).toEqual(
       expect.stringContaining(`"nextStep":"${paths.regulatorDashboard}"`)
     )

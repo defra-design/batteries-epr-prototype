@@ -3,8 +3,7 @@ import { initialiseServer } from '../../../test-utils/initialise-server.js'
 import { paths } from '../../../config/paths.js'
 import { content } from '../../../config/content.js'
 
-const stepUrl = (step) =>
-  paths.operatorApplication.replace('{step}', step)
+const stepUrl = (step) => paths.operatorApplication.replace('{step}', step)
 
 describe('#operatorApplicationController', () => {
   let server
@@ -24,14 +23,11 @@ describe('#operatorApplicationController', () => {
     })
 
     expect(statusCode).toBe(statusCodes.ok)
-    const stepContent =
-      content.operator({}).application.steps.operatorDetails
+    const stepContent = content.operator({}).application.steps.operatorDetails
     expect(result).toEqual(expect.stringContaining(stepContent.heading))
     expect(result).toEqual(expect.stringContaining(stepContent.nameLabel))
     expect(result).toEqual(expect.stringContaining('"target":"hydrate"'))
-    expect(result).toEqual(
-      expect.stringContaining('"step":"operator-details"')
-    )
+    expect(result).toEqual(expect.stringContaining('"step":"operator-details"'))
   })
 
   test('GET unknown step returns 404', async () => {
@@ -70,12 +66,8 @@ describe('#operatorApplicationController', () => {
 
     expect(statusCode).toBe(statusCodes.ok)
     expect(result).toEqual(expect.stringContaining('"target":"persist"'))
-    expect(result).toEqual(
-      expect.stringContaining('"name":"Green Recycling"')
-    )
-    expect(result).toEqual(
-      expect.stringContaining('"approvalType":"abto"')
-    )
+    expect(result).toEqual(expect.stringContaining('"name":"Green Recycling"'))
+    expect(result).toEqual(expect.stringContaining('"approvalType":"abto"'))
     expect(result).toEqual(
       expect.stringContaining(
         '"next":"/operator/application/registered-address"'
@@ -139,18 +131,10 @@ describe('#operatorApplicationController', () => {
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
     expect(result).toEqual(expect.stringContaining('"target":"persist"'))
-    expect(result).toEqual(
-      expect.stringContaining('"isPortable":true')
-    )
-    expect(result).toEqual(
-      expect.stringContaining('"isIndustrial":true')
-    )
-    expect(result).toEqual(
-      expect.stringContaining('"isAutomotive":false')
-    )
-    expect(result).toEqual(
-      expect.stringContaining('"name":"Main Site"')
-    )
+    expect(result).toEqual(expect.stringContaining('"isPortable":true'))
+    expect(result).toEqual(expect.stringContaining('"isIndustrial":true'))
+    expect(result).toEqual(expect.stringContaining('"isAutomotive":false'))
+    expect(result).toEqual(expect.stringContaining('"name":"Main Site"'))
     expect(result).toEqual(
       expect.stringContaining('"operationsDescription":"Treatment"')
     )
@@ -160,7 +144,8 @@ describe('#operatorApplicationController', () => {
     const { statusCode } = await server.inject({
       method: 'POST',
       url: stepUrl('site-details'),
-      payload: 'siteName=&siteLine1=&siteTown=&sitePostcode=&operationsDescription=',
+      payload:
+        'siteName=&siteLine1=&siteTown=&sitePostcode=&operationsDescription=',
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
     expect(statusCode).toBe(statusCodes.found)
@@ -177,9 +162,7 @@ describe('#operatorApplicationController', () => {
       expect.stringContaining('"approvalStatus":"submitted"')
     )
     expect(result).toEqual(
-      expect.stringContaining(
-        '"next":"/operator/application/confirmation"'
-      )
+      expect.stringContaining('"next":"/operator/application/confirmation"')
     )
   })
 

@@ -2,8 +2,7 @@ import { statusCodes } from '../../../common/constants/status-codes.js'
 import { initialiseServer } from '../../../../test-utils/initialise-server.js'
 import { paths } from '../../../../config/paths.js'
 
-const stepUrl = (step) =>
-  paths.operatorEvidenceIssue.replace('{step}', step)
+const stepUrl = (step) => paths.operatorEvidenceIssue.replace('{step}', step)
 
 const FIRST_SCHEME_ID = '22222222-0001-4000-a000-000000000001'
 

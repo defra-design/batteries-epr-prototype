@@ -3,7 +3,10 @@ import { initialiseServer } from '../../../../test-utils/initialise-server.js'
 import { paths } from '../../../../config/paths.js'
 import { content } from '../../../../config/content.js'
 
-const evidenceDetailUrl = paths.regulatorEvidenceDetail.replace('{evidenceId}', 'test-evidence-id')
+const evidenceDetailUrl = paths.regulatorEvidenceDetail.replace(
+  '{evidenceId}',
+  'test-evidence-id'
+)
 
 describe('#regulatorEvidenceDetailController', () => {
   let server
@@ -25,8 +28,12 @@ describe('#regulatorEvidenceDetailController', () => {
     expect(statusCode).toBe(statusCodes.ok)
     const pageContent = content.regulator({}).evidenceOverviewPages.detail
     expect(result).toEqual(expect.stringContaining(pageContent.heading))
-    expect(result).toEqual(expect.stringContaining('data-testid="evidence-detail-list"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="evidence-detail-list"')
+    )
     expect(result).toEqual(expect.stringContaining('"target":"hydrate"'))
-    expect(result).toEqual(expect.stringContaining('"evidenceId":"test-evidence-id"'))
+    expect(result).toEqual(
+      expect.stringContaining('"evidenceId":"test-evidence-id"')
+    )
   })
 })

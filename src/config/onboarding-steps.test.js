@@ -1,10 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import {
-  ONBOARDING_STEPS,
-  findStep,
-  nextStepPath
-} from './onboarding-steps.js'
+import { ONBOARDING_STEPS, findStep, nextStepPath } from './onboarding-steps.js'
 
 describe('onboarding-steps', () => {
   test('exposes the canonical 8-step ordering', () => {

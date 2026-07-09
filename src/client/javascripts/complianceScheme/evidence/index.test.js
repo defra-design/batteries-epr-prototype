@@ -183,7 +183,8 @@ describe('evidence list', () => {
     buildListDom()
     runEvidencePage(document, globalThis.location)
     expect(
-      document.querySelector('[data-testid="evidence-row-transfer"]').textContent
+      document.querySelector('[data-testid="evidence-row-transfer"]')
+        .textContent
     ).toBe('Out')
   })
 })
@@ -279,9 +280,8 @@ describe('evidence issue wizard', () => {
     buildDeclarationDom(baseHydrate('declaration'))
     runEvidencePage(document, globalThis.location)
     expect(
-      document.querySelector(
-        '[data-testid="evidence-issue-summary-recipient"]'
-      ).textContent
+      document.querySelector('[data-testid="evidence-issue-summary-recipient"]')
+        .textContent
     ).toContain('Alpha')
     expect(
       document.querySelector('[data-testid="evidence-issue-summary-tonnes"]')
@@ -298,9 +298,8 @@ describe('evidence issue wizard', () => {
     buildDeclarationDom(baseHydrate('declaration'))
     runEvidencePage(document, globalThis.location)
     expect(
-      document.querySelector(
-        '[data-testid="evidence-issue-summary-recipient"]'
-      ).textContent
+      document.querySelector('[data-testid="evidence-issue-summary-recipient"]')
+        .textContent
     ).toBe('BPRN-UNKNOWN')
   })
 
@@ -433,7 +432,8 @@ describe('evidence detail', () => {
       document.querySelector('[data-testid="evidence-detail-buttons"]').hidden
     ).toBe(true)
     expect(
-      document.querySelector('[data-testid="evidence-detail-no-actions"]').hidden
+      document.querySelector('[data-testid="evidence-detail-no-actions"]')
+        .hidden
     ).toBe(false)
     expect(
       document.querySelector('[data-testid="evidence-detail-transfer"]')

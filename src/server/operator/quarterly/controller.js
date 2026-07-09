@@ -12,9 +12,7 @@ import { STEPS, isKnownQuarter, isKnownStep } from './steps.js'
 const flashKey = (quarter, step) => `operatorQuarterly:${quarter}:${step}`
 
 const stepUrl = (quarter, step) =>
-  paths.operatorQuarterly
-    .replace('{quarter}', quarter)
-    .replace('{step}', step)
+  paths.operatorQuarterly.replace('{quarter}', quarter).replace('{step}', step)
 
 const nextUrl = (quarter, step) => {
   const next = STEPS[step].next
@@ -58,7 +56,10 @@ export const operatorQuarterlyController = {
         return h.response().code(statusCodes.notFound)
       }
       const compliancePeriodYear = getCompliancePeriod(request)
-      const { errors, values } = readStepErrors(request, flashKey(quarter, step))
+      const { errors, values } = readStepErrors(
+        request,
+        flashKey(quarter, step)
+      )
 
       return renderStep(h, request, quarter, step, {
         errorSummary: errors || [],
@@ -93,7 +94,10 @@ export const operatorQuarterlyController = {
       const payload = request.payload
       const { error, value } = stepConfig.schema.validate(payload)
       if (error) {
-        const list = collectErrors(error, stepConfig.fieldMessages(stepContent.error))
+        const list = collectErrors(
+          error,
+          stepConfig.fieldMessages(stepContent.error)
+        )
         flashStepErrors(request, flashKey(quarter, step), list, payload)
         return h.redirect(stepUrl(quarter, step))
       }

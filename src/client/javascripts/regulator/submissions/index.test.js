@@ -90,8 +90,12 @@ describe('runRegulatorSubmissionsPage', () => {
     document.body.innerHTML = submissionsHtml(defaultPayload)
     const result = runRegulatorSubmissionsPage(document, { assign: assignSpy })
     expect(result).toBe('rendered')
-    const typeCells = document.querySelectorAll('[data-testid="submission-row-type"]')
-    const hasIa = [...typeCells].some((cell) => cell.textContent.includes('Scheme IA'))
+    const typeCells = document.querySelectorAll(
+      '[data-testid="submission-row-type"]'
+    )
+    const hasIa = [...typeCells].some((cell) =>
+      cell.textContent.includes('Scheme IA')
+    )
     expect(hasIa).toBe(true)
   })
 
@@ -107,8 +111,12 @@ describe('runRegulatorSubmissionsPage', () => {
     document.body.innerHTML = submissionsHtml(defaultPayload)
     const result = runRegulatorSubmissionsPage(document, { assign: assignSpy })
     expect(result).toBe('rendered')
-    const typeCells = document.querySelectorAll('[data-testid="submission-row-type"]')
-    const hasOpQ = [...typeCells].some((cell) => cell.textContent.includes('Operator quarterly'))
+    const typeCells = document.querySelectorAll(
+      '[data-testid="submission-row-type"]'
+    )
+    const hasOpQ = [...typeCells].some((cell) =>
+      cell.textContent.includes('Operator quarterly')
+    )
     expect(hasOpQ).toBe(true)
   })
 
@@ -124,8 +132,12 @@ describe('runRegulatorSubmissionsPage', () => {
     document.body.innerHTML = submissionsHtml(defaultPayload)
     const result = runRegulatorSubmissionsPage(document, { assign: assignSpy })
     expect(result).toBe('rendered')
-    const typeCells = document.querySelectorAll('[data-testid="submission-row-type"]')
-    const hasOpA = [...typeCells].some((cell) => cell.textContent.includes('Operator annual'))
+    const typeCells = document.querySelectorAll(
+      '[data-testid="submission-row-type"]'
+    )
+    const hasOpA = [...typeCells].some((cell) =>
+      cell.textContent.includes('Operator annual')
+    )
     expect(hasOpA).toBe(true)
   })
 
@@ -140,8 +152,12 @@ describe('runRegulatorSubmissionsPage', () => {
 
     document.body.innerHTML = submissionsHtml(defaultPayload)
     runRegulatorSubmissionsPage(document, { assign: assignSpy })
-    const entityCells = document.querySelectorAll('[data-testid="submission-row-entity"]')
-    const hasName = [...entityCells].some((cell) => cell.textContent === operator.name)
+    const entityCells = document.querySelectorAll(
+      '[data-testid="submission-row-entity"]'
+    )
+    const hasName = [...entityCells].some(
+      (cell) => cell.textContent === operator.name
+    )
     expect(hasName).toBe(true)
   })
 
@@ -156,8 +172,12 @@ describe('runRegulatorSubmissionsPage', () => {
 
     document.body.innerHTML = submissionsHtml(defaultPayload)
     runRegulatorSubmissionsPage(document, { assign: assignSpy })
-    const periodCells = document.querySelectorAll('[data-testid="submission-row-period"]')
-    const hasQ3 = [...periodCells].some((cell) => cell.textContent === '2026 Q3')
+    const periodCells = document.querySelectorAll(
+      '[data-testid="submission-row-period"]'
+    )
+    const hasQ3 = [...periodCells].some(
+      (cell) => cell.textContent === '2026 Q3'
+    )
     expect(hasQ3).toBe(true)
   })
 })

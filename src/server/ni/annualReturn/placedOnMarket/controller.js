@@ -33,7 +33,10 @@ const schema = joi
     pomAutomotive: tonnes
   })
   .custom((value, helpers) => {
-    const total = FIELDS.reduce((sum, field) => sum + (Number(value[field]) || 0), 0)
+    const total = FIELDS.reduce(
+      (sum, field) => sum + (Number(value[field]) || 0),
+      0
+    )
     if (total <= 0) return helpers.error('atLeastOne')
     return value
   })
@@ -76,8 +79,14 @@ export const placedOnMarketController = {
             pomEv: pageContent.error.number,
             pomAutomotive: pageContent.error.number
           })
-          if (!list.length && err.details.some((d) => d.type === 'atLeastOne')) {
-            list.push({ text: pageContent.error.atLeastOne, href: '#pomPortable' })
+          if (
+            !list.length &&
+            err.details.some((d) => d.type === 'atLeastOne')
+          ) {
+            list.push({
+              text: pageContent.error.atLeastOne,
+              href: '#pomPortable'
+            })
           }
           flashErrors(request, STEP_ID, list, request.payload)
           return h.redirect(paths.niAnnualReturnPlaced).takeover()

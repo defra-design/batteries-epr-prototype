@@ -75,9 +75,7 @@ export const schemeSelectController = {
         payload: schema,
         failAction: (request, h, _err) => {
           const pageContent = content.onboardingSchemeSelect(request)
-          const list = [
-            { text: pageContent.error.choice, href: '#schemeId' }
-          ]
+          const list = [{ text: pageContent.error.choice, href: '#schemeId' }]
           flashStepErrors(request, STEP_ID, list, request.payload)
           const returnUrl = returnUrlFromRequest(request)
           return h

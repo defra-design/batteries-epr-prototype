@@ -45,9 +45,7 @@ describe('#schemeSelect', () => {
       payload: { schemeId }
     })
     expect(statusCode).toBe(statusCodes.ok)
-    expect(result).toEqual(
-      expect.stringContaining(`"schemeId":"${schemeId}"`)
-    )
+    expect(result).toEqual(expect.stringContaining(`"schemeId":"${schemeId}"`))
     expect(result).toEqual(
       expect.stringContaining(`"nextStep":"${paths.onboardingSchemeConfirm}"`)
     )

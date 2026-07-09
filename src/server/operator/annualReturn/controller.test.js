@@ -3,8 +3,7 @@ import { initialiseServer } from '../../../test-utils/initialise-server.js'
 import { paths } from '../../../config/paths.js'
 import { content } from '../../../config/content.js'
 
-const stepUrl = (step) =>
-  paths.operatorAnnualReturn.replace('{step}', step)
+const stepUrl = (step) => paths.operatorAnnualReturn.replace('{step}', step)
 
 const validTonnagePayload = [
   'industrialAcceptedLeadAcid=1.000',
@@ -39,8 +38,7 @@ describe('#operatorAnnualReturnController', () => {
     })
 
     expect(statusCode).toBe(statusCodes.ok)
-    const stepContent =
-      content.operator({}).annualPages.steps.tonnages
+    const stepContent = content.operator({}).annualPages.steps.tonnages
     expect(result).toEqual(expect.stringContaining(stepContent.heading))
     expect(result).toEqual(expect.stringContaining('"target":"hydrate"'))
     expect(result).toEqual(expect.stringContaining('"step":"tonnages"'))
@@ -81,9 +79,7 @@ describe('#operatorAnnualReturnController', () => {
 
     expect(statusCode).toBe(statusCodes.ok)
     expect(result).toEqual(expect.stringContaining('"target":"persist"'))
-    expect(result).toEqual(
-      expect.stringContaining('"status":"in-progress"')
-    )
+    expect(result).toEqual(expect.stringContaining('"status":"in-progress"'))
     expect(result).toEqual(
       expect.stringContaining('"next":"/operator/annual-return/declaration"')
     )
@@ -108,13 +104,9 @@ describe('#operatorAnnualReturnController', () => {
       payload: 'declarationAccepted=yes',
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
+    expect(result).toEqual(expect.stringContaining('"status":"submitted"'))
     expect(result).toEqual(
-      expect.stringContaining('"status":"submitted"')
-    )
-    expect(result).toEqual(
-      expect.stringContaining(
-        '"next":"/operator/annual-return/confirmation"'
-      )
+      expect.stringContaining('"next":"/operator/annual-return/confirmation"')
     )
   })
 
@@ -160,8 +152,6 @@ describe('#operatorAnnualReturnController', () => {
 
     expect(statusCode).toBe(statusCodes.ok)
     const annualPages = content.operator({}).annualPages
-    expect(result).toEqual(
-      expect.stringContaining(annualPages.confirmAction)
-    )
+    expect(result).toEqual(expect.stringContaining(annualPages.confirmAction))
   })
 })

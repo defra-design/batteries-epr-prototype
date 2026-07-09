@@ -14,7 +14,13 @@ const defaultPayload = {
   view: 'list',
   compliancePeriodYear: '2026',
   copy: {
-    statuses: { 'not-started': 'Not started', 'in-progress': 'In progress', submitted: 'Submitted', approved: 'Approved', rejected: 'Rejected' },
+    statuses: {
+      'not-started': 'Not started',
+      'in-progress': 'In progress',
+      submitted: 'Submitted',
+      approved: 'Approved',
+      rejected: 'Rejected'
+    },
     typeLabels: { abto: 'ABTO', abe: 'ABE' },
     viewAction: 'View'
   },
@@ -61,16 +67,22 @@ describe('runRegulatorOperatorList', () => {
   test('renders type labels correctly', () => {
     document.body.innerHTML = listHtml(defaultPayload)
     runRegulatorOperatorList(document, { assign: assignSpy })
-    const typeCells = document.querySelectorAll('[data-testid="operator-row-type"]')
+    const typeCells = document.querySelectorAll(
+      '[data-testid="operator-row-type"]'
+    )
     expect(typeCells.length).toBeGreaterThan(0)
-    const hasAbto = [...typeCells].some((cell) => cell.textContent.includes('ABTO'))
+    const hasAbto = [...typeCells].some((cell) =>
+      cell.textContent.includes('ABTO')
+    )
     expect(hasAbto).toBe(true)
   })
 
   test('renders view links with correct hrefs', () => {
     document.body.innerHTML = listHtml(defaultPayload)
     runRegulatorOperatorList(document, { assign: assignSpy })
-    const viewLinks = document.querySelectorAll('[data-testid="operator-row-view"]')
+    const viewLinks = document.querySelectorAll(
+      '[data-testid="operator-row-view"]'
+    )
     expect(viewLinks.length).toBeGreaterThan(0)
     for (const link of viewLinks) {
       expect(link.getAttribute('href')).toContain('/regulator/operators/')

@@ -51,7 +51,8 @@ describe('runObligationPage', () => {
       document.querySelectorAll('tr[data-testid^="obligation-row-"]')
     ).toHaveLength(3)
     expect(
-      document.querySelector('[data-testid="obligation-total-placed"]').textContent
+      document.querySelector('[data-testid="obligation-total-placed"]')
+        .textContent
     ).toBe('0.000')
   })
 
@@ -62,7 +63,12 @@ describe('runObligationPage', () => {
       compliancePeriodYear: '2026',
       quarter: 'Q1',
       status: 'submitted',
-      memberData: [{ memberId: 'm-1', marketData: { portable: '1', industrial: '0', automotive: '0' } }]
+      memberData: [
+        {
+          memberId: 'm-1',
+          marketData: { portable: '1', industrial: '0', automotive: '0' }
+        }
+      ]
     })
     buildDom({
       ...PAYLOAD,
@@ -76,7 +82,8 @@ describe('runObligationPage', () => {
     })
     runObligationPage(document)
     expect(
-      document.querySelector('[data-testid="obligation-row-portable"]').innerHTML
+      document.querySelector('[data-testid="obligation-row-portable"]')
+        .innerHTML
     ).toContain('Portable &amp; co')
   })
 
@@ -87,7 +94,12 @@ describe('runObligationPage', () => {
       compliancePeriodYear: '2026',
       quarter: 'Q1',
       status: 'submitted',
-      memberData: [{ memberId: 'm-1', marketData: { portable: '100', industrial: '50', automotive: '50' } }]
+      memberData: [
+        {
+          memberId: 'm-1',
+          marketData: { portable: '100', industrial: '50', automotive: '50' }
+        }
+      ]
     })
     storage.saveEvidence(
       createEvidence({
@@ -101,9 +113,8 @@ describe('runObligationPage', () => {
     buildDom()
     runObligationPage(document)
     expect(
-      document.querySelector(
-        '[data-testid="obligation-row-portable-placed"]'
-      ).textContent
+      document.querySelector('[data-testid="obligation-row-portable-placed"]')
+        .textContent
     ).toBe('100.000')
     expect(
       document.querySelector(
@@ -111,9 +122,8 @@ describe('runObligationPage', () => {
       ).textContent
     ).toBe('45.000')
     expect(
-      document.querySelector(
-        '[data-testid="obligation-row-portable-accepted"]'
-      ).textContent
+      document.querySelector('[data-testid="obligation-row-portable-accepted"]')
+        .textContent
     ).toBe('10.000')
     expect(
       document.querySelector(
@@ -133,7 +143,12 @@ describe('runObligationPage', () => {
       compliancePeriodYear: '2026',
       quarter: 'Q1',
       status: 'submitted',
-      memberData: [{ memberId: 'm-1', marketData: { portable: '100', industrial: '0', automotive: '0' } }]
+      memberData: [
+        {
+          memberId: 'm-1',
+          marketData: { portable: '100', industrial: '0', automotive: '0' }
+        }
+      ]
     })
     buildDom()
     runObligationPage(document)
@@ -174,21 +189,30 @@ describe('runObligationPage', () => {
       compliancePeriodYear: '2026',
       quarter: 'Q1',
       status: 'submitted',
-      memberData: [{ memberId: 'm-1', marketData: { portable: '100', industrial: '0', automotive: '0' } }]
+      memberData: [
+        {
+          memberId: 'm-1',
+          marketData: { portable: '100', industrial: '0', automotive: '0' }
+        }
+      ]
     })
     storage.saveQuarterlySubmission({
       schemeId: scheme.id,
       compliancePeriodYear: '2027',
       quarter: 'Q1',
       status: 'submitted',
-      memberData: [{ memberId: 'm-1', marketData: { portable: '500', industrial: '0', automotive: '0' } }]
+      memberData: [
+        {
+          memberId: 'm-1',
+          marketData: { portable: '500', industrial: '0', automotive: '0' }
+        }
+      ]
     })
     buildDom({ ...PAYLOAD, compliancePeriodYear: '2027' })
     runObligationPage(document)
     expect(
-      document.querySelector(
-        '[data-testid="obligation-row-portable-placed"]'
-      ).textContent
+      document.querySelector('[data-testid="obligation-row-portable-placed"]')
+        .textContent
     ).toBe('500.000')
   })
 

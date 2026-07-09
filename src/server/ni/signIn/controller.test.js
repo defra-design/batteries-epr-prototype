@@ -56,8 +56,6 @@ describe('#niSignIn', () => {
       url: paths.niSignIn,
       headers: { cookie }
     })
-    expect(result).toEqual(
-      expect.stringContaining('ni-sign-in-error-summary')
-    )
+    expect(result).toEqual(expect.stringContaining('ni-sign-in-error-summary'))
   })
 })

@@ -28,7 +28,9 @@ describe('#complianceSchemeQuarterlyController', () => {
       url: stepUrl('Q1', 'member-list')
     })
     expect(statusCode).toBe(statusCodes.ok)
-    expect(result).toEqual(expect.stringContaining('data-testid="quarterly-member-list-table"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="quarterly-member-list-table"')
+    )
     expect(result).toEqual(expect.stringContaining('"view":"quarterly"'))
     expect(result).toEqual(expect.stringContaining('"step":"member-list"'))
     expect(result).toEqual(expect.stringContaining('"target":"hydrate"'))
@@ -58,7 +60,11 @@ describe('#complianceSchemeQuarterlyController', () => {
     expect(result).toEqual(
       expect.stringContaining('data-testid="quarterly-check-table"')
     )
-    expect(result).toEqual(expect.stringContaining('"next":"/compliance-scheme/quarterly/Q2/declaration"'))
+    expect(result).toEqual(
+      expect.stringContaining(
+        '"next":"/compliance-scheme/quarterly/Q2/declaration"'
+      )
+    )
   })
 
   test('GET confirmation renders the panel', async () => {
@@ -78,9 +84,7 @@ describe('#complianceSchemeQuarterlyController', () => {
       payload: 'declarationAccepted=yes',
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
-    expect(result).toEqual(
-      expect.stringContaining('"status":"submitted"')
-    )
+    expect(result).toEqual(expect.stringContaining('"status":"submitted"'))
     expect(result).toEqual(
       expect.stringContaining(
         '"next":"/compliance-scheme/quarterly/Q1/confirmation"'
@@ -120,9 +124,13 @@ describe('#complianceSchemeQuarterlyController', () => {
       url: memberUrl('Q1', 'test-member-id', 'market-data')
     })
     expect(statusCode).toBe(statusCodes.ok)
-    expect(result).toEqual(expect.stringContaining('data-testid="quarterly-member-form"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="quarterly-member-form"')
+    )
     expect(result).toEqual(expect.stringContaining('"view":"quarterly-member"'))
-    expect(result).toEqual(expect.stringContaining('"memberId":"test-member-id"'))
+    expect(result).toEqual(
+      expect.stringContaining('"memberId":"test-member-id"')
+    )
   })
 
   test('GET member unknown dataType returns 404', async () => {
@@ -173,6 +181,8 @@ describe('#complianceSchemeQuarterlyController', () => {
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
     expect(statusCode).toBe(statusCodes.found)
-    expect(headers.location).toBe(memberUrl('Q1', 'test-member-id', 'market-data'))
+    expect(headers.location).toBe(
+      memberUrl('Q1', 'test-member-id', 'market-data')
+    )
   })
 })

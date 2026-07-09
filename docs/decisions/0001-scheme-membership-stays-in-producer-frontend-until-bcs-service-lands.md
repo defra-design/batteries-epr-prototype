@@ -8,7 +8,7 @@
 
 The original PRD splits the eventual production system into several services: a producer frontend (this repo), a `batteries-scheme-frontend` for compliance-scheme operators, a `batteries-reprocessor-frontend`, and a regulator-facing service. The compliance-scheme functionality — approving schemes, accepting members, filing rosters, evidence accounting — was scoped to the future scheme frontend.
 
-The producer-side experience of *being a member of a scheme* is small: an onboarding fork (pick a scheme), a dashboard tile, an account row, a "leave scheme" wizard, and the divergence point on the annual return. None of this requires the operator-side machinery; it just needs to know which scheme the producer belongs to.
+The producer-side experience of _being a member of a scheme_ is small: an onboarding fork (pick a scheme), a dashboard tile, an account row, a "leave scheme" wizard, and the divergence point on the annual return. None of this requires the operator-side machinery; it just needs to know which scheme the producer belongs to.
 
 The prototype's job is to validate user journeys and copy end-to-end. A producer who picks "compliance scheme" but then sees a 404 (because the scheme side doesn't exist) is not a useful prototype.
 

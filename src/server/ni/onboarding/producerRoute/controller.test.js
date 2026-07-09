@@ -17,7 +17,9 @@ describe('#niOnboardingProducerRoute', () => {
       url: paths.niOnboardingProducerRoute
     })
     expect(statusCode).toBe(statusCodes.ok)
-    expect(result).toEqual(expect.stringContaining('data-testid="ni-route-self"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="ni-route-self"')
+    )
   })
 
   test('POST with no choice redirects back and flashes an error', async () => {

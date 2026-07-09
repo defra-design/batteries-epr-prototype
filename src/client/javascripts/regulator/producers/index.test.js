@@ -50,7 +50,10 @@ describe('runRegulatorProducersPage', () => {
       copy: {
         viewAction: 'View'
       },
-      urls: { detailTemplate: '/regulator/producers/{producerId}', dashboard: '/regulator' }
+      urls: {
+        detailTemplate: '/regulator/producers/{producerId}',
+        dashboard: '/regulator'
+      }
     })
     const result = runRegulatorProducersPage(document, { assign: assignSpy })
     expect(result).toBe('rendered')

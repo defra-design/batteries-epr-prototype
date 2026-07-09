@@ -7,16 +7,23 @@ A GDS-pattern Hapi.js + Nunjucks frontend that reproduces the producer-facing jo
 ## Requirements
 
 - Node.js v22.16.0 (use `.nvmrc`)
-- npm
+- pnpm 11
 
 ## Getting started
 
 ```bash
-npm install
-npm run dev
+corepack enable
+corepack prepare pnpm@11 --activate
+pnpm install
+pnpm dev
 ```
 
 The service runs on http://localhost:3010.
+
+CI installs dependencies with `pnpm install --frozen-lockfile`, so commit
+`pnpm-lock.yaml` whenever dependencies change. If pnpm reports ignored build
+scripts after dependency changes, run `pnpm approve-builds` locally and commit
+the resulting approval changes.
 
 ## Useful URLs in development
 
@@ -81,13 +88,13 @@ Everything that would otherwise be a backend call goes through `src/client/javas
 ## Commands
 
 ```bash
-npm run dev              # webpack watch + nodemon (port 3010)
-npm run build:frontend   # webpack production build
-npm test                 # Vitest, 100% coverage threshold
-npm run test:watch       # Vitest in watch mode
-npm run lint             # ESLint + Stylelint
-npm run format           # Prettier write
-npm run format:check     # Prettier check (CI mode)
+pnpm dev              # webpack watch + nodemon (port 3010)
+pnpm build:frontend   # webpack production build
+pnpm test             # Vitest, 100% coverage threshold
+pnpm test:watch       # Vitest in watch mode
+pnpm lint             # ESLint + Stylelint
+pnpm format           # Prettier write
+pnpm format:check     # Prettier check (CI mode)
 ```
 
 Pre-commit hooks run `format:check && lint && test`.

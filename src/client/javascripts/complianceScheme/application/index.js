@@ -13,7 +13,8 @@ const ensureScheme = (loc) => {
   return scheme
 }
 
-const applyPatch = (scheme, patch) => storage.saveScheme({ ...scheme, ...patch })
+const applyPatch = (scheme, patch) =>
+  storage.saveScheme({ ...scheme, ...patch })
 
 export const runApplicationStep = (
   doc = globalThis.document,

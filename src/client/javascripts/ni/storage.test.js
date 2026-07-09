@@ -54,7 +54,10 @@ describe('ni storage — registration', () => {
 
 describe('ni storage — annual returns', () => {
   test('saveAnnualReturn stores a return keyed by period', () => {
-    const saved = saveAnnualReturn({ period: '2026', reference: 'NI-AR-100001' })
+    const saved = saveAnnualReturn({
+      period: '2026',
+      reference: 'NI-AR-100001'
+    })
 
     expect(saved.id).toMatch(/^[0-9a-f-]{36}$/)
     expect(saved.version).toBe(0)
@@ -64,7 +67,10 @@ describe('ni storage — annual returns', () => {
   test('saveAnnualReturn keeps multiple periods and re-stamps a re-save', () => {
     saveAnnualReturn({ period: '2025', reference: 'NI-AR-100001' })
     saveAnnualReturn({ period: '2026', reference: 'NI-AR-100002' })
-    const resaved = saveAnnualReturn({ period: '2026', reference: 'NI-AR-100003' })
+    const resaved = saveAnnualReturn({
+      period: '2026',
+      reference: 'NI-AR-100003'
+    })
 
     expect(resaved.version).toBe(1)
     expect(listAnnualReturns()).toHaveLength(2)

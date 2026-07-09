@@ -24,9 +24,15 @@ describe('#regulatorOperatorListController', () => {
     const pageContent = content.regulator({}).operatorsPages.list
     expect(result).toEqual(expect.stringContaining(pageContent.heading))
     expect(result).toEqual(expect.stringContaining(pageContent.intro))
-    expect(result).toEqual(expect.stringContaining('data-testid="operators-table"'))
-    expect(result).toEqual(expect.stringContaining('data-testid="operators-body"'))
-    expect(result).toEqual(expect.stringContaining('data-testid="operators-empty"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="operators-table"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="operators-body"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="operators-empty"')
+    )
   })
 
   test('emits a page-payload with view list', async () => {

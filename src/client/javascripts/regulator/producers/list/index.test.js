@@ -59,7 +59,9 @@ describe('runRegulatorProducerList', () => {
   test('renders view links with correct hrefs', () => {
     document.body.innerHTML = listHtml(defaultPayload)
     runRegulatorProducerList(document, { assign: assignSpy })
-    const viewLinks = document.querySelectorAll('[data-testid="producer-row-view"]')
+    const viewLinks = document.querySelectorAll(
+      '[data-testid="producer-row-view"]'
+    )
     expect(viewLinks.length).toBeGreaterThan(0)
     for (const link of viewLinks) {
       expect(link.getAttribute('href')).toContain('/regulator/producers/')
@@ -69,7 +71,9 @@ describe('runRegulatorProducerList', () => {
   test('renders battery types as comma-separated list', () => {
     document.body.innerHTML = listHtml(defaultPayload)
     runRegulatorProducerList(document, { assign: assignSpy })
-    const typeCells = document.querySelectorAll('[data-testid="producer-row-battery-types"]')
+    const typeCells = document.querySelectorAll(
+      '[data-testid="producer-row-battery-types"]'
+    )
     expect(typeCells.length).toBeGreaterThan(0)
   })
 })

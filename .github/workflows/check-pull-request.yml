@@ -14,22 +14,29 @@ jobs:
   pr-validator:
     name: Run Pull Request Checks
     runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
 
       - name: Test code and Create Test Coverage Reports
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: npm
+          cache: pnpm
       - run: |
-          npm ci
-          npm audit --audit-level=high
-          npm run build:frontend
-          npm run format:check
-          npm run lint
-          npm test
+          pnpm install --frozen-lockfile
+          pnpm audit --audit-level high
+          pnpm run build:frontend
+          pnpm run format:check
+          pnpm run lint
+          pnpm test
 
       - name: Test Docker Image Build
         run: |
@@ -38,7 +45,7 @@ jobs:
           exit $?
 
       - name: SonarCloud Scan
-        if: github.actor != 'dependabot[bot]'
+        if: ${{ github.actor != 'dependabot[bot]' && env.SONAR_TOKEN != '' }}
         uses: SonarSource/sonarqube-scan-action@v6.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

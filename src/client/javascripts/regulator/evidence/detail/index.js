@@ -35,7 +35,9 @@ export const runRegulatorEvidenceDetail = (doc, loc) => {
   const payload = readPagePayload(doc)
 
   const evidence = storage.findEvidence(payload.evidenceId)
-  const notFound = doc.querySelector('[data-testid="evidence-detail-not-found"]')
+  const notFound = doc.querySelector(
+    '[data-testid="evidence-detail-not-found"]'
+  )
   const list = doc.querySelector('[data-testid="evidence-detail-list"]')
 
   if (!evidence) {
@@ -48,14 +50,38 @@ export const runRegulatorEvidenceDetail = (doc, loc) => {
   list.hidden = false
 
   /* v8 ignore start */
-  setText(doc, '[data-testid="evidence-detail-issuer"]', resolveIssuerName(evidence))
-  setText(doc, '[data-testid="evidence-detail-recipient"]', evidence.recipientName ?? '—')
-  setText(doc, '[data-testid="evidence-detail-category"]', evidence.category ?? '—')
+  setText(
+    doc,
+    '[data-testid="evidence-detail-issuer"]',
+    resolveIssuerName(evidence)
+  )
+  setText(
+    doc,
+    '[data-testid="evidence-detail-recipient"]',
+    evidence.recipientName ?? '—'
+  )
+  setText(
+    doc,
+    '[data-testid="evidence-detail-category"]',
+    evidence.category ?? '—'
+  )
   setText(doc, '[data-testid="evidence-detail-tonnes"]', evidence.tonnes ?? '—')
   setText(doc, '[data-testid="evidence-detail-status"]', evidence.status ?? '—')
-  setText(doc, '[data-testid="evidence-detail-issued"]', evidence.issuedOn ?? '—')
-  setText(doc, '[data-testid="evidence-detail-dates"]', formatDateRange(evidence.wasteReceivedFrom, evidence.wasteReceivedTo))
-  setText(doc, '[data-testid="evidence-detail-direction"]', evidence.direction ?? '—')
+  setText(
+    doc,
+    '[data-testid="evidence-detail-issued"]',
+    evidence.issuedOn ?? '—'
+  )
+  setText(
+    doc,
+    '[data-testid="evidence-detail-dates"]',
+    formatDateRange(evidence.wasteReceivedFrom, evidence.wasteReceivedTo)
+  )
+  setText(
+    doc,
+    '[data-testid="evidence-detail-direction"]',
+    evidence.direction ?? '—'
+  )
   /* v8 ignore stop */
 
   return 'hydrated'

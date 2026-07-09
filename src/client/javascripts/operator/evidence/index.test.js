@@ -1,11 +1,13 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
+import { runOperatorEvidencePage, __testing__ } from './index.js'
 import {
-  runOperatorEvidencePage,
-  __testing__
-} from './index.js'
-import { storage, createOperator, createEvidence, STORAGE_KEYS } from '../../storage-adapter.js'
+  storage,
+  createOperator,
+  createEvidence,
+  STORAGE_KEYS
+} from '../../storage-adapter.js'
 
 const { ISSUE_DRAFT_KEY, writeDraft, clearDraft } = __testing__
 
@@ -212,9 +214,7 @@ describe('runOperatorEvidencePage', () => {
         document.querySelector('input[name="category"][value="portable"]')
           .checked
       ).toBe(true)
-      expect(document.querySelector('input[name="tonnes"]').value).toBe(
-        '2.000'
-      )
+      expect(document.querySelector('input[name="tonnes"]').value).toBe('2.000')
     })
   })
 
@@ -239,14 +239,12 @@ describe('runOperatorEvidencePage', () => {
       })
       runOperatorEvidencePage(document, { assign: assignSpy })
       expect(
-        document.querySelector(
-          '[data-testid="evidence-issue-summary-scheme"]'
-        ).textContent
+        document.querySelector('[data-testid="evidence-issue-summary-scheme"]')
+          .textContent
       ).toBe(scheme.name)
       expect(
-        document.querySelector(
-          '[data-testid="evidence-issue-summary-tonnes"]'
-        ).textContent
+        document.querySelector('[data-testid="evidence-issue-summary-tonnes"]')
+          .textContent
       ).toBe('3.000')
     })
 
@@ -266,9 +264,8 @@ describe('runOperatorEvidencePage', () => {
       })
       runOperatorEvidencePage(document, { assign: assignSpy })
       expect(
-        document.querySelector(
-          '[data-testid="evidence-issue-summary-scheme"]'
-        ).textContent
+        document.querySelector('[data-testid="evidence-issue-summary-scheme"]')
+          .textContent
       ).toBe('unknown-id')
     })
 
@@ -284,9 +281,8 @@ describe('runOperatorEvidencePage', () => {
       })
       runOperatorEvidencePage(document, { assign: assignSpy })
       expect(
-        document.querySelector(
-          '[data-testid="evidence-issue-summary-scheme"]'
-        ).textContent
+        document.querySelector('[data-testid="evidence-issue-summary-scheme"]')
+          .textContent
       ).toBe('')
     })
   })

@@ -23,7 +23,11 @@ const carbonFootprintResult = (categories, cf) => {
     heading: CARBON_FOOTPRINT.heading,
     legislation: CARBON_FOOTPRINT.legislation,
     applies,
-    status: !applies ? 'not-applicable' : declared ? 'declared' : 'not-declared',
+    status: !applies
+      ? 'not-applicable'
+      : declared
+        ? 'declared'
+        : 'not-declared',
     rows: [
       {
         label: 'Declared carbon footprint',

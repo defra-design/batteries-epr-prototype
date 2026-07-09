@@ -52,7 +52,9 @@ export const signInController = {
         failAction(request, h, _err) {
           const pageContent = content.complianceSchemeSignIn(request)
           return renderView(h, request, {
-            errorSummary: [{ text: pageContent.error.choice, href: '#schemeId' }],
+            errorSummary: [
+              { text: pageContent.error.choice, href: '#schemeId' }
+            ],
             errors: { schemeId: pageContent.error.choice },
             formValues: request.payload,
             schemes: approvedSchemes(),

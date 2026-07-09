@@ -25,7 +25,9 @@ describe('#niOnboardingCompanyDetails', () => {
       url: paths.niOnboardingCompanyDetails
     })
     expect(statusCode).toBe(statusCodes.ok)
-    expect(result).toEqual(expect.stringContaining('data-testid="ni-company-name"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="ni-company-name"')
+    )
   })
 
   test('POST with missing fields redirects back and flashes errors', async () => {

@@ -14,12 +14,7 @@ export const CARBON_FOOTPRINT = {
 export const RECYCLED_CONTENT = {
   key: 'recycledContent',
   heading: 'Recycled content',
-  appliesToCategories: [
-    'isElectricVehicle',
-    'isLmt',
-    'isIndustrial',
-    'isSli'
-  ],
+  appliesToCategories: ['isElectricVehicle', 'isLmt', 'isIndustrial', 'isSli'],
   legislation: {
     articles: 'Article 8',
     title: 'Recycled content',
@@ -28,9 +23,24 @@ export const RECYCLED_CONTENT = {
     appliesFrom: 'Declaration from 2028; minimum shares from 2031'
   },
   materials: [
-    { key: 'cobalt', label: 'Cobalt', field: 'recycledCobalt', thresholdPercent: 16 },
-    { key: 'lithium', label: 'Lithium', field: 'recycledLithium', thresholdPercent: 6 },
-    { key: 'nickel', label: 'Nickel', field: 'recycledNickel', thresholdPercent: 6 },
+    {
+      key: 'cobalt',
+      label: 'Cobalt',
+      field: 'recycledCobalt',
+      thresholdPercent: 16
+    },
+    {
+      key: 'lithium',
+      label: 'Lithium',
+      field: 'recycledLithium',
+      thresholdPercent: 6
+    },
+    {
+      key: 'nickel',
+      label: 'Nickel',
+      field: 'recycledNickel',
+      thresholdPercent: 6
+    },
     { key: 'lead', label: 'Lead', field: 'recycledLead', thresholdPercent: 85 }
   ]
 }

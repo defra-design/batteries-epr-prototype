@@ -29,13 +29,10 @@ const setText = (doc, selector, text) => {
   if (el) el.textContent = text
 }
 
-const hasData = (obj) =>
-  obj !== null && obj !== undefined
+const hasData = (obj) => obj !== null && obj !== undefined
 
 const memberMarketUrl = (template, memberId) =>
-  template
-    .replace('{memberId}', memberId)
-    .replace('{dataType}', 'market-data')
+  template.replace('{memberId}', memberId).replace('{dataType}', 'market-data')
 
 const renderMemberList = (doc, submission, payload) => {
   /* v8 ignore next */
@@ -75,10 +72,7 @@ const renderMemberList = (doc, submission, payload) => {
 }
 
 const sumMemberField = (members, dataKey, field) =>
-  members.reduce(
-    (total, m) => total + Number(m[dataKey]?.[field] ?? 0),
-    0
-  )
+  members.reduce((total, m) => total + Number(m[dataKey]?.[field] ?? 0), 0)
 
 const renderCheckAnswers = (doc, submission, payload) => {
   const members = submission?.memberData ?? []
@@ -104,12 +98,36 @@ const renderCheckAnswers = (doc, submission, payload) => {
     .join('')
 
   const fmt = (n) => n.toFixed(3)
-  setText(doc, '[data-testid="quarterly-check-total-market-portable"]', fmt(sumMemberField(members, 'marketData', 'portable')))
-  setText(doc, '[data-testid="quarterly-check-total-market-industrial"]', fmt(sumMemberField(members, 'marketData', 'industrial')))
-  setText(doc, '[data-testid="quarterly-check-total-market-automotive"]', fmt(sumMemberField(members, 'marketData', 'automotive')))
-  setText(doc, '[data-testid="quarterly-check-total-waste-portable"]', fmt(sumMemberField(members, 'wasteData', 'portable')))
-  setText(doc, '[data-testid="quarterly-check-total-waste-industrial"]', fmt(sumMemberField(members, 'wasteData', 'industrial')))
-  setText(doc, '[data-testid="quarterly-check-total-waste-automotive"]', fmt(sumMemberField(members, 'wasteData', 'automotive')))
+  setText(
+    doc,
+    '[data-testid="quarterly-check-total-market-portable"]',
+    fmt(sumMemberField(members, 'marketData', 'portable'))
+  )
+  setText(
+    doc,
+    '[data-testid="quarterly-check-total-market-industrial"]',
+    fmt(sumMemberField(members, 'marketData', 'industrial'))
+  )
+  setText(
+    doc,
+    '[data-testid="quarterly-check-total-market-automotive"]',
+    fmt(sumMemberField(members, 'marketData', 'automotive'))
+  )
+  setText(
+    doc,
+    '[data-testid="quarterly-check-total-waste-portable"]',
+    fmt(sumMemberField(members, 'wasteData', 'portable'))
+  )
+  setText(
+    doc,
+    '[data-testid="quarterly-check-total-waste-industrial"]',
+    fmt(sumMemberField(members, 'wasteData', 'industrial'))
+  )
+  setText(
+    doc,
+    '[data-testid="quarterly-check-total-waste-automotive"]',
+    fmt(sumMemberField(members, 'wasteData', 'automotive'))
+  )
 }
 
 const hydrateMemberStep = (doc, submission, payload) => {
@@ -124,13 +142,15 @@ const hydrateMemberStep = (doc, submission, payload) => {
     nameEl.textContent = `${member.companyName} (${member.producerBprn})`
   }
 
-  const dataKey = payload.dataType === 'market-data' ? 'marketData' : 'wasteData'
+  const dataKey =
+    payload.dataType === 'market-data' ? 'marketData' : 'wasteData'
   const values = member[dataKey]
   if (values) hydrateForm(doc.querySelector('form'), values)
 }
 
 const persistMemberStep = (scheme, payload, loc) => {
-  const dataKey = payload.dataType === 'market-data' ? 'marketData' : 'wasteData'
+  const dataKey =
+    payload.dataType === 'market-data' ? 'marketData' : 'wasteData'
   const memberPatch = { [dataKey]: payload.patch[dataKey] }
 
   storage.upsertQuarterlyMemberTonnage(
@@ -142,8 +162,10 @@ const persistMemberStep = (scheme, payload, loc) => {
   )
 
   if (payload.dataType === 'market-data') {
-    const wasteUrl = payload.next
-      .replace('member-list', `member/${payload.memberId}/waste-data`)
+    const wasteUrl = payload.next.replace(
+      'member-list',
+      `member/${payload.memberId}/waste-data`
+    )
     loc.assign(wasteUrl)
     return 'navigated'
   }

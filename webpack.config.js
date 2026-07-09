@@ -47,6 +47,7 @@ export default {
       './javascripts/annualReturn/schemeRepresented/entry.js',
     serviceCharge: './javascripts/serviceCharge/entry.js',
     paymentDetails: './javascripts/paymentDetails/entry.js',
+    npwdPackagingComparison: './javascripts/npwdPackagingComparison/entry.js',
     account: './javascripts/account/entry.js',
     accountScheme: './javascripts/account/scheme/entry.js',
     leaveScheme: './javascripts/leaveScheme/entry.js',
@@ -58,8 +59,7 @@ export default {
     complianceSchemeSignIn: './javascripts/complianceScheme/signIn/entry.js',
     complianceSchemeApplication:
       './javascripts/complianceScheme/application/entry.js',
-    complianceSchemeMembers:
-      './javascripts/complianceScheme/members/entry.js',
+    complianceSchemeMembers: './javascripts/complianceScheme/members/entry.js',
     complianceSchemeQuarterly:
       './javascripts/complianceScheme/quarterly/entry.js',
     complianceSchemeIa: './javascripts/complianceScheme/ia/entry.js',

@@ -524,9 +524,9 @@ describe('public register', () => {
       schemeId: newScheme.id
     })
 
-    expect(
-      storage.getPublicProducer('BPRN-EA-2026-099666').scheme.name
-    ).toBe('New Scheme')
+    expect(storage.getPublicProducer('BPRN-EA-2026-099666').scheme.name).toBe(
+      'New Scheme'
+    )
   })
 
   test('omits producers in Started status with no BPRN', () => {
@@ -823,7 +823,15 @@ describe('compliance scheme factories and storage', () => {
   })
 
   test('createQuarterlySubmission and createIaSubmission accept overrides', () => {
-    const memberData = [{ memberId: 'm-1', producerBprn: 'BPRN-1', companyName: 'Acme', marketData: { portable: '1' }, wasteData: null }]
+    const memberData = [
+      {
+        memberId: 'm-1',
+        producerBprn: 'BPRN-1',
+        companyName: 'Acme',
+        marketData: { portable: '1' },
+        wasteData: null
+      }
+    ]
     const q = createQuarterlySubmission({
       id: 'q-1',
       schemeId: 's-1',
@@ -839,7 +847,17 @@ describe('compliance scheme factories and storage', () => {
     expect(q.status).toBe('submitted')
     expect(q.memberData).toEqual(memberData)
 
-    const iaMemberData = [{ memberId: 'm-2', producerBprn: 'BPRN-2', companyName: 'Beta', placed: { industrial: '5' }, exported: null, takenBack: null, delivered: null }]
+    const iaMemberData = [
+      {
+        memberId: 'm-2',
+        producerBprn: 'BPRN-2',
+        companyName: 'Beta',
+        placed: { industrial: '5' },
+        exported: null,
+        takenBack: null,
+        delivered: null
+      }
+    ]
     const i = createIaSubmission({
       id: 'i-1',
       schemeId: 's-1',
@@ -1062,10 +1080,16 @@ describe('compliance scheme factories and storage', () => {
 
   test('listEvidenceByOperator filters by operator id', () => {
     storage.saveEvidence(
-      createEvidence({ issuedByOperatorId: 'op-1', compliancePeriodYear: '2026' })
+      createEvidence({
+        issuedByOperatorId: 'op-1',
+        compliancePeriodYear: '2026'
+      })
     )
     storage.saveEvidence(
-      createEvidence({ issuedByOperatorId: 'op-2', compliancePeriodYear: '2026' })
+      createEvidence({
+        issuedByOperatorId: 'op-2',
+        compliancePeriodYear: '2026'
+      })
     )
     expect(storage.listEvidenceByOperator('op-1', '2026')).toHaveLength(1)
     expect(storage.listEvidenceByOperator('op-1')).toHaveLength(1)
@@ -1100,12 +1124,12 @@ describe('compliance scheme factories and storage', () => {
     expect(
       storage.listEvidenceForSchemeFromOperators('scheme-2', '2026')
     ).toHaveLength(1)
-    expect(
-      storage.listEvidenceForSchemeFromOperators('scheme-1')
-    ).toHaveLength(1)
-    expect(
-      storage.listEvidenceForSchemeFromOperators('scheme-3')
-    ).toHaveLength(0)
+    expect(storage.listEvidenceForSchemeFromOperators('scheme-1')).toHaveLength(
+      1
+    )
+    expect(storage.listEvidenceForSchemeFromOperators('scheme-3')).toHaveLength(
+      0
+    )
   })
 
   test('scheme members add and filter by status', () => {
@@ -1235,9 +1259,9 @@ describe('compliance scheme factories and storage', () => {
         .map((s) => s.name)
     ).toEqual(['EA-Approved-2026'])
 
-    expect(storage.getSchemes({ status: 'pending' }).map((s) => s.name)).toEqual(
-      ['EA-Pending-2026']
-    )
+    expect(
+      storage.getSchemes({ status: 'pending' }).map((s) => s.name)
+    ).toEqual(['EA-Pending-2026'])
 
     expect(storage.getSchemes({ status: null })).toHaveLength(4)
   })
@@ -1821,7 +1845,10 @@ describe('compliance scheme factories and storage', () => {
     expect(storage.listEvidence()).toHaveLength(2)
 
     const [item] = storage.listEvidence('s-1')
-    const updated = storage.saveEvidence({ ...item, status: 'awaiting-acceptance' })
+    const updated = storage.saveEvidence({
+      ...item,
+      status: 'awaiting-acceptance'
+    })
     expect(updated.status).toBe('awaiting-acceptance')
     expect(updated.tonnes).toBe('2.500')
   })
@@ -1928,7 +1955,6 @@ describe('compliance scheme factories and storage', () => {
     expect(statuses.has('approved')).toBe(true)
   })
 
-
   test('seedDemoData skips schemes that already exist', () => {
     const [first] = seedData.schemes
     globalThis.localStorage.setItem(
@@ -1995,14 +2021,22 @@ describe('compliance scheme factories and storage', () => {
         status: 'submitted'
       })
     )
-    expect(
-      storage.findQuarterlySubmission('s-1', '2026', 'Q1').status
-    ).toBe('submitted')
+    expect(storage.findQuarterlySubmission('s-1', '2026', 'Q1').status).toBe(
+      'submitted'
+    )
     expect(storage.findQuarterlySubmission('s-1', '2026', 'Q2')).toBeNull()
   })
 
   test('upsertQuarterlySubmission creates then updates the same record', () => {
-    const memberData = [{ memberId: 'm-1', producerBprn: 'B-1', companyName: 'Acme', marketData: null, wasteData: null }]
+    const memberData = [
+      {
+        memberId: 'm-1',
+        producerBprn: 'B-1',
+        companyName: 'Acme',
+        marketData: null,
+        wasteData: null
+      }
+    ]
     const first = storage.upsertQuarterlySubmission('s-1', '2026', 'Q1', {
       memberData
     })
@@ -2025,10 +2059,12 @@ describe('compliance scheme factories and storage', () => {
       memberData: [{ memberId: 'm-2', companyName: 'B' }]
     })
     expect(
-      storage.findQuarterlySubmission('s-1', '2026', 'Q1').memberData[0].companyName
+      storage.findQuarterlySubmission('s-1', '2026', 'Q1').memberData[0]
+        .companyName
     ).toBe('A')
     expect(
-      storage.findQuarterlySubmission('s-1', '2027', 'Q1').memberData[0].companyName
+      storage.findQuarterlySubmission('s-1', '2027', 'Q1').memberData[0]
+        .companyName
     ).toBe('B')
   })
 
@@ -2045,7 +2081,17 @@ describe('compliance scheme factories and storage', () => {
   })
 
   test('upsertIaSubmission creates then updates the same record per year', () => {
-    const memberData = [{ memberId: 'm-1', producerBprn: 'B-1', companyName: 'Acme', placed: null, exported: null, takenBack: null, delivered: null }]
+    const memberData = [
+      {
+        memberId: 'm-1',
+        producerBprn: 'B-1',
+        companyName: 'Acme',
+        placed: null,
+        exported: null,
+        takenBack: null,
+        delivered: null
+      }
+    ]
     const first = storage.upsertIaSubmission('s-1', '2026', { memberData })
     expect(first.status).toBe('in-progress')
     expect(first.memberData).toEqual(memberData)
@@ -2058,8 +2104,12 @@ describe('compliance scheme factories and storage', () => {
     storage.upsertIaSubmission('s-1', '2027', {
       memberData: [{ memberId: 'm-2', companyName: 'Beta' }]
     })
-    expect(storage.findIaSubmission('s-1', '2026').memberData[0].companyName).toBe('Acme')
-    expect(storage.findIaSubmission('s-1', '2027').memberData[0].companyName).toBe('Beta')
+    expect(
+      storage.findIaSubmission('s-1', '2026').memberData[0].companyName
+    ).toBe('Acme')
+    expect(
+      storage.findIaSubmission('s-1', '2027').memberData[0].companyName
+    ).toBe('Beta')
   })
 
   test('upsertQuarterlyMemberTonnage returns null when no submission exists', () => {
@@ -2088,8 +2138,16 @@ describe('createOperatorQuarterlyReturn', () => {
     expect(ret.compliancePeriodYear).toBeNull()
     expect(ret.quarter).toBeNull()
     expect(ret.status).toBe('not-started')
-    expect(ret.accepted).toEqual({ leadAcid: '0.000', nickelCadmium: '0.000', other: '0.000' })
-    expect(ret.treated).toEqual({ leadAcid: '0.000', nickelCadmium: '0.000', other: '0.000' })
+    expect(ret.accepted).toEqual({
+      leadAcid: '0.000',
+      nickelCadmium: '0.000',
+      other: '0.000'
+    })
+    expect(ret.treated).toEqual({
+      leadAcid: '0.000',
+      nickelCadmium: '0.000',
+      other: '0.000'
+    })
     expect(ret.submittedOn).toBeNull()
     expect(ret.createdAt).toMatch(/T/)
     expect(ret.updatedAt).toMatch(/T/)
@@ -2143,10 +2201,18 @@ describe('operator quarterly return storage functions', () => {
 
   test('listOperatorQuarterlyReturns filters by operatorId', () => {
     storage.saveOperatorQuarterlyReturn(
-      createOperatorQuarterlyReturn({ operatorId: 'op-1', compliancePeriodYear: '2026', quarter: 'Q1' })
+      createOperatorQuarterlyReturn({
+        operatorId: 'op-1',
+        compliancePeriodYear: '2026',
+        quarter: 'Q1'
+      })
     )
     storage.saveOperatorQuarterlyReturn(
-      createOperatorQuarterlyReturn({ operatorId: 'op-2', compliancePeriodYear: '2026', quarter: 'Q1' })
+      createOperatorQuarterlyReturn({
+        operatorId: 'op-2',
+        compliancePeriodYear: '2026',
+        quarter: 'Q1'
+      })
     )
     expect(storage.listOperatorQuarterlyReturns('op-1')).toHaveLength(1)
     expect(storage.listOperatorQuarterlyReturns('op-2')).toHaveLength(1)
@@ -2154,10 +2220,18 @@ describe('operator quarterly return storage functions', () => {
 
   test('listOperatorQuarterlyReturns filters by compliancePeriodYear', () => {
     storage.saveOperatorQuarterlyReturn(
-      createOperatorQuarterlyReturn({ operatorId: 'op-1', compliancePeriodYear: '2026', quarter: 'Q1' })
+      createOperatorQuarterlyReturn({
+        operatorId: 'op-1',
+        compliancePeriodYear: '2026',
+        quarter: 'Q1'
+      })
     )
     storage.saveOperatorQuarterlyReturn(
-      createOperatorQuarterlyReturn({ operatorId: 'op-1', compliancePeriodYear: '2027', quarter: 'Q1' })
+      createOperatorQuarterlyReturn({
+        operatorId: 'op-1',
+        compliancePeriodYear: '2027',
+        quarter: 'Q1'
+      })
     )
     expect(storage.listOperatorQuarterlyReturns('op-1', '2026')).toHaveLength(1)
     expect(storage.listOperatorQuarterlyReturns('op-1')).toHaveLength(2)
@@ -2180,10 +2254,15 @@ describe('operator quarterly return storage functions', () => {
     storage.upsertOperatorQuarterlyReturn('op-1', '2026', 'Q1', {
       status: 'in-progress'
     })
-    const updated = storage.upsertOperatorQuarterlyReturn('op-1', '2026', 'Q1', {
-      status: 'submitted',
-      submittedOn: '2026-04-01T00:00:00Z'
-    })
+    const updated = storage.upsertOperatorQuarterlyReturn(
+      'op-1',
+      '2026',
+      'Q1',
+      {
+        status: 'submitted',
+        submittedOn: '2026-04-01T00:00:00Z'
+      }
+    )
     expect(updated.status).toBe('submitted')
     expect(updated.submittedOn).toBe('2026-04-01T00:00:00Z')
   })
@@ -2210,7 +2289,10 @@ describe('operator quarterly return storage functions', () => {
 
   test('saveOperatorAnnualReturn and findOperatorAnnualReturn round-trip', () => {
     const saved = storage.saveOperatorAnnualReturn(
-      createOperatorAnnualReturn({ operatorId: 'op-1', compliancePeriodYear: '2026' })
+      createOperatorAnnualReturn({
+        operatorId: 'op-1',
+        compliancePeriodYear: '2026'
+      })
     )
     expect(saved.id).toBeTruthy()
     const found = storage.findOperatorAnnualReturn('op-1', '2026')
@@ -2226,7 +2308,9 @@ describe('operator quarterly return storage functions', () => {
   })
 
   test('upsertOperatorAnnualReturn updates existing', () => {
-    storage.upsertOperatorAnnualReturn('op-3', '2026', { status: 'in-progress' })
+    storage.upsertOperatorAnnualReturn('op-3', '2026', {
+      status: 'in-progress'
+    })
     const updated = storage.upsertOperatorAnnualReturn('op-3', '2026', {
       status: 'submitted',
       submittedOn: '2026-12-01T00:00:00Z'
@@ -2320,7 +2404,10 @@ describe('listAllEvidence', () => {
   test('returns filtered evidence with year filter', () => {
     const ev = createEvidence({ compliancePeriodYear: '2026', tonnes: '1.000' })
     storage.saveEvidence(ev)
-    const ev2 = createEvidence({ compliancePeriodYear: '2025', tonnes: '2.000' })
+    const ev2 = createEvidence({
+      compliancePeriodYear: '2025',
+      tonnes: '2.000'
+    })
     storage.saveEvidence(ev2)
     const filtered = storage.listAllEvidence('2026')
     expect(filtered.every((e) => e.compliancePeriodYear === '2026')).toBe(true)
@@ -2440,12 +2527,16 @@ describe('list-all submission functions', () => {
   })
 
   test('listAllOperatorQuarterlyReturns returns all', () => {
-    expect(Array.isArray(storage.listAllOperatorQuarterlyReturns('2026'))).toBe(true)
+    expect(Array.isArray(storage.listAllOperatorQuarterlyReturns('2026'))).toBe(
+      true
+    )
     expect(Array.isArray(storage.listAllOperatorQuarterlyReturns())).toBe(true)
   })
 
   test('listAllOperatorAnnualReturns returns all', () => {
-    expect(Array.isArray(storage.listAllOperatorAnnualReturns('2026'))).toBe(true)
+    expect(Array.isArray(storage.listAllOperatorAnnualReturns('2026'))).toBe(
+      true
+    )
     expect(Array.isArray(storage.listAllOperatorAnnualReturns())).toBe(true)
   })
 })

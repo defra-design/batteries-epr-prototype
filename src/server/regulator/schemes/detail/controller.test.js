@@ -3,7 +3,10 @@ import { initialiseServer } from '../../../../test-utils/initialise-server.js'
 import { paths } from '../../../../config/paths.js'
 import { content } from '../../../../config/content.js'
 
-const schemeDetailUrl = paths.regulatorSchemeDetail.replace('{schemeId}', 'test-scheme-id')
+const schemeDetailUrl = paths.regulatorSchemeDetail.replace(
+  '{schemeId}',
+  'test-scheme-id'
+)
 
 describe('#regulatorSchemeDetailController', () => {
   let server
@@ -25,9 +28,13 @@ describe('#regulatorSchemeDetailController', () => {
     expect(statusCode).toBe(statusCodes.ok)
     const pageContent = content.regulator({}).schemesPages.detail
     expect(result).toEqual(expect.stringContaining(pageContent.heading))
-    expect(result).toEqual(expect.stringContaining('data-testid="scheme-detail-list"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="scheme-detail-list"')
+    )
     expect(result).toEqual(expect.stringContaining('"target":"hydrate"'))
-    expect(result).toEqual(expect.stringContaining('"schemeId":"test-scheme-id"'))
+    expect(result).toEqual(
+      expect.stringContaining('"schemeId":"test-scheme-id"')
+    )
   })
 
   test('POST renders with persist target and approve action', async () => {
@@ -40,7 +47,9 @@ describe('#regulatorSchemeDetailController', () => {
     expect(statusCode).toBe(statusCodes.ok)
     expect(result).toEqual(expect.stringContaining('"target":"persist"'))
     expect(result).toEqual(expect.stringContaining('"action":"approve"'))
-    expect(result).toEqual(expect.stringContaining('"approvalNumber":"BCS-001"'))
+    expect(result).toEqual(
+      expect.stringContaining('"approvalNumber":"BCS-001"')
+    )
   })
 
   test('POST renders with persist target and reject action', async () => {

@@ -6,6 +6,7 @@ export const paths = {
   terms: '/terms',
   privacyNotice: '/privacy-notice',
   accessibility: '/accessibility-statement',
+  npwdPackagingComparison: '/npwd-vs-packaging',
 
   health: '/health',
 

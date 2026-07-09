@@ -56,8 +56,7 @@ export const schemeConfirmController = {
             STEP_ID,
             'registration',
             { schemeConfirmed: true },
-            returnUrl ||
-              `${paths.onboardingDeclaration}?route=complianceScheme`
+            returnUrl || `${paths.onboardingDeclaration}?route=complianceScheme`
           )
         }
       )

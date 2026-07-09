@@ -1,2 +1,1 @@
-export const currentCompliancePeriod = () =>
-  String(new Date().getUTCFullYear())
+export const currentCompliancePeriod = () => String(new Date().getUTCFullYear())

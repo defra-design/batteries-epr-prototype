@@ -47,7 +47,9 @@ describe('#membersListController', () => {
       )
     )
     expect(result).toEqual(expect.stringContaining('"copy"'))
-    expect(result).toEqual(expect.stringContaining('"compliancePeriodYear":"2026"'))
+    expect(result).toEqual(
+      expect.stringContaining('"compliancePeriodYear":"2026"')
+    )
     expect(result).toEqual(
       expect.stringContaining('data-testid="members-period">2026')
     )

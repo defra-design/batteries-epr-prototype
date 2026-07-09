@@ -9,7 +9,14 @@ const setText = (doc, selector, text) => {
 
 const formatAddress = (address) => {
   if (!address) return '—'
-  return [address.line1, address.line2, address.line3, address.line4, address.town, address.postcode]
+  return [
+    address.line1,
+    address.line2,
+    address.line3,
+    address.line4,
+    address.town,
+    address.postcode
+  ]
     .filter(Boolean)
     .join(', ')
 }
@@ -45,14 +52,42 @@ export const runRegulatorSchemeDetail = (doc, loc) => {
   /* v8 ignore start */
   setText(doc, '[data-testid="scheme-detail-name"]', scheme.name ?? '—')
   setText(doc, '[data-testid="scheme-detail-operator"]', scheme.operator ?? '—')
-  setText(doc, '[data-testid="scheme-detail-address"]', formatAddress(scheme.registeredAddress))
-  setText(doc, '[data-testid="scheme-detail-contact-address"]', formatAddress(scheme.contactAddress))
-  setText(doc, '[data-testid="scheme-detail-operational-plan"]', scheme.operationalPlan ?? '—')
-  setText(doc, '[data-testid="scheme-detail-partners"]', scheme.partners?.map((p) => p.name).join(', ') || '—')
-  setText(doc, '[data-testid="scheme-detail-offences"]', scheme.offences ?? 'None declared')
-  setText(doc, '[data-testid="scheme-detail-status"]', scheme.approvalStatus ?? '—')
+  setText(
+    doc,
+    '[data-testid="scheme-detail-address"]',
+    formatAddress(scheme.registeredAddress)
+  )
+  setText(
+    doc,
+    '[data-testid="scheme-detail-contact-address"]',
+    formatAddress(scheme.contactAddress)
+  )
+  setText(
+    doc,
+    '[data-testid="scheme-detail-operational-plan"]',
+    scheme.operationalPlan ?? '—'
+  )
+  setText(
+    doc,
+    '[data-testid="scheme-detail-partners"]',
+    scheme.partners?.map((p) => p.name).join(', ') || '—'
+  )
+  setText(
+    doc,
+    '[data-testid="scheme-detail-offences"]',
+    scheme.offences ?? 'None declared'
+  )
+  setText(
+    doc,
+    '[data-testid="scheme-detail-status"]',
+    scheme.approvalStatus ?? '—'
+  )
   setText(doc, '[data-testid="scheme-detail-agency"]', scheme.agencyCode ?? '—')
-  setText(doc, '[data-testid="scheme-detail-approval-number"]', scheme.approvalNumber ?? '—')
+  setText(
+    doc,
+    '[data-testid="scheme-detail-approval-number"]',
+    scheme.approvalNumber ?? '—'
+  )
   /* v8 ignore stop */
 
   if (scheme.approvalStatus === 'submitted') {
@@ -64,9 +99,13 @@ export const runRegulatorSchemeDetail = (doc, loc) => {
   const withdrawEl = doc.querySelector('[data-testid="scheme-detail-withdraw"]')
   if (withdrawEl) {
     if (scheme.approvalStatus === 'approved') {
-      const withdrawLink = doc.querySelector('[data-testid="scheme-detail-withdraw-link"]')
+      const withdrawLink = doc.querySelector(
+        '[data-testid="scheme-detail-withdraw-link"]'
+      )
       /* v8 ignore next */
-      if (withdrawLink) withdrawLink.href = `/regulator/schemes/${scheme.id}/withdraw`
+      if (withdrawLink) {
+        withdrawLink.href = `/regulator/schemes/${scheme.id}/withdraw`
+      }
       withdrawEl.hidden = false
     } else {
       withdrawEl.hidden = true

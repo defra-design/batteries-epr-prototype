@@ -504,9 +504,7 @@ describe('runOnboardingStep — schemeSelect agency filter', () => {
       <form></form>
       <script id="page-payload" type="application/json">${JSON.stringify({ step: 'schemeSelect', target: 'hydrate', compliancePeriod: '2026' })}</script>
     `
-    expect(() =>
-      runOnboardingStep(document, globalThis.location)
-    ).not.toThrow()
+    expect(() => runOnboardingStep(document, globalThis.location)).not.toThrow()
   })
 
   test('treats schemes without an agencyCode as visible to any producer', () => {
@@ -563,13 +561,16 @@ describe('runOnboardingStep — schemeConfirm hydration', () => {
       document.querySelector('[data-testid="scheme-confirm-name"]').textContent
     ).toBe('Northern Battery Compliance Scheme')
     expect(
-      document.querySelector('[data-testid="scheme-confirm-operator"]').textContent
+      document.querySelector('[data-testid="scheme-confirm-operator"]')
+        .textContent
     ).toBe('NBCS Ltd')
     expect(
-      document.querySelector('[data-testid="scheme-confirm-contact-email"]').textContent
+      document.querySelector('[data-testid="scheme-confirm-contact-email"]')
+        .textContent
     ).toBe('ops@nbcs.test')
     expect(
-      document.querySelector('[data-testid="scheme-confirm-web-address"]').textContent
+      document.querySelector('[data-testid="scheme-confirm-web-address"]')
+        .textContent
     ).toBe('https://nbcs.test')
   })
 
@@ -606,7 +607,8 @@ describe('runOnboardingStep — schemeConfirm hydration', () => {
     renderSchemeConfirm()
     runOnboardingStep(document, globalThis.location)
     expect(
-      document.querySelector('[data-testid="scheme-confirm-operator"]').textContent
+      document.querySelector('[data-testid="scheme-confirm-operator"]')
+        .textContent
     ).toBe('—')
   })
 

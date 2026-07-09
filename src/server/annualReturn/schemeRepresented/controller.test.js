@@ -2,7 +2,9 @@ import { initialiseServer } from '../../../test-utils/initialise-server.js'
 import { pathTo, paths } from '../../../config/paths.js'
 import { statusCodes } from '../../common/constants/status-codes.js'
 
-const URL = pathTo(paths.annualReturnSchemeRepresented, { registrationId: 'reg-1' })
+const URL = pathTo(paths.annualReturnSchemeRepresented, {
+  registrationId: 'reg-1'
+})
 
 describe('#annualReturn/schemeRepresented', () => {
   let server
@@ -14,7 +16,10 @@ describe('#annualReturn/schemeRepresented', () => {
   })
 
   test('GET renders the scheme-represented information page', async () => {
-    const { result, statusCode } = await server.inject({ method: 'GET', url: URL })
+    const { result, statusCode } = await server.inject({
+      method: 'GET',
+      url: URL
+    })
     expect(statusCode).toBe(statusCodes.ok)
     expect(result).toEqual(
       expect.stringContaining('data-testid="scheme-represented-heading"')

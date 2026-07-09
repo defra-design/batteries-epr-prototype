@@ -94,7 +94,9 @@ describe('#declaration', () => {
       expect.stringContaining('joint and several liability')
     )
     expect(result).toEqual(
-      expect.stringContaining('action="/onboarding/declaration?route=complianceScheme"')
+      expect.stringContaining(
+        'action="/onboarding/declaration?route=complianceScheme"'
+      )
     )
   })
 
@@ -105,7 +107,9 @@ describe('#declaration', () => {
       payload: validPayload
     })
     expect(result).toEqual(
-      expect.stringContaining('action="/onboarding/declaration?route=complianceScheme"')
+      expect.stringContaining(
+        'action="/onboarding/declaration?route=complianceScheme"'
+      )
     )
     expect(result).toEqual(
       expect.stringContaining('"target":"registration-and-submit"')
@@ -119,6 +123,8 @@ describe('#declaration', () => {
       payload: {}
     })
     expect(statusCode).toBe(statusCodes.found)
-    expect(headers.location).toBe('/onboarding/declaration?route=complianceScheme')
+    expect(headers.location).toBe(
+      '/onboarding/declaration?route=complianceScheme'
+    )
   })
 })

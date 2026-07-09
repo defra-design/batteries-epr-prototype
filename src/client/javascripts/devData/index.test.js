@@ -22,9 +22,7 @@ describe('initDevData', () => {
   test('renders a collapsible section for every journey', () => {
     initDevData(globalThis.document)
 
-    const journeys = Array.from(
-      root().querySelectorAll('[data-dev-journey]')
-    )
+    const journeys = Array.from(root().querySelectorAll('[data-dev-journey]'))
     expect(journeys).toHaveLength(6)
     expect(journeys.every((node) => node.tagName === 'DETAILS')).toBe(true)
     const names = journeys.map((node) => node.getAttribute('data-dev-journey'))

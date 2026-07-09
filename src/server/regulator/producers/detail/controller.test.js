@@ -3,7 +3,10 @@ import { initialiseServer } from '../../../../test-utils/initialise-server.js'
 import { paths } from '../../../../config/paths.js'
 import { content } from '../../../../config/content.js'
 
-const producerDetailUrl = paths.regulatorProducerDetail.replace('{producerId}', 'test-producer-id')
+const producerDetailUrl = paths.regulatorProducerDetail.replace(
+  '{producerId}',
+  'test-producer-id'
+)
 
 describe('#regulatorProducerDetailController', () => {
   let server
@@ -25,8 +28,12 @@ describe('#regulatorProducerDetailController', () => {
     expect(statusCode).toBe(statusCodes.ok)
     const pageContent = content.regulator({}).producersPages.detail
     expect(result).toEqual(expect.stringContaining(pageContent.heading))
-    expect(result).toEqual(expect.stringContaining('data-testid="producer-detail-list"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="producer-detail-list"')
+    )
     expect(result).toEqual(expect.stringContaining('"target":"hydrate"'))
-    expect(result).toEqual(expect.stringContaining('"producerId":"test-producer-id"'))
+    expect(result).toEqual(
+      expect.stringContaining('"producerId":"test-producer-id"')
+    )
   })
 })

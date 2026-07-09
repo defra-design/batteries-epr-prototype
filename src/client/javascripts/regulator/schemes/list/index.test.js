@@ -14,7 +14,13 @@ const defaultPayload = {
   view: 'list',
   compliancePeriodYear: '2026',
   copy: {
-    statuses: { 'not-started': 'Not started', 'in-progress': 'In progress', submitted: 'Submitted', approved: 'Approved', rejected: 'Rejected' },
+    statuses: {
+      'not-started': 'Not started',
+      'in-progress': 'In progress',
+      submitted: 'Submitted',
+      approved: 'Approved',
+      rejected: 'Rejected'
+    },
     viewAction: 'View'
   },
   urls: {
@@ -60,20 +66,25 @@ describe('runRegulatorSchemeList', () => {
   test('renders status tags with correct classes', () => {
     document.body.innerHTML = listHtml(defaultPayload)
     runRegulatorSchemeList(document, { assign: assignSpy })
-    const statusCells = document.querySelectorAll('[data-testid="scheme-row-status"]')
+    const statusCells = document.querySelectorAll(
+      '[data-testid="scheme-row-status"]'
+    )
     expect(statusCells.length).toBeGreaterThan(0)
-    const hasTag = [...statusCells].some((cell) => cell.querySelector('.govuk-tag'))
+    const hasTag = [...statusCells].some((cell) =>
+      cell.querySelector('.govuk-tag')
+    )
     expect(hasTag).toBe(true)
   })
 
   test('renders view links with correct hrefs', () => {
     document.body.innerHTML = listHtml(defaultPayload)
     runRegulatorSchemeList(document, { assign: assignSpy })
-    const viewLinks = document.querySelectorAll('[data-testid="scheme-row-view"]')
+    const viewLinks = document.querySelectorAll(
+      '[data-testid="scheme-row-view"]'
+    )
     expect(viewLinks.length).toBeGreaterThan(0)
     for (const link of viewLinks) {
       expect(link.getAttribute('href')).toContain('/regulator/schemes/')
     }
   })
-}
-)
+})

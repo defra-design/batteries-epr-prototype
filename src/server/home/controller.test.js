@@ -30,9 +30,7 @@ describe('#homeController', () => {
     expect(result).toEqual(
       expect.stringContaining('data-testid="home-journey-producer-cta"')
     )
-    expect(result).toEqual(
-      expect.stringContaining(`href="${paths.signIn}"`)
-    )
+    expect(result).toEqual(expect.stringContaining(`href="${paths.signIn}"`))
     expect(result).toEqual(
       expect.stringContaining(
         'data-testid="home-journey-compliance-scheme-cta"'

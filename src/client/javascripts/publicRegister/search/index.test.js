@@ -113,11 +113,7 @@ describe('renderSearchResults', () => {
       producerRoute: 'complianceScheme',
       schemeId: scheme.id
     })
-    renderSearchResults(
-      document,
-      { q: 'Visible', page: 1 },
-      '/register/{bprn}'
-    )
+    renderSearchResults(document, { q: 'Visible', page: 1 }, '/register/{bprn}')
     const repCells = document.querySelectorAll(
       '[data-testid="register-result-represented-by"]'
     )

@@ -204,15 +204,27 @@ export const createOperatorQuarterlyReturn = (input = {}) => ({
   compliancePeriodYear: input.compliancePeriodYear ?? null,
   quarter: input.quarter ?? null,
   status: input.status ?? 'not-started',
-  accepted: input.accepted ?? { leadAcid: '0.000', nickelCadmium: '0.000', other: '0.000' },
-  treated: input.treated ?? { leadAcid: '0.000', nickelCadmium: '0.000', other: '0.000' },
+  accepted: input.accepted ?? {
+    leadAcid: '0.000',
+    nickelCadmium: '0.000',
+    other: '0.000'
+  },
+  treated: input.treated ?? {
+    leadAcid: '0.000',
+    nickelCadmium: '0.000',
+    other: '0.000'
+  },
   submittedOn: input.submittedOn ?? null,
   createdAt: input.createdAt ?? now(),
   updatedAt: input.updatedAt ?? now()
 })
 
 export const createOperatorAnnualReturn = (input = {}) => {
-  const chemistryDefaults = { leadAcid: '0.000', nickelCadmium: '0.000', other: '0.000' }
+  const chemistryDefaults = {
+    leadAcid: '0.000',
+    nickelCadmium: '0.000',
+    other: '0.000'
+  }
   return {
     id: input.id ?? newId(),
     version: 0,
@@ -429,7 +441,9 @@ const findRepresentingSchemeForProducer = (producerId) => {
         r.producerRoute === 'complianceScheme' &&
         r.schemeId
     )
-    .sort((a, b) => String(b.compliancePeriod).localeCompare(a.compliancePeriod))
+    .sort((a, b) =>
+      String(b.compliancePeriod).localeCompare(a.compliancePeriod)
+    )
   if (registrations.length === 0) return null
   return getScheme(registrations[0].schemeId)
 }
@@ -463,7 +477,10 @@ const searchPublicRegister = ({
   const withScheme = producers
     .filter((p) => p.bprn)
     .filter((p) => p.status === 'Active' || p.status === 'Approved')
-    .map((p) => ({ producer: p, scheme: findRepresentingSchemeForProducer(p.id) }))
+    .map((p) => ({
+      producer: p,
+      scheme: findRepresentingSchemeForProducer(p.id)
+    }))
     .filter(({ producer, scheme }) =>
       matchesSearch(producer, scheme, { q, bprn, postcode })
     )
@@ -642,21 +659,16 @@ const listActiveSchemeMembers = (schemeId) =>
   )
 
 const listPendingSchemeMembers = (schemeId) =>
-  listSchemeMembers(schemeId).filter(
-    (m) => m.status === 'pendingAcceptance'
-  )
+  listSchemeMembers(schemeId).filter((m) => m.status === 'pendingAcceptance')
 
 const yearOf = (iso) => Number(String(iso).slice(0, 4))
 
 const membersForYear = (schemeId, compliancePeriodYear) => {
   const year = Number(compliancePeriodYear)
   const all = listSchemeMembers(schemeId).filter(
-    (m) =>
-      yearOf(m.joinedOn) <= year && m.status !== 'pendingAcceptance'
+    (m) => yearOf(m.joinedOn) <= year && m.status !== 'pendingAcceptance'
   )
-  const active = all.filter(
-    (m) => m.leftOn === null || yearOf(m.leftOn) > year
-  )
+  const active = all.filter((m) => m.leftOn === null || yearOf(m.leftOn) > year)
   const history = all.filter(
     (m) => m.leftOn !== null && yearOf(m.leftOn) <= year
   )
@@ -1118,7 +1130,11 @@ const listOperatorQuarterlyReturns = (operatorId, compliancePeriodYear) => {
   )
 }
 
-const findOperatorQuarterlyReturn = (operatorId, compliancePeriodYear, quarter) =>
+const findOperatorQuarterlyReturn = (
+  operatorId,
+  compliancePeriodYear,
+  quarter
+) =>
   listOperatorQuarterlyReturns(operatorId, compliancePeriodYear).find(
     (r) => r.quarter === quarter
   ) ?? null
@@ -1138,21 +1154,36 @@ const saveOperatorQuarterlyReturn = (ret) => {
   return merged
 }
 
-const upsertOperatorQuarterlyReturn = (operatorId, compliancePeriodYear, quarter, patch) => {
-  let existing = findOperatorQuarterlyReturn(operatorId, compliancePeriodYear, quarter)
+const upsertOperatorQuarterlyReturn = (
+  operatorId,
+  compliancePeriodYear,
+  quarter,
+  patch
+) => {
+  let existing = findOperatorQuarterlyReturn(
+    operatorId,
+    compliancePeriodYear,
+    quarter
+  )
   if (!existing) {
-    existing = createOperatorQuarterlyReturn({ operatorId, compliancePeriodYear, quarter })
+    existing = createOperatorQuarterlyReturn({
+      operatorId,
+      compliancePeriodYear,
+      quarter
+    })
   }
   return saveOperatorQuarterlyReturn({ ...existing, ...patch })
 }
 
 const findOperatorAnnualReturn = (operatorId, compliancePeriodYear) => {
   const items = Object.values(readMap(STORAGE_KEYS.operatorAnnualReturns))
-  return items.find(
-    (r) =>
-      r.operatorId === operatorId &&
-      r.compliancePeriodYear === compliancePeriodYear
-  ) ?? null
+  return (
+    items.find(
+      (r) =>
+        r.operatorId === operatorId &&
+        r.compliancePeriodYear === compliancePeriodYear
+    ) ?? null
+  )
 }
 
 const saveOperatorAnnualReturn = (ret) => {
@@ -1170,7 +1201,11 @@ const saveOperatorAnnualReturn = (ret) => {
   return merged
 }
 
-const upsertOperatorAnnualReturn = (operatorId, compliancePeriodYear, patch) => {
+const upsertOperatorAnnualReturn = (
+  operatorId,
+  compliancePeriodYear,
+  patch
+) => {
   let existing = findOperatorAnnualReturn(operatorId, compliancePeriodYear)
   if (!existing) {
     existing = createOperatorAnnualReturn({ operatorId, compliancePeriodYear })
@@ -1193,7 +1228,7 @@ const clearCurrentAgencyCode = () => {
 
 const currentAgency = () => {
   const code = getCurrentAgencyCode()
-  return code ? AGENCIES.find((a) => a.code === code) ?? null : null
+  return code ? (AGENCIES.find((a) => a.code === code) ?? null) : null
 }
 
 const getRegulatorTargets = (agencyCode) =>

@@ -24,7 +24,9 @@ afterEach(() => {
 
 describe('runRegulatorOperatorWithdraw', () => {
   test('hydrates operator name when operator exists', () => {
-    const approved = storage.listOperators().find((o) => o.approvalStatus === 'approved')
+    const approved = storage
+      .listOperators()
+      .find((o) => o.approvalStatus === 'approved')
     document.body.innerHTML = withdrawHtml({
       view: 'withdraw',
       target: 'hydrate',
@@ -32,7 +34,9 @@ describe('runRegulatorOperatorWithdraw', () => {
     })
     const result = runRegulatorOperatorWithdraw(document, { assign: assignSpy })
     expect(result).toBe('hydrated')
-    const nameEl = document.querySelector('[data-testid="operator-withdraw-name"]')
+    const nameEl = document.querySelector(
+      '[data-testid="operator-withdraw-name"]'
+    )
     expect(nameEl.textContent).toBe(approved.name)
     expect(nameEl.hidden).toBe(false)
   })
@@ -48,7 +52,9 @@ describe('runRegulatorOperatorWithdraw', () => {
   })
 
   test('persist calls withdrawOperatorApproval and navigates', () => {
-    const approved = storage.listOperators().find((o) => o.approvalStatus === 'approved')
+    const approved = storage
+      .listOperators()
+      .find((o) => o.approvalStatus === 'approved')
     document.body.innerHTML = withdrawHtml({
       view: 'withdraw',
       target: 'persist',

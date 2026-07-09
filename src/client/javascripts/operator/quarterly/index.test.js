@@ -34,7 +34,11 @@ const seedOperator = (overrides = {}) => {
     name: 'Test Operator Ltd',
     approvalType: 'abto',
     approvalStatus: 'approved',
-    batteryTypes: { isPortable: true, isIndustrial: false, isAutomotive: false },
+    batteryTypes: {
+      isPortable: true,
+      isIndustrial: false,
+      isAutomotive: false
+    },
     ...overrides
   })
   storage.saveOperator(op)
@@ -91,7 +95,9 @@ describe('runOperatorQuarterlyStep persist', () => {
       next: '/operator/quarterly/Q1/declaration'
     })
 
-    expect(runOperatorQuarterlyStep(document, globalThis.location)).toBe('navigated')
+    expect(runOperatorQuarterlyStep(document, globalThis.location)).toBe(
+      'navigated'
+    )
     expect(assignSpy).toHaveBeenCalledWith('/operator/quarterly/Q1/declaration')
 
     const ret = storage.findOperatorQuarterlyReturn(operator.id, '2026', 'Q1')
@@ -110,7 +116,9 @@ describe('runOperatorQuarterlyStep persist', () => {
       next: '/operator/quarterly/Q2/confirmation'
     })
 
-    expect(runOperatorQuarterlyStep(document, globalThis.location)).toBe('navigated')
+    expect(runOperatorQuarterlyStep(document, globalThis.location)).toBe(
+      'navigated'
+    )
     const ret = storage.findOperatorQuarterlyReturn(operator.id, '2026', 'Q2')
     expect(ret.status).toBe('submitted')
   })
@@ -125,7 +133,9 @@ describe('runOperatorQuarterlyStep persist', () => {
       patch: { status: 'in-progress' },
       next: null
     })
-    expect(runOperatorQuarterlyStep(document, globalThis.location)).toBe('persisted')
+    expect(runOperatorQuarterlyStep(document, globalThis.location)).toBe(
+      'persisted'
+    )
     expect(assignSpy).not.toHaveBeenCalled()
   })
 })
@@ -146,9 +156,15 @@ describe('runOperatorQuarterlyStep hydrate', () => {
       target: 'hydrate'
     })
 
-    expect(runOperatorQuarterlyStep(document, globalThis.location)).toBe('hydrated')
-    expect(document.querySelector('input[name="acceptedLeadAcid"]').value).toBe('1.500')
-    expect(document.querySelector('input[name="treatedOther"]').value).toBe('6.500')
+    expect(runOperatorQuarterlyStep(document, globalThis.location)).toBe(
+      'hydrated'
+    )
+    expect(document.querySelector('input[name="acceptedLeadAcid"]').value).toBe(
+      '1.500'
+    )
+    expect(document.querySelector('input[name="treatedOther"]').value).toBe(
+      '6.500'
+    )
   })
 
   test('tonnages step with no existing data does not populate form', () => {
@@ -160,8 +176,12 @@ describe('runOperatorQuarterlyStep hydrate', () => {
       target: 'hydrate'
     })
 
-    expect(runOperatorQuarterlyStep(document, globalThis.location)).toBe('hydrated')
-    expect(document.querySelector('input[name="acceptedLeadAcid"]').value).toBe('')
+    expect(runOperatorQuarterlyStep(document, globalThis.location)).toBe(
+      'hydrated'
+    )
+    expect(document.querySelector('input[name="acceptedLeadAcid"]').value).toBe(
+      ''
+    )
   })
 
   test('declaration step marks checkbox when status is submitted', () => {
@@ -212,6 +232,8 @@ describe('runOperatorQuarterlyStep hydrate', () => {
       compliancePeriodYear: '2026',
       target: 'hydrate'
     })
-    expect(runOperatorQuarterlyStep(document, globalThis.location)).toBe('hydrated')
+    expect(runOperatorQuarterlyStep(document, globalThis.location)).toBe(
+      'hydrated'
+    )
   })
 })

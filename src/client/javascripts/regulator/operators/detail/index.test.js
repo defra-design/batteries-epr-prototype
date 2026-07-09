@@ -45,7 +45,9 @@ describe('runRegulatorOperatorDetail', () => {
     })
     const result = runRegulatorOperatorDetail(document, { assign: assignSpy })
     expect(result).toBe('hydrated')
-    expect(document.querySelector('[data-testid="operator-detail-name"]').textContent).toBe(operator.name)
+    expect(
+      document.querySelector('[data-testid="operator-detail-name"]').textContent
+    ).toBe(operator.name)
   })
 
   test('shows not-found when operator does not exist', () => {
@@ -56,11 +58,15 @@ describe('runRegulatorOperatorDetail', () => {
     })
     const result = runRegulatorOperatorDetail(document, { assign: assignSpy })
     expect(result).toBe('not-found')
-    expect(document.querySelector('[data-testid="operator-detail-not-found"]').hidden).toBe(false)
+    expect(
+      document.querySelector('[data-testid="operator-detail-not-found"]').hidden
+    ).toBe(false)
   })
 
   test('shows action panel for submitted operators', () => {
-    const submitted = storage.listOperators().find((o) => o.approvalStatus === 'submitted')
+    const submitted = storage
+      .listOperators()
+      .find((o) => o.approvalStatus === 'submitted')
     if (!submitted) return
     document.body.innerHTML = detailHtml({
       view: 'detail',
@@ -68,22 +74,30 @@ describe('runRegulatorOperatorDetail', () => {
       operatorId: submitted.id
     })
     runRegulatorOperatorDetail(document, { assign: assignSpy })
-    expect(document.querySelector('[data-testid="operator-detail-actions"]').hidden).toBe(false)
+    expect(
+      document.querySelector('[data-testid="operator-detail-actions"]').hidden
+    ).toBe(false)
   })
 
   test('hides action panel for approved operators', () => {
-    const approved = storage.listOperators().find((o) => o.approvalStatus === 'approved')
+    const approved = storage
+      .listOperators()
+      .find((o) => o.approvalStatus === 'approved')
     document.body.innerHTML = detailHtml({
       view: 'detail',
       target: 'hydrate',
       operatorId: approved.id
     })
     runRegulatorOperatorDetail(document, { assign: assignSpy })
-    expect(document.querySelector('[data-testid="operator-detail-actions"]').hidden).toBe(true)
+    expect(
+      document.querySelector('[data-testid="operator-detail-actions"]').hidden
+    ).toBe(true)
   })
 
   test('persist approve calls approveOperator and navigates', () => {
-    const submitted = storage.listOperators().find((o) => o.approvalStatus === 'submitted')
+    const submitted = storage
+      .listOperators()
+      .find((o) => o.approvalStatus === 'submitted')
     if (!submitted) return
     document.body.innerHTML = detailHtml({
       view: 'detail',
@@ -101,7 +115,9 @@ describe('runRegulatorOperatorDetail', () => {
   })
 
   test('persist reject calls rejectOperator and navigates', () => {
-    const submitted = storage.listOperators().find((o) => o.approvalStatus === 'submitted')
+    const submitted = storage
+      .listOperators()
+      .find((o) => o.approvalStatus === 'submitted')
     if (!submitted) return
     document.body.innerHTML = detailHtml({
       view: 'detail',
@@ -117,21 +133,31 @@ describe('runRegulatorOperatorDetail', () => {
   })
 
   test('shows withdraw link for approved operators', () => {
-    const approved = storage.listOperators().find((o) => o.approvalStatus === 'approved')
+    const approved = storage
+      .listOperators()
+      .find((o) => o.approvalStatus === 'approved')
     document.body.innerHTML = detailHtml({
       view: 'detail',
       target: 'hydrate',
       operatorId: approved.id
     })
     runRegulatorOperatorDetail(document, { assign: assignSpy })
-    const withdrawEl = document.querySelector('[data-testid="operator-detail-withdraw"]')
+    const withdrawEl = document.querySelector(
+      '[data-testid="operator-detail-withdraw"]'
+    )
     expect(withdrawEl.hidden).toBe(false)
-    const withdrawLink = document.querySelector('[data-testid="operator-detail-withdraw-link"]')
-    expect(withdrawLink.href).toContain(`/regulator/operators/${approved.id}/withdraw`)
+    const withdrawLink = document.querySelector(
+      '[data-testid="operator-detail-withdraw-link"]'
+    )
+    expect(withdrawLink.href).toContain(
+      `/regulator/operators/${approved.id}/withdraw`
+    )
   })
 
   test('hides withdraw link for submitted operators', () => {
-    const submitted = storage.listOperators().find((o) => o.approvalStatus === 'submitted')
+    const submitted = storage
+      .listOperators()
+      .find((o) => o.approvalStatus === 'submitted')
     if (!submitted) return
     document.body.innerHTML = detailHtml({
       view: 'detail',
@@ -139,7 +165,9 @@ describe('runRegulatorOperatorDetail', () => {
       operatorId: submitted.id
     })
     runRegulatorOperatorDetail(document, { assign: assignSpy })
-    const withdrawEl = document.querySelector('[data-testid="operator-detail-withdraw"]')
+    const withdrawEl = document.querySelector(
+      '[data-testid="operator-detail-withdraw"]'
+    )
     expect(withdrawEl.hidden).toBe(true)
   })
 })

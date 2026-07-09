@@ -44,7 +44,10 @@ describe('runRegulatorProducerDetail', () => {
     })
     const result = runRegulatorProducerDetail(document, { assign: assignSpy })
     expect(result).toBe('hydrated')
-    expect(document.querySelector('[data-testid="producer-detail-company-name"]').textContent).toBe(producer.companyName)
+    expect(
+      document.querySelector('[data-testid="producer-detail-company-name"]')
+        .textContent
+    ).toBe(producer.companyName)
   })
 
   test('shows not-found when producer does not exist', () => {
@@ -55,6 +58,8 @@ describe('runRegulatorProducerDetail', () => {
     })
     const result = runRegulatorProducerDetail(document, { assign: assignSpy })
     expect(result).toBe('not-found')
-    expect(document.querySelector('[data-testid="producer-detail-not-found"]').hidden).toBe(false)
+    expect(
+      document.querySelector('[data-testid="producer-detail-not-found"]').hidden
+    ).toBe(false)
   })
 })

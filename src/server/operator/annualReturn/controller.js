@@ -10,8 +10,7 @@ import {
   readStepErrors
 } from '../application/shared.js'
 
-const stepUrl = (step) =>
-  paths.operatorAnnualReturn.replace('{step}', step)
+const stepUrl = (step) => paths.operatorAnnualReturn.replace('{step}', step)
 
 const renderStep = (h, request, step, viewModel) => {
   const annualPages = content.operator(request).annualPages
@@ -23,7 +22,10 @@ const renderStep = (h, request, step, viewModel) => {
     intro: stepContent.intro,
     labels: stepContent,
     errorTitle: annualPages.errorTitle,
-    continueAction: step === 'declaration' ? annualPages.confirmAction : annualPages.continueAction,
+    continueAction:
+      step === 'declaration'
+        ? annualPages.confirmAction
+        : annualPages.continueAction,
     dashboardUrl: paths.operatorDashboard,
     action: stepUrl(step),
     step,

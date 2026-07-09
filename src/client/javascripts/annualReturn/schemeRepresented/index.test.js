@@ -54,13 +54,16 @@ describe('renderSchemeRepresented', () => {
     buildDom(registration.id)
     expect(renderSchemeRepresented(document)).toBe('rendered')
     expect(
-      document.querySelector('[data-testid="scheme-represented-scheme-name"]').textContent
+      document.querySelector('[data-testid="scheme-represented-scheme-name"]')
+        .textContent
     ).toBe('Northern Battery Compliance Scheme')
     expect(
-      document.querySelector('[data-testid="scheme-represented-period"]').textContent
+      document.querySelector('[data-testid="scheme-represented-period"]')
+        .textContent
     ).toBe('2026')
     expect(
-      document.querySelector('[data-testid="scheme-represented-roster"]').textContent
+      document.querySelector('[data-testid="scheme-represented-roster"]')
+        .textContent
     ).toContain('Mar')
   })
 
@@ -75,7 +78,8 @@ describe('renderSchemeRepresented', () => {
     buildDom(registration.id)
     renderSchemeRepresented(document)
     expect(
-      document.querySelector('[data-testid="scheme-represented-roster"]').textContent
+      document.querySelector('[data-testid="scheme-represented-roster"]')
+        .textContent
     ).toBe('Awaiting first roster')
   })
 
@@ -84,10 +88,12 @@ describe('renderSchemeRepresented', () => {
     buildDom('no-such-registration')
     expect(renderSchemeRepresented(document)).toBe('rendered')
     expect(
-      document.querySelector('[data-testid="scheme-represented-scheme-name"]').textContent
+      document.querySelector('[data-testid="scheme-represented-scheme-name"]')
+        .textContent
     ).toBe('—')
     expect(
-      document.querySelector('[data-testid="scheme-represented-period"]').textContent
+      document.querySelector('[data-testid="scheme-represented-period"]')
+        .textContent
     ).toBe('2026')
   })
 
@@ -97,7 +103,8 @@ describe('renderSchemeRepresented', () => {
     buildDom(registration.id)
     renderSchemeRepresented(document)
     expect(
-      document.querySelector('[data-testid="scheme-represented-scheme-name"]').textContent
+      document.querySelector('[data-testid="scheme-represented-scheme-name"]')
+        .textContent
     ).toBe('—')
   })
 })

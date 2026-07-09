@@ -13,17 +13,21 @@ ARG PORT_DEBUG
 ENV PORT=${PORT}
 EXPOSE ${PORT} ${PORT_DEBUG}
 
-COPY --chown=node:node --chmod=755 package*.json ./
-RUN npm ci
+USER root
+RUN npm install -g pnpm@11
+USER node
+
+COPY --chown=node:node --chmod=755 package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm install --frozen-lockfile
 COPY --chown=node:node --chmod=755 . .
 
-CMD [ "npm", "run", "dev" ]
+CMD [ "pnpm", "run", "dev" ]
 
 FROM development AS production_build
 
 ENV NODE_ENV=production
 
-RUN npm run build:frontend
+RUN pnpm run build:frontend
 
 FROM defradigital/node:${PARENT_VERSION} AS production
 ARG PARENT_VERSION
@@ -33,13 +37,14 @@ ENV TZ="Europe/London"
 
 USER root
 RUN apk add --no-cache curl
+RUN npm install -g pnpm@11
 USER node
 
-COPY --from=production_build /home/node/package*.json ./
+COPY --from=production_build /home/node/package.json /home/node/pnpm-lock.yaml /home/node/pnpm-workspace.yaml ./
 COPY --from=production_build /home/node/src ./src/
 COPY --from=production_build /home/node/.public/ ./.public/
 
-RUN npm ci --omit=dev
+RUN pnpm install --prod --frozen-lockfile
 
 ARG PORT
 ENV PORT=${PORT}

@@ -6,7 +6,10 @@ const TAG_BY_STATUS = {
   met: { className: 'govuk-tag govuk-tag--green', text: 'Met' },
   shortfall: { className: 'govuk-tag govuk-tag--red', text: 'Shortfall' },
   'take-back': { className: 'govuk-tag govuk-tag--blue', text: 'Take-back' },
-  'not-yet': { className: 'govuk-tag govuk-tag--grey', text: 'Not yet in force' }
+  'not-yet': {
+    className: 'govuk-tag govuk-tag--grey',
+    text: 'Not yet in force'
+  }
 }
 
 const formatTonnes = (value) => (value === null ? '—' : `${value} t`)
@@ -118,7 +121,12 @@ const recyclingRow = (doc, row) => {
   tr.appendChild(cell(doc, row.label))
   tr.appendChild(cell(doc, formatPercent(row.achievedPercent)))
   tr.appendChild(
-    annotatedCell(doc, formatPercent(row.targetPercent), row.key, row.legislation)
+    annotatedCell(
+      doc,
+      formatPercent(row.targetPercent),
+      row.key,
+      row.legislation
+    )
   )
   tr.appendChild(statusCell(doc, row.status))
   return tr

@@ -1,0 +1,170 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl" data-testid="comparison-heading">{{ heading }}</h1>
+      <p class="govuk-body-l">{{ intro }}</p>
+      <p class="govuk-body">
+        {{ govukTag({ text: "Common", classes: "govuk-tag--green" }) }}
+        {{ govukTag({ text: "Shared", classes: "govuk-tag--blue" }) }}
+        {{ govukTag({ text: "Unique", classes: "govuk-tag--grey" }) }}
+        <span class="govuk-!-margin-left-2">{{ legend }}</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full" data-comparison-filter hidden>
+      {{ govukRadios({
+        name: "classification-filter",
+        classes: "govuk-radios--inline govuk-radios--small",
+        fieldset: {
+          legend: {
+            text: "Filter by classification",
+            classes: "govuk-fieldset__legend--s"
+          }
+        },
+        attributes: { "data-testid": "comparison-filter" },
+        items: [
+          { value: "all", text: "All", checked: true },
+          { value: "common", text: "Common" },
+          { value: "shared", text: "Shared" },
+          { value: "unique", text: "Unique" }
+        ]
+      }) }}
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">NPWD</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <p class="govuk-body">{{ services.npwd }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Packaging</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <p class="govuk-body">{{ services.packaging }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% for area in areas %}
+    <div class="govuk-grid-row" data-comparison-section>
+      <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-l" data-testid="comparison-area-{{ area.id }}">{{ area.title }}</h2>
+        <table class="govuk-table">
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Aspect</th>
+              <th scope="col" class="govuk-table__header">NPWD</th>
+              <th scope="col" class="govuk-table__header">Packaging</th>
+              <th scope="col" class="govuk-table__header">Classification</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            {% for row in area.rows %}
+              <tr class="govuk-table__row" data-classification="{{ row.classification }}">
+                <th scope="row" class="govuk-table__header">{{ row.aspect }}</th>
+                <td class="govuk-table__cell">{{ row.npwd }}</td>
+                <td class="govuk-table__cell">{{ row.packaging }}</td>
+                <td class="govuk-table__cell">
+                  {{ govukTag({ text: classificationTag[row.classification].text, classes: classificationTag[row.classification].classes }) }}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endfor %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h2 class="govuk-heading-l" data-testid="comparison-fields">Field-by-field mapping</h2>
+    </div>
+  </div>
+
+  {% for group in fieldGroups %}
+    <div class="govuk-grid-row" data-comparison-section>
+      <div class="govuk-grid-column-full">
+        <h3 class="govuk-heading-m" data-testid="comparison-fieldgroup-{{ group.id }}">{{ group.title }}</h3>
+        <table class="govuk-table">
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Concept</th>
+              <th scope="col" class="govuk-table__header">NPWD field</th>
+              <th scope="col" class="govuk-table__header">Packaging field</th>
+              <th scope="col" class="govuk-table__header">Classification</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            {% for row in group.rows %}
+              <tr class="govuk-table__row" data-classification="{{ row.classification }}">
+                <th scope="row" class="govuk-table__header">{{ row.concept }}</th>
+                <td class="govuk-table__cell">{{ row.npwd }}</td>
+                <td class="govuk-table__cell">{{ row.packaging }}</td>
+                <td class="govuk-table__cell">
+                  {{ govukTag({ text: classificationTag[row.classification].text, classes: classificationTag[row.classification].classes }) }}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endfor %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-l">Shared foundation</h2>
+      <ul class="govuk-list govuk-list--bullet" data-testid="comparison-shared">
+        {% for item in summary.shared %}
+          <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+
+      <h2 class="govuk-heading-l">Service-specific</h2>
+      <ul class="govuk-list govuk-list--bullet" data-testid="comparison-service-specific">
+        {% for item in summary.serviceSpecific %}
+          <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+
+      <h2 class="govuk-heading-l">Inconsistencies, duplication & gaps</h2>
+      <ul class="govuk-list govuk-list--bullet" data-testid="comparison-inconsistencies">
+        {% for item in summary.inconsistencies %}
+          <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+
+      {% set caveatsHtml %}
+        <ul class="govuk-list govuk-list--bullet">
+          {% for item in caveats %}
+            <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      {% endset %}
+      {{ govukInsetText({ html: caveatsHtml, attributes: { "data-testid": "comparison-caveats" } }) }}
+    </div>
+  </div>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('npwdPackagingComparison.js') }}"></script>
+{% endblock %}

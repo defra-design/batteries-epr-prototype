@@ -19,9 +19,7 @@ export const wireTimeTravelButton = (
   const button = doc.querySelector('[data-testid="dev-time-travel-confirm"]')
   const input = doc.querySelector('[data-testid="dev-time-travel-year"]')
   const status = doc.querySelector('[data-testid="dev-time-travel-status"]')
-  const clearButton = doc.querySelector(
-    '[data-testid="dev-time-travel-clear"]'
-  )
+  const clearButton = doc.querySelector('[data-testid="dev-time-travel-clear"]')
   const current = doc.querySelector('[data-testid="dev-time-travel-current"]')
   if (!button || !input) return false
 
@@ -37,8 +35,7 @@ export const wireTimeTravelButton = (
     const year = Number(input.value)
     if (!Number.isInteger(year) || year < 1970 || year > 9999) {
       if (status) {
-        status.textContent =
-          'Enter a four-digit year between 1970 and 9999.'
+        status.textContent = 'Enter a four-digit year between 1970 and 9999.'
       }
       return
     }

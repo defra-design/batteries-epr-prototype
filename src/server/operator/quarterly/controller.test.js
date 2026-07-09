@@ -22,8 +22,12 @@ describe('#operatorQuarterlyController', () => {
       url: stepUrl('Q1', 'tonnages')
     })
     expect(statusCode).toBe(statusCodes.ok)
-    expect(result).toEqual(expect.stringContaining('data-testid="operator-quarterly-form"'))
-    expect(result).toEqual(expect.stringContaining('"view":"operatorQuarterly"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="operator-quarterly-form"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining('"view":"operatorQuarterly"')
+    )
     expect(result).toEqual(expect.stringContaining('"step":"tonnages"'))
     expect(result).toEqual(expect.stringContaining('"target":"hydrate"'))
   })
@@ -50,7 +54,9 @@ describe('#operatorQuarterlyController', () => {
       url: stepUrl('Q3', 'confirmation')
     })
     expect(result).toEqual(
-      expect.stringContaining('data-testid="operator-quarterly-confirmation-panel"')
+      expect.stringContaining(
+        'data-testid="operator-quarterly-confirmation-panel"'
+      )
     )
   })
 
@@ -71,7 +77,8 @@ describe('#operatorQuarterlyController', () => {
     const { result } = await server.inject({
       method: 'POST',
       url: stepUrl('Q1', 'tonnages'),
-      payload: 'acceptedLeadAcid=1.000&acceptedNickelCadmium=2.000&acceptedOther=3.000&treatedLeadAcid=4.000&treatedNickelCadmium=5.000&treatedOther=6.000',
+      payload:
+        'acceptedLeadAcid=1.000&acceptedNickelCadmium=2.000&acceptedOther=3.000&treatedLeadAcid=4.000&treatedNickelCadmium=5.000&treatedOther=6.000',
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
     expect(result).toEqual(expect.stringContaining('"target":"persist"'))
@@ -85,7 +92,8 @@ describe('#operatorQuarterlyController', () => {
     const { statusCode } = await server.inject({
       method: 'POST',
       url: stepUrl('Q1', 'tonnages'),
-      payload: 'acceptedLeadAcid=abc&acceptedNickelCadmium=2&acceptedOther=3&treatedLeadAcid=4&treatedNickelCadmium=5&treatedOther=6',
+      payload:
+        'acceptedLeadAcid=abc&acceptedNickelCadmium=2&acceptedOther=3&treatedLeadAcid=4&treatedNickelCadmium=5&treatedOther=6',
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
     expect(statusCode).toBe(statusCodes.found)
@@ -95,7 +103,8 @@ describe('#operatorQuarterlyController', () => {
     const { statusCode, headers } = await server.inject({
       method: 'POST',
       url: stepUrl('Q1', 'tonnages'),
-      payload: 'acceptedLeadAcid=&acceptedNickelCadmium=&acceptedOther=&treatedLeadAcid=&treatedNickelCadmium=&treatedOther=',
+      payload:
+        'acceptedLeadAcid=&acceptedNickelCadmium=&acceptedOther=&treatedLeadAcid=&treatedNickelCadmium=&treatedOther=',
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
     expect(statusCode).toBe(statusCodes.found)

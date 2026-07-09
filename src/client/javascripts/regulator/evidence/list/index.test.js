@@ -14,8 +14,17 @@ const defaultPayload = {
   view: 'list',
   compliancePeriodYear: '2026',
   copy: {
-    categories: { portable: 'Portable', industrial: 'Industrial', automotive: 'Automotive' },
-    statuses: { 'awaiting-acceptance': 'Awaiting acceptance', accepted: 'Accepted', cancelled: 'Cancelled', 'awaiting-authorisation': 'Awaiting authorisation' },
+    categories: {
+      portable: 'Portable',
+      industrial: 'Industrial',
+      automotive: 'Automotive'
+    },
+    statuses: {
+      'awaiting-acceptance': 'Awaiting acceptance',
+      accepted: 'Accepted',
+      cancelled: 'Cancelled',
+      'awaiting-authorisation': 'Awaiting authorisation'
+    },
     viewAction: 'View'
   },
   urls: {
@@ -105,7 +114,9 @@ describe('runRegulatorEvidenceList', () => {
     })
     document.body.innerHTML = listHtml(defaultPayload)
     runRegulatorEvidenceList(document, { assign: assignSpy })
-    const viewLinks = document.querySelectorAll('[data-testid="evidence-row-view"]')
+    const viewLinks = document.querySelectorAll(
+      '[data-testid="evidence-row-view"]'
+    )
     expect(viewLinks.length).toBeGreaterThan(0)
     for (const link of viewLinks) {
       expect(link.getAttribute('href')).toContain('/regulator/evidence/')
@@ -128,8 +139,12 @@ describe('runRegulatorEvidenceList', () => {
     })
     document.body.innerHTML = listHtml(defaultPayload)
     runRegulatorEvidenceList(document, { assign: assignSpy })
-    const issuerCells = document.querySelectorAll('[data-testid="evidence-row-issuer"]')
-    const hasOperatorName = [...issuerCells].some((cell) => cell.textContent.includes(operator.name))
+    const issuerCells = document.querySelectorAll(
+      '[data-testid="evidence-row-issuer"]'
+    )
+    const hasOperatorName = [...issuerCells].some((cell) =>
+      cell.textContent.includes(operator.name)
+    )
     expect(hasOperatorName).toBe(true)
   })
 })

@@ -102,9 +102,15 @@ describe('runApplicationStep hydrate target', () => {
     )
 
     runApplicationStep(document, globalThis.location)
-    expect(document.querySelector('input[name="line1"]').value).toBe('1 Test St')
-    expect(document.querySelector('input[name="town"]').value).toBe('Townsville')
-    expect(document.querySelector('input[name="postcode"]').value).toBe('LS1 1AA')
+    expect(document.querySelector('input[name="line1"]').value).toBe(
+      '1 Test St'
+    )
+    expect(document.querySelector('input[name="town"]').value).toBe(
+      'Townsville'
+    )
+    expect(document.querySelector('input[name="postcode"]').value).toBe(
+      'LS1 1AA'
+    )
     expect(document.querySelector('input[name="line2"]').value).toBe('')
   })
 
@@ -143,9 +149,9 @@ describe('runApplicationStep hydrate target', () => {
       '<form><textarea name="operationalPlan"></textarea></form>'
     )
     runApplicationStep(document, globalThis.location)
-    expect(document.querySelector('textarea[name="operationalPlan"]').value).toBe(
-      'A plan'
-    )
+    expect(
+      document.querySelector('textarea[name="operationalPlan"]').value
+    ).toBe('A plan')
 
     buildDom(
       { step: 'partners', target: 'hydrate' },
@@ -161,9 +167,9 @@ describe('runApplicationStep hydrate target', () => {
       '<form><textarea name="additionalFiles"></textarea></form>'
     )
     runApplicationStep(document, globalThis.location)
-    expect(document.querySelector('textarea[name="additionalFiles"]').value).toBe(
-      'a.pdf'
-    )
+    expect(
+      document.querySelector('textarea[name="additionalFiles"]').value
+    ).toBe('a.pdf')
 
     buildDom(
       { step: 'offences', target: 'hydrate' },
@@ -173,9 +179,9 @@ describe('runApplicationStep hydrate target', () => {
     expect(
       document.querySelector('input[name="hasOffences"][value="yes"]').checked
     ).toBe(true)
-    expect(document.querySelector('textarea[name="offencesDetail"]').value).toBe(
-      'A past offence'
-    )
+    expect(
+      document.querySelector('textarea[name="offencesDetail"]').value
+    ).toBe('A past offence')
 
     buildDom(
       { step: 'declaration', target: 'hydrate' },

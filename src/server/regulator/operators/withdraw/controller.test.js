@@ -3,7 +3,10 @@ import { initialiseServer } from '../../../../test-utils/initialise-server.js'
 import { paths } from '../../../../config/paths.js'
 import { content } from '../../../../config/content.js'
 
-const withdrawUrl = paths.regulatorOperatorWithdraw.replace('{operatorId}', 'test-operator-id')
+const withdrawUrl = paths.regulatorOperatorWithdraw.replace(
+  '{operatorId}',
+  'test-operator-id'
+)
 
 describe('#regulatorOperatorWithdrawController', () => {
   let server
@@ -25,9 +28,13 @@ describe('#regulatorOperatorWithdrawController', () => {
     expect(statusCode).toBe(statusCodes.ok)
     const pageContent = content.regulator({}).operatorsPages.withdraw
     expect(result).toEqual(expect.stringContaining(pageContent.heading))
-    expect(result).toEqual(expect.stringContaining('data-testid="operator-withdraw-heading"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="operator-withdraw-heading"')
+    )
     expect(result).toEqual(expect.stringContaining('"target":"hydrate"'))
-    expect(result).toEqual(expect.stringContaining('"operatorId":"test-operator-id"'))
+    expect(result).toEqual(
+      expect.stringContaining('"operatorId":"test-operator-id"')
+    )
   })
 
   test('POST renders with persist target and reason', async () => {
@@ -39,7 +46,9 @@ describe('#regulatorOperatorWithdrawController', () => {
 
     expect(statusCode).toBe(statusCodes.ok)
     expect(result).toEqual(expect.stringContaining('"target":"persist"'))
-    expect(result).toEqual(expect.stringContaining('"reason":"Breach of conditions"'))
+    expect(result).toEqual(
+      expect.stringContaining('"reason":"Breach of conditions"')
+    )
   })
 
   test('POST renders with empty reason when not provided', async () => {

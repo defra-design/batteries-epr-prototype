@@ -54,13 +54,22 @@ describe('obligation', () => {
     const quarterly = [
       {
         memberData: [
-          { memberId: 'm-1', marketData: { portable: '60', industrial: '200', automotive: '30' } },
-          { memberId: 'm-2', marketData: { portable: '40', industrial: '0', automotive: '20' } }
+          {
+            memberId: 'm-1',
+            marketData: { portable: '60', industrial: '200', automotive: '30' }
+          },
+          {
+            memberId: 'm-2',
+            marketData: { portable: '40', industrial: '0', automotive: '20' }
+          }
         ]
       },
       {
         memberData: [
-          { memberId: 'm-1', marketData: { portable: '50', industrial: '0', automotive: '50' } }
+          {
+            memberId: 'm-1',
+            marketData: { portable: '50', industrial: '0', automotive: '50' }
+          }
         ]
       }
     ]
@@ -79,7 +88,10 @@ describe('obligation', () => {
     const quarterly = [
       {
         memberData: [
-          { memberId: 'm-1', marketData: { portable: '150', industrial: '0', automotive: '0' } }
+          {
+            memberId: 'm-1',
+            marketData: { portable: '150', industrial: '0', automotive: '0' }
+          }
         ]
       }
     ]
@@ -96,7 +108,10 @@ describe('obligation', () => {
     const quarterly = [
       {
         memberData: [
-          { memberId: 'm-1', marketData: { portable: '100', industrial: '0', automotive: '0' } }
+          {
+            memberId: 'm-1',
+            marketData: { portable: '100', industrial: '0', automotive: '0' }
+          }
         ]
       }
     ]
@@ -115,7 +130,14 @@ describe('obligation', () => {
 
   test('only accepted evidence counts toward fulfilment', () => {
     const quarterly = [
-      { memberData: [{ memberId: 'm-1', marketData: { portable: '100', industrial: '0', automotive: '0' } }] }
+      {
+        memberData: [
+          {
+            memberId: 'm-1',
+            marketData: { portable: '100', industrial: '0', automotive: '0' }
+          }
+        ]
+      }
     ]
     const evidence = [
       { category: 'portable', status: 'accepted', tonnes: '20' },
@@ -130,7 +152,9 @@ describe('obligation', () => {
   })
 
   test('missing tonnes fields are treated as zero', () => {
-    const quarterly = [{ memberData: [{ memberId: 'm-1', marketData: { portable: undefined } }] }]
+    const quarterly = [
+      { memberData: [{ memberId: 'm-1', marketData: { portable: undefined } }] }
+    ]
     const evidence = [{ category: 'portable', status: 'accepted' }]
     const { rows } = buildObligation({ quarterly, evidence })
     const portable = rows.find((r) => r.category === 'portable')
@@ -154,7 +178,7 @@ describe('resolveTargets', () => {
     })
   })
 
-  test('converts a regulator\'s stored whole-percent targets to fractions', () => {
+  test("converts a regulator's stored whole-percent targets to fractions", () => {
     storage.saveRegulatorTargets('EA', {
       collection: { portable: 45, industrial: 100, automotive: 100 },
       recycling: { portable: 60, industrial: 50, automotive: 50 }

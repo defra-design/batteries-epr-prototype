@@ -68,7 +68,9 @@ describe('#complianceSchemeApplicationController', () => {
     expect(statusCode).toBe(statusCodes.ok)
     expect(result).toEqual(expect.stringContaining('"target":"persist"'))
     expect(result).toEqual(expect.stringContaining('"name":"Acme"'))
-    expect(result).toEqual(expect.stringContaining('"tradingNames":["Acme1","Acme2"]'))
+    expect(result).toEqual(
+      expect.stringContaining('"tradingNames":["Acme1","Acme2"]')
+    )
     expect(result).toEqual(
       expect.stringContaining(
         '"next":"/compliance-scheme/application/registered-address"'
@@ -132,9 +134,7 @@ describe('#complianceSchemeApplicationController', () => {
     })
     expect(result).toEqual(expect.stringContaining('"contactAddress"'))
     expect(result).toEqual(expect.stringContaining('"line2":"Suite 1"'))
-    expect(result).toEqual(
-      expect.stringContaining('"serviceOfNoticeAddress"')
-    )
+    expect(result).toEqual(expect.stringContaining('"serviceOfNoticeAddress"'))
   })
 
   test('POST offences with yes requires details', async () => {
@@ -238,7 +238,9 @@ describe('#complianceSchemeApplicationController', () => {
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
     expect(result).toEqual(
-      expect.stringContaining('"partners":[{"name":"Alpha"},{"name":"Beta Co"}]')
+      expect.stringContaining(
+        '"partners":[{"name":"Alpha"},{"name":"Beta Co"}]'
+      )
     )
   })
 
