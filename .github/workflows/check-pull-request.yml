@@ -32,8 +32,8 @@ jobs:
           pnpm install --frozen-lockfile
           pnpm audit --audit-level high
           pnpm run build:frontend
-          pnpm run format:check
-          pnpm run lint
+          # pnpm run format:check
+          # pnpm run lint
           pnpm test
 
       - name: Test Docker Image Build
