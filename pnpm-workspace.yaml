@@ -1,0 +1,7 @@
+packages:
+  - .
+
+onlyBuiltDependencies:
+  - '@defra/hapi-secure-context'
+  - '@defra/hapi-tracing'
+  - esbuild
