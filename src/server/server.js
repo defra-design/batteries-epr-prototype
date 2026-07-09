@@ -22,6 +22,7 @@ export async function createServer(plugins) {
   const server = hapi.server({
     host: config.get('host'),
     port: config.get('port'),
+    ...(config.get('isDevelopment') && { uri: config.get('appBaseUrl') }),
     routes: {
       validate: {
         options: {
