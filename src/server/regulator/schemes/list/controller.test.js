@@ -24,9 +24,15 @@ describe('#regulatorSchemeListController', () => {
     const pageContent = content.regulator({}).schemesPages.list
     expect(result).toEqual(expect.stringContaining(pageContent.heading))
     expect(result).toEqual(expect.stringContaining(pageContent.intro))
-    expect(result).toEqual(expect.stringContaining('data-testid="schemes-table"'))
-    expect(result).toEqual(expect.stringContaining('data-testid="schemes-body"'))
-    expect(result).toEqual(expect.stringContaining('data-testid="schemes-empty"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="schemes-table"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="schemes-body"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="schemes-empty"')
+    )
   })
 
   test('emits a page-payload with view list', async () => {

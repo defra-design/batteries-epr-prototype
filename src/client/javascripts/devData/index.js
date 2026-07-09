@@ -55,29 +55,156 @@ const EVIDENCE = 'Evidence (GB)'
 const SESSION = 'Session and dev (GB)'
 const NORTHERN_IRELAND = 'Northern Ireland (EUBR)'
 
-const JOURNEYS = [PRODUCER, SCHEME, OPERATOR, EVIDENCE, SESSION, NORTHERN_IRELAND]
+const JOURNEYS = [
+  PRODUCER,
+  SCHEME,
+  OPERATOR,
+  EVIDENCE,
+  SESSION,
+  NORTHERN_IRELAND
+]
 
 const REGISTRY = [
-  { key: STORAGE_KEYS.producers, label: 'Producers', journey: PRODUCER, kind: 'map', schema: createProducer() },
-  { key: STORAGE_KEYS.registrations, label: 'Registrations', journey: PRODUCER, kind: 'map', schema: createRegistration() },
-  { key: STORAGE_KEYS.submissions, label: 'Annual return submissions', journey: PRODUCER, kind: 'map', schema: createSubmission() },
-  { key: STORAGE_KEYS.payments, label: 'Payments', journey: PRODUCER, kind: 'map', schema: null },
-  { key: STORAGE_KEYS.schemes, label: 'Schemes', journey: SCHEME, kind: 'map', schema: createScheme() },
-  { key: STORAGE_KEYS.schemeMembers, label: 'Scheme members', journey: SCHEME, kind: 'map', schema: createSchemeMember() },
-  { key: STORAGE_KEYS.quarterlySubmissions, label: 'Quarterly submissions', journey: SCHEME, kind: 'map', schema: createQuarterlySubmission() },
-  { key: STORAGE_KEYS.iaSubmissions, label: 'IA submissions', journey: SCHEME, kind: 'map', schema: createIaSubmission() },
-  { key: STORAGE_KEYS.operators, label: 'Operators', journey: OPERATOR, kind: 'map', schema: createOperator() },
-  { key: STORAGE_KEYS.operatorQuarterlyReturns, label: 'Operator quarterly returns', journey: OPERATOR, kind: 'map', schema: createOperatorQuarterlyReturn() },
-  { key: STORAGE_KEYS.operatorAnnualReturns, label: 'Operator annual returns', journey: OPERATOR, kind: 'map', schema: createOperatorAnnualReturn() },
-  { key: STORAGE_KEYS.evidence, label: 'Evidence', journey: EVIDENCE, kind: 'map', schema: createEvidence() },
-  { key: STORAGE_KEYS.currentUser, label: 'Current user', journey: SESSION, kind: 'single', schema: null },
-  { key: STORAGE_KEYS.currentSchemeId, label: 'Current scheme id', journey: SESSION, kind: 'scalar', schema: null },
-  { key: STORAGE_KEYS.currentOperatorId, label: 'Current operator id', journey: SESSION, kind: 'scalar', schema: null },
-  { key: STORAGE_KEYS.currentAgencyCode, label: 'Current agency code', journey: SESSION, kind: 'scalar', schema: null },
-  { key: STORAGE_KEYS.seedVersion, label: 'Seed version', journey: SESSION, kind: 'scalar', schema: null },
-  { key: STORAGE_KEYS.timeTravelTargetYear, label: 'Time-travel target year', journey: SESSION, kind: 'scalar', schema: null },
-  { key: NI_STORAGE_KEYS.registration, label: 'NI registration', journey: NORTHERN_IRELAND, kind: 'single', schema: NI_REGISTRATION_SCHEMA },
-  { key: NI_STORAGE_KEYS.annualReturns, label: 'NI annual returns', journey: NORTHERN_IRELAND, kind: 'map', schema: NI_ANNUAL_RETURN_SCHEMA }
+  {
+    key: STORAGE_KEYS.producers,
+    label: 'Producers',
+    journey: PRODUCER,
+    kind: 'map',
+    schema: createProducer()
+  },
+  {
+    key: STORAGE_KEYS.registrations,
+    label: 'Registrations',
+    journey: PRODUCER,
+    kind: 'map',
+    schema: createRegistration()
+  },
+  {
+    key: STORAGE_KEYS.submissions,
+    label: 'Annual return submissions',
+    journey: PRODUCER,
+    kind: 'map',
+    schema: createSubmission()
+  },
+  {
+    key: STORAGE_KEYS.payments,
+    label: 'Payments',
+    journey: PRODUCER,
+    kind: 'map',
+    schema: null
+  },
+  {
+    key: STORAGE_KEYS.schemes,
+    label: 'Schemes',
+    journey: SCHEME,
+    kind: 'map',
+    schema: createScheme()
+  },
+  {
+    key: STORAGE_KEYS.schemeMembers,
+    label: 'Scheme members',
+    journey: SCHEME,
+    kind: 'map',
+    schema: createSchemeMember()
+  },
+  {
+    key: STORAGE_KEYS.quarterlySubmissions,
+    label: 'Quarterly submissions',
+    journey: SCHEME,
+    kind: 'map',
+    schema: createQuarterlySubmission()
+  },
+  {
+    key: STORAGE_KEYS.iaSubmissions,
+    label: 'IA submissions',
+    journey: SCHEME,
+    kind: 'map',
+    schema: createIaSubmission()
+  },
+  {
+    key: STORAGE_KEYS.operators,
+    label: 'Operators',
+    journey: OPERATOR,
+    kind: 'map',
+    schema: createOperator()
+  },
+  {
+    key: STORAGE_KEYS.operatorQuarterlyReturns,
+    label: 'Operator quarterly returns',
+    journey: OPERATOR,
+    kind: 'map',
+    schema: createOperatorQuarterlyReturn()
+  },
+  {
+    key: STORAGE_KEYS.operatorAnnualReturns,
+    label: 'Operator annual returns',
+    journey: OPERATOR,
+    kind: 'map',
+    schema: createOperatorAnnualReturn()
+  },
+  {
+    key: STORAGE_KEYS.evidence,
+    label: 'Evidence',
+    journey: EVIDENCE,
+    kind: 'map',
+    schema: createEvidence()
+  },
+  {
+    key: STORAGE_KEYS.currentUser,
+    label: 'Current user',
+    journey: SESSION,
+    kind: 'single',
+    schema: null
+  },
+  {
+    key: STORAGE_KEYS.currentSchemeId,
+    label: 'Current scheme id',
+    journey: SESSION,
+    kind: 'scalar',
+    schema: null
+  },
+  {
+    key: STORAGE_KEYS.currentOperatorId,
+    label: 'Current operator id',
+    journey: SESSION,
+    kind: 'scalar',
+    schema: null
+  },
+  {
+    key: STORAGE_KEYS.currentAgencyCode,
+    label: 'Current agency code',
+    journey: SESSION,
+    kind: 'scalar',
+    schema: null
+  },
+  {
+    key: STORAGE_KEYS.seedVersion,
+    label: 'Seed version',
+    journey: SESSION,
+    kind: 'scalar',
+    schema: null
+  },
+  {
+    key: STORAGE_KEYS.timeTravelTargetYear,
+    label: 'Time-travel target year',
+    journey: SESSION,
+    kind: 'scalar',
+    schema: null
+  },
+  {
+    key: NI_STORAGE_KEYS.registration,
+    label: 'NI registration',
+    journey: NORTHERN_IRELAND,
+    kind: 'single',
+    schema: NI_REGISTRATION_SCHEMA
+  },
+  {
+    key: NI_STORAGE_KEYS.annualReturns,
+    label: 'NI annual returns',
+    journey: NORTHERN_IRELAND,
+    kind: 'map',
+    schema: NI_ANNUAL_RETURN_SCHEMA
+  }
 ]
 
 const typeLabel = (value) => {
@@ -158,7 +285,9 @@ const renderSchema = (doc, schema) => {
 
 const renderRecord = (doc, entry) => {
   const details = el(doc, 'details', 'govuk-details')
-  details.appendChild(el(doc, 'summary', 'govuk-details__summary-text', entry.title))
+  details.appendChild(
+    el(doc, 'summary', 'govuk-details__summary-text', entry.title)
+  )
   const text = el(doc, 'div', 'govuk-details__text')
   if (entry.value !== null && typeof entry.value === 'object') {
     const list = el(doc, 'dl', 'govuk-summary-list')

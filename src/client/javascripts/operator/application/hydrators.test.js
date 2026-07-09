@@ -75,8 +75,7 @@ describe('operator application hydrators', () => {
 
   test('declaration hydrates checked when submitted', () => {
     expect(
-      HYDRATORS.declaration({ approvalStatus: 'submitted' })
-        .declarationAccepted
+      HYDRATORS.declaration({ approvalStatus: 'submitted' }).declarationAccepted
     ).toBe('yes')
   })
 

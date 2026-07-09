@@ -232,7 +232,8 @@ describe('members pending acceptance', () => {
     expect(rows).toHaveLength(1)
     expect(rows[0].dataset.memberId).toBeTruthy()
     expect(
-      document.querySelector('[data-testid="members-pending-company"]').textContent
+      document.querySelector('[data-testid="members-pending-company"]')
+        .textContent
     ).toBe('Pending Co')
     expect(
       document.querySelector('[data-testid="members-pending-empty"]').hidden
@@ -256,9 +257,7 @@ describe('members pending acceptance', () => {
     runMembersPage(document, globalThis.location)
     document.querySelector('[data-testid="members-pending-accept"]').click()
 
-    const updated = storage
-      .listSchemeMembers()
-      .find((m) => m.id === member.id)
+    const updated = storage.listSchemeMembers().find((m) => m.id === member.id)
     expect(updated.status).toBe('active')
     expect(updated.producerBprn).toMatch(/^BPRN-/)
     expect(globalThis.location.reload).toHaveBeenCalled()
@@ -290,9 +289,7 @@ describe('members pending acceptance', () => {
     runMembersPage(document, globalThis.location)
     document.querySelector('[data-testid="members-pending-reject"]').click()
 
-    const updated = storage
-      .listSchemeMembers()
-      .find((m) => m.id === member.id)
+    const updated = storage.listSchemeMembers().find((m) => m.id === member.id)
     expect(updated.status).toBe('rejected')
     expect(updated.reasonForLeaving).toBe('rejected-by-scheme')
     confirmSpy.mockRestore()
@@ -412,7 +409,9 @@ describe('members remove view', () => {
     })
 
     expect(runMembersPage(document, globalThis.location)).toBe('navigated')
-    const stored = storage.listSchemeMembers(scheme.id).find((m) => m.id === member.id)
+    const stored = storage
+      .listSchemeMembers(scheme.id)
+      .find((m) => m.id === member.id)
     expect(stored.leftOn).toBeTruthy()
     expect(assignSpy).toHaveBeenCalledWith('/compliance-scheme/members')
   })

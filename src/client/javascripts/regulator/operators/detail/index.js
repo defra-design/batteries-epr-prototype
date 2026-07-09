@@ -10,7 +10,14 @@ const setText = (doc, selector, text) => {
 /* v8 ignore start */
 const formatAddress = (address) => {
   if (!address) return '—'
-  return [address.line1, address.line2, address.line3, address.line4, address.town, address.postcode]
+  return [
+    address.line1,
+    address.line2,
+    address.line3,
+    address.line4,
+    address.town,
+    address.postcode
+  ]
     .filter(Boolean)
     .join(', ')
 }
@@ -43,7 +50,9 @@ export const runRegulatorOperatorDetail = (doc, loc) => {
   }
 
   const operator = storage.getOperator(payload.operatorId)
-  const notFound = doc.querySelector('[data-testid="operator-detail-not-found"]')
+  const notFound = doc.querySelector(
+    '[data-testid="operator-detail-not-found"]'
+  )
   const list = doc.querySelector('[data-testid="operator-detail-list"]')
   const actions = doc.querySelector('[data-testid="operator-detail-actions"]')
 
@@ -59,13 +68,41 @@ export const runRegulatorOperatorDetail = (doc, loc) => {
 
   /* v8 ignore start */
   setText(doc, '[data-testid="operator-detail-name"]', operator.name ?? '—')
-  setText(doc, '[data-testid="operator-detail-type"]', (operator.approvalType ?? '').toUpperCase())
-  setText(doc, '[data-testid="operator-detail-company-reg"]', operator.companyRegistrationNo ?? '—')
-  setText(doc, '[data-testid="operator-detail-address"]', formatAddress(operator.registeredAddress))
-  setText(doc, '[data-testid="operator-detail-sites"]', formatSites(operator.sites))
-  setText(doc, '[data-testid="operator-detail-status"]', operator.approvalStatus ?? '—')
-  setText(doc, '[data-testid="operator-detail-agency"]', operator.agencyCode ?? '—')
-  setText(doc, '[data-testid="operator-detail-approval-number"]', operator.approvalNumber ?? '—')
+  setText(
+    doc,
+    '[data-testid="operator-detail-type"]',
+    (operator.approvalType ?? '').toUpperCase()
+  )
+  setText(
+    doc,
+    '[data-testid="operator-detail-company-reg"]',
+    operator.companyRegistrationNo ?? '—'
+  )
+  setText(
+    doc,
+    '[data-testid="operator-detail-address"]',
+    formatAddress(operator.registeredAddress)
+  )
+  setText(
+    doc,
+    '[data-testid="operator-detail-sites"]',
+    formatSites(operator.sites)
+  )
+  setText(
+    doc,
+    '[data-testid="operator-detail-status"]',
+    operator.approvalStatus ?? '—'
+  )
+  setText(
+    doc,
+    '[data-testid="operator-detail-agency"]',
+    operator.agencyCode ?? '—'
+  )
+  setText(
+    doc,
+    '[data-testid="operator-detail-approval-number"]',
+    operator.approvalNumber ?? '—'
+  )
   /* v8 ignore stop */
 
   if (operator.approvalStatus === 'submitted') {
@@ -74,12 +111,18 @@ export const runRegulatorOperatorDetail = (doc, loc) => {
     actions.hidden = true
   }
 
-  const withdrawEl = doc.querySelector('[data-testid="operator-detail-withdraw"]')
+  const withdrawEl = doc.querySelector(
+    '[data-testid="operator-detail-withdraw"]'
+  )
   if (withdrawEl) {
     if (operator.approvalStatus === 'approved') {
-      const withdrawLink = doc.querySelector('[data-testid="operator-detail-withdraw-link"]')
+      const withdrawLink = doc.querySelector(
+        '[data-testid="operator-detail-withdraw-link"]'
+      )
       /* v8 ignore next */
-      if (withdrawLink) withdrawLink.href = `/regulator/operators/${operator.id}/withdraw`
+      if (withdrawLink) {
+        withdrawLink.href = `/regulator/operators/${operator.id}/withdraw`
+      }
       withdrawEl.hidden = false
     } else {
       withdrawEl.hidden = true

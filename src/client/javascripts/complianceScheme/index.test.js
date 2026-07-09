@@ -113,7 +113,8 @@ describe('initComplianceSchemeDashboard', () => {
     expect(meta).toMatch(/Approval number: BCS2010864\/E/)
     expect(meta).toMatch(/Approved on/)
     expect(
-      document.querySelector('[data-testid="tile-approval-action"] a').textContent
+      document.querySelector('[data-testid="tile-approval-action"] a')
+        .textContent
     ).toBe('View application')
 
     expect(
@@ -121,13 +122,16 @@ describe('initComplianceSchemeDashboard', () => {
     ).toBe('0 active members')
 
     expect(
-      document.querySelector('[data-testid="tile-evidence-accepted"]').textContent
+      document.querySelector('[data-testid="tile-evidence-accepted"]')
+        .textContent
     ).toBe('0.000')
     const availability = document.querySelector(
       '[data-testid="tile-evidence-availability"]'
     )
     expect(availability.textContent).toMatch(/Available to members & partners/)
-    expect(availability.innerHTML).toContain('Available to members &amp; partners')
+    expect(availability.innerHTML).toContain(
+      'Available to members &amp; partners'
+    )
 
     expect(
       document.querySelector('[data-testid="tile-quarterly-hint"]').textContent
@@ -319,7 +323,8 @@ describe('initComplianceSchemeDashboard', () => {
     expect(scheme.approvedOn).toBeTruthy()
     expect(scheme.submittedOn).toBeTruthy()
     expect(
-      document.querySelector('[data-testid="debug-fast-forward-message"]').hidden
+      document.querySelector('[data-testid="debug-fast-forward-message"]')
+        .hidden
     ).toBe(false)
     expect(reloadSpy).toHaveBeenCalled()
   })

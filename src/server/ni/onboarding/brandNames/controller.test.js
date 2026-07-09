@@ -17,7 +17,9 @@ describe('#niOnboardingBrandNames', () => {
       url: paths.niOnboardingBrandNames
     })
     expect(statusCode).toBe(statusCodes.ok)
-    expect(result).toEqual(expect.stringContaining('data-testid="ni-brand-names"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="ni-brand-names"')
+    )
   })
 
   test('POST with no brand names redirects back and flashes an error', async () => {

@@ -10,7 +10,14 @@ const setText = (doc, selector, text) => {
 /* v8 ignore start */
 const formatAddress = (address) => {
   if (!address) return '—'
-  return [address.line1, address.line2, address.line3, address.line4, address.town, address.postcode]
+  return [
+    address.line1,
+    address.line2,
+    address.line3,
+    address.line4,
+    address.town,
+    address.postcode
+  ]
     .filter(Boolean)
     .join(', ')
 }
@@ -37,7 +44,9 @@ export const runRegulatorProducerDetail = (doc, loc) => {
 
   const producers = storage.listAllProducers()
   const producer = producers.find((p) => p.id === payload.producerId)
-  const notFound = doc.querySelector('[data-testid="producer-detail-not-found"]')
+  const notFound = doc.querySelector(
+    '[data-testid="producer-detail-not-found"]'
+  )
   const list = doc.querySelector('[data-testid="producer-detail-list"]')
 
   if (!producer) {
@@ -51,13 +60,41 @@ export const runRegulatorProducerDetail = (doc, loc) => {
 
   /* v8 ignore start */
   setText(doc, '[data-testid="producer-detail-bprn"]', producer.bprn ?? '—')
-  setText(doc, '[data-testid="producer-detail-company-name"]', producer.companyName ?? '—')
-  setText(doc, '[data-testid="producer-detail-trading-name"]', producer.tradingName ?? '—')
-  setText(doc, '[data-testid="producer-detail-company-reg"]', producer.companyRegistrationNo ?? '—')
-  setText(doc, '[data-testid="producer-detail-address"]', formatAddress(producer.registeredAddress))
-  setText(doc, '[data-testid="producer-detail-contact"]', formatContact(producer.primaryContact))
-  setText(doc, '[data-testid="producer-detail-battery-types"]', formatBatteryTypes(producer.batteryTypes))
-  setText(doc, '[data-testid="producer-detail-agency"]', producer.agencyCode ?? '—')
+  setText(
+    doc,
+    '[data-testid="producer-detail-company-name"]',
+    producer.companyName ?? '—'
+  )
+  setText(
+    doc,
+    '[data-testid="producer-detail-trading-name"]',
+    producer.tradingName ?? '—'
+  )
+  setText(
+    doc,
+    '[data-testid="producer-detail-company-reg"]',
+    producer.companyRegistrationNo ?? '—'
+  )
+  setText(
+    doc,
+    '[data-testid="producer-detail-address"]',
+    formatAddress(producer.registeredAddress)
+  )
+  setText(
+    doc,
+    '[data-testid="producer-detail-contact"]',
+    formatContact(producer.primaryContact)
+  )
+  setText(
+    doc,
+    '[data-testid="producer-detail-battery-types"]',
+    formatBatteryTypes(producer.batteryTypes)
+  )
+  setText(
+    doc,
+    '[data-testid="producer-detail-agency"]',
+    producer.agencyCode ?? '—'
+  )
   setText(doc, '[data-testid="producer-detail-status"]', producer.status ?? '—')
   /* v8 ignore stop */
 

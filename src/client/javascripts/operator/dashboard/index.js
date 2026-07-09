@@ -73,7 +73,9 @@ const renderApproval = (doc, operator, copy, urls) => {
 
   const meta = []
   if (operator.approvalNumber) meta.push(operator.approvalNumber)
-  if (operator.approvedOn) meta.push(`Approved ${formatDate(operator.approvedOn)}`)
+  if (operator.approvedOn) {
+    meta.push(`Approved ${formatDate(operator.approvedOn)}`)
+  }
   setText(doc, '[data-testid="tile-approval-meta"]', meta.join(' · '))
 
   const action = approvalAction(status, urls, copy)
@@ -96,7 +98,11 @@ const renderEvidence = (doc, operator, year, copy, urls) => {
     `${items.length} BEN${items.length === 1 ? '' : 's'} issued`,
     `${totalTonnes.toFixed(3)} tonnes`
   ]
-  setText(doc, '[data-testid="tile-evidence-summary"]', summaryParts.join(' · '))
+  setText(
+    doc,
+    '[data-testid="tile-evidence-summary"]',
+    summaryParts.join(' · ')
+  )
   const actionEl = doc.querySelector('[data-testid="tile-evidence-action"]')
   if (actionEl) {
     if (isGated) {
@@ -127,7 +133,9 @@ const quarterlyActionForStatus = (status, copy, urlTemplate, quarter) => {
 const renderQuarterly = (doc, operator, year, copy, urls) => {
   const isGated = operator.approvalStatus !== 'approved'
   const hasPortable = operator.batteryTypes?.isPortable
-  const container = doc.querySelector('[data-testid="tile-quarterly-container"]')
+  const container = doc.querySelector(
+    '[data-testid="tile-quarterly-container"]'
+  )
   if (!hasPortable && container) {
     container.hidden = true
     return
@@ -181,7 +189,10 @@ const renderAnnual = (doc, operator, year, copy, urls) => {
     doc,
     '[data-testid="tile-annual-status"]',
     /* v8 ignore next */
-    tag(copy.statuses?.[status] ?? status, STATUS_TAG_CLASS[status] ?? STATUS_TAG_CLASS['not-started'])
+    tag(
+      copy.statuses?.[status] ?? status,
+      STATUS_TAG_CLASS[status] ?? STATUS_TAG_CLASS['not-started']
+    )
   )
   setText(
     doc,

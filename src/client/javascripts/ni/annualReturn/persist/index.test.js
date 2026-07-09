@@ -23,7 +23,11 @@ afterEach(() => {
 
 describe('initNiAnnualReturnPersist', () => {
   test('persists the payload to the annual returns store', () => {
-    setPayload({ period: '2026', reference: 'NI-AR-100001', status: 'Submitted' })
+    setPayload({
+      period: '2026',
+      reference: 'NI-AR-100001',
+      status: 'Submitted'
+    })
 
     const saved = initNiAnnualReturnPersist(globalThis.document)
 

@@ -108,7 +108,9 @@ describe('renderAccountScheme', () => {
     })
 
     buildDom()
-    expect(renderAccountScheme(document, globalThis.location)).toBe('not-member')
+    expect(renderAccountScheme(document, globalThis.location)).toBe(
+      'not-member'
+    )
     expect(
       document.querySelector('[data-testid="account-scheme-not-member"]').hidden
     ).toBe(false)
@@ -125,10 +127,12 @@ describe('renderAccountScheme', () => {
       document.querySelector('[data-testid="account-scheme-name"]').textContent
     ).toBe('Northern Battery Compliance Scheme')
     expect(
-      document.querySelector('[data-testid="account-scheme-operator"]').textContent
+      document.querySelector('[data-testid="account-scheme-operator"]')
+        .textContent
     ).toBe('NBCS Ltd')
     expect(
-      document.querySelector('[data-testid="account-scheme-approval-number"]').textContent
+      document.querySelector('[data-testid="account-scheme-approval-number"]')
+        .textContent
     ).toBe('BCS/2026/001')
   })
 
@@ -137,7 +141,8 @@ describe('renderAccountScheme', () => {
     buildDom()
     renderAccountScheme(document, globalThis.location)
     expect(
-      document.querySelector('[data-testid="account-scheme-timeline-empty"]').hidden
+      document.querySelector('[data-testid="account-scheme-timeline-empty"]')
+        .hidden
     ).toBe(false)
   })
 
@@ -233,7 +238,8 @@ describe('renderAccountScheme', () => {
     buildDom()
     expect(renderAccountScheme(document, globalThis.location)).toBe('rendered')
     expect(
-      document.querySelector('[data-testid="account-scheme-timeline-empty"]').hidden
+      document.querySelector('[data-testid="account-scheme-timeline-empty"]')
+        .hidden
     ).toBe(false)
   })
 })

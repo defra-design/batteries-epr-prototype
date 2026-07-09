@@ -1,4 +1,9 @@
-import { collectErrors, errorListToMap, flashStepErrors, readStepErrors } from './shared.js'
+import {
+  collectErrors,
+  errorListToMap,
+  flashStepErrors,
+  readStepErrors
+} from './shared.js'
 
 const fakeRequest = (returns) => {
   const calls = []
@@ -42,7 +47,9 @@ describe('application/shared', () => {
   })
 
   test('errorListToMap', () => {
-    expect(errorListToMap([{ text: 'A', href: '#name' }])).toEqual({ name: 'A' })
+    expect(errorListToMap([{ text: 'A', href: '#name' }])).toEqual({
+      name: 'A'
+    })
     expect(errorListToMap(null)).toEqual({})
   })
 

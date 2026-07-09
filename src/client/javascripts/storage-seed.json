@@ -221,10 +221,7 @@
         "phone": "01612000001",
         "email": "ops@acme-batteries.co.uk"
       },
-      "brandNames": [
-        "Acme",
-        "Acme Pro"
-      ],
+      "brandNames": ["Acme", "Acme Pro"],
       "batteryTypes": {
         "isPortable": true,
         "isIndustrial": false,
@@ -271,9 +268,7 @@
         "phone": "01210000002",
         "email": "compliance@beacon-cells.com"
       },
-      "brandNames": [
-        "Beacon"
-      ],
+      "brandNames": ["Beacon"],
       "batteryTypes": {
         "isPortable": false,
         "isIndustrial": true,
@@ -320,10 +315,7 @@
         "phone": "01130000003",
         "email": "ops@cinder-energy.co.uk"
       },
-      "brandNames": [
-        "Cinder",
-        "Cinder ES"
-      ],
+      "brandNames": ["Cinder", "Cinder ES"],
       "batteryTypes": {
         "isPortable": false,
         "isIndustrial": true,
@@ -370,10 +362,7 @@
         "phone": "01170000004",
         "email": "info@dawnpower.co.uk"
       },
-      "brandNames": [
-        "Dawn",
-        "DawnGo"
-      ],
+      "brandNames": ["Dawn", "DawnGo"],
       "batteryTypes": {
         "isPortable": true,
         "isIndustrial": false,
@@ -420,9 +409,7 @@
         "phone": "02476000005",
         "email": "hello@everspark.co.uk"
       },
-      "brandNames": [
-        "Everspark"
-      ],
+      "brandNames": ["Everspark"],
       "batteryTypes": {
         "isPortable": false,
         "isIndustrial": false,
@@ -469,9 +456,7 @@
         "phone": "01752000006",
         "email": "register@fjordcells.co.uk"
       },
-      "brandNames": [
-        "Fjord"
-      ],
+      "brandNames": ["Fjord"],
       "batteryTypes": {
         "isPortable": true,
         "isIndustrial": false,
@@ -517,10 +502,7 @@
         "phone": "02920000007",
         "email": "compliance@glanydwr.cymru"
       },
-      "brandNames": [
-        "Glan-y-Dwr",
-        "GD"
-      ],
+      "brandNames": ["Glan-y-Dwr", "GD"],
       "batteryTypes": {
         "isPortable": true,
         "isIndustrial": true,
@@ -567,9 +549,7 @@
         "phone": "01792000008",
         "email": "info@harbourbright.co.uk"
       },
-      "brandNames": [
-        "Harbour Bright"
-      ],
+      "brandNames": ["Harbour Bright"],
       "batteryTypes": {
         "isPortable": false,
         "isIndustrial": true,
@@ -616,9 +596,7 @@
         "phone": "01248000009",
         "email": "team@iolocells.co.uk"
       },
-      "brandNames": [
-        "Iolo"
-      ],
+      "brandNames": ["Iolo"],
       "batteryTypes": {
         "isPortable": true,
         "isIndustrial": false,
@@ -665,9 +643,7 @@
         "phone": "01633000010",
         "email": "register@johnswold.cymru"
       },
-      "brandNames": [
-        "JW Auto"
-      ],
+      "brandNames": ["JW Auto"],
       "batteryTypes": {
         "isPortable": false,
         "isIndustrial": false,
@@ -713,10 +689,7 @@
         "phone": "01410000011",
         "email": "ops@kelvinpower.co.uk"
       },
-      "brandNames": [
-        "Kelvin",
-        "Kelvin Pro"
-      ],
+      "brandNames": ["Kelvin", "Kelvin Pro"],
       "batteryTypes": {
         "isPortable": false,
         "isIndustrial": true,
@@ -763,9 +736,7 @@
         "phone": "01310000012",
         "email": "info@lochlinpower.scot"
       },
-      "brandNames": [
-        "Lochlin"
-      ],
+      "brandNames": ["Lochlin"],
       "batteryTypes": {
         "isPortable": true,
         "isIndustrial": false,
@@ -812,9 +783,7 @@
         "phone": "01224000013",
         "email": "hello@morrowmotor.scot"
       },
-      "brandNames": [
-        "Morrow"
-      ],
+      "brandNames": ["Morrow"],
       "batteryTypes": {
         "isPortable": false,
         "isIndustrial": false,
@@ -861,9 +830,7 @@
         "phone": "01463000014",
         "email": "team@nessenergy.scot"
       },
-      "brandNames": [
-        "Ness"
-      ],
+      "brandNames": ["Ness"],
       "batteryTypes": {
         "isPortable": true,
         "isIndustrial": false,
@@ -909,9 +876,7 @@
         "phone": "02890000015",
         "email": "ops@oldforgepower.co.uk"
       },
-      "brandNames": [
-        "OldForge"
-      ],
+      "brandNames": ["OldForge"],
       "batteryTypes": {
         "isPortable": true,
         "isIndustrial": false,
@@ -958,10 +923,7 @@
         "phone": "02890000016",
         "email": "info@portalmotion.co.uk"
       },
-      "brandNames": [
-        "Portal",
-        "Portal EV"
-      ],
+      "brandNames": ["Portal", "Portal EV"],
       "batteryTypes": {
         "isPortable": false,
         "isIndustrial": false,
@@ -1008,9 +970,7 @@
         "phone": "02892000017",
         "email": "register@quaystorage.co.uk"
       },
-      "brandNames": [
-        "QuayStore"
-      ],
+      "brandNames": ["QuayStore"],
       "batteryTypes": {
         "isPortable": false,
         "isIndustrial": true,
@@ -1057,10 +1017,7 @@
         "phone": "01904000018",
         "email": "ops@redwillowtech.co.uk"
       },
-      "brandNames": [
-        "Red Willow",
-        "RW"
-      ],
+      "brandNames": ["Red Willow", "RW"],
       "batteryTypes": {
         "isPortable": true,
         "isIndustrial": true,
@@ -1107,9 +1064,7 @@
         "phone": "01603000019",
         "email": "info@silverwatts.co.uk"
       },
-      "brandNames": [
-        "Silver Watts"
-      ],
+      "brandNames": ["Silver Watts"],
       "batteryTypes": {
         "isPortable": true,
         "isIndustrial": false,
@@ -1156,10 +1111,7 @@
         "phone": "01180000020",
         "email": "team@thamesvolt.co.uk"
       },
-      "brandNames": [
-        "Thames Volt",
-        "TV Industrial"
-      ],
+      "brandNames": ["Thames Volt", "TV Industrial"],
       "batteryTypes": {
         "isPortable": false,
         "isIndustrial": true,
@@ -1180,7 +1132,15 @@
       "approvalStatus": "submitted",
       "approvedOn": null,
       "submittedOn": "2026-04-15T00:00:00Z",
-      "registeredAddress": { "line1": "14 Compliance Way", "line2": null, "line3": null, "line4": null, "town": "Bristol", "postcode": "BS1 5AH", "countryCode": "GB" },
+      "registeredAddress": {
+        "line1": "14 Compliance Way",
+        "line2": null,
+        "line3": null,
+        "line4": null,
+        "town": "Bristol",
+        "postcode": "BS1 5AH",
+        "countryCode": "GB"
+      },
       "contactAddress": null,
       "serviceOfNoticeAddress": null,
       "operationalPlan": "Collection via local authority partnerships and retail drop-off points.",
@@ -1364,11 +1324,43 @@
       "approvalStatus": "submitted",
       "approvedOn": null,
       "submittedOn": "2026-04-20T00:00:00Z",
-      "registeredAddress": { "line1": "Northfield Works", "line2": "Station Road", "line3": null, "line4": null, "town": "Birmingham", "postcode": "B31 2JT", "countryCode": "GB" },
+      "registeredAddress": {
+        "line1": "Northfield Works",
+        "line2": "Station Road",
+        "line3": null,
+        "line4": null,
+        "town": "Birmingham",
+        "postcode": "B31 2JT",
+        "countryCode": "GB"
+      },
       "contactAddress": null,
       "serviceOfNoticeAddress": null,
-      "batteryTypes": { "isPortable": true, "isIndustrial": true, "isAutomotive": false },
-      "sites": [{ "id": "44444444-0001-4000-a000-000000000004", "name": "Northfield Treatment Facility", "address": { "line1": "Northfield Works", "line2": "Station Road", "line3": null, "line4": null, "town": "Birmingham", "postcode": "B31 2JT", "countryCode": "GB" }, "batteryTypes": { "isPortable": true, "isIndustrial": true, "isAutomotive": false }, "operationsDescription": "Sorting, shredding, and hydrometallurgical processing of portable and industrial batteries." }],
+      "batteryTypes": {
+        "isPortable": true,
+        "isIndustrial": true,
+        "isAutomotive": false
+      },
+      "sites": [
+        {
+          "id": "44444444-0001-4000-a000-000000000004",
+          "name": "Northfield Treatment Facility",
+          "address": {
+            "line1": "Northfield Works",
+            "line2": "Station Road",
+            "line3": null,
+            "line4": null,
+            "town": "Birmingham",
+            "postcode": "B31 2JT",
+            "countryCode": "GB"
+          },
+          "batteryTypes": {
+            "isPortable": true,
+            "isIndustrial": true,
+            "isAutomotive": false
+          },
+          "operationsDescription": "Sorting, shredding, and hydrometallurgical processing of portable and industrial batteries."
+        }
+      ],
       "agencyCode": "EA",
       "compliancePeriod": "2026",
       "contactEmail": "approvals@northfieldbp.co.uk",

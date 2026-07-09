@@ -26,7 +26,9 @@ export const initRegulatorDashboard = (
   const code = agency.code
   const schemes = storage.listSchemes().filter((s) => s.agencyCode === code)
   const operators = storage.listOperators().filter((o) => o.agencyCode === code)
-  const producers = storage.listAllProducers().filter((p) => p.agencyCode === code)
+  const producers = storage
+    .listAllProducers()
+    .filter((p) => p.agencyCode === code)
   const evidence = storage.listAllEvidence(payload.compliancePeriodYear)
 
   setText(
@@ -56,19 +58,25 @@ export const initRegulatorDashboard = (
     schemesAction.innerHTML = `<a class="govuk-link" href="${payload.urls.schemes}">${payload.copy.schemes.viewAction}</a>`
   }
 
-  const operatorsAction = doc.querySelector('[data-testid="tile-operators-action"]')
+  const operatorsAction = doc.querySelector(
+    '[data-testid="tile-operators-action"]'
+  )
   /* v8 ignore next 3 */
   if (operatorsAction && payload.urls?.operators) {
     operatorsAction.innerHTML = `<a class="govuk-link" href="${payload.urls.operators}">${payload.copy.operators.viewAction}</a>`
   }
 
-  const producersAction = doc.querySelector('[data-testid="tile-producers-action"]')
+  const producersAction = doc.querySelector(
+    '[data-testid="tile-producers-action"]'
+  )
   /* v8 ignore next 3 */
   if (producersAction && payload.urls?.producers) {
     producersAction.innerHTML = `<a class="govuk-link" href="${payload.urls.producers}">${payload.copy.producers.manageAction}</a>`
   }
 
-  const evidenceAction = doc.querySelector('[data-testid="tile-evidence-action"]')
+  const evidenceAction = doc.querySelector(
+    '[data-testid="tile-evidence-action"]'
+  )
   /* v8 ignore next 3 */
   if (evidenceAction && payload.urls?.evidence) {
     evidenceAction.innerHTML = `<a class="govuk-link" href="${payload.urls.evidence}">${payload.copy.evidence.manageAction}</a>`

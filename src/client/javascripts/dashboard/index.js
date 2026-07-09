@@ -65,7 +65,11 @@ const renderRegistrationCard = (doc, copy, registration, producer) => {
       '[data-testid="card-registration-bprn"]',
       `${copy.bprnLabel} ${copy.bprnAwaitingScheme}`
     )
-    setText(doc, '[data-testid="card-registration-body"]', copy.pendingSchemeBody)
+    setText(
+      doc,
+      '[data-testid="card-registration-body"]',
+      copy.pendingSchemeBody
+    )
     setLink(doc, '[data-testid="card-registration-action"]', null)
     return
   }

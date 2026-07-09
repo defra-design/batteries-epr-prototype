@@ -51,7 +51,8 @@ const belongsToAgency = (item, agencyCode) => {
 export const runRegulatorEvidenceList = (doc, loc) => {
   const payload = readPagePayload(doc)
   const agency = storage.currentAgency()
-  const evidence = storage.listAllEvidence(payload.compliancePeriodYear)
+  const evidence = storage
+    .listAllEvidence(payload.compliancePeriodYear)
     .filter((e) => belongsToAgency(e, agency?.code))
   const body = doc.querySelector('[data-testid="evidence-body"]')
   const empty = doc.querySelector('[data-testid="evidence-empty"]')
@@ -66,10 +67,15 @@ export const runRegulatorEvidenceList = (doc, loc) => {
   body.innerHTML = evidence
     /* v8 ignore start */
     .map((item) => {
-      const detailHref = payload.urls.detailTemplate.replace('{evidenceId}', item.id)
+      const detailHref = payload.urls.detailTemplate.replace(
+        '{evidenceId}',
+        item.id
+      )
       const issuerName = resolveIssuerName(item)
-      const categoryText = payload.copy.categories[item.category] ?? item.category ?? '—'
-      const statusText = payload.copy.statuses[item.status] ?? item.status ?? '—'
+      const categoryText =
+        payload.copy.categories[item.category] ?? item.category ?? '—'
+      const statusText =
+        payload.copy.statuses[item.status] ?? item.status ?? '—'
       const tagClass = STATUS_TAG_CLASSES[item.status] ?? ''
       return `<tr class="govuk-table__row" data-testid="evidence-row">
         <td class="govuk-table__cell" data-testid="evidence-row-issuer">${escape(issuerName)}</td>

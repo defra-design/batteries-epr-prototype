@@ -25,7 +25,9 @@ const STATUS_TAG_CLASSES = {
 export const runRegulatorSchemeList = (doc, loc) => {
   const payload = readPagePayload(doc)
   const agency = storage.currentAgency()
-  const schemes = storage.listSchemes().filter((s) => s.agencyCode === agency?.code)
+  const schemes = storage
+    .listSchemes()
+    .filter((s) => s.agencyCode === agency?.code)
   const body = doc.querySelector('[data-testid="schemes-body"]')
   const empty = doc.querySelector('[data-testid="schemes-empty"]')
 
@@ -39,8 +41,12 @@ export const runRegulatorSchemeList = (doc, loc) => {
   body.innerHTML = schemes
     /* v8 ignore start */
     .map((scheme) => {
-      const detailHref = payload.urls.detailTemplate.replace('{schemeId}', scheme.id)
-      const statusText = payload.copy.statuses[scheme.approvalStatus] ?? scheme.approvalStatus
+      const detailHref = payload.urls.detailTemplate.replace(
+        '{schemeId}',
+        scheme.id
+      )
+      const statusText =
+        payload.copy.statuses[scheme.approvalStatus] ?? scheme.approvalStatus
       const tagClass = STATUS_TAG_CLASSES[scheme.approvalStatus] ?? ''
       return `<tr class="govuk-table__row" data-testid="scheme-row">
         <td class="govuk-table__cell" data-testid="scheme-row-name">${escape(scheme.name)}</td>

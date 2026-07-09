@@ -17,7 +17,9 @@ describe('#niOnboardingCarbonFootprint', () => {
       url: paths.niOnboardingCarbonFootprint
     })
     expect(statusCode).toBe(statusCodes.ok)
-    expect(result).toEqual(expect.stringContaining('data-testid="ni-carbon-value"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="ni-carbon-value"')
+    )
   })
 
   test('POST with missing value or class redirects back and flashes errors', async () => {

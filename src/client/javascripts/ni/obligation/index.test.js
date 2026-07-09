@@ -48,7 +48,11 @@ describe('initNiObligation', () => {
         colIndustrial: '40',
         colAutomotive: '0'
       },
-      recyclingEfficiency: { reLeadAcid: '85', reLithium: '60', reNickelCadmium: '90' }
+      recyclingEfficiency: {
+        reLeadAcid: '85',
+        reLithium: '60',
+        reNickelCadmium: '90'
+      }
     })
 
     initNiObligation(globalThis.document)
@@ -87,9 +91,9 @@ describe('initNiObligation', () => {
     expect(recyclingAnnotation).not.toBeNull()
 
     expect(
-      portable.querySelector('[data-eubr="portable-avg"]').getAttribute(
-        'data-eubr-articles'
-      )
+      portable
+        .querySelector('[data-eubr="portable-avg"]')
+        .getAttribute('data-eubr-articles')
     ).toBe('Article 59(3)')
     expect(
       portable.querySelector('[data-eubr="portable-required"]')
@@ -114,7 +118,11 @@ describe('initNiObligation', () => {
 
     expect(result.hasData).toBe(true)
     expect(result.bprn).toBe('NIP1000001')
-    expect(result.periods.map((p) => p.period)).toEqual(['2028', '2027', '2026'])
+    expect(result.periods.map((p) => p.period)).toEqual([
+      '2028',
+      '2027',
+      '2026'
+    ])
     expect(
       globalThis.document.querySelector('[data-ni-obligation-results]').hidden
     ).toBe(false)

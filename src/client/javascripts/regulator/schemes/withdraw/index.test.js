@@ -24,7 +24,9 @@ afterEach(() => {
 
 describe('runRegulatorSchemeWithdraw', () => {
   test('hydrates scheme name when scheme exists', () => {
-    const approved = storage.listSchemes().find((s) => s.approvalStatus === 'approved')
+    const approved = storage
+      .listSchemes()
+      .find((s) => s.approvalStatus === 'approved')
     document.body.innerHTML = withdrawHtml({
       view: 'withdraw',
       target: 'hydrate',
@@ -32,7 +34,9 @@ describe('runRegulatorSchemeWithdraw', () => {
     })
     const result = runRegulatorSchemeWithdraw(document, { assign: assignSpy })
     expect(result).toBe('hydrated')
-    const nameEl = document.querySelector('[data-testid="scheme-withdraw-name"]')
+    const nameEl = document.querySelector(
+      '[data-testid="scheme-withdraw-name"]'
+    )
     expect(nameEl.textContent).toBe(approved.name)
     expect(nameEl.hidden).toBe(false)
   })
@@ -48,7 +52,9 @@ describe('runRegulatorSchemeWithdraw', () => {
   })
 
   test('persist calls withdrawSchemeApproval and navigates', () => {
-    const approved = storage.listSchemes().find((s) => s.approvalStatus === 'approved')
+    const approved = storage
+      .listSchemes()
+      .find((s) => s.approvalStatus === 'approved')
     document.body.innerHTML = withdrawHtml({
       view: 'withdraw',
       target: 'persist',

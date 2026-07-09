@@ -70,7 +70,9 @@ export const brandNamesController = {
     },
     handler(request, h) {
       const brandNames = parseBrandNames(request.payload.brandNames)
-      saveData(request, { brandNames: { brandNames, raw: brandNames.join('\n') } })
+      saveData(request, {
+        brandNames: { brandNames, raw: brandNames.join('\n') }
+      })
       return h.redirect(nextStepPath(STEP_ID))
     }
   }

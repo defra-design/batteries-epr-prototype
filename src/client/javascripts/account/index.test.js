@@ -471,7 +471,8 @@ describe('initAccount compliance scheme row', () => {
       document.querySelector('[data-testid="account-scheme-section"]').hidden
     ).toBe(false)
     expect(
-      document.querySelector('[data-testid="account-scheme-row-name"]').textContent
+      document.querySelector('[data-testid="account-scheme-row-name"]')
+        .textContent
     ).toBe('Northern Battery Compliance Scheme')
   })
 
@@ -499,7 +500,8 @@ describe('initAccount compliance scheme row', () => {
     buildDom()
     initAccount(document, globalThis.location)
     expect(
-      document.querySelector('[data-testid="account-scheme-row-name"]').textContent
+      document.querySelector('[data-testid="account-scheme-row-name"]')
+        .textContent
     ).toBe('')
     expect(
       document.querySelector('[data-testid="account-scheme-section"]').hidden
@@ -511,7 +513,8 @@ describe('initAccount compliance scheme row', () => {
     buildDom()
     initAccount(document, globalThis.location)
     expect(
-      document.querySelector('[data-testid="account-scheme-row-name"]').textContent
+      document.querySelector('[data-testid="account-scheme-row-name"]')
+        .textContent
     ).toBe('')
     expect(
       document.querySelector('[data-testid="account-scheme-section"]').hidden

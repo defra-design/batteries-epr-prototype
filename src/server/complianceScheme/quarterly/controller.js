@@ -62,7 +62,14 @@ const renderStep = (h, request, quarter, step, viewModel) => {
   })
 }
 
-const renderMemberStep = (h, request, quarter, memberId, dataType, viewModel) => {
+const renderMemberStep = (
+  h,
+  request,
+  quarter,
+  memberId,
+  dataType,
+  viewModel
+) => {
   const quarterlyContent = content.complianceScheme(request).quarterlyPages
   const stepConfig = MEMBER_STEPS[dataType]
   const stepContent = quarterlyContent.steps[stepConfig.contentKey]
@@ -92,7 +99,10 @@ export const quarterlyController = {
         return h.response().code(statusCodes.notFound)
       }
       const compliancePeriodYear = getCompliancePeriod(request)
-      const { errors, values } = readStepErrors(request, flashKey(quarter, step))
+      const { errors, values } = readStepErrors(
+        request,
+        flashKey(quarter, step)
+      )
 
       return renderStep(h, request, quarter, step, {
         errorSummary: errors || [],
@@ -105,7 +115,11 @@ export const quarterlyController = {
           compliancePeriodYear,
           target: 'hydrate',
           next: nextUrl(quarter, step),
-          memberStepUrlTemplate: memberStepUrl(quarter, '{memberId}', '{dataType}')
+          memberStepUrlTemplate: memberStepUrl(
+            quarter,
+            '{memberId}',
+            '{dataType}'
+          )
         }
       })
     }
@@ -128,7 +142,10 @@ export const quarterlyController = {
       const payload = request.payload
       const { error, value } = stepConfig.schema.validate(payload)
       if (error) {
-        const list = collectErrors(error, stepConfig.fieldMessages(stepContent.error))
+        const list = collectErrors(
+          error,
+          stepConfig.fieldMessages(stepContent.error)
+        )
         flashStepErrors(request, flashKey(quarter, step), list, payload)
         return h.redirect(stepUrl(quarter, step))
       }
@@ -196,7 +213,10 @@ export const quarterlyMemberController = {
 
       if (error) {
         const flashId = flashKey(quarter, `member:${memberId}:${dataType}`)
-        const list = collectErrors(error, stepConfig.fieldMessages(stepContent.error))
+        const list = collectErrors(
+          error,
+          stepConfig.fieldMessages(stepContent.error)
+        )
         flashStepErrors(request, flashId, list, payload)
         return h.redirect(memberStepUrl(quarter, memberId, dataType))
       }

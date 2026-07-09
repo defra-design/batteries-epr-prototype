@@ -11,8 +11,7 @@ export const getCurrentYear = (request) => {
   return new Date().getUTCFullYear()
 }
 
-export const getCompliancePeriod = (request) =>
-  String(getCurrentYear(request))
+export const getCompliancePeriod = (request) => String(getCurrentYear(request))
 
 export const getCurrentDate = (request) => {
   const now = new Date()

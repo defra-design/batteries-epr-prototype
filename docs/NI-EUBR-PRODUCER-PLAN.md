@@ -31,23 +31,23 @@ Decisions confirmed with the user: **full parallel journey**, **add EUBR‑speci
 
 A new config module `src/config/eubr.js` exports an `eubrArticles` map: each key → `{ articles, title, summary, appliesFrom }`. This is the **one place** legislation text is defined; templates reference it by key via the annotation macro, and the overlay JS reads it from `data-*` attributes the macro emits. Indicative mapping (article numbers per Regulation (EU) 2023/1542):
 
-| Key | UI area | EUBR article(s) | Applies from |
-|---|---|---|---|
-| `registration` | Producer registration / BPRN | Arts 55–57 (registration before placing on market) | 18 Aug 2025 |
-| `epr` | Extended producer responsibility / scheme | Arts 54, 56 (operational + financial EoL responsibility), PRO appointment | 18 Aug 2025 |
-| `batteryCategories` | Battery type/category selection | Art 3 definitions; Annex I categories (portable, LMT, industrial, EV, SLI) | 18 Feb 2024 |
-| `carbonFootprint` | Carbon‑footprint declaration screen | Arts 7–10 (CF declaration, performance classes, max thresholds) | phased 2025–2028 |
-| `restrictedSubstances` | Hazardous/restricted substances | Art 6 + Annex I (mercury, cadmium, lead restrictions) | 18 Feb 2024 |
-| `labelling` | Labelling & marking | Art 13 (separate‑collection symbol, capacity, CE, hazardous‑substance marking) | from 18 Aug 2026 / 2027 |
-| `batteryPassport` | Battery passport / QR code screen | Art 77 + Art 13(6) QR (LMT, industrial >2 kWh, EV) | 18 Feb 2027 |
-| `dueDiligence` | Due‑diligence policy screen | Arts 48–53 (due‑diligence policy, risk management, third‑party verification) | 18 Aug 2025 (guidance 2027) |
-| `removability` | Removability & replaceability | Art 11 (portable batteries removable/replaceable by end‑user) | 18 Feb 2027 |
-| `collectionTargets` | Collection / take‑back obligations | Art 59 (portable), Art 60 (LMT), Art 61 (industrial/EV take‑back) | phased from 2023 |
-| `recyclingEfficiency` | Recycling efficiency & material recovery | Art 71 + Annex XII (efficiency + Co/Li/Ni/Pb recovery targets) | phased from 2025 |
-| `recycledContent` | Recycled‑content declaration | Art 8 (minimum recycled Co/Pb/Li/Ni shares) | from 18 Aug 2028 |
-| `informationEndUsers` | Information to end‑users | Art 74 | 18 Aug 2025 |
-| `reporting` | Annual return / reporting to authority | Arts 75–76 (reporting to competent authority) | from 2025 |
-| `dueDiligenceScope` | Due‑diligence scope gate (€40m turnover) | Art 48(2) net‑turnover threshold | 18 Aug 2025 |
+| Key                    | UI area                                   | EUBR article(s)                                                                | Applies from                |
+| ---------------------- | ----------------------------------------- | ------------------------------------------------------------------------------ | --------------------------- |
+| `registration`         | Producer registration / BPRN              | Arts 55–57 (registration before placing on market)                             | 18 Aug 2025                 |
+| `epr`                  | Extended producer responsibility / scheme | Arts 54, 56 (operational + financial EoL responsibility), PRO appointment      | 18 Aug 2025                 |
+| `batteryCategories`    | Battery type/category selection           | Art 3 definitions; Annex I categories (portable, LMT, industrial, EV, SLI)     | 18 Feb 2024                 |
+| `carbonFootprint`      | Carbon‑footprint declaration screen       | Arts 7–10 (CF declaration, performance classes, max thresholds)                | phased 2025–2028            |
+| `restrictedSubstances` | Hazardous/restricted substances           | Art 6 + Annex I (mercury, cadmium, lead restrictions)                          | 18 Feb 2024                 |
+| `labelling`            | Labelling & marking                       | Art 13 (separate‑collection symbol, capacity, CE, hazardous‑substance marking) | from 18 Aug 2026 / 2027     |
+| `batteryPassport`      | Battery passport / QR code screen         | Art 77 + Art 13(6) QR (LMT, industrial >2 kWh, EV)                             | 18 Feb 2027                 |
+| `dueDiligence`         | Due‑diligence policy screen               | Arts 48–53 (due‑diligence policy, risk management, third‑party verification)   | 18 Aug 2025 (guidance 2027) |
+| `removability`         | Removability & replaceability             | Art 11 (portable batteries removable/replaceable by end‑user)                  | 18 Feb 2027                 |
+| `collectionTargets`    | Collection / take‑back obligations        | Art 59 (portable), Art 60 (LMT), Art 61 (industrial/EV take‑back)              | phased from 2023            |
+| `recyclingEfficiency`  | Recycling efficiency & material recovery  | Art 71 + Annex XII (efficiency + Co/Li/Ni/Pb recovery targets)                 | phased from 2025            |
+| `recycledContent`      | Recycled‑content declaration              | Art 8 (minimum recycled Co/Pb/Li/Ni shares)                                    | from 18 Aug 2028            |
+| `informationEndUsers`  | Information to end‑users                  | Art 74                                                                         | 18 Aug 2025                 |
+| `reporting`            | Annual return / reporting to authority    | Arts 75–76 (reporting to competent authority)                                  | from 2025                   |
+| `dueDiligenceScope`    | Due‑diligence scope gate (€40m turnover)  | Art 48(2) net‑turnover threshold                                               | 18 Aug 2025                 |
 
 > Implementation note: confirm each article number against the consolidated text on EUR‑Lex (`eur-lex.europa.eu/eli/reg/2023/1542/oj/eng`) while authoring `eubr.js`; the summaries should be one short sentence each, written for a service‑team audience, not legal text. Where an area maps to several articles, list them all.
 
@@ -99,7 +99,7 @@ Goal: a multi‑step NI registration flow modelled on the existing onboarding wi
 
 ## Phase 4 — EUBR‑specific screens (no GB equivalent)
 
-Goal: the screens that make this an *EUBR* journey rather than a relabelled GB one. Each is a new step/section, heavily annotated.
+Goal: the screens that make this an _EUBR_ journey rather than a relabelled GB one. Each is a new step/section, heavily annotated.
 
 1. **Carbon‑footprint declaration** (`carbonFootprint`, `recycledContent`) — declare CF value, performance class, recycled‑content shares.
 2. **Battery passport & labelling** (`batteryPassport`, `labelling`, `removability`) — QR/passport data‑carrier, separate‑collection symbol, capacity marking, removability statement; render a sample QR placeholder.
@@ -127,6 +127,7 @@ Goal: NI annual return mirroring the GB annual‑return shape, annotated for rep
 ## Files created (new) and edited (additive only)
 
 **New (representative):**
+
 - `src/config/eubr.js`, `src/config/ni-content.js`
 - `src/server/common/templates/ni/_layout.njk`, `.../ni/onboarding/_layout.njk`, `.../ni/annualReturn/_layout.njk`
 - `src/server/common/components/eubr-annotation/macro.njk`
@@ -135,6 +136,7 @@ Goal: NI annual return mirroring the GB annual‑return shape, annotated for rep
 - `src/client/javascripts/ni/eubr/{index,entry}.js` (+ per‑page entries mirroring existing ones)
 
 **Edited (additive):**
+
 - `src/server/router.js` — NI route registrations
 - `src/config/paths.js` — `ni*` path constants
 - `src/config/nunjucks/globals/globals.js` — export `eubrArticles`

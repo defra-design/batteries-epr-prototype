@@ -53,7 +53,10 @@ const memberOf = (members, bprn) =>
   members.find((m) => m.producerBprn === bprn) ?? null
 
 const renderList = (doc, payload, scheme) => {
-  const schemeEvidence = storage.listEvidence(scheme.id, payload.compliancePeriodYear)
+  const schemeEvidence = storage.listEvidence(
+    scheme.id,
+    payload.compliancePeriodYear
+  )
   const operatorEvidence = storage.listEvidenceForSchemeFromOperators(
     scheme.id,
     payload.compliancePeriodYear
@@ -95,7 +98,9 @@ const renderRecipientRadios = (doc, scheme, payload) => {
   const radios = doc.querySelector(
     '[data-testid="evidence-issue-recipient-radios"]'
   )
-  const noMembers = doc.querySelector('[data-testid="evidence-issue-no-members"]')
+  const noMembers = doc.querySelector(
+    '[data-testid="evidence-issue-no-members"]'
+  )
   const members = storage.membersForYear(
     scheme.id,
     payload.compliancePeriodYear
@@ -193,10 +198,14 @@ const runIssueView = (doc, loc, payload, scheme) => {
 
 const renderDetail = (doc, payload, scheme) => {
   const item = storage.findEvidence(payload.evidenceId)
-  const notFound = doc.querySelector('[data-testid="evidence-detail-not-found"]')
+  const notFound = doc.querySelector(
+    '[data-testid="evidence-detail-not-found"]'
+  )
   const list = doc.querySelector('[data-testid="evidence-detail-list"]')
   const actions = doc.querySelector('[data-testid="evidence-detail-buttons"]')
-  const noActions = doc.querySelector('[data-testid="evidence-detail-no-actions"]')
+  const noActions = doc.querySelector(
+    '[data-testid="evidence-detail-no-actions"]'
+  )
   const isOwnEvidence = item?.schemeId === scheme.id && !item?.direction
   /* v8 ignore next 2 */
   const isOperatorEvidence =
@@ -249,13 +258,13 @@ const runDetailView = (doc, loc, payload, scheme) => {
 }
 
 const renderTransferCandidates = (doc, scheme) => {
-  const radios = doc.querySelector('[data-testid="evidence-transfer-candidates"]')
+  const radios = doc.querySelector(
+    '[data-testid="evidence-transfer-candidates"]'
+  )
   const empty = doc.querySelector(
     '[data-testid="evidence-transfer-no-candidates"]'
   )
-  const candidates = storage
-    .listSchemes()
-    .filter((s) => s.id !== scheme.id)
+  const candidates = storage.listSchemes().filter((s) => s.id !== scheme.id)
   if (candidates.length === 0) {
     radios.innerHTML = ''
     empty.hidden = false
@@ -279,7 +288,9 @@ const runTransferView = (doc, loc, payload, scheme) => {
     return 'navigated'
   }
   const item = storage.findEvidence(payload.evidenceId)
-  const notFound = doc.querySelector('[data-testid="evidence-transfer-not-found"]')
+  const notFound = doc.querySelector(
+    '[data-testid="evidence-transfer-not-found"]'
+  )
   const ineligible = doc.querySelector(
     '[data-testid="evidence-transfer-ineligible"]'
   )
@@ -326,7 +337,9 @@ export const runEvidencePage = (
   }
   if (payload.view === 'issue') return runIssueView(doc, loc, payload, scheme)
   if (payload.view === 'detail') return runDetailView(doc, loc, payload, scheme)
-  if (payload.view === 'transfer') return runTransferView(doc, loc, payload, scheme)
+  if (payload.view === 'transfer') {
+    return runTransferView(doc, loc, payload, scheme)
+  }
   return runAvailabilityView(doc, loc, payload, scheme)
 }
 

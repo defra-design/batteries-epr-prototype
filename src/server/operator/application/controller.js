@@ -9,8 +9,7 @@ import {
   readStepErrors
 } from './shared.js'
 
-const stepUrl = (step) =>
-  paths.operatorApplication.replace('{step}', step)
+const stepUrl = (step) => paths.operatorApplication.replace('{step}', step)
 
 const renderStep = (h, request, step, viewModel) => {
   const application = content.operator(request).application

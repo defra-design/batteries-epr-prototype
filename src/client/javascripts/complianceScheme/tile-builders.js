@@ -56,9 +56,7 @@ export const buildEvidenceTile = (scheme, evidence, obligation, urls, copy) => {
 }
 
 const quarterlyHref = (urls, quarter, step) =>
-  urls.quarterly
-    .replace('{quarter}', quarter)
-    .replace('{step}', step)
+  urls.quarterly.replace('{quarter}', quarter).replace('{step}', step)
 
 const quarterAction = (status, quarter, urls, copy) => {
   if (status === 'not-started') {
@@ -137,7 +135,13 @@ export const buildDashboardViewModel = ({
   scheme: { id: scheme?.id ?? null, name: scheme?.name ?? null },
   approval: buildApprovalTile(scheme, urls, copy.approval),
   members: buildMembersTile(members, urls, copy.members),
-  evidence: buildEvidenceTile(scheme, evidence, obligation, urls, copy.evidence),
+  evidence: buildEvidenceTile(
+    scheme,
+    evidence,
+    obligation,
+    urls,
+    copy.evidence
+  ),
   quarterly: buildQuarterlyTile(scheme, quarterly, urls, copy.quarterly),
   ia: buildIaTile(scheme, ia, urls, copy.ia),
   obligationBreakdown: buildObligationBreakdownTile(

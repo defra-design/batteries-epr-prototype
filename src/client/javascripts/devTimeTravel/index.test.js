@@ -48,9 +48,9 @@ const renderForm = (defaultYear = 2030, includeClear = true) => {
 describe('performTimeTravel', () => {
   test('stores the target year, sets the tt-year cookie, and redirects home', () => {
     performTimeTravel(2030, location)
-    expect(globalThis.localStorage.getItem(STORAGE_KEYS.timeTravelTargetYear)).toBe(
-      '2030'
-    )
+    expect(
+      globalThis.localStorage.getItem(STORAGE_KEYS.timeTravelTargetYear)
+    ).toBe('2030')
     expect(document.cookie).toContain('tt-year=2030')
     expect(assignSpy).toHaveBeenCalledWith('/')
   })

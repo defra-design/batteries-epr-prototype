@@ -5,7 +5,8 @@ const TOGGLE_ON_LABEL = 'Turn off EUBR mode'
 const TOGGLE_OFF_LABEL = 'Turn on EUBR mode'
 const TOOLTIP_OFFSET = 8
 
-const readStoredMode = (win) => win.sessionStorage?.getItem(STORAGE_KEY) ?? 'off'
+const readStoredMode = (win) =>
+  win.sessionStorage?.getItem(STORAGE_KEY) ?? 'off'
 
 const writeStoredMode = (win, value) => {
   win.sessionStorage?.setItem(STORAGE_KEY, value)

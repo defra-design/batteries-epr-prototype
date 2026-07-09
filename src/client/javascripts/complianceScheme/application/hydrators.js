@@ -2,10 +2,20 @@ const joinLines = (list) =>
   Array.isArray(list) ? list.filter(Boolean).join('\n') : ''
 
 const partnerNames = (list) =>
-  Array.isArray(list) ? list.map((p) => p.name).filter(Boolean).join('\n') : ''
+  Array.isArray(list)
+    ? list
+        .map((p) => p.name)
+        .filter(Boolean)
+        .join('\n')
+    : ''
 
 const fileNames = (list) =>
-  Array.isArray(list) ? list.map((f) => f.name).filter(Boolean).join('\n') : ''
+  Array.isArray(list)
+    ? list
+        .map((f) => f.name)
+        .filter(Boolean)
+        .join('\n')
+    : ''
 
 const fromAddress = (address) => ({
   line1: address?.line1 ?? '',

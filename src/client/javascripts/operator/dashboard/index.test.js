@@ -158,10 +158,12 @@ describe('initOperatorDashboard', () => {
     document.body.innerHTML = dashboardHtml
     initOperatorDashboard(document, { assign: assignSpy })
     expect(
-      document.querySelector('[data-testid="tile-evidence-summary"]').textContent
+      document.querySelector('[data-testid="tile-evidence-summary"]')
+        .textContent
     ).toContain('1 BEN issued')
     expect(
-      document.querySelector('[data-testid="tile-evidence-summary"]').textContent
+      document.querySelector('[data-testid="tile-evidence-summary"]')
+        .textContent
     ).toContain('2.500 tonnes')
     expect(
       document.querySelector('[data-testid="tile-evidence-action"]').innerHTML
@@ -169,7 +171,11 @@ describe('initOperatorDashboard', () => {
   })
 
   test('hides evidence action links when operator is not approved', () => {
-    seedOperator({ approvalStatus: 'not-started', approvalNumber: null, approvedOn: null })
+    seedOperator({
+      approvalStatus: 'not-started',
+      approvalNumber: null,
+      approvedOn: null
+    })
     document.body.innerHTML = dashboardHtml
     initOperatorDashboard(document, { assign: assignSpy })
     expect(
@@ -189,7 +195,11 @@ describe('initOperatorDashboard', () => {
   })
 
   test('renders Start application link for not-started operator', () => {
-    seedOperator({ approvalStatus: 'not-started', approvalNumber: null, approvedOn: null })
+    seedOperator({
+      approvalStatus: 'not-started',
+      approvalNumber: null,
+      approvedOn: null
+    })
     document.body.innerHTML = dashboardHtml
     initOperatorDashboard(document, { assign: assignSpy })
     const actionHtml = document.querySelector(
@@ -200,7 +210,11 @@ describe('initOperatorDashboard', () => {
   })
 
   test('renders Continue application link for in-progress operator', () => {
-    seedOperator({ approvalStatus: 'in-progress', approvalNumber: null, approvedOn: null })
+    seedOperator({
+      approvalStatus: 'in-progress',
+      approvalNumber: null,
+      approvedOn: null
+    })
     document.body.innerHTML = dashboardHtml
     initOperatorDashboard(document, { assign: assignSpy })
     const actionHtml = document.querySelector(
@@ -234,7 +248,11 @@ describe('initOperatorDashboard', () => {
 
   test('hides quarterly tile when operator does not handle portable', () => {
     seedOperator({
-      batteryTypes: { isPortable: false, isIndustrial: false, isAutomotive: true }
+      batteryTypes: {
+        isPortable: false,
+        isIndustrial: false,
+        isAutomotive: true
+      }
     })
     document.body.innerHTML = dashboardHtml
     initOperatorDashboard(document, { assign: assignSpy })
@@ -245,7 +263,11 @@ describe('initOperatorDashboard', () => {
 
   test('hides annual tile when operator does not handle industrial or automotive', () => {
     seedOperator({
-      batteryTypes: { isPortable: true, isIndustrial: false, isAutomotive: false }
+      batteryTypes: {
+        isPortable: true,
+        isIndustrial: false,
+        isAutomotive: false
+      }
     })
     document.body.innerHTML = dashboardHtml
     initOperatorDashboard(document, { assign: assignSpy })
@@ -256,7 +278,11 @@ describe('initOperatorDashboard', () => {
 
   test('shows annual tile when operator handles industrial', () => {
     seedOperator({
-      batteryTypes: { isPortable: false, isIndustrial: true, isAutomotive: false }
+      batteryTypes: {
+        isPortable: false,
+        isIndustrial: true,
+        isAutomotive: false
+      }
     })
     document.body.innerHTML = dashboardHtml
     initOperatorDashboard(document, { assign: assignSpy })
@@ -277,7 +303,9 @@ describe('initOperatorDashboard', () => {
     )
     document.body.innerHTML = dashboardHtml
     initOperatorDashboard(document, { assign: assignSpy })
-    const q1Html = document.querySelector('[data-testid="tile-quarterly-Q1"]').innerHTML
+    const q1Html = document.querySelector(
+      '[data-testid="tile-quarterly-Q1"]'
+    ).innerHTML
     expect(q1Html).toContain('Submitted')
     expect(q1Html).toContain('View')
   })
@@ -294,14 +322,20 @@ describe('initOperatorDashboard', () => {
     )
     document.body.innerHTML = dashboardHtml
     initOperatorDashboard(document, { assign: assignSpy })
-    const q2Html = document.querySelector('[data-testid="tile-quarterly-Q2"]').innerHTML
+    const q2Html = document.querySelector(
+      '[data-testid="tile-quarterly-Q2"]'
+    ).innerHTML
     expect(q2Html).toContain('In progress')
     expect(q2Html).toContain('Continue')
   })
 
   test('annual tile shows in-progress status and continue link', () => {
     const op = seedOperator({
-      batteryTypes: { isPortable: false, isIndustrial: true, isAutomotive: false }
+      batteryTypes: {
+        isPortable: false,
+        isIndustrial: true,
+        isAutomotive: false
+      }
     })
     storage.saveOperatorAnnualReturn(
       createOperatorAnnualReturn({
@@ -312,14 +346,20 @@ describe('initOperatorDashboard', () => {
     )
     document.body.innerHTML = dashboardHtml
     initOperatorDashboard(document, { assign: assignSpy })
-    const actionHtml = document.querySelector('[data-testid="tile-annual-action"]').innerHTML
+    const actionHtml = document.querySelector(
+      '[data-testid="tile-annual-action"]'
+    ).innerHTML
     expect(actionHtml).toContain('Continue')
     expect(actionHtml).toContain('/operator/annual-return/tonnages')
   })
 
   test('annual tile shows submitted status and view link', () => {
     const op = seedOperator({
-      batteryTypes: { isPortable: false, isIndustrial: true, isAutomotive: false }
+      batteryTypes: {
+        isPortable: false,
+        isIndustrial: true,
+        isAutomotive: false
+      }
     })
     storage.saveOperatorAnnualReturn(
       createOperatorAnnualReturn({
@@ -330,24 +370,36 @@ describe('initOperatorDashboard', () => {
     )
     document.body.innerHTML = dashboardHtml
     initOperatorDashboard(document, { assign: assignSpy })
-    const actionHtml = document.querySelector('[data-testid="tile-annual-action"]').innerHTML
+    const actionHtml = document.querySelector(
+      '[data-testid="tile-annual-action"]'
+    ).innerHTML
     expect(actionHtml).toContain('View')
     expect(actionHtml).toContain('/operator/annual-return/declaration')
   })
 
   test('annual tile shows start link for not-started', () => {
     seedOperator({
-      batteryTypes: { isPortable: false, isIndustrial: true, isAutomotive: false }
+      batteryTypes: {
+        isPortable: false,
+        isIndustrial: true,
+        isAutomotive: false
+      }
     })
     document.body.innerHTML = dashboardHtml
     initOperatorDashboard(document, { assign: assignSpy })
-    const actionHtml = document.querySelector('[data-testid="tile-annual-action"]').innerHTML
+    const actionHtml = document.querySelector(
+      '[data-testid="tile-annual-action"]'
+    ).innerHTML
     expect(actionHtml).toContain('Start')
     expect(actionHtml).toContain('/operator/annual-return/tonnages')
   })
 
   test('shows gated hints when operator is not approved', () => {
-    seedOperator({ approvalStatus: 'not-started', approvalNumber: null, approvedOn: null })
+    seedOperator({
+      approvalStatus: 'not-started',
+      approvalNumber: null,
+      approvedOn: null
+    })
     document.body.innerHTML = dashboardHtml
     initOperatorDashboard(document, { assign: assignSpy })
     expect(
@@ -380,7 +432,11 @@ describe('initOperatorDashboard', () => {
       id: '33333333-0001-4000-a000-000000000099',
       name: 'No Status Op',
       approvalType: 'abto',
-      batteryTypes: { isPortable: true, isIndustrial: true, isAutomotive: false }
+      batteryTypes: {
+        isPortable: true,
+        isIndustrial: true,
+        isAutomotive: false
+      }
     })
     delete op.approvalStatus
     storage.saveOperator(op)
@@ -393,7 +449,11 @@ describe('initOperatorDashboard', () => {
   })
 
   test('attaches debug fast-forward handler when enabled', () => {
-    seedOperator({ approvalStatus: 'not-started', approvalNumber: null, approvedOn: null })
+    seedOperator({
+      approvalStatus: 'not-started',
+      approvalNumber: null,
+      approvedOn: null
+    })
     const debugPayload = {
       ...PAYLOAD,
       debug: { fastForwardEnabled: true }
@@ -424,7 +484,8 @@ describe('initOperatorDashboard', () => {
     expect(updated.approvalStatus).toBe('approved')
     expect(updated.approvalNumber).toBe('ABTO/DEBUG/001')
     expect(
-      document.querySelector('[data-testid="debug-fast-forward-message"]').hidden
+      document.querySelector('[data-testid="debug-fast-forward-message"]')
+        .hidden
     ).toBe(false)
     expect(reloadSpy).toHaveBeenCalled()
   })

@@ -24,9 +24,15 @@ describe('#regulatorSubmissionsController', () => {
     const pageContent = content.regulator({}).submissionsPages
     expect(result).toEqual(expect.stringContaining(pageContent.heading))
     expect(result).toEqual(expect.stringContaining(pageContent.intro))
-    expect(result).toEqual(expect.stringContaining('data-testid="submissions-table"'))
-    expect(result).toEqual(expect.stringContaining('data-testid="submissions-body"'))
-    expect(result).toEqual(expect.stringContaining('data-testid="submissions-empty"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="submissions-table"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="submissions-body"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="submissions-empty"')
+    )
   })
 
   test('emits a page-payload with view list', async () => {

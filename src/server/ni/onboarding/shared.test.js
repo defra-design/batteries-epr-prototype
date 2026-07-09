@@ -34,7 +34,9 @@ const makeRequest = () => {
 
 describe('ni onboarding shared', () => {
   test('nextStepPath returns the following step path', () => {
-    expect(nextStepPath('companyDetails')).toBe(paths.niOnboardingContactDetails)
+    expect(nextStepPath('companyDetails')).toBe(
+      paths.niOnboardingContactDetails
+    )
   })
 
   test('nextStepPath returns the dashboard for the final step', () => {

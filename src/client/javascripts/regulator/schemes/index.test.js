@@ -53,7 +53,10 @@ describe('runRegulatorSchemesPage', () => {
         statuses: { approved: 'Approved', submitted: 'Submitted' },
         viewAction: 'View'
       },
-      urls: { detailTemplate: '/regulator/schemes/{schemeId}', dashboard: '/regulator' }
+      urls: {
+        detailTemplate: '/regulator/schemes/{schemeId}',
+        dashboard: '/regulator'
+      }
     })
     const result = runRegulatorSchemesPage(document, { assign: assignSpy })
     expect(result).toBe('rendered')
@@ -75,7 +78,9 @@ describe('runRegulatorSchemesPage', () => {
   test('dispatches to withdraw view', () => {
     storage.seedDemoData()
     storage.setCurrentAgencyCode('EA')
-    const approved = storage.listSchemes().find((s) => s.approvalStatus === 'approved')
+    const approved = storage
+      .listSchemes()
+      .find((s) => s.approvalStatus === 'approved')
     document.body.innerHTML = `
       <p data-testid="scheme-withdraw-name" hidden></p>
       <script id="page-payload" type="application/json">${JSON.stringify({

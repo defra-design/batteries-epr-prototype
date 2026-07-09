@@ -24,9 +24,15 @@ describe('#regulatorProducerListController', () => {
     const pageContent = content.regulator({}).producersPages.list
     expect(result).toEqual(expect.stringContaining(pageContent.heading))
     expect(result).toEqual(expect.stringContaining(pageContent.intro))
-    expect(result).toEqual(expect.stringContaining('data-testid="producers-table"'))
-    expect(result).toEqual(expect.stringContaining('data-testid="producers-body"'))
-    expect(result).toEqual(expect.stringContaining('data-testid="producers-empty"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="producers-table"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="producers-body"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="producers-empty"')
+    )
   })
 
   test('emits a page-payload with view list', async () => {

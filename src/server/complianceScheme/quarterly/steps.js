@@ -15,7 +15,10 @@ const tonneTriple = joi
   .options({ stripUnknown: true })
 
 const tripleMessages = (errorContent) => ({
-  portable: { required: errorContent.portable, format: errorContent.portableFormat },
+  portable: {
+    required: errorContent.portable,
+    format: errorContent.portableFormat
+  },
   industrial: {
     required: errorContent.industrial,
     format: errorContent.industrialFormat

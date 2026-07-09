@@ -11,8 +11,7 @@ import { STEPS, isKnownStep } from './steps.js'
 
 const flashKey = (step) => `operator-evidence-issue:${step}`
 
-const stepUrl = (step) =>
-  paths.operatorEvidenceIssue.replace('{step}', step)
+const stepUrl = (step) => paths.operatorEvidenceIssue.replace('{step}', step)
 
 const nextUrl = (step) => {
   const next = STEPS[step].next

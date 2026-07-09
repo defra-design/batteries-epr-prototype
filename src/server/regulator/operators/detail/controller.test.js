@@ -3,7 +3,10 @@ import { initialiseServer } from '../../../../test-utils/initialise-server.js'
 import { paths } from '../../../../config/paths.js'
 import { content } from '../../../../config/content.js'
 
-const operatorDetailUrl = paths.regulatorOperatorDetail.replace('{operatorId}', 'test-operator-id')
+const operatorDetailUrl = paths.regulatorOperatorDetail.replace(
+  '{operatorId}',
+  'test-operator-id'
+)
 
 describe('#regulatorOperatorDetailController', () => {
   let server
@@ -25,9 +28,13 @@ describe('#regulatorOperatorDetailController', () => {
     expect(statusCode).toBe(statusCodes.ok)
     const pageContent = content.regulator({}).operatorsPages.detail
     expect(result).toEqual(expect.stringContaining(pageContent.heading))
-    expect(result).toEqual(expect.stringContaining('data-testid="operator-detail-list"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="operator-detail-list"')
+    )
     expect(result).toEqual(expect.stringContaining('"target":"hydrate"'))
-    expect(result).toEqual(expect.stringContaining('"operatorId":"test-operator-id"'))
+    expect(result).toEqual(
+      expect.stringContaining('"operatorId":"test-operator-id"')
+    )
   })
 
   test('POST renders with persist target and approve action', async () => {
@@ -40,7 +47,9 @@ describe('#regulatorOperatorDetailController', () => {
     expect(statusCode).toBe(statusCodes.ok)
     expect(result).toEqual(expect.stringContaining('"target":"persist"'))
     expect(result).toEqual(expect.stringContaining('"action":"approve"'))
-    expect(result).toEqual(expect.stringContaining('"approvalNumber":"ABTO-001"'))
+    expect(result).toEqual(
+      expect.stringContaining('"approvalNumber":"ABTO-001"')
+    )
   })
 
   test('POST renders with persist target and reject action', async () => {

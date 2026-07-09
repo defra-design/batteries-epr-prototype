@@ -159,7 +159,8 @@ describe('runIaStep hydrate', () => {
       compliancePeriodYear: '2026',
       target: 'hydrate',
       next: '/compliance-scheme/industrial-automotive/check-answers',
-      memberStepUrlTemplate: '/compliance-scheme/industrial-automotive/member/{memberId}/placed'
+      memberStepUrlTemplate:
+        '/compliance-scheme/industrial-automotive/member/{memberId}/placed'
     })
 
     expect(runIaStep(document, globalThis.location)).toBe('hydrated')
@@ -184,7 +185,8 @@ describe('runIaStep hydrate', () => {
       compliancePeriodYear: '2026',
       target: 'hydrate',
       next: '/compliance-scheme/industrial-automotive/check-answers',
-      memberStepUrlTemplate: '/compliance-scheme/industrial-automotive/member/{memberId}/placed'
+      memberStepUrlTemplate:
+        '/compliance-scheme/industrial-automotive/member/{memberId}/placed'
     })
 
     runIaStep(document, globalThis.location)
@@ -202,7 +204,8 @@ describe('runIaStep hydrate', () => {
       compliancePeriodYear: '2026',
       target: 'hydrate',
       next: '/compliance-scheme/industrial-automotive/check-answers',
-      memberStepUrlTemplate: '/compliance-scheme/industrial-automotive/member/{memberId}/placed'
+      memberStepUrlTemplate:
+        '/compliance-scheme/industrial-automotive/member/{memberId}/placed'
     })
 
     runIaStep(document, globalThis.location)
@@ -254,13 +257,17 @@ describe('runIaStep hydrate', () => {
       step: 'check-answers',
       compliancePeriodYear: '2026',
       target: 'hydrate',
-      memberStepUrlTemplate: '/compliance-scheme/industrial-automotive/member/{memberId}/placed'
+      memberStepUrlTemplate:
+        '/compliance-scheme/industrial-automotive/member/{memberId}/placed'
     })
 
     runIaStep(document, globalThis.location)
     const body = document.querySelector('[data-testid="ia-check-body"]')
     expect(body.innerHTML).toContain('—')
-    expect(document.querySelector('[data-testid="ia-check-total-placed-industrial"]').textContent).toBe('0.000')
+    expect(
+      document.querySelector('[data-testid="ia-check-total-placed-industrial"]')
+        .textContent
+    ).toBe('0.000')
   })
 
   test('check-answers populates per-member rows and totals', () => {
@@ -277,14 +284,22 @@ describe('runIaStep hydrate', () => {
       step: 'check-answers',
       compliancePeriodYear: '2026',
       target: 'hydrate',
-      memberStepUrlTemplate: '/compliance-scheme/industrial-automotive/member/{memberId}/placed'
+      memberStepUrlTemplate:
+        '/compliance-scheme/industrial-automotive/member/{memberId}/placed'
     })
 
     expect(runIaStep(document, globalThis.location)).toBe('hydrated')
     const body = document.querySelector('[data-testid="ia-check-body"]')
     expect(body.innerHTML).toContain('IA Test &amp; Producer Ltd')
-    expect(document.querySelector('[data-testid="ia-check-total-placed-industrial"]').textContent).toBe('10.000')
-    expect(document.querySelector('[data-testid="ia-check-total-delivered-automotive"]').textContent).toBe('2.000')
+    expect(
+      document.querySelector('[data-testid="ia-check-total-placed-industrial"]')
+        .textContent
+    ).toBe('10.000')
+    expect(
+      document.querySelector(
+        '[data-testid="ia-check-total-delivered-automotive"]'
+      ).textContent
+    ).toBe('2.000')
   })
 
   test('check-answers handles missing submission gracefully', () => {
@@ -293,7 +308,8 @@ describe('runIaStep hydrate', () => {
       step: 'check-answers',
       compliancePeriodYear: '2026',
       target: 'hydrate',
-      memberStepUrlTemplate: '/compliance-scheme/industrial-automotive/member/{memberId}/placed'
+      memberStepUrlTemplate:
+        '/compliance-scheme/industrial-automotive/member/{memberId}/placed'
     })
     expect(runIaStep(document, globalThis.location)).toBe('hydrated')
     const body = document.querySelector('[data-testid="ia-check-body"]')

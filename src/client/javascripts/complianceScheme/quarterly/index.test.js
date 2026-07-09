@@ -126,7 +126,9 @@ describe('runQuarterlyStep member persist', () => {
       dataType: 'market-data',
       compliancePeriodYear: '2026',
       target: 'persist',
-      patch: { marketData: { portable: '1', industrial: '2', automotive: '3' } },
+      patch: {
+        marketData: { portable: '1', industrial: '2', automotive: '3' }
+      },
       next: '/compliance-scheme/quarterly/Q1/member-list'
     })
 
@@ -151,7 +153,9 @@ describe('runQuarterlyStep member persist', () => {
       dataType: 'waste-data',
       compliancePeriodYear: '2026',
       target: 'persist',
-      patch: { wasteData: { portable: '0.5', industrial: '0.25', automotive: '0.125' } },
+      patch: {
+        wasteData: { portable: '0.5', industrial: '0.25', automotive: '0.125' }
+      },
       next: '/compliance-scheme/quarterly/Q1/member-list'
     })
 
@@ -176,11 +180,14 @@ describe('runQuarterlyStep hydrate', () => {
       compliancePeriodYear: '2026',
       target: 'hydrate',
       next: '/compliance-scheme/quarterly/Q1/check-answers',
-      memberStepUrlTemplate: '/compliance-scheme/quarterly/Q1/member/{memberId}/{dataType}'
+      memberStepUrlTemplate:
+        '/compliance-scheme/quarterly/Q1/member/{memberId}/{dataType}'
     })
 
     expect(runQuarterlyStep(document, globalThis.location)).toBe('hydrated')
-    const body = document.querySelector('[data-testid="quarterly-member-list-body"]')
+    const body = document.querySelector(
+      '[data-testid="quarterly-member-list-body"]'
+    )
     expect(body.innerHTML).toContain('Test &amp; Producer Ltd')
     expect(body.innerHTML).toContain('BPRN-EA-2026-000099')
     expect(body.innerHTML).toContain('Not entered')
@@ -200,11 +207,14 @@ describe('runQuarterlyStep hydrate', () => {
       compliancePeriodYear: '2026',
       target: 'hydrate',
       next: '/compliance-scheme/quarterly/Q1/check-answers',
-      memberStepUrlTemplate: '/compliance-scheme/quarterly/Q1/member/{memberId}/{dataType}'
+      memberStepUrlTemplate:
+        '/compliance-scheme/quarterly/Q1/member/{memberId}/{dataType}'
     })
 
     runQuarterlyStep(document, globalThis.location)
-    const body = document.querySelector('[data-testid="quarterly-member-list-body"]')
+    const body = document.querySelector(
+      '[data-testid="quarterly-member-list-body"]'
+    )
     expect(body.innerHTML).toContain('Edit')
     expect(body.innerHTML).not.toContain('Not entered')
   })
@@ -219,11 +229,14 @@ describe('runQuarterlyStep hydrate', () => {
       compliancePeriodYear: '2026',
       target: 'hydrate',
       next: '/compliance-scheme/quarterly/Q1/check-answers',
-      memberStepUrlTemplate: '/compliance-scheme/quarterly/Q1/member/{memberId}/{dataType}'
+      memberStepUrlTemplate:
+        '/compliance-scheme/quarterly/Q1/member/{memberId}/{dataType}'
     })
 
     runQuarterlyStep(document, globalThis.location)
-    const empty = document.querySelector('[data-testid="quarterly-member-list-empty"]')
+    const empty = document.querySelector(
+      '[data-testid="quarterly-member-list-empty"]'
+    )
     expect(empty.hidden).toBe(false)
   })
 
@@ -280,7 +293,9 @@ describe('runQuarterlyStep hydrate', () => {
     })
 
     runQuarterlyStep(document, globalThis.location)
-    const nameEl = document.querySelector('[data-testid="quarterly-member-name"]')
+    const nameEl = document.querySelector(
+      '[data-testid="quarterly-member-name"]'
+    )
     expect(nameEl.textContent).toContain('Test & Producer Ltd')
     expect(nameEl.textContent).toContain('BPRN-EA-2026-000099')
   })
@@ -294,13 +309,18 @@ describe('runQuarterlyStep hydrate', () => {
       quarter: 'Q1',
       compliancePeriodYear: '2026',
       target: 'hydrate',
-      memberStepUrlTemplate: '/compliance-scheme/quarterly/Q1/member/{memberId}/{dataType}'
+      memberStepUrlTemplate:
+        '/compliance-scheme/quarterly/Q1/member/{memberId}/{dataType}'
     })
 
     runQuarterlyStep(document, globalThis.location)
     const body = document.querySelector('[data-testid="quarterly-check-body"]')
     expect(body.innerHTML).toContain('—')
-    expect(document.querySelector('[data-testid="quarterly-check-total-market-portable"]').textContent).toBe('0.000')
+    expect(
+      document.querySelector(
+        '[data-testid="quarterly-check-total-market-portable"]'
+      ).textContent
+    ).toBe('0.000')
   })
 
   test('check-answers populates per-member rows and totals', () => {
@@ -316,15 +336,24 @@ describe('runQuarterlyStep hydrate', () => {
       quarter: 'Q1',
       compliancePeriodYear: '2026',
       target: 'hydrate',
-      memberStepUrlTemplate: '/compliance-scheme/quarterly/Q1/member/{memberId}/{dataType}'
+      memberStepUrlTemplate:
+        '/compliance-scheme/quarterly/Q1/member/{memberId}/{dataType}'
     })
 
     expect(runQuarterlyStep(document, globalThis.location)).toBe('hydrated')
     const body = document.querySelector('[data-testid="quarterly-check-body"]')
     expect(body.innerHTML).toContain('Test &amp; Producer Ltd')
     expect(body.innerHTML).toContain('1')
-    expect(document.querySelector('[data-testid="quarterly-check-total-market-portable"]').textContent).toBe('1.000')
-    expect(document.querySelector('[data-testid="quarterly-check-total-waste-automotive"]').textContent).toBe('0.300')
+    expect(
+      document.querySelector(
+        '[data-testid="quarterly-check-total-market-portable"]'
+      ).textContent
+    ).toBe('1.000')
+    expect(
+      document.querySelector(
+        '[data-testid="quarterly-check-total-waste-automotive"]'
+      ).textContent
+    ).toBe('0.300')
   })
 
   test('check-answers handles missing submission gracefully', () => {
@@ -334,7 +363,8 @@ describe('runQuarterlyStep hydrate', () => {
       quarter: 'Q1',
       compliancePeriodYear: '2026',
       target: 'hydrate',
-      memberStepUrlTemplate: '/compliance-scheme/quarterly/Q1/member/{memberId}/{dataType}'
+      memberStepUrlTemplate:
+        '/compliance-scheme/quarterly/Q1/member/{memberId}/{dataType}'
     })
     expect(runQuarterlyStep(document, globalThis.location)).toBe('hydrated')
     const body = document.querySelector('[data-testid="quarterly-check-body"]')

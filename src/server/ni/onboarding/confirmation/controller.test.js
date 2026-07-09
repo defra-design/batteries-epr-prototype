@@ -17,7 +17,9 @@ describe('#niOnboardingConfirmation', () => {
       url: paths.niOnboardingConfirmation
     })
     expect(first.statusCode).toBe(statusCodes.ok)
-    expect(first.result).toEqual(expect.stringContaining('data-testid="ni-bprn"'))
+    expect(first.result).toEqual(
+      expect.stringContaining('data-testid="ni-bprn"')
+    )
     expect(first.result).toEqual(expect.stringContaining('NIP'))
 
     const cookie = first.headers['set-cookie']?.[0]?.split(';')[0]

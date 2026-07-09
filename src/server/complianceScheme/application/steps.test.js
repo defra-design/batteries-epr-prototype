@@ -45,7 +45,9 @@ describe('application/steps', () => {
   })
 
   test('declaration toSchemePatch sets approvalStatus and submittedOn', () => {
-    const patch = STEPS.declaration.toSchemePatch({ declarationAccepted: 'yes' })
+    const patch = STEPS.declaration.toSchemePatch({
+      declarationAccepted: 'yes'
+    })
     expect(patch.approvalStatus).toBe('submitted')
     expect(typeof patch.submittedOn).toBe('string')
   })

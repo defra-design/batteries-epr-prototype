@@ -4,8 +4,14 @@ import { calculateProductRequirements } from './calculator.js'
 
 const TAG_BY_STATUS = {
   declared: { className: 'govuk-tag govuk-tag--green', text: 'Declared' },
-  'not-declared': { className: 'govuk-tag govuk-tag--red', text: 'Not declared' },
-  'not-applicable': { className: 'govuk-tag govuk-tag--grey', text: 'Not applicable' },
+  'not-declared': {
+    className: 'govuk-tag govuk-tag--red',
+    text: 'Not declared'
+  },
+  'not-applicable': {
+    className: 'govuk-tag govuk-tag--grey',
+    text: 'Not applicable'
+  },
   complete: { className: 'govuk-tag govuk-tag--green', text: 'Complete' },
   incomplete: { className: 'govuk-tag govuk-tag--yellow', text: 'Incomplete' },
   provided: { className: 'govuk-tag govuk-tag--green', text: 'Provided' },

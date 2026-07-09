@@ -62,7 +62,10 @@ export const transferController = {
 
       if (error) {
         const list = [
-          { text: pageContent.error.counterpartySchemeId, href: '#counterpartySchemeId' }
+          {
+            text: pageContent.error.counterpartySchemeId,
+            href: '#counterpartySchemeId'
+          }
         ]
         flashStepErrors(request, STEP_ID(evidenceId), list, payload)
         return h.redirect(transferUrl(evidenceId))

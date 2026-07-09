@@ -40,10 +40,7 @@ const renderActive = (doc, members, payload) => {
   empty.hidden = true
   body.innerHTML = members
     .map((m) => {
-      const removeHref = payload.urls.removeTemplate.replace(
-        '{memberId}',
-        m.id
-      )
+      const removeHref = payload.urls.removeTemplate.replace('{memberId}', m.id)
       return `<tr class="govuk-table__row" data-testid="members-active-row">
         <td class="govuk-table__cell" data-testid="members-active-bprn">${escape(m.producerBprn)}</td>
         <td class="govuk-table__cell" data-testid="members-active-company">${escape(m.companyName)}</td>
@@ -101,8 +98,9 @@ const renderPending = (doc, members, payload) => {
 }
 
 const wirePendingActions = (doc, loc, scheme, payload) => {
-  doc.querySelectorAll('[data-testid="members-pending-accept"]').forEach(
-    (button) => {
+  doc
+    .querySelectorAll('[data-testid="members-pending-accept"]')
+    .forEach((button) => {
       button.addEventListener('click', () => {
         if (!globalThis.confirm(payload.copy.acceptConfirm)) return
         storage.acceptSchemeMember(button.dataset.memberId, {
@@ -110,17 +108,19 @@ const wirePendingActions = (doc, loc, scheme, payload) => {
         })
         loc.reload()
       })
-    }
-  )
-  doc.querySelectorAll('[data-testid="members-pending-reject"]').forEach(
-    (button) => {
+    })
+  doc
+    .querySelectorAll('[data-testid="members-pending-reject"]')
+    .forEach((button) => {
       button.addEventListener('click', () => {
         if (!globalThis.confirm(payload.copy.rejectConfirm)) return
-        storage.rejectSchemeMember(button.dataset.memberId, 'rejected-by-scheme')
+        storage.rejectSchemeMember(
+          button.dataset.memberId,
+          'rejected-by-scheme'
+        )
         loc.reload()
       })
-    }
-  )
+    })
 }
 
 const runListView = (doc, loc, payload, scheme) => {
@@ -173,12 +173,10 @@ const runRemoveView = (doc, loc, payload, scheme) => {
     confirm.disabled = true
     return
   }
-  doc.querySelector(
-    '[data-testid="members-remove-member-name"]'
-  ).textContent = member.companyName
-  doc.querySelector(
-    '[data-testid="members-remove-member-bprn"]'
-  ).textContent = member.producerBprn
+  doc.querySelector('[data-testid="members-remove-member-name"]').textContent =
+    member.companyName
+  doc.querySelector('[data-testid="members-remove-member-bprn"]').textContent =
+    member.producerBprn
 }
 
 export const runMembersPage = (

@@ -46,7 +46,9 @@ describe('#complianceSchemeIaController', () => {
       method: 'GET',
       url: stepUrl('check-answers')
     })
-    expect(result).toEqual(expect.stringContaining('data-testid="ia-check-table"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="ia-check-table"')
+    )
   })
 
   test('GET confirmation renders the panel', async () => {
@@ -104,7 +106,9 @@ describe('#complianceSchemeIaController', () => {
       expect.stringContaining('data-testid="ia-member-form"')
     )
     expect(result).toEqual(expect.stringContaining('"view":"ia-member"'))
-    expect(result).toEqual(expect.stringContaining('"memberId":"test-member-id"'))
+    expect(result).toEqual(
+      expect.stringContaining('"memberId":"test-member-id"')
+    )
   })
 
   test('GET member unknown step returns 404', async () => {
@@ -134,7 +138,11 @@ describe('#complianceSchemeIaController', () => {
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
     expect(result).toEqual(expect.stringContaining('"target":"persist"'))
-    expect(result).toEqual(expect.stringContaining('"next":"/compliance-scheme/industrial-automotive/member-list"'))
+    expect(result).toEqual(
+      expect.stringContaining(
+        '"next":"/compliance-scheme/industrial-automotive/member-list"'
+      )
+    )
   })
 
   test('POST member placed non-numeric redirects', async () => {

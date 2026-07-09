@@ -21,10 +21,28 @@ const defaultPayload = {
   signInUrl: '/regulator/sign-in',
   compliancePeriodYear: '2026',
   copy: {
-    schemes: { heading: 'Compliance schemes', countLabel: 'Total schemes', manageAction: 'View schemes', viewAction: 'View all schemes' },
-    operators: { heading: 'Operators', countLabel: 'Total operators', manageAction: 'View operators', viewAction: 'View all operators' },
-    producers: { heading: 'Producers', countLabel: 'Total producers', manageAction: 'View producers' },
-    evidence: { heading: 'Evidence', countLabel: 'Total evidence notes', manageAction: 'View evidence' }
+    schemes: {
+      heading: 'Compliance schemes',
+      countLabel: 'Total schemes',
+      manageAction: 'View schemes',
+      viewAction: 'View all schemes'
+    },
+    operators: {
+      heading: 'Operators',
+      countLabel: 'Total operators',
+      manageAction: 'View operators',
+      viewAction: 'View all operators'
+    },
+    producers: {
+      heading: 'Producers',
+      countLabel: 'Total producers',
+      manageAction: 'View producers'
+    },
+    evidence: {
+      heading: 'Evidence',
+      countLabel: 'Total evidence notes',
+      manageAction: 'View evidence'
+    }
   },
   urls: {
     schemes: '/regulator/schemes',
@@ -67,10 +85,14 @@ describe('initRegulatorDashboard', () => {
     const title = document.querySelector('[data-testid="app-heading-title"]')
     expect(title.textContent).toBe('Environment Agency')
 
-    const schemesCount = document.querySelector('[data-testid="tile-schemes-count"]')
+    const schemesCount = document.querySelector(
+      '[data-testid="tile-schemes-count"]'
+    )
     expect(schemesCount.textContent).toContain('Total schemes')
 
-    const producersCount = document.querySelector('[data-testid="tile-producers-count"]')
+    const producersCount = document.querySelector(
+      '[data-testid="tile-producers-count"]'
+    )
     expect(producersCount.textContent).toContain('Total producers')
   })
 })

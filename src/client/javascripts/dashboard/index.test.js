@@ -857,10 +857,12 @@ describe('initDashboard compliance-scheme route', () => {
     buildDom()
     initDashboard(document, globalThis.location)
     expect(
-      document.querySelector('[data-testid="card-registration-bprn"]').textContent
+      document.querySelector('[data-testid="card-registration-bprn"]')
+        .textContent
     ).toContain('Awaiting scheme roster')
     expect(
-      document.querySelector('[data-testid="card-registration-status"]').textContent
+      document.querySelector('[data-testid="card-registration-status"]')
+        .textContent
     ).toBe('Awaiting scheme')
   })
 
@@ -882,20 +884,23 @@ describe('initDashboard compliance-scheme route', () => {
     initDashboard(document, globalThis.location)
 
     expect(
-      document.querySelector('[data-testid="card-annual-return-title"]').textContent
+      document.querySelector('[data-testid="card-annual-return-title"]')
+        .textContent
     ).toBe('Your compliance scheme')
     expect(
-      document.querySelector('[data-testid="card-annual-return-body"]').textContent
+      document.querySelector('[data-testid="card-annual-return-body"]')
+        .textContent
     ).toContain('Northern Battery Compliance Scheme')
-    const link = document.querySelector(
-      '[data-testid="card-scheme-view-link"]'
-    )
+    const link = document.querySelector('[data-testid="card-scheme-view-link"]')
     expect(link).not.toBeNull()
     expect(link.getAttribute('href')).toBe('/account/scheme')
   })
 
   test('rearranges the layout: removes the fee card, lifts the scheme card next to registration, and widens activity to full width', () => {
-    const scheme = storage.saveScheme({ name: 'Layout Scheme', agencyCode: 'EA' })
+    const scheme = storage.saveScheme({
+      name: 'Layout Scheme',
+      agencyCode: 'EA'
+    })
     storage.setCurrentUser({ email: 'layout@x.com' })
     storage.saveProducer({
       contactEmail: 'layout@x.com',
@@ -925,7 +930,9 @@ describe('initDashboard compliance-scheme route', () => {
       '[data-testid="card-activity-wrapper"]'
     )
     expect(activity.classList.contains('govuk-grid-column-full')).toBe(true)
-    expect(activity.classList.contains('govuk-grid-column-one-half')).toBe(false)
+    expect(activity.classList.contains('govuk-grid-column-one-half')).toBe(
+      false
+    )
   })
 
   test('renders an agency-mismatch banner when scheme agencyCode differs from producer agencyCode', () => {
@@ -1068,7 +1075,8 @@ describe('initDashboard compliance-scheme route', () => {
     buildDom()
     initDashboard(document, globalThis.location)
     expect(
-      document.querySelector('[data-testid="card-annual-return-body"]').textContent
+      document.querySelector('[data-testid="card-annual-return-body"]')
+        .textContent
     ).toContain('Your chosen scheme will confirm your registration')
   })
 })

@@ -3,7 +3,10 @@ import { initialiseServer } from '../../../../test-utils/initialise-server.js'
 import { paths } from '../../../../config/paths.js'
 import { content } from '../../../../config/content.js'
 
-const withdrawUrl = paths.regulatorSchemeWithdraw.replace('{schemeId}', 'test-scheme-id')
+const withdrawUrl = paths.regulatorSchemeWithdraw.replace(
+  '{schemeId}',
+  'test-scheme-id'
+)
 
 describe('#regulatorSchemeWithdrawController', () => {
   let server
@@ -25,9 +28,13 @@ describe('#regulatorSchemeWithdrawController', () => {
     expect(statusCode).toBe(statusCodes.ok)
     const pageContent = content.regulator({}).schemesPages.withdraw
     expect(result).toEqual(expect.stringContaining(pageContent.heading))
-    expect(result).toEqual(expect.stringContaining('data-testid="scheme-withdraw-heading"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="scheme-withdraw-heading"')
+    )
     expect(result).toEqual(expect.stringContaining('"target":"hydrate"'))
-    expect(result).toEqual(expect.stringContaining('"schemeId":"test-scheme-id"'))
+    expect(result).toEqual(
+      expect.stringContaining('"schemeId":"test-scheme-id"')
+    )
   })
 
   test('POST renders with persist target and reason', async () => {

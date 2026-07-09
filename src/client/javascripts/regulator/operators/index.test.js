@@ -52,7 +52,10 @@ describe('runRegulatorOperatorsPage', () => {
         typeLabels: { abto: 'ABTO', abe: 'ABE' },
         viewAction: 'View'
       },
-      urls: { detailTemplate: '/regulator/operators/{operatorId}', dashboard: '/regulator' }
+      urls: {
+        detailTemplate: '/regulator/operators/{operatorId}',
+        dashboard: '/regulator'
+      }
     })
     const result = runRegulatorOperatorsPage(document, { assign: assignSpy })
     expect(result).toBe('rendered')
@@ -74,7 +77,9 @@ describe('runRegulatorOperatorsPage', () => {
   test('dispatches to withdraw view', () => {
     storage.seedDemoData()
     storage.setCurrentAgencyCode('EA')
-    const approved = storage.listOperators().find((o) => o.approvalStatus === 'approved')
+    const approved = storage
+      .listOperators()
+      .find((o) => o.approvalStatus === 'approved')
     document.body.innerHTML = `
       <p data-testid="operator-withdraw-name" hidden></p>
       <script id="page-payload" type="application/json">${JSON.stringify({

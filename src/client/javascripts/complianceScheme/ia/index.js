@@ -32,9 +32,7 @@ const setText = (doc, selector, text) => {
 const TONNAGE_KEYS = ['placed', 'exported', 'takenBack', 'delivered']
 
 const isMemberComplete = (member) =>
-  TONNAGE_KEYS.every(
-    (key) => member[key] !== null && member[key] !== undefined
-  )
+  TONNAGE_KEYS.every((key) => member[key] !== null && member[key] !== undefined)
 
 const memberEntryUrl = (template, memberId) =>
   template.replace('{memberId}', memberId)
@@ -79,10 +77,7 @@ const STEP_TO_KEY = {
 }
 
 const sumMemberField = (members, dataKey, field) =>
-  members.reduce(
-    (total, m) => total + Number(m[dataKey]?.[field] ?? 0),
-    0
-  )
+  members.reduce((total, m) => total + Number(m[dataKey]?.[field] ?? 0), 0)
 
 const renderCheckAnswers = (doc, submission, payload) => {
   const members = submission?.memberData ?? []
@@ -112,14 +107,46 @@ const renderCheckAnswers = (doc, submission, payload) => {
     .join('')
 
   const fmt = (n) => n.toFixed(3)
-  setText(doc, '[data-testid="ia-check-total-placed-industrial"]', fmt(sumMemberField(members, 'placed', 'industrial')))
-  setText(doc, '[data-testid="ia-check-total-placed-automotive"]', fmt(sumMemberField(members, 'placed', 'automotive')))
-  setText(doc, '[data-testid="ia-check-total-exported-industrial"]', fmt(sumMemberField(members, 'exported', 'industrial')))
-  setText(doc, '[data-testid="ia-check-total-exported-automotive"]', fmt(sumMemberField(members, 'exported', 'automotive')))
-  setText(doc, '[data-testid="ia-check-total-taken-back-industrial"]', fmt(sumMemberField(members, 'takenBack', 'industrial')))
-  setText(doc, '[data-testid="ia-check-total-taken-back-automotive"]', fmt(sumMemberField(members, 'takenBack', 'automotive')))
-  setText(doc, '[data-testid="ia-check-total-delivered-industrial"]', fmt(sumMemberField(members, 'delivered', 'industrial')))
-  setText(doc, '[data-testid="ia-check-total-delivered-automotive"]', fmt(sumMemberField(members, 'delivered', 'automotive')))
+  setText(
+    doc,
+    '[data-testid="ia-check-total-placed-industrial"]',
+    fmt(sumMemberField(members, 'placed', 'industrial'))
+  )
+  setText(
+    doc,
+    '[data-testid="ia-check-total-placed-automotive"]',
+    fmt(sumMemberField(members, 'placed', 'automotive'))
+  )
+  setText(
+    doc,
+    '[data-testid="ia-check-total-exported-industrial"]',
+    fmt(sumMemberField(members, 'exported', 'industrial'))
+  )
+  setText(
+    doc,
+    '[data-testid="ia-check-total-exported-automotive"]',
+    fmt(sumMemberField(members, 'exported', 'automotive'))
+  )
+  setText(
+    doc,
+    '[data-testid="ia-check-total-taken-back-industrial"]',
+    fmt(sumMemberField(members, 'takenBack', 'industrial'))
+  )
+  setText(
+    doc,
+    '[data-testid="ia-check-total-taken-back-automotive"]',
+    fmt(sumMemberField(members, 'takenBack', 'automotive'))
+  )
+  setText(
+    doc,
+    '[data-testid="ia-check-total-delivered-industrial"]',
+    fmt(sumMemberField(members, 'delivered', 'industrial'))
+  )
+  setText(
+    doc,
+    '[data-testid="ia-check-total-delivered-automotive"]',
+    fmt(sumMemberField(members, 'delivered', 'automotive'))
+  )
 }
 
 const hydrateMemberStep = (doc, submission, payload) => {

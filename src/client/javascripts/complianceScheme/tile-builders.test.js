@@ -133,7 +133,9 @@ describe('buildMembersTile', () => {
   })
 })
 
-const zeroObligation = { totals: { obligation: 0, accepted: 0, awaiting: 0, outstanding: 0 } }
+const zeroObligation = {
+  totals: { obligation: 0, accepted: 0, awaiting: 0, outstanding: 0 }
+}
 
 describe('buildEvidenceTile', () => {
   test('sums accepted vs awaiting and surfaces availability on', () => {
@@ -167,7 +169,9 @@ describe('buildEvidenceTile', () => {
     const tile = buildEvidenceTile(
       approvedScheme,
       [{ status: 'accepted', tonnes: '10' }],
-      { totals: { obligation: 50, accepted: 10, awaiting: 0, outstanding: 40 } },
+      {
+        totals: { obligation: 50, accepted: 10, awaiting: 0, outstanding: 40 }
+      },
       urls,
       copy.evidence
     )

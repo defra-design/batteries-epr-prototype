@@ -25,142 +25,143 @@ Following the schema-relationships taxonomy:
 
 ## 1. Accounts, logins & identity
 
-| Aspect | NPWD | Packaging | Class |
-|---|---|---|---|
-| Authentication mechanism | Forms Auth against a separate `aspnetdb`; OData API uses Entra/CIAM JWT | Defra ID / Azure B2C (OIDC) | Shared |
-| User identifier | GUID (`Common.Contact.ContactId`); one user split across 3 stores | GUID (`UserData.Id` from B2C ObjectId); one JSON claim | Common |
-| Account lifecycle | `Common.Contact.UserStatusId` + `Common.LoginRequest` approval | `UserData.EnrolmentStatus` | Shared |
-| Secondary authentication | `Common.Contact.AuthorisationPIN` (submissions PIN-signed) | — | Unique |
+| Aspect                   | NPWD                                                                    | Packaging                                              | Class  |
+| ------------------------ | ----------------------------------------------------------------------- | ------------------------------------------------------ | ------ |
+| Authentication mechanism | Forms Auth against a separate `aspnetdb`; OData API uses Entra/CIAM JWT | Defra ID / Azure B2C (OIDC)                            | Shared |
+| User identifier          | GUID (`Common.Contact.ContactId`); one user split across 3 stores       | GUID (`UserData.Id` from B2C ObjectId); one JSON claim | Common |
+| Account lifecycle        | `Common.Contact.UserStatusId` + `Common.LoginRequest` approval          | `UserData.EnrolmentStatus`                             | Shared |
+| Secondary authentication | `Common.Contact.AuthorisationPIN` (submissions PIN-signed)              | —                                                      | Unique |
 
 ## 2. The person record
 
-| Aspect | NPWD | Packaging | Class |
-|---|---|---|---|
-| Person separate from login | No — `Common.Contact` is both | No — `UserData` is both (facade keeps a separate `PersonModel`) | Common |
-| Person fields | `FirstName, LastName, EMail, Position` | `FirstName, LastName, Email, JobTitle, Telephone` | Common |
-| Telephone on the person | No — phone lives on the Org/Address | Yes — `UserData.Telephone` | Shared |
+| Aspect                     | NPWD                                   | Packaging                                                       | Class  |
+| -------------------------- | -------------------------------------- | --------------------------------------------------------------- | ------ |
+| Person separate from login | No — `Common.Contact` is both          | No — `UserData` is both (facade keeps a separate `PersonModel`) | Common |
+| Person fields              | `FirstName, LastName, EMail, Position` | `FirstName, LastName, Email, JobTitle, Telephone`               | Common |
+| Telephone on the person    | No — phone lives on the Org/Address    | Yes — `UserData.Telephone`                                      | Shared |
 
 ## 3. Organisation & registrant linkage
 
-| Aspect | NPWD | Packaging | Class |
-|---|---|---|---|
-| Organisation entity | `Common.Org`, typed by `EntityTypeId`, self-referential `ParentOrgId` hierarchy | `Organisation` (`OrganisationType`/`OrganisationRole`) | Common |
-| User → organisation cardinality | One primary org (`Common.Contact.OrgId`); multi-org via role scoping | Many — `UserData.Organisations` list | Shared |
-| Organisation hierarchy | Self-referential `ParentOrgId`/`AreaOrgId` | — | Unique |
-| Organisation-type discriminator | `EntityTypeId` (Producer/Scheme/Reprocessor/Agency) | `OrganisationType`/`OrganisationRole` | Common |
+| Aspect                          | NPWD                                                                            | Packaging                                              | Class  |
+| ------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------ | ------ |
+| Organisation entity             | `Common.Org`, typed by `EntityTypeId`, self-referential `ParentOrgId` hierarchy | `Organisation` (`OrganisationType`/`OrganisationRole`) | Common |
+| User → organisation cardinality | One primary org (`Common.Contact.OrgId`); multi-org via role scoping            | Many — `UserData.Organisations` list                   | Shared |
+| Organisation hierarchy          | Self-referential `ParentOrgId`/`AreaOrgId`                                      | —                                                      | Unique |
+| Organisation-type discriminator | `EntityTypeId` (Producer/Scheme/Reprocessor/Agency)                             | `OrganisationType`/`OrganisationRole`                  | Common |
 
 ## 4. Roles & permissions
 
-| Aspect | NPWD | Packaging | Class |
-|---|---|---|---|
-| Role assignment | `Common.UserRole` scoped M:N + inline `Common.Contact.UserRoleId` | `UserData.ServiceRole`/`ServiceRoleId` scalar (per active org) | Shared |
-| Role vocabulary | `Common.RoleType` + hardcoded strings in `UserRoleConstants.vb` | `ServiceRoles` constants + two `RoleInOrganisation` vocabularies | Shared |
-| Permission model | No permission table — code-driven `AccessControl` | No permission table — role-gated policy handlers | Common |
-| Roles spread across >1 place | Yes — `UserRole` + `Contact.UserRoleId` + `RoleType` + code constants | Yes — top-level scalars + per-org list + two vocabularies | Common |
+| Aspect                       | NPWD                                                                  | Packaging                                                        | Class  |
+| ---------------------------- | --------------------------------------------------------------------- | ---------------------------------------------------------------- | ------ |
+| Role assignment              | `Common.UserRole` scoped M:N + inline `Common.Contact.UserRoleId`     | `UserData.ServiceRole`/`ServiceRoleId` scalar (per active org)   | Shared |
+| Role vocabulary              | `Common.RoleType` + hardcoded strings in `UserRoleConstants.vb`       | `ServiceRoles` constants + two `RoleInOrganisation` vocabularies | Shared |
+| Permission model             | No permission table — code-driven `AccessControl`                     | No permission table — role-gated policy handlers                 | Common |
+| Roles spread across >1 place | Yes — `UserRole` + `Contact.UserRoleId` + `RoleType` + code constants | Yes — top-level scalars + per-org list + two vocabularies        | Common |
 
 ## 5. Registration & domain identifiers
 
-| Aspect | NPWD | Packaging | Class |
-|---|---|---|---|
-| Organisation number | `Common.Org.OrgCode` (NPWDCode, e.g. `NPWD123456`) | `Organisation.OrganisationNumber` | Common |
-| Producer registration number | `Batteries.ProducerRegistration.RegistrationNo` (the **BPRN**) | `RegistrationReferenceNumber` (the "producer registration number") | Common |
+| Aspect                           | NPWD                                                                                 | Packaging                                                                  | Class  |
+| -------------------------------- | ------------------------------------------------------------------------------------ | -------------------------------------------------------------------------- | ------ |
+| Organisation number              | `Common.Org.OrgCode` (NPWDCode, e.g. `NPWD123456`)                                   | `Organisation.OrganisationNumber`                                          | Common |
+| Producer registration number     | `Batteries.ProducerRegistration.RegistrationNo` (the **BPRN**)                       | `RegistrationReferenceNumber` (the "producer registration number")         | Common |
 | Registration record (per period) | `Batteries.ProducerRegistration`, unique per (`ProducerOrgId`, `CompliancePeriodId`) | `RegistrationApplicationDetails`, keyed by org + scheme + period + journey | Shared |
-| Compliance period | `Common.CompliancePeriod` (first-class dated entity, coded, Year/Quarter) | `SubmissionPeriod` string ("January to December {year}") | Shared |
-| Scheme approval number | `Batteries.SchemeApproval.ApprovalNo` | — (scheme identified by `ComplianceSchemeId` + name) | Unique |
+| Compliance period                | `Common.CompliancePeriod` (first-class dated entity, coded, Year/Quarter)            | `SubmissionPeriod` string ("January to December {year}")                   | Shared |
+| Scheme approval number           | `Batteries.SchemeApproval.ApprovalNo`                                                | — (scheme identified by `ComplianceSchemeId` + name)                       | Unique |
 
 ## Field-by-field mapping
 
 ### Accounts, logins & credentials
 
-| Concept | NPWD field | Packaging field | Class |
-|---|---|---|---|
-| User identifier | `Common.Contact.ContactId` (GUID) | `UserData.Id` (Guid?) | Common |
-| Login username | `Common.Contact.UserName` | — (B2C ObjectId + Email) | Unique |
-| Email | `Common.Contact.EMail` | `UserData.Email` | Common |
-| Credential / password hash | `aspnetdb aspnet_Membership`; `Contact.InitialPwd` | — (Defra ID / B2C) | Unique |
-| Secondary auth PIN | `Common.Contact.AuthorisationPIN` | — | Unique |
-| Account status | `Common.Contact.UserStatusId` | `UserData.EnrolmentStatus` | Shared |
-| Terms accepted | `Common.Contact.AgreedTCDate` | — | Unique |
-| Onboarding / invite | `Common.LoginRequest` (pre-registration) | `UserData.InviteToken` | Shared |
-| Change request pending | — | `UserData.IsChangeRequestPending` | Unique |
-| Active service context | — | `UserData.Service` | Unique |
+| Concept                    | NPWD field                                         | Packaging field                   | Class  |
+| -------------------------- | -------------------------------------------------- | --------------------------------- | ------ |
+| User identifier            | `Common.Contact.ContactId` (GUID)                  | `UserData.Id` (Guid?)             | Common |
+| Login username             | `Common.Contact.UserName`                          | — (B2C ObjectId + Email)          | Unique |
+| Email                      | `Common.Contact.EMail`                             | `UserData.Email`                  | Common |
+| Credential / password hash | `aspnetdb aspnet_Membership`; `Contact.InitialPwd` | — (Defra ID / B2C)                | Unique |
+| Secondary auth PIN         | `Common.Contact.AuthorisationPIN`                  | —                                 | Unique |
+| Account status             | `Common.Contact.UserStatusId`                      | `UserData.EnrolmentStatus`        | Shared |
+| Terms accepted             | `Common.Contact.AgreedTCDate`                      | —                                 | Unique |
+| Onboarding / invite        | `Common.LoginRequest` (pre-registration)           | `UserData.InviteToken`            | Shared |
+| Change request pending     | —                                                  | `UserData.IsChangeRequestPending` | Unique |
+| Active service context     | —                                                  | `UserData.Service`                | Unique |
 
 ### Person
 
-| Concept | NPWD field | Packaging field | Class |
-|---|---|---|---|
-| First name | `Common.Contact.FirstName` | `UserData.FirstName` | Common |
-| Last name | `Common.Contact.LastName` | `UserData.LastName` | Common |
-| Job title / position | `Common.Contact.Position` | `UserData.JobTitle` (+ `Organisation.JobTitle`) | Common |
-| Telephone | — on the person (Org/Address) | `UserData.Telephone` | Shared |
+| Concept              | NPWD field                    | Packaging field                                 | Class  |
+| -------------------- | ----------------------------- | ----------------------------------------------- | ------ |
+| First name           | `Common.Contact.FirstName`    | `UserData.FirstName`                            | Common |
+| Last name            | `Common.Contact.LastName`     | `UserData.LastName`                             | Common |
+| Job title / position | `Common.Contact.Position`     | `UserData.JobTitle` (+ `Organisation.JobTitle`) | Common |
+| Telephone            | — on the person (Org/Address) | `UserData.Telephone`                            | Shared |
 
 ### Organisation
 
-| Concept | NPWD field | Packaging field | Class |
-|---|---|---|---|
-| Organisation id | `Common.Org.OrgId` (GUID) | `Organisation.Id` (Guid?) | Common |
-| Organisation name | `Common.Org.OrgName` | `Organisation.Name` | Common |
-| Trading / alternative name | `Common.Org.AlternativeOrgName` | `Organisation.TradingName` | Common |
-| Organisation number / code | `Common.Org.OrgCode` | `Organisation.OrganisationNumber` | Common |
-| Companies House number | `Common.Org.CompanyRegNo` | `Organisation.CompaniesHouseNumber` | Common |
-| Company registration country | `Common.Org.CompanyRegCountry` | — | Unique |
-| Organisation type | `Common.Org.EntityTypeId` | `Organisation.OrganisationType` | Common |
-| Organisation role | — (role via `UserRole`/`RoleType`) | `Organisation.OrganisationRole` | Shared |
-| Parent / area organisation | `Common.Org.ParentOrgId`, `AreaOrgId` | — | Unique |
-| Regulator / agency link | `Common.Org.AgencyId`; `Contact.AgencyOrgId` | — (via `ServiceRole`) | Unique |
-| Organisation status | `Common.Org.OrgStatusId` | — | Unique |
-| Nation / country | `Common.Org.CountryId`, `TerritoryId` | `Organisation.NationId`, `Country` | Common |
-| Web address | `Common.Org.WebAddress` | — | Unique |
-| User → organisation link | `Common.Contact.OrgId` (single FK) | `UserData.Organisations[]` (list) | Shared |
+| Concept                      | NPWD field                                   | Packaging field                     | Class  |
+| ---------------------------- | -------------------------------------------- | ----------------------------------- | ------ |
+| Organisation id              | `Common.Org.OrgId` (GUID)                    | `Organisation.Id` (Guid?)           | Common |
+| Organisation name            | `Common.Org.OrgName`                         | `Organisation.Name`                 | Common |
+| Trading / alternative name   | `Common.Org.AlternativeOrgName`              | `Organisation.TradingName`          | Common |
+| Organisation number / code   | `Common.Org.OrgCode`                         | `Organisation.OrganisationNumber`   | Common |
+| Companies House number       | `Common.Org.CompanyRegNo`                    | `Organisation.CompaniesHouseNumber` | Common |
+| Company registration country | `Common.Org.CompanyRegCountry`               | —                                   | Unique |
+| Organisation type            | `Common.Org.EntityTypeId`                    | `Organisation.OrganisationType`     | Common |
+| Organisation role            | — (role via `UserRole`/`RoleType`)           | `Organisation.OrganisationRole`     | Shared |
+| Parent / area organisation   | `Common.Org.ParentOrgId`, `AreaOrgId`        | —                                   | Unique |
+| Regulator / agency link      | `Common.Org.AgencyId`; `Contact.AgencyOrgId` | — (via `ServiceRole`)               | Unique |
+| Organisation status          | `Common.Org.OrgStatusId`                     | —                                   | Unique |
+| Nation / country             | `Common.Org.CountryId`, `TerritoryId`        | `Organisation.NationId`, `Country`  | Common |
+| Web address                  | `Common.Org.WebAddress`                      | —                                   | Unique |
+| User → organisation link     | `Common.Contact.OrgId` (single FK)           | `UserData.Organisations[]` (list)   | Shared |
 
 ### Address & organisation contact
 
-| Concept | NPWD field | Packaging field | Class |
-|---|---|---|---|
-| Address lines | `Common.Org`/`Address.AddressLine1-4` (flat) | `Organisation.SubBuildingName`/`BuildingName`/`BuildingNumber`/`Street` (PAF) | Shared |
-| Town | `Common.Org`/`Address.Town` | `Organisation.Town` | Common |
-| County | `Common.Org`/`Address.County` | `Organisation.County` | Common |
-| Postcode | `Common.Org`/`Address.Postcode` | `Organisation.Postcode` | Common |
-| Locality / dependent locality | — | `Organisation.Locality`, `DependentLocality` | Unique |
-| Multiple typed addresses | `Common.Address` (typed by `EntityTypeId`) | — (one embedded address) | Unique |
-| Org-embedded contact person | `Common.Org.ContactFirstName`/`ContactLastName`/`ContactTitle` | — (person on `UserData`) | Shared |
-| Organisation phone / fax | `Common.Org.TelNo1`/`TelNo2`/`FaxNo1`/`FaxNo2` | — (Telephone on user only) | Shared |
-| Organisation email | `Common.Org.EMail` | — (email on user) | Shared |
-| Submission contact snapshot | `Common.SubmissionContact` | — | Unique |
+| Concept                       | NPWD field                                                     | Packaging field                                                               | Class  |
+| ----------------------------- | -------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------ |
+| Address lines                 | `Common.Org`/`Address.AddressLine1-4` (flat)                   | `Organisation.SubBuildingName`/`BuildingName`/`BuildingNumber`/`Street` (PAF) | Shared |
+| Town                          | `Common.Org`/`Address.Town`                                    | `Organisation.Town`                                                           | Common |
+| County                        | `Common.Org`/`Address.County`                                  | `Organisation.County`                                                         | Common |
+| Postcode                      | `Common.Org`/`Address.Postcode`                                | `Organisation.Postcode`                                                       | Common |
+| Locality / dependent locality | —                                                              | `Organisation.Locality`, `DependentLocality`                                  | Unique |
+| Multiple typed addresses      | `Common.Address` (typed by `EntityTypeId`)                     | — (one embedded address)                                                      | Unique |
+| Org-embedded contact person   | `Common.Org.ContactFirstName`/`ContactLastName`/`ContactTitle` | — (person on `UserData`)                                                      | Shared |
+| Organisation phone / fax      | `Common.Org.TelNo1`/`TelNo2`/`FaxNo1`/`FaxNo2`                 | — (Telephone on user only)                                                    | Shared |
+| Organisation email            | `Common.Org.EMail`                                             | — (email on user)                                                             | Shared |
+| Submission contact snapshot   | `Common.SubmissionContact`                                     | —                                                                             | Unique |
 
 ### Roles & permissions
 
-| Concept | NPWD field | Packaging field | Class |
-|---|---|---|---|
-| Primary role on the user | `Common.Contact.UserRoleId` (inline) | `UserData.ServiceRole`/`ServiceRoleId` | Shared |
-| Role assignment (scoped) | `Common.UserRole` (UserId × RoleTypeId × EntityId/OrgId) | — (per active org context) | Shared |
-| Role vocabulary | `Common.RoleType` + `UserRoleConstants.vb` strings | `ServiceRoles` constants | Shared |
-| Numeric role id | `Common.RoleType.RoleTypeId` (GUID) | `UserData.ServiceRoleId` (int) | Shared |
-| Role scope (entity / org) | `Common.UserRole.EntityTypeId`/`EntityId`/`OrgId` | — (single active org) | Shared |
-| Role grouping / order | `Common.RoleType.RoleGroup`/`RoleGroupingCode`/`RoleOrder` | — | Unique |
-| Role in organisation (legal position) | — | `UserData.RoleInOrganisation` (Admin/Employee) + facade Director/Company Secretary/Partner/Member | Unique |
+| Concept                               | NPWD field                                                 | Packaging field                                                                                   | Class  |
+| ------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------ |
+| Primary role on the user              | `Common.Contact.UserRoleId` (inline)                       | `UserData.ServiceRole`/`ServiceRoleId`                                                            | Shared |
+| Role assignment (scoped)              | `Common.UserRole` (UserId × RoleTypeId × EntityId/OrgId)   | — (per active org context)                                                                        | Shared |
+| Role vocabulary                       | `Common.RoleType` + `UserRoleConstants.vb` strings         | `ServiceRoles` constants                                                                          | Shared |
+| Numeric role id                       | `Common.RoleType.RoleTypeId` (GUID)                        | `UserData.ServiceRoleId` (int)                                                                    | Shared |
+| Role scope (entity / org)             | `Common.UserRole.EntityTypeId`/`EntityId`/`OrgId`          | — (single active org)                                                                             | Shared |
+| Role grouping / order                 | `Common.RoleType.RoleGroup`/`RoleGroupingCode`/`RoleOrder` | —                                                                                                 | Unique |
+| Role in organisation (legal position) | —                                                          | `UserData.RoleInOrganisation` (Admin/Employee) + facade Director/Company Secretary/Partner/Member | Unique |
 
 ### Registration & domain identifiers
 
-| Concept | NPWD field | Packaging field | Class |
-|---|---|---|---|
-| Organisation number | `Common.Org.OrgCode` (NPWDCode, e.g. `NPWD123456`) | `Organisation.OrganisationNumber` | Common |
-| Producer registration number | `Batteries.ProducerRegistration.RegistrationNo` (called the **BPRN** in NPWD code/docs) | `RegistrationReferenceNumber` (backend-issued on grant) | Common |
-| Application / payment reference | — | `ApplicationReferenceNumber` (`PEPR{org}{yy}P{period}{size}`, via `ReferenceNumberBuilder`) | Unique |
-| Registration record id | `Batteries.ProducerRegistration.ProducerRegistrationId` (GUID) | `RegistrationApplicationDetails.SubmissionId` (Guid) | Shared |
-| Registration key (per producer per period) | `ProducerOrgId` + `CompliancePeriodId` (unique index) | `OrganisationId` + `ComplianceSchemeId?` + `SubmissionPeriod` + `RegistrationJourney` | Shared |
-| Compliance / submission period | `Common.CompliancePeriod` (`CompliancePeriodId` GUID / `CompliancePeriodCode`) | `SubmissionPeriod.DataPeriod` (string) / `Year` (string) | Shared |
-| Registration status | `Batteries.ProducerRegistration.StatusId` | `RegistrationApplicationDetails.ApplicationStatus` | Shared |
-| Compliance scheme id | `Batteries.ProducerRegistration.SchemeOrgId` (`Common.Org`) | `ComplianceSchemeId` (Guid) / `ComplianceSchemeDto` | Common |
-| Scheme membership reference | `ProducerRegistration.SchemeRefNumber` / `SchemeMembers.SchemeRefNumber` | — (membership via `ComplianceSchemeMemberDto` org relationships) | Shared |
-| Scheme approval number | `Batteries.SchemeApproval.ApprovalNo` | — | Unique |
-| Reprocessor / exporter approval number | `Batteries.ReprocessorApproval.ApprovalNo` (ABTO/ABE) | — (Re-Ex is a separate stream) | Unique |
-| Registration classification | `IsPortable` / `IsIndustrial` / `IsAutomotive` (battery category) | `OrganisationSize` (Large/Small) + `RegistrationJourney` | Shared |
-| Number allocation | `Metadata.EntitySequence` + `Common.Agency.RegistrationNoPrefix`/`Next` (agency-banded) | `ReferenceNumberBuilder` (code) + backend-issued `RegistrationReferenceNumber` | Shared |
+| Concept                                    | NPWD field                                                                              | Packaging field                                                                             | Class  |
+| ------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ------ |
+| Organisation number                        | `Common.Org.OrgCode` (NPWDCode, e.g. `NPWD123456`)                                      | `Organisation.OrganisationNumber`                                                           | Common |
+| Producer registration number               | `Batteries.ProducerRegistration.RegistrationNo` (called the **BPRN** in NPWD code/docs) | `RegistrationReferenceNumber` (backend-issued on grant)                                     | Common |
+| Application / payment reference            | —                                                                                       | `ApplicationReferenceNumber` (`PEPR{org}{yy}P{period}{size}`, via `ReferenceNumberBuilder`) | Unique |
+| Registration record id                     | `Batteries.ProducerRegistration.ProducerRegistrationId` (GUID)                          | `RegistrationApplicationDetails.SubmissionId` (Guid)                                        | Shared |
+| Registration key (per producer per period) | `ProducerOrgId` + `CompliancePeriodId` (unique index)                                   | `OrganisationId` + `ComplianceSchemeId?` + `SubmissionPeriod` + `RegistrationJourney`       | Shared |
+| Compliance / submission period             | `Common.CompliancePeriod` (`CompliancePeriodId` GUID / `CompliancePeriodCode`)          | `SubmissionPeriod.DataPeriod` (string) / `Year` (string)                                    | Shared |
+| Registration status                        | `Batteries.ProducerRegistration.StatusId`                                               | `RegistrationApplicationDetails.ApplicationStatus`                                          | Shared |
+| Compliance scheme id                       | `Batteries.ProducerRegistration.SchemeOrgId` (`Common.Org`)                             | `ComplianceSchemeId` (Guid) / `ComplianceSchemeDto`                                         | Common |
+| Scheme membership reference                | `ProducerRegistration.SchemeRefNumber` / `SchemeMembers.SchemeRefNumber`                | — (membership via `ComplianceSchemeMemberDto` org relationships)                            | Shared |
+| Scheme approval number                     | `Batteries.SchemeApproval.ApprovalNo`                                                   | —                                                                                           | Unique |
+| Reprocessor / exporter approval number     | `Batteries.ReprocessorApproval.ApprovalNo` (ABTO/ABE)                                   | — (Re-Ex is a separate stream)                                                              | Unique |
+| Registration classification                | `IsPortable` / `IsIndustrial` / `IsAutomotive` (battery category)                       | `OrganisationSize` (Large/Small) + `RegistrationJourney`                                    | Shared |
+| Number allocation                          | `Metadata.EntitySequence` + `Common.Agency.RegistrationNoPrefix`/`Next` (agency-banded) | `ReferenceNumberBuilder` (code) + backend-issued `RegistrationReferenceNumber`              | Shared |
 
 ## Shared / service-specific / inconsistencies
 
 **Shared foundation**
+
 - A central Organisation entity typed by kind (NPWD `EntityTypeId` ~ Packaging `OrganisationType`), covering Producer and Compliance Scheme.
 - GUID user identity on both sides.
 - Person collapsed into the account record on both (`Common.Contact` / `UserData`).
@@ -169,10 +170,12 @@ Following the schema-relationships taxonomy:
 - Both issue a producer registration number on approval (NPWD `RegistrationNo` / "BPRN" ~ Packaging `RegistrationReferenceNumber`) plus an org-level number (NPWDCode ~ OrganisationNumber).
 
 **Service-specific**
+
 - _NPWD_: split identity (aspnetdb credentials + `Common.Contact` + `UserRole`); Forms Auth, no OIDC/MFA; `AuthorisationPIN`; `LoginRequest` pre-registration; self-referential Org hierarchy; typed `Common.Address` rows; hardcoded role string vocabulary; a second OData/Entra auth stack.
 - _Packaging_: federated Defra ID/B2C; identity as one JSON `UserData` claim; user↔many organisations; `InviteToken`/`IsChangeRequestPending`/`Service`; structured PAF address; policy-handler authorisation; a second (facade) person and role-in-organisation vocabulary.
 
 **Inconsistencies, duplication & gaps**
+
 - **Auth** — NPWD bespoke Forms Auth + separate `aspnetdb` (no MFA/OIDC) vs Packaging federated Defra ID — the headline modernisation gap.
 - **Cardinality** — NPWD one-primary-org (`Contact.OrgId`) vs Packaging user↔many orgs.
 - **Contact level** — NPWD duplicates contact/address across ~4 levels (`Org`, `Address`, `SubmissionContact`, `Contact`) vs Packaging holding telephone on the user + one address per org.

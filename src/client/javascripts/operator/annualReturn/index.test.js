@@ -31,9 +31,9 @@ const buildDom = (payload, formHtml = '') => {
 }
 
 const tonnageFormHtml = () => {
-  const fields = TONNAGE_FIELDS.map(
-    (name) => `<input name="${name}" />`
-  ).join('')
+  const fields = TONNAGE_FIELDS.map((name) => `<input name="${name}" />`).join(
+    ''
+  )
   return `<form>${fields}</form>`
 }
 
@@ -115,7 +115,9 @@ describe('runOperatorAnnualReturnStep persist target', () => {
     const saved = storage.findOperatorAnnualReturn('op-annual-001', '2026')
     expect(saved.status).toBe('in-progress')
     expect(saved.industrial.accepted.leadAcid).toBe('1.000')
-    expect(assignSpy).toHaveBeenCalledWith('/operator/annual-return/declaration')
+    expect(assignSpy).toHaveBeenCalledWith(
+      '/operator/annual-return/declaration'
+    )
   })
 
   test('persists without navigating when next is null', () => {

@@ -47,7 +47,9 @@ describe('runRegulatorSchemeDetail', () => {
     })
     const result = runRegulatorSchemeDetail(document, { assign: assignSpy })
     expect(result).toBe('hydrated')
-    expect(document.querySelector('[data-testid="scheme-detail-name"]').textContent).toBe(scheme.name)
+    expect(
+      document.querySelector('[data-testid="scheme-detail-name"]').textContent
+    ).toBe(scheme.name)
   })
 
   test('shows not-found when scheme does not exist', () => {
@@ -58,11 +60,15 @@ describe('runRegulatorSchemeDetail', () => {
     })
     const result = runRegulatorSchemeDetail(document, { assign: assignSpy })
     expect(result).toBe('not-found')
-    expect(document.querySelector('[data-testid="scheme-detail-not-found"]').hidden).toBe(false)
+    expect(
+      document.querySelector('[data-testid="scheme-detail-not-found"]').hidden
+    ).toBe(false)
   })
 
   test('shows action panel for submitted schemes', () => {
-    const submitted = storage.listSchemes().find((s) => s.approvalStatus === 'submitted')
+    const submitted = storage
+      .listSchemes()
+      .find((s) => s.approvalStatus === 'submitted')
     if (!submitted) return
     document.body.innerHTML = detailHtml({
       view: 'detail',
@@ -70,22 +76,30 @@ describe('runRegulatorSchemeDetail', () => {
       schemeId: submitted.id
     })
     runRegulatorSchemeDetail(document, { assign: assignSpy })
-    expect(document.querySelector('[data-testid="scheme-detail-actions"]').hidden).toBe(false)
+    expect(
+      document.querySelector('[data-testid="scheme-detail-actions"]').hidden
+    ).toBe(false)
   })
 
   test('hides action panel for approved schemes', () => {
-    const approved = storage.listSchemes().find((s) => s.approvalStatus === 'approved')
+    const approved = storage
+      .listSchemes()
+      .find((s) => s.approvalStatus === 'approved')
     document.body.innerHTML = detailHtml({
       view: 'detail',
       target: 'hydrate',
       schemeId: approved.id
     })
     runRegulatorSchemeDetail(document, { assign: assignSpy })
-    expect(document.querySelector('[data-testid="scheme-detail-actions"]').hidden).toBe(true)
+    expect(
+      document.querySelector('[data-testid="scheme-detail-actions"]').hidden
+    ).toBe(true)
   })
 
   test('persist approve calls approveScheme and navigates', () => {
-    const submitted = storage.listSchemes().find((s) => s.approvalStatus === 'submitted')
+    const submitted = storage
+      .listSchemes()
+      .find((s) => s.approvalStatus === 'submitted')
     if (!submitted) return
     document.body.innerHTML = detailHtml({
       view: 'detail',
@@ -103,7 +117,9 @@ describe('runRegulatorSchemeDetail', () => {
   })
 
   test('persist reject calls rejectScheme and navigates', () => {
-    const submitted = storage.listSchemes().find((s) => s.approvalStatus === 'submitted')
+    const submitted = storage
+      .listSchemes()
+      .find((s) => s.approvalStatus === 'submitted')
     if (!submitted) return
     document.body.innerHTML = detailHtml({
       view: 'detail',
@@ -119,21 +135,31 @@ describe('runRegulatorSchemeDetail', () => {
   })
 
   test('shows withdraw link for approved schemes', () => {
-    const approved = storage.listSchemes().find((s) => s.approvalStatus === 'approved')
+    const approved = storage
+      .listSchemes()
+      .find((s) => s.approvalStatus === 'approved')
     document.body.innerHTML = detailHtml({
       view: 'detail',
       target: 'hydrate',
       schemeId: approved.id
     })
     runRegulatorSchemeDetail(document, { assign: assignSpy })
-    const withdrawEl = document.querySelector('[data-testid="scheme-detail-withdraw"]')
+    const withdrawEl = document.querySelector(
+      '[data-testid="scheme-detail-withdraw"]'
+    )
     expect(withdrawEl.hidden).toBe(false)
-    const withdrawLink = document.querySelector('[data-testid="scheme-detail-withdraw-link"]')
-    expect(withdrawLink.href).toContain(`/regulator/schemes/${approved.id}/withdraw`)
+    const withdrawLink = document.querySelector(
+      '[data-testid="scheme-detail-withdraw-link"]'
+    )
+    expect(withdrawLink.href).toContain(
+      `/regulator/schemes/${approved.id}/withdraw`
+    )
   })
 
   test('hides withdraw link for submitted schemes', () => {
-    const submitted = storage.listSchemes().find((s) => s.approvalStatus === 'submitted')
+    const submitted = storage
+      .listSchemes()
+      .find((s) => s.approvalStatus === 'submitted')
     if (!submitted) return
     document.body.innerHTML = detailHtml({
       view: 'detail',
@@ -141,7 +167,9 @@ describe('runRegulatorSchemeDetail', () => {
       schemeId: submitted.id
     })
     runRegulatorSchemeDetail(document, { assign: assignSpy })
-    const withdrawEl = document.querySelector('[data-testid="scheme-detail-withdraw"]')
+    const withdrawEl = document.querySelector(
+      '[data-testid="scheme-detail-withdraw"]'
+    )
     expect(withdrawEl.hidden).toBe(true)
   })
 })

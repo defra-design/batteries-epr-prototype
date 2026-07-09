@@ -126,7 +126,10 @@ export const iaController = {
 
       const { error, value } = stepConfig.schema.validate(payload)
       if (error) {
-        const list = collectErrors(error, stepConfig.fieldMessages(stepContent.error))
+        const list = collectErrors(
+          error,
+          stepConfig.fieldMessages(stepContent.error)
+        )
         flashStepErrors(request, flashKey(step), list, payload)
         return h.redirect(stepUrl(step))
       }
@@ -192,7 +195,10 @@ export const iaMemberController = {
       const { error, value } = stepConfig.schema.validate(payload)
       if (error) {
         const flashId = flashKey(`member:${memberId}:${step}`)
-        const list = collectErrors(error, stepConfig.fieldMessages(stepContent.error))
+        const list = collectErrors(
+          error,
+          stepConfig.fieldMessages(stepContent.error)
+        )
         flashStepErrors(request, flashId, list, payload)
         return h.redirect(memberStepUrl(memberId, step))
       }

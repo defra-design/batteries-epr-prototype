@@ -47,7 +47,8 @@ export const niContent = {
         eubrKey: 'batteryPassport',
         column: 'one-half',
         title: 'Battery passport and labelling',
-        description: 'Provide labelling, a QR data carrier and a battery passport.',
+        description:
+          'Provide labelling, a QR data carrier and a battery passport.',
         status: { text: 'Not started', classes: 'govuk-tag--grey' },
         body: 'Apply the separate-collection symbol, capacity marking and QR code, and create a battery passport where required.'
       },
@@ -98,8 +99,7 @@ export const niContent = {
     heading: 'Your collection and recycling obligation',
     intro:
       'This obligation is calculated from the annual returns you have submitted. Portable batteries have a percentage collection target under Article 59, measured against the average tonnage placed on the market over the reporting year and the two preceding years; recycling efficiency follows Annex XII of the EU Batteries Regulation.',
-    note:
-      'Industrial, automotive and EV batteries have a take-back obligation under Article 61: you must accept all returned waste batteries free of charge, so there is no percentage collection target for these streams.',
+    note: 'Industrial, automotive and EV batteries have a take-back obligation under Article 61: you must accept all returned waste batteries free of charge, so there is no percentage collection target for these streams.',
     empty:
       'Submit an annual return to see your calculated collection and recycling obligation.'
   },
@@ -149,7 +149,8 @@ export const niContent = {
       intro:
         'The EU Batteries Regulation classifies batteries into categories with different obligations. Select all that apply.',
       portableLabel: 'Portable batteries',
-      portableHint: 'For example button cells, AA/AAA, mobile and laptop batteries.',
+      portableHint:
+        'For example button cells, AA/AAA, mobile and laptop batteries.',
       lmtLabel: 'Light means of transport (LMT) batteries',
       lmtHint: 'Batteries for e-bikes, e-scooters and similar vehicles.',
       industrialLabel: 'Industrial batteries',
@@ -187,7 +188,8 @@ export const niContent = {
       selfLabel: 'I will meet my obligations directly',
       selfHint: 'You take operational and financial responsibility yourself.',
       proLabel: 'I will appoint a producer responsibility organisation',
-      proHint: 'A PRO meets your collection and reporting obligations on your behalf.',
+      proHint:
+        'A PRO meets your collection and reporting obligations on your behalf.',
       continueAction: 'Continue',
       error: {
         title: 'There is a problem',
@@ -200,7 +202,8 @@ export const niContent = {
       intro:
         'Electric-vehicle, LMT and rechargeable industrial batteries must carry a carbon footprint declaration and performance class, and meet minimum recycled-content shares.',
       valueLabel: 'Carbon footprint (kg CO2e per kWh)',
-      valueHint: 'Enter the declared carbon footprint over the battery life cycle.',
+      valueHint:
+        'Enter the declared carbon footprint over the battery life cycle.',
       classLegend: 'Carbon footprint performance class',
       classHint: 'Class A is the lowest carbon footprint.',
       classes: ['A', 'B', 'C', 'D', 'E'],
@@ -266,8 +269,7 @@ export const niContent = {
       continueAction: 'Continue',
       error: {
         title: 'There is a problem',
-        threshold:
-          'Select whether your net turnover is above €40 million',
+        threshold: 'Select whether your net turnover is above €40 million',
         policyConfirm: 'Confirm you operate a due diligence policy'
       }
     },

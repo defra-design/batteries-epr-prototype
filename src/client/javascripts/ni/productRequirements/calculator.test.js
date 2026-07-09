@@ -55,9 +55,9 @@ describe('calculateProductRequirements', () => {
     expect(passport.status).toBe('provided')
     expect(passport.rows[0].value).toBe('BP-123')
     expect(passport.rows[0].status).toBe('provided')
-    expect(
-      passport.rows.find((r) => r.label === 'CE marking').value
-    ).toBe('Not applied')
+    expect(passport.rows.find((r) => r.label === 'CE marking').value).toBe(
+      'Not applied'
+    )
     expect(
       passport.rows.find((r) => r.label === 'Removable by the end user').value
     ).toBe('Yes')
@@ -109,6 +109,8 @@ describe('calculateProductRequirements', () => {
 
     expect(result.hasData).toBe(true)
     expect(result.bprn).toBeNull()
-    expect(result.sections.every((s) => s.status === 'not-applicable')).toBe(true)
+    expect(result.sections.every((s) => s.status === 'not-applicable')).toBe(
+      true
+    )
   })
 })

@@ -54,7 +54,10 @@ describe('runRegulatorEvidenceDetail', () => {
     })
     const result = runRegulatorEvidenceDetail(document, { assign: assignSpy })
     expect(result).toBe('hydrated')
-    expect(document.querySelector('[data-testid="evidence-detail-tonnes"]').textContent).toBe('5.000')
+    expect(
+      document.querySelector('[data-testid="evidence-detail-tonnes"]')
+        .textContent
+    ).toBe('5.000')
   })
 
   test('shows not-found when evidence does not exist', () => {
@@ -65,6 +68,8 @@ describe('runRegulatorEvidenceDetail', () => {
     })
     const result = runRegulatorEvidenceDetail(document, { assign: assignSpy })
     expect(result).toBe('not-found')
-    expect(document.querySelector('[data-testid="evidence-detail-not-found"]').hidden).toBe(false)
+    expect(
+      document.querySelector('[data-testid="evidence-detail-not-found"]').hidden
+    ).toBe(false)
   })
 })

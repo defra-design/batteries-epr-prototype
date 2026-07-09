@@ -47,11 +47,21 @@ describe('runRegulatorEvidencePage', () => {
       view: 'list',
       compliancePeriodYear: '2026',
       copy: {
-        categories: { portable: 'Portable', industrial: 'Industrial', automotive: 'Automotive' },
-        statuses: { 'awaiting-acceptance': 'Awaiting acceptance', accepted: 'Accepted' },
+        categories: {
+          portable: 'Portable',
+          industrial: 'Industrial',
+          automotive: 'Automotive'
+        },
+        statuses: {
+          'awaiting-acceptance': 'Awaiting acceptance',
+          accepted: 'Accepted'
+        },
         viewAction: 'View'
       },
-      urls: { detailTemplate: '/regulator/evidence/{evidenceId}', dashboard: '/regulator' }
+      urls: {
+        detailTemplate: '/regulator/evidence/{evidenceId}',
+        dashboard: '/regulator'
+      }
     })
     const result = runRegulatorEvidencePage(document, { assign: assignSpy })
     expect(result === 'rendered' || result === 'rendered-empty').toBe(true)

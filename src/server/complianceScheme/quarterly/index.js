@@ -1,8 +1,5 @@
 import { paths } from '../../../config/paths.js'
-import {
-  quarterlyController,
-  quarterlyMemberController
-} from './controller.js'
+import { quarterlyController, quarterlyMemberController } from './controller.js'
 
 export const complianceSchemeQuarterly = {
   openRoutes: [

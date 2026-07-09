@@ -1,4 +1,12 @@
-import { STEPS, MEMBER_STEPS, STEP_ORDER, QUARTERS, isKnownStep, isKnownMemberStep, isKnownQuarter } from './steps.js'
+import {
+  STEPS,
+  MEMBER_STEPS,
+  STEP_ORDER,
+  QUARTERS,
+  isKnownStep,
+  isKnownMemberStep,
+  isKnownQuarter
+} from './steps.js'
 
 describe('quarterly/steps', () => {
   test('STEP_ORDER lists the four steps in sequence', () => {

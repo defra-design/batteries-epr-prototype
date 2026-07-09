@@ -1,4 +1,10 @@
-import { STEPS, STEP_ORDER, QUARTERS, isKnownStep, isKnownQuarter } from './steps.js'
+import {
+  STEPS,
+  STEP_ORDER,
+  QUARTERS,
+  isKnownStep,
+  isKnownQuarter
+} from './steps.js'
 
 describe('operator quarterly/steps', () => {
   test('STEP_ORDER lists the three steps in sequence', () => {

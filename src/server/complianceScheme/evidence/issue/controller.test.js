@@ -2,8 +2,7 @@ import { statusCodes } from '../../../common/constants/status-codes.js'
 import { initialiseServer } from '../../../../test-utils/initialise-server.js'
 import { paths } from '../../../../config/paths.js'
 
-const stepUrl = (s) =>
-  paths.complianceSchemeEvidenceIssue.replace('{step}', s)
+const stepUrl = (s) => paths.complianceSchemeEvidenceIssue.replace('{step}', s)
 
 describe('#evidenceIssueController', () => {
   let server
@@ -26,9 +25,7 @@ describe('#evidenceIssueController', () => {
     expect(result).toEqual(expect.stringContaining('"step":"recipient"'))
     expect(result).toEqual(expect.stringContaining('"target":"hydrate"'))
     expect(result).toEqual(
-      expect.stringContaining(
-        'data-testid="evidence-issue-recipient-radios"'
-      )
+      expect.stringContaining('data-testid="evidence-issue-recipient-radios"')
     )
   })
 

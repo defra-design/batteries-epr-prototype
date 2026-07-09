@@ -68,13 +68,13 @@ This file, the README "Pages" table, and [ADR 0001](decisions/0001-scheme-member
 
 ## Out of scope
 
-| Item | Where it should live |
-|---|---|
-| BCS member-roster spreadsheet upload | `batteries-scheme-frontend` |
-| `SchemeApproval` application form for new schemes | `batteries-scheme-frontend` |
-| Scheme-side annual obligation submission | `batteries-scheme-backend` |
-| Regulator approval/withdrawal of schemes | future agency frontend |
-| Public scheme detail page | `batteries-scheme-frontend` |
+| Item                                                   | Where it should live                 |
+| ------------------------------------------------------ | ------------------------------------ |
+| BCS member-roster spreadsheet upload                   | `batteries-scheme-frontend`          |
+| `SchemeApproval` application form for new schemes      | `batteries-scheme-frontend`          |
+| Scheme-side annual obligation submission               | `batteries-scheme-backend`           |
+| Regulator approval/withdrawal of schemes               | future agency frontend               |
+| Public scheme detail page                              | `batteries-scheme-frontend`          |
 | Real cross-service notification (producer-joins event) | message bus once both services exist |
 
 ## Deferred / known gaps

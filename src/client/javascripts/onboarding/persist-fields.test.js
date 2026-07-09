@@ -175,7 +175,9 @@ describe('submitRegistration', () => {
     })
     submitRegistration('a@b.com', '2026')
     const memberships = storage.getSchemeMembershipHistory(null)
-    expect(memberships.find((m) => m.schemeId === scheme.id)?.companyName).toBeNull()
+    expect(
+      memberships.find((m) => m.schemeId === scheme.id)?.companyName
+    ).toBeNull()
   })
 
   test('compliance-scheme submit without a schemeId still marks pendingScheme without creating membership', () => {

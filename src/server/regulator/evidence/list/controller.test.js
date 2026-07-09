@@ -24,9 +24,15 @@ describe('#regulatorEvidenceListController', () => {
     const pageContent = content.regulator({}).evidenceOverviewPages.list
     expect(result).toEqual(expect.stringContaining(pageContent.heading))
     expect(result).toEqual(expect.stringContaining(pageContent.intro))
-    expect(result).toEqual(expect.stringContaining('data-testid="evidence-table"'))
-    expect(result).toEqual(expect.stringContaining('data-testid="evidence-body"'))
-    expect(result).toEqual(expect.stringContaining('data-testid="evidence-empty"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="evidence-table"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="evidence-body"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="evidence-empty"')
+    )
   })
 
   test('emits a page-payload with view list', async () => {

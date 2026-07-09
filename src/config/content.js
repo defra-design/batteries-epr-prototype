@@ -1141,7 +1141,8 @@ export const content = {
           joinedAnotherScheme: 'I am joining a different compliance scheme',
           belowThreshold:
             'I am now below the threshold and want to register as a small producer',
-          ceasedTrading: 'My business has ceased placing batteries on the market',
+          ceasedTrading:
+            'My business has ceased placing batteries on the market',
           other: 'Other'
         },
         otherReasonLabel: 'If other, please describe',
@@ -1734,7 +1735,8 @@ export const content = {
               tonnes: {
                 title: 'Category and tonnes',
                 heading: 'Category and tonnes',
-                intro: 'Tell us the category and how much evidence is being issued.',
+                intro:
+                  'Tell us the category and how much evidence is being issued.',
                 categoryLegend: 'Category',
                 tonnesLabel: 'Tonnes',
                 tonnesHint: 'Enter a value up to three decimal places.',
@@ -1761,7 +1763,8 @@ export const content = {
                   'I confirm the information provided is correct and issue this evidence.',
                 confirmAction: 'Issue evidence',
                 error: {
-                  declarationAccepted: 'Confirm the declaration to issue evidence'
+                  declarationAccepted:
+                    'Confirm the declaration to issue evidence'
                 }
               },
               confirmation: {
@@ -1786,7 +1789,8 @@ export const content = {
             transferAction: 'Transfer to another scheme',
             backAction: 'Back to evidence',
             notFoundMessage: 'This evidence could not be found.',
-            noActionsMessage: 'No actions are available for evidence in this state.'
+            noActionsMessage:
+              'No actions are available for evidence in this state.'
           },
           transfer: {
             title: 'Transfer evidence',
@@ -1798,7 +1802,8 @@ export const content = {
             cancelAction: 'Cancel',
             error: {
               counterpartySchemeId: 'Choose a receiving scheme',
-              noCandidates: 'No other compliance schemes are available for transfer.'
+              noCandidates:
+                'No other compliance schemes are available for transfer.'
             },
             notFoundMessage: 'This evidence could not be found.',
             ineligibleMessage:
@@ -1841,11 +1846,12 @@ export const content = {
           title: 'Obligation breakdown',
           heading: 'Obligation breakdown',
           intro:
-            'How your scheme\'s obligation is calculated from quarterly market data, by category.',
+            "How your scheme's obligation is calculated from quarterly market data, by category.",
           tableCaption: 'Obligation by battery category',
           totalsLabel: 'Total',
           backToDashboardAction: 'Back to compliance scheme dashboard',
-          calcHeading: 'How we calculated your collection and recycling obligations',
+          calcHeading:
+            'How we calculated your collection and recycling obligations',
           calcIntro:
             'We used the total tonnes placed on the UK market across all four quarters, together with the collection and recycling targets set for each battery category, to calculate your obligations. Accepted evidence reduces your outstanding obligation. This is a playground calculation — production maths will be more nuanced.',
           formulaEquation: 'X × Y = Z',
@@ -1898,7 +1904,8 @@ export const content = {
               enteredTag: 'Entered',
               notEnteredTag: 'Not entered',
               continueAction: 'Continue',
-              emptyMessage: 'This scheme has no active members for the current compliance period.',
+              emptyMessage:
+                'This scheme has no active members for the current compliance period.',
               totalsHeading: 'Totals'
             },
             marketData: {
@@ -1940,8 +1947,7 @@ export const content = {
             checkAnswers: {
               title: 'Check your answers',
               heading: 'Check your answers',
-              intro:
-                'Review the figures for this quarter before submitting.',
+              intro: 'Review the figures for this quarter before submitting.',
               marketHeading: 'Placed on the market',
               wasteHeading: 'Waste collected',
               portableLabel: 'Portable (tonnes)',
@@ -1957,7 +1963,9 @@ export const content = {
                 'Confirm the figures are correct and submit the quarterly return.',
               declarationLabel:
                 'I confirm the information provided is correct and submit this quarterly return.',
-              error: { declarationAccepted: 'Confirm the declaration to submit' }
+              error: {
+                declarationAccepted: 'Confirm the declaration to submit'
+              }
             },
             confirmation: {
               title: 'Quarterly return submitted',
@@ -1987,7 +1995,8 @@ export const content = {
               enteredTag: 'Entered',
               notEnteredTag: 'Not entered',
               continueAction: 'Continue',
-              emptyMessage: 'This scheme has no active members for the current compliance period.',
+              emptyMessage:
+                'This scheme has no active members for the current compliance period.',
               totalsHeading: 'Totals'
             },
             placed: {
@@ -2022,7 +2031,8 @@ export const content = {
             },
             takenBack: {
               title: 'Batteries taken back',
-              heading: 'Industrial and automotive batteries taken back this year',
+              heading:
+                'Industrial and automotive batteries taken back this year',
               intro:
                 'Enter the tonnes of industrial and automotive batteries this member took back from the market.',
               industrialLabel: 'Industrial batteries (tonnes)',
@@ -2072,7 +2082,9 @@ export const content = {
                 'Confirm the figures are correct and submit the industrial and automotive return.',
               declarationLabel:
                 'I confirm the information provided is correct and submit this return.',
-              error: { declarationAccepted: 'Confirm the declaration to submit' }
+              error: {
+                declarationAccepted: 'Confirm the declaration to submit'
+              }
             },
             confirmation: {
               title: 'Annual return submitted',
@@ -2091,7 +2103,8 @@ export const content = {
             schemeDetails: {
               title: 'Scheme details',
               heading: 'Scheme details',
-              intro: 'Tell us the legal name of the scheme and any trading names.',
+              intro:
+                'Tell us the legal name of the scheme and any trading names.',
               nameLabel: 'Scheme name',
               tradingNamesLabel: 'Trading names',
               tradingNamesHint: 'Enter each trading name on a new line.',
@@ -2164,7 +2177,9 @@ export const content = {
                 'Confirm the information you have provided is correct and complete.',
               declarationLabel:
                 'I confirm the information provided is correct and submit this application.',
-              error: { declarationAccepted: 'Confirm the declaration to submit' }
+              error: {
+                declarationAccepted: 'Confirm the declaration to submit'
+              }
             },
             confirmation: {
               title: 'Application submitted',
@@ -2810,11 +2825,24 @@ export const content = {
             title: 'Compliance schemes',
             heading: 'Compliance schemes',
             intro: 'All compliance scheme applications and approvals.',
-            columns: { name: 'Name', approvalNumber: 'Approval number', status: 'Status', agency: 'Agency', actions: 'Actions' },
+            columns: {
+              name: 'Name',
+              approvalNumber: 'Approval number',
+              status: 'Status',
+              agency: 'Agency',
+              actions: 'Actions'
+            },
             emptyMessage: 'No compliance schemes found.',
             viewAction: 'View',
             backToDashboardAction: 'Back to regulator dashboard',
-            statuses: { 'not-started': 'Not started', 'in-progress': 'In progress', submitted: 'Submitted', approved: 'Approved', rejected: 'Rejected', withdrawn: 'Withdrawn' }
+            statuses: {
+              'not-started': 'Not started',
+              'in-progress': 'In progress',
+              submitted: 'Submitted',
+              approved: 'Approved',
+              rejected: 'Rejected',
+              withdrawn: 'Withdrawn'
+            }
           },
           detail: {
             title: 'Scheme details',
@@ -2842,7 +2870,8 @@ export const content = {
           withdraw: {
             title: 'Withdraw scheme approval',
             heading: 'Withdraw approval',
-            intro: 'Withdrawing approval will prevent this scheme from operating.',
+            intro:
+              'Withdrawing approval will prevent this scheme from operating.',
             reasonLabel: 'Reason for withdrawal',
             reasonHint: 'Explain why the approval is being withdrawn.',
             confirmAction: 'Confirm withdrawal',
@@ -2855,11 +2884,25 @@ export const content = {
             title: 'Operators (ABTO/ABE)',
             heading: 'Operators (ABTO/ABE)',
             intro: 'All operator applications and approvals.',
-            columns: { name: 'Name', type: 'Type', approvalNumber: 'Approval number', status: 'Status', agency: 'Agency', actions: 'Actions' },
+            columns: {
+              name: 'Name',
+              type: 'Type',
+              approvalNumber: 'Approval number',
+              status: 'Status',
+              agency: 'Agency',
+              actions: 'Actions'
+            },
             emptyMessage: 'No operators found.',
             viewAction: 'View',
             backToDashboardAction: 'Back to regulator dashboard',
-            statuses: { 'not-started': 'Not started', 'in-progress': 'In progress', submitted: 'Submitted', approved: 'Approved', rejected: 'Rejected', withdrawn: 'Withdrawn' },
+            statuses: {
+              'not-started': 'Not started',
+              'in-progress': 'In progress',
+              submitted: 'Submitted',
+              approved: 'Approved',
+              rejected: 'Rejected',
+              withdrawn: 'Withdrawn'
+            },
             typeLabels: { abto: 'ABTO', abe: 'ABE' }
           },
           detail: {
@@ -2887,7 +2930,8 @@ export const content = {
           withdraw: {
             title: 'Withdraw operator approval',
             heading: 'Withdraw approval',
-            intro: 'Withdrawing approval will prevent this operator from operating.',
+            intro:
+              'Withdrawing approval will prevent this operator from operating.',
             reasonLabel: 'Reason for withdrawal',
             reasonHint: 'Explain why the approval is being withdrawn.',
             confirmAction: 'Confirm withdrawal',
@@ -2900,7 +2944,14 @@ export const content = {
             title: 'Registered producers',
             heading: 'Registered producers',
             intro: 'All battery producers registered in the system.',
-            columns: { bprn: 'BPRN', companyName: 'Company name', agency: 'Agency', status: 'Status', batteryTypes: 'Battery types', actions: 'Actions' },
+            columns: {
+              bprn: 'BPRN',
+              companyName: 'Company name',
+              agency: 'Agency',
+              status: 'Status',
+              batteryTypes: 'Battery types',
+              actions: 'Actions'
+            },
             emptyMessage: 'No producers found.',
             viewAction: 'View',
             backToDashboardAction: 'Back to regulator dashboard'
@@ -2925,13 +2976,30 @@ export const content = {
           list: {
             title: 'Evidence notes',
             heading: 'All evidence notes',
-            intro: 'Evidence notes across all compliance schemes and operators.',
-            columns: { issuer: 'Issued by', recipient: 'Issued to', category: 'Category', tonnes: 'Tonnes', status: 'Status', actions: 'Actions' },
+            intro:
+              'Evidence notes across all compliance schemes and operators.',
+            columns: {
+              issuer: 'Issued by',
+              recipient: 'Issued to',
+              category: 'Category',
+              tonnes: 'Tonnes',
+              status: 'Status',
+              actions: 'Actions'
+            },
             emptyMessage: 'No evidence notes found.',
             viewAction: 'View',
             backToDashboardAction: 'Back to regulator dashboard',
-            categories: { portable: 'Portable', industrial: 'Industrial', automotive: 'Automotive' },
-            statuses: { 'awaiting-acceptance': 'Awaiting acceptance', accepted: 'Accepted', cancelled: 'Cancelled', 'awaiting-authorisation': 'Awaiting authorisation' }
+            categories: {
+              portable: 'Portable',
+              industrial: 'Industrial',
+              automotive: 'Automotive'
+            },
+            statuses: {
+              'awaiting-acceptance': 'Awaiting acceptance',
+              accepted: 'Accepted',
+              cancelled: 'Cancelled',
+              'awaiting-authorisation': 'Awaiting authorisation'
+            }
           },
           detail: {
             title: 'Evidence note detail',
@@ -2951,8 +3019,14 @@ export const content = {
         submissionsPages: {
           title: 'Submissions overview',
           heading: 'All submissions and returns',
-          intro: 'Quarterly and annual submissions from compliance schemes and operators.',
-          columns: { entityName: 'Entity', type: 'Type', period: 'Period', status: 'Status' },
+          intro:
+            'Quarterly and annual submissions from compliance schemes and operators.',
+          columns: {
+            entityName: 'Entity',
+            type: 'Type',
+            period: 'Period',
+            status: 'Status'
+          },
           emptyMessage: 'No submissions found.',
           backToDashboardAction: 'Back to regulator dashboard',
           typeLabels: {
@@ -2961,7 +3035,11 @@ export const content = {
             operatorQuarterly: 'Operator quarterly',
             operatorAnnual: 'Operator annual'
           },
-          statuses: { 'not-started': 'Not started', 'in-progress': 'In progress', submitted: 'Submitted' }
+          statuses: {
+            'not-started': 'Not started',
+            'in-progress': 'In progress',
+            submitted: 'Submitted'
+          }
         },
         targetsPage: {
           title: 'Collection and recycling targets',
@@ -3025,11 +3103,24 @@ export const content = {
             title: 'TODO welsh',
             heading: 'TODO welsh',
             intro: 'TODO welsh',
-            columns: { name: 'TODO welsh', approvalNumber: 'TODO welsh', status: 'TODO welsh', agency: 'TODO welsh', actions: 'TODO welsh' },
+            columns: {
+              name: 'TODO welsh',
+              approvalNumber: 'TODO welsh',
+              status: 'TODO welsh',
+              agency: 'TODO welsh',
+              actions: 'TODO welsh'
+            },
             emptyMessage: 'TODO welsh',
             viewAction: 'TODO welsh',
             backToDashboardAction: 'TODO welsh',
-            statuses: { 'not-started': 'TODO welsh', 'in-progress': 'TODO welsh', submitted: 'TODO welsh', approved: 'TODO welsh', rejected: 'TODO welsh', withdrawn: 'TODO welsh' }
+            statuses: {
+              'not-started': 'TODO welsh',
+              'in-progress': 'TODO welsh',
+              submitted: 'TODO welsh',
+              approved: 'TODO welsh',
+              rejected: 'TODO welsh',
+              withdrawn: 'TODO welsh'
+            }
           },
           detail: {
             title: 'TODO welsh',
@@ -3070,11 +3161,25 @@ export const content = {
             title: 'TODO welsh',
             heading: 'TODO welsh',
             intro: 'TODO welsh',
-            columns: { name: 'TODO welsh', type: 'TODO welsh', approvalNumber: 'TODO welsh', status: 'TODO welsh', agency: 'TODO welsh', actions: 'TODO welsh' },
+            columns: {
+              name: 'TODO welsh',
+              type: 'TODO welsh',
+              approvalNumber: 'TODO welsh',
+              status: 'TODO welsh',
+              agency: 'TODO welsh',
+              actions: 'TODO welsh'
+            },
             emptyMessage: 'TODO welsh',
             viewAction: 'TODO welsh',
             backToDashboardAction: 'TODO welsh',
-            statuses: { 'not-started': 'TODO welsh', 'in-progress': 'TODO welsh', submitted: 'TODO welsh', approved: 'TODO welsh', rejected: 'TODO welsh', withdrawn: 'TODO welsh' },
+            statuses: {
+              'not-started': 'TODO welsh',
+              'in-progress': 'TODO welsh',
+              submitted: 'TODO welsh',
+              approved: 'TODO welsh',
+              rejected: 'TODO welsh',
+              withdrawn: 'TODO welsh'
+            },
             typeLabels: { abto: 'TODO welsh', abe: 'TODO welsh' }
           },
           detail: {
@@ -3115,7 +3220,14 @@ export const content = {
             title: 'TODO welsh',
             heading: 'TODO welsh',
             intro: 'TODO welsh',
-            columns: { bprn: 'TODO welsh', companyName: 'TODO welsh', agency: 'TODO welsh', status: 'TODO welsh', batteryTypes: 'TODO welsh', actions: 'TODO welsh' },
+            columns: {
+              bprn: 'TODO welsh',
+              companyName: 'TODO welsh',
+              agency: 'TODO welsh',
+              status: 'TODO welsh',
+              batteryTypes: 'TODO welsh',
+              actions: 'TODO welsh'
+            },
             emptyMessage: 'TODO welsh',
             viewAction: 'TODO welsh',
             backToDashboardAction: 'TODO welsh'
@@ -3141,12 +3253,28 @@ export const content = {
             title: 'TODO welsh',
             heading: 'TODO welsh',
             intro: 'TODO welsh',
-            columns: { issuer: 'TODO welsh', recipient: 'TODO welsh', category: 'TODO welsh', tonnes: 'TODO welsh', status: 'TODO welsh', actions: 'TODO welsh' },
+            columns: {
+              issuer: 'TODO welsh',
+              recipient: 'TODO welsh',
+              category: 'TODO welsh',
+              tonnes: 'TODO welsh',
+              status: 'TODO welsh',
+              actions: 'TODO welsh'
+            },
             emptyMessage: 'TODO welsh',
             viewAction: 'TODO welsh',
             backToDashboardAction: 'TODO welsh',
-            categories: { portable: 'TODO welsh', industrial: 'TODO welsh', automotive: 'TODO welsh' },
-            statuses: { 'awaiting-acceptance': 'TODO welsh', accepted: 'TODO welsh', cancelled: 'TODO welsh', 'awaiting-authorisation': 'TODO welsh' }
+            categories: {
+              portable: 'TODO welsh',
+              industrial: 'TODO welsh',
+              automotive: 'TODO welsh'
+            },
+            statuses: {
+              'awaiting-acceptance': 'TODO welsh',
+              accepted: 'TODO welsh',
+              cancelled: 'TODO welsh',
+              'awaiting-authorisation': 'TODO welsh'
+            }
           },
           detail: {
             title: 'TODO welsh',
@@ -3167,7 +3295,12 @@ export const content = {
           title: 'TODO welsh',
           heading: 'TODO welsh',
           intro: 'TODO welsh',
-          columns: { entityName: 'TODO welsh', type: 'TODO welsh', period: 'TODO welsh', status: 'TODO welsh' },
+          columns: {
+            entityName: 'TODO welsh',
+            type: 'TODO welsh',
+            period: 'TODO welsh',
+            status: 'TODO welsh'
+          },
           emptyMessage: 'TODO welsh',
           backToDashboardAction: 'TODO welsh',
           typeLabels: {
@@ -3176,7 +3309,11 @@ export const content = {
             operatorQuarterly: 'TODO welsh',
             operatorAnnual: 'TODO welsh'
           },
-          statuses: { 'not-started': 'TODO welsh', 'in-progress': 'TODO welsh', submitted: 'TODO welsh' }
+          statuses: {
+            'not-started': 'TODO welsh',
+            'in-progress': 'TODO welsh',
+            submitted: 'TODO welsh'
+          }
         },
         targetsPage: {
           title: 'TODO welsh',
@@ -3324,10 +3461,8 @@ export const content = {
                 'Tell us the name of your organisation and the type of approval you are applying for.',
               nameLabel: 'Organisation name',
               approvalTypeLabel: 'What type of approval are you applying for?',
-              approvalTypeHint:
-                'Select the type that matches your operations.',
-              abtoLabel:
-                'Approved Battery Treatment Operator (ABTO)',
+              approvalTypeHint: 'Select the type that matches your operations.',
+              abtoLabel: 'Approved Battery Treatment Operator (ABTO)',
               abeLabel: 'Approved Battery Exporter (ABE)',
               companyRegistrationNoLabel: 'Companies House number',
               companyRegistrationNoHint: '8 digits, for example 12345678',
@@ -3381,8 +3516,7 @@ export const content = {
               declarationLabel:
                 'I confirm the information provided is correct and submit this application for approval.',
               error: {
-                declarationAccepted:
-                  'Confirm the declaration to submit'
+                declarationAccepted: 'Confirm the declaration to submit'
               }
             },
             confirmation: {
@@ -3468,11 +3602,9 @@ export const content = {
                 error: {
                   category: 'Select a battery category',
                   tonnes: 'Enter the tonnage',
-                  tonnesFormat:
-                    'Enter a valid tonnage (for example, 1.500)',
+                  tonnesFormat: 'Enter a valid tonnage (for example, 1.500)',
                   wasteReceivedFrom: 'Enter the waste received from date',
-                  wasteReceivedFromFormat:
-                    'Enter a valid date (YYYY-MM-DD)',
+                  wasteReceivedFromFormat: 'Enter a valid date (YYYY-MM-DD)',
                   wasteReceivedTo: 'Enter the waste received to date',
                   wasteReceivedToFormat: 'Enter a valid date (YYYY-MM-DD)'
                 }
@@ -3522,15 +3654,19 @@ export const content = {
               hint: 'Enter a value in tonnes, up to three decimal places.',
               error: {
                 acceptedLeadAcid: 'Enter accepted lead acid tonnes',
-                acceptedLeadAcidFormat: 'Enter accepted lead acid tonnes as a number',
+                acceptedLeadAcidFormat:
+                  'Enter accepted lead acid tonnes as a number',
                 acceptedNickelCadmium: 'Enter accepted nickel cadmium tonnes',
-                acceptedNickelCadmiumFormat: 'Enter accepted nickel cadmium tonnes as a number',
+                acceptedNickelCadmiumFormat:
+                  'Enter accepted nickel cadmium tonnes as a number',
                 acceptedOther: 'Enter accepted other tonnes',
                 acceptedOtherFormat: 'Enter accepted other tonnes as a number',
                 treatedLeadAcid: 'Enter treated lead acid tonnes',
-                treatedLeadAcidFormat: 'Enter treated lead acid tonnes as a number',
+                treatedLeadAcidFormat:
+                  'Enter treated lead acid tonnes as a number',
                 treatedNickelCadmium: 'Enter treated nickel cadmium tonnes',
-                treatedNickelCadmiumFormat: 'Enter treated nickel cadmium tonnes as a number',
+                treatedNickelCadmiumFormat:
+                  'Enter treated nickel cadmium tonnes as a number',
                 treatedOther: 'Enter treated other tonnes',
                 treatedOtherFormat: 'Enter treated other tonnes as a number'
               }
@@ -3542,7 +3678,9 @@ export const content = {
                 'Confirm the figures are correct and submit the quarterly return.',
               declarationLabel:
                 'I confirm the information provided is correct and submit this quarterly return.',
-              error: { declarationAccepted: 'Confirm the declaration to submit' }
+              error: {
+                declarationAccepted: 'Confirm the declaration to submit'
+              }
             },
             confirmation: {
               title: 'Quarterly return submitted',
@@ -3572,17 +3710,27 @@ export const content = {
               otherLabel: 'Other (tonnes)',
               hint: 'Enter a value in tonnes, up to three decimal places.',
               error: {
-                industrialAcceptedLeadAcid: 'Enter industrial accepted lead acid tonnes',
-                industrialAcceptedNickelCadmium: 'Enter industrial accepted nickel cadmium tonnes',
-                industrialAcceptedOther: 'Enter industrial accepted other tonnes',
-                industrialTreatedLeadAcid: 'Enter industrial treated lead acid tonnes',
-                industrialTreatedNickelCadmium: 'Enter industrial treated nickel cadmium tonnes',
+                industrialAcceptedLeadAcid:
+                  'Enter industrial accepted lead acid tonnes',
+                industrialAcceptedNickelCadmium:
+                  'Enter industrial accepted nickel cadmium tonnes',
+                industrialAcceptedOther:
+                  'Enter industrial accepted other tonnes',
+                industrialTreatedLeadAcid:
+                  'Enter industrial treated lead acid tonnes',
+                industrialTreatedNickelCadmium:
+                  'Enter industrial treated nickel cadmium tonnes',
                 industrialTreatedOther: 'Enter industrial treated other tonnes',
-                automotiveAcceptedLeadAcid: 'Enter automotive accepted lead acid tonnes',
-                automotiveAcceptedNickelCadmium: 'Enter automotive accepted nickel cadmium tonnes',
-                automotiveAcceptedOther: 'Enter automotive accepted other tonnes',
-                automotiveTreatedLeadAcid: 'Enter automotive treated lead acid tonnes',
-                automotiveTreatedNickelCadmium: 'Enter automotive treated nickel cadmium tonnes',
+                automotiveAcceptedLeadAcid:
+                  'Enter automotive accepted lead acid tonnes',
+                automotiveAcceptedNickelCadmium:
+                  'Enter automotive accepted nickel cadmium tonnes',
+                automotiveAcceptedOther:
+                  'Enter automotive accepted other tonnes',
+                automotiveTreatedLeadAcid:
+                  'Enter automotive treated lead acid tonnes',
+                automotiveTreatedNickelCadmium:
+                  'Enter automotive treated nickel cadmium tonnes',
                 automotiveTreatedOther: 'Enter automotive treated other tonnes'
               }
             },

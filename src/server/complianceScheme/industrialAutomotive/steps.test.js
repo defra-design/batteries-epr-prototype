@@ -1,4 +1,11 @@
-import { STEPS, MEMBER_STEPS, STEP_ORDER, MEMBER_STEP_ORDER, isKnownStep, isKnownMemberStep } from './steps.js'
+import {
+  STEPS,
+  MEMBER_STEPS,
+  STEP_ORDER,
+  MEMBER_STEP_ORDER,
+  isKnownStep,
+  isKnownMemberStep
+} from './steps.js'
 
 describe('industrialAutomotive/steps', () => {
   test('STEP_ORDER lists the four steps in sequence', () => {
@@ -38,7 +45,9 @@ describe('industrialAutomotive/steps', () => {
     const payload = { industrial: '1', automotive: '2' }
     expect(MEMBER_STEPS.placed.toPatch(payload).placed).toEqual(payload)
     expect(MEMBER_STEPS.exported.toPatch(payload).exported).toEqual(payload)
-    expect(MEMBER_STEPS['taken-back'].toPatch(payload).takenBack).toEqual(payload)
+    expect(MEMBER_STEPS['taken-back'].toPatch(payload).takenBack).toEqual(
+      payload
+    )
     expect(MEMBER_STEPS.delivered.toPatch(payload).delivered).toEqual(payload)
   })
 

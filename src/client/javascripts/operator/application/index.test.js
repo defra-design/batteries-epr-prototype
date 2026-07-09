@@ -35,7 +35,11 @@ const seedOperator = (overrides = {}) => {
           town: 'Sheffield',
           postcode: 'S9 2RG'
         },
-        batteryTypes: { isPortable: true, isIndustrial: true, isAutomotive: false },
+        batteryTypes: {
+          isPortable: true,
+          isIndustrial: true,
+          isAutomotive: false
+        },
         operationsDescription: 'Battery treatment.'
       }
     ],
@@ -66,7 +70,11 @@ describe('runApplicationStep persist target', () => {
     buildDom({
       step: 'operator-details',
       target: 'persist',
-      patch: { name: 'Updated', approvalType: 'abe', companyRegistrationNo: '99999999' },
+      patch: {
+        name: 'Updated',
+        approvalType: 'abe',
+        companyRegistrationNo: '99999999'
+      },
       next: '/operator/application/registered-address'
     })
 
@@ -109,9 +117,9 @@ describe('runApplicationStep hydrate target', () => {
     expect(
       document.querySelector('input[name="approvalType"][value="abto"]').checked
     ).toBe(true)
-    expect(document.querySelector('input[name="companyRegistrationNo"]').value).toBe(
-      '12345678'
-    )
+    expect(
+      document.querySelector('input[name="companyRegistrationNo"]').value
+    ).toBe('12345678')
   })
 
   test('hydrates registered-address from the operator record', () => {
@@ -138,15 +146,15 @@ describe('runApplicationStep hydrate target', () => {
     expect(document.querySelector('input[name="siteName"]').value).toBe(
       'Sheffield Facility'
     )
-    expect(
-      document.querySelector('input[name="isPortable"]').checked
-    ).toBe(true)
-    expect(
-      document.querySelector('input[name="isIndustrial"]').checked
-    ).toBe(true)
-    expect(
-      document.querySelector('input[name="isAutomotive"]').checked
-    ).toBe(false)
+    expect(document.querySelector('input[name="isPortable"]').checked).toBe(
+      true
+    )
+    expect(document.querySelector('input[name="isIndustrial"]').checked).toBe(
+      true
+    )
+    expect(document.querySelector('input[name="isAutomotive"]').checked).toBe(
+      false
+    )
     expect(
       document.querySelector('textarea[name="operationsDescription"]').value
     ).toBe('Battery treatment.')
