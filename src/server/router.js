@@ -1,6 +1,7 @@
 import inert from '@hapi/inert'
 
 import { home } from './home/index.js'
+import { blueprint } from './blueprint/index.js'
 import { about } from './about/index.js'
 import { cookies } from './cookies/index.js'
 import { terms } from './terms/index.js'
@@ -84,6 +85,7 @@ export const router = {
 
       const plugins = Object.entries({
         home: home.openRoutes,
+        blueprint: blueprint.openRoutes,
         about: about.openRoutes,
         cookies: cookies.openRoutes,
         terms: terms.openRoutes,
