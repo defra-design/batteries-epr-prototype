@@ -56,6 +56,31 @@ describe('runRegulatorTargets', () => {
     expect(document.querySelector('#recyclingIndustrial').value).toBe('50')
   })
 
+  test('renders a recent-changes preview scoped to the agency', () => {
+    storage.setCurrentAgencyCode('EA')
+    document.body.innerHTML = `
+      <p data-testid="regulator-targets-agency" hidden></p>
+      ${INPUT_IDS.map((id) => `<input id="${id}" />`).join('')}
+      <ol data-testid="regulator-targets-history"></ol>
+      <script id="page-payload" type="application/json">${JSON.stringify({
+        view: 'targets',
+        target: 'hydrate',
+        auditCopy: {
+          empty: 'No changes yet.',
+          fieldLabels: { collection: 'collection', recycling: 'recycling' },
+          categoryLabels: {
+            portable: 'portable',
+            industrial: 'industrial',
+            automotive: 'automotive'
+          }
+        }
+      })}</script>
+    `
+    expect(runRegulatorTargets(document)).toBe('hydrated')
+    const items = document.querySelectorAll('[data-testid="audit-entry"]')
+    expect(items.length).toBe(3)
+  })
+
   test('hydrates from stored targets when the agency has customised them', () => {
     storage.setCurrentAgencyCode('NRW')
     storage.saveRegulatorTargets('NRW', {
@@ -80,7 +105,7 @@ describe('runRegulatorTargets', () => {
       }
     })
     expect(runRegulatorTargets(document, { assign })).toBe('saved')
-    expect(assign).toHaveBeenCalledWith('/regulator')
+    expect(assign).toHaveBeenCalledWith('/regulator/targets?saved=1')
     expect(storage.getRegulatorTargets('SEPA')).toEqual({
       collection: { portable: 45, industrial: 100, automotive: 0 },
       recycling: { portable: 0, industrial: 50, automotive: 50 }

@@ -119,6 +119,7 @@ export const paths = {
   regulatorDashboard: '/regulator',
   regulatorSignIn: '/regulator/sign-in',
   regulatorTargets: '/regulator/targets',
+  regulatorAuditTrail: '/regulator/audit-trail',
   regulatorSchemes: '/regulator/schemes',
   regulatorSchemeDetail: '/regulator/schemes/{schemeId}',
   regulatorOperators: '/regulator/operators',

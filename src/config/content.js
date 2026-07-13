@@ -2768,6 +2768,7 @@ export const content = {
         heading: 'Sign in as a regulator',
         intro: 'Choose which environment agency you are signing in as.',
         legend: 'Environment agency',
+        nameLabel: 'Your name',
         continueAction: 'Continue',
         cancelAction: 'Cancel and return to the playground home',
         error: {
@@ -2780,6 +2781,7 @@ export const content = {
         heading: 'TODO welsh',
         intro: 'TODO welsh',
         legend: 'TODO welsh',
+        nameLabel: 'TODO welsh',
         continueAction: 'TODO welsh',
         cancelAction: 'TODO welsh',
         error: { title: 'TODO welsh', choice: 'TODO welsh' }
@@ -2794,6 +2796,7 @@ export const content = {
           'Review applications, monitor compliance, and manage approvals for battery producers, compliance schemes, and operators.',
         switchAgencyAction: 'Switch agency',
         targetsAction: 'Manage collection and recycling targets',
+        auditTrailAction: 'View target change history',
         tiles: {
           schemes: {
             heading: 'Compliance schemes',
@@ -3063,6 +3066,32 @@ export const content = {
             '<p class="govuk-body">Recycling efficiencies are set by the Waste Batteries and Accumulators Regulations 2009, Schedule 4, Part 2, paragraph 10(3)(c): lead-acid 65%, nickel-cadmium 75% and other batteries 50% by average weight.</p><p class="govuk-body">The 45% portable collection target derives from the retained EU Batteries Directive 2006/66/EC, Article 10; regulation 70 defines the collection rate but sets no numeric target. Industrial and automotive batteries are subject to take-back (collect all returned batteries) under Parts 4 and 7, shown here as 100%.</p>',
           saveAction: 'Save targets',
           savedMessage: 'Targets saved.',
+          backToDashboardAction: 'Back to regulator dashboard',
+          historyPreviewHeading: 'Recent changes',
+          historyViewAllAction: 'View full target change history'
+        },
+        auditTrailPage: {
+          title: 'Target change history',
+          heading: 'Target change history',
+          intro:
+            'Every change to your agency’s collection and recycling targets is recorded here, most recent first. Each entry shows what changed, who changed it and when.',
+          warningText:
+            'This is a playground audit trail — production audit infrastructure will be more robust.',
+          empty: 'No target changes have been recorded for this agency yet.',
+          columns: {
+            date: 'Date',
+            target: 'Target',
+            previous: 'Previous',
+            new: 'New',
+            changedBy: 'Changed by'
+          },
+          notSet: 'Not set',
+          fieldLabels: { collection: 'collection', recycling: 'recycling' },
+          categoryLabels: {
+            portable: 'portable',
+            industrial: 'industrial',
+            automotive: 'automotive'
+          },
           backToDashboardAction: 'Back to regulator dashboard'
         }
       },
@@ -3072,6 +3101,7 @@ export const content = {
         introParagraph: 'TODO welsh',
         switchAgencyAction: 'TODO welsh',
         targetsAction: 'TODO welsh',
+        auditTrailAction: 'TODO welsh',
         tiles: {
           schemes: {
             heading: 'TODO welsh',
@@ -3333,6 +3363,30 @@ export const content = {
           explanationHtml: 'TODO welsh',
           saveAction: 'TODO welsh',
           savedMessage: 'TODO welsh',
+          backToDashboardAction: 'TODO welsh',
+          historyPreviewHeading: 'TODO welsh',
+          historyViewAllAction: 'TODO welsh'
+        },
+        auditTrailPage: {
+          title: 'TODO welsh',
+          heading: 'TODO welsh',
+          intro: 'TODO welsh',
+          warningText: 'TODO welsh',
+          empty: 'TODO welsh',
+          columns: {
+            date: 'TODO welsh',
+            target: 'TODO welsh',
+            previous: 'TODO welsh',
+            new: 'TODO welsh',
+            changedBy: 'TODO welsh'
+          },
+          notSet: 'TODO welsh',
+          fieldLabels: { collection: 'TODO welsh', recycling: 'TODO welsh' },
+          categoryLabels: {
+            portable: 'TODO welsh',
+            industrial: 'TODO welsh',
+            automotive: 'TODO welsh'
+          },
           backToDashboardAction: 'TODO welsh'
         }
       }

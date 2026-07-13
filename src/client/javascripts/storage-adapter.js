@@ -21,7 +21,9 @@ export const STORAGE_KEYS = {
   operatorQuarterlyReturns: `${KEY_PREFIX}operatorQuarterlyReturns`,
   operatorAnnualReturns: `${KEY_PREFIX}operatorAnnualReturns`,
   currentAgencyCode: `${KEY_PREFIX}currentAgencyCode`,
-  regulatorTargets: `${KEY_PREFIX}regulatorTargets`
+  currentRegulatorUser: `${KEY_PREFIX}currentRegulatorUser`,
+  regulatorTargets: `${KEY_PREFIX}regulatorTargets`,
+  configAuditLog: `${KEY_PREFIX}configAuditLog`
 }
 
 const bprnSequenceKey = (agencyCode, compliancePeriod) =>
@@ -64,6 +66,8 @@ const allOurKeys = () => {
 }
 
 const readMap = (key) => readJson(key) ?? {}
+
+const readList = (key) => readJson(key) ?? []
 
 const coerceTonnes = (value) => {
   if (typeof value === 'string') return value
@@ -251,6 +255,16 @@ export const AGENCIES = [
   { code: 'SEPA', name: 'Scottish Environment Protection Agency' },
   { code: 'NIEA', name: 'Northern Ireland Environment Agency' }
 ]
+
+export const REGULATOR_USERS = {
+  EA: ['Priya Shah', 'Daniel Okafor', 'Rachel Bennett'],
+  NRW: ['Gareth Pugh', 'Ffion Davies'],
+  SEPA: ['Iain Cameron', 'Morag Sinclair'],
+  NIEA: ['Sean Doherty', 'Aoife Kelly']
+}
+
+export const regulatorUsersFor = (agencyCode) =>
+  REGULATOR_USERS[agencyCode] ?? []
 
 export const createSchemeMember = (input = {}) => ({
   id: input.id ?? newId(),
@@ -1231,13 +1245,88 @@ const currentAgency = () => {
   return code ? (AGENCIES.find((a) => a.code === code) ?? null) : null
 }
 
+const setCurrentRegulatorUser = (name) => {
+  globalThis.localStorage.setItem(STORAGE_KEYS.currentRegulatorUser, name)
+}
+
+const clearCurrentRegulatorUser = () => {
+  globalThis.localStorage.removeItem(STORAGE_KEYS.currentRegulatorUser)
+}
+
+const DEFAULT_REGULATOR_USER = 'Regulator user'
+
+const currentRegulatorUser = () =>
+  globalThis.localStorage.getItem(STORAGE_KEYS.currentRegulatorUser) ??
+  DEFAULT_REGULATOR_USER
+
 const getRegulatorTargets = (agencyCode) =>
   readMap(STORAGE_KEYS.regulatorTargets)[agencyCode] ?? null
 
-const saveRegulatorTargets = (agencyCode, targets) => {
+const TARGET_TYPES = ['collection', 'recycling']
+const TARGET_CATEGORIES = ['portable', 'industrial', 'automotive']
+
+const diffTargets = (previous, next) => {
+  const changes = []
+  for (const field of TARGET_TYPES) {
+    for (const category of TARGET_CATEGORIES) {
+      const previousValue = previous?.[field]?.[category] ?? null
+      const newValue = next[field][category]
+      if (previousValue !== newValue) {
+        changes.push({ field, category, previousValue, newValue })
+      }
+    }
+  }
+  return changes
+}
+
+const createConfigAuditEntry = ({
+  agencyCode,
+  actorName,
+  field,
+  category,
+  previousValue,
+  newValue
+}) => ({
+  id: newId(),
+  at: now(),
+  agencyCode,
+  actorName,
+  field,
+  category,
+  previousValue,
+  newValue
+})
+
+const appendConfigAuditEntries = (entries) => {
+  if (entries.length === 0) return []
+  const log = readList(STORAGE_KEYS.configAuditLog)
+  writeJson(STORAGE_KEYS.configAuditLog, [...log, ...entries])
+  return entries
+}
+
+const listConfigAuditEntries = (agencyCode) => {
+  const entries = readList(STORAGE_KEYS.configAuditLog)
+  const scoped = agencyCode
+    ? entries.filter((entry) => entry.agencyCode === agencyCode)
+    : entries
+  return [...scoped].reverse()
+}
+
+const saveRegulatorTargets = (agencyCode, targets, actorName) => {
   const all = readMap(STORAGE_KEYS.regulatorTargets)
+  const previous = all[agencyCode] ?? null
+  const changes = diffTargets(previous, targets)
   all[agencyCode] = targets
   writeJson(STORAGE_KEYS.regulatorTargets, all)
+  appendConfigAuditEntries(
+    changes.map((change) =>
+      createConfigAuditEntry({
+        agencyCode,
+        actorName: actorName ?? DEFAULT_REGULATOR_USER,
+        ...change
+      })
+    )
+  )
   return targets
 }
 
@@ -1428,6 +1517,10 @@ const seedDemoData = () => {
   }
   writeJson(STORAGE_KEYS.regulatorTargets, regulatorTargets)
 
+  if (readList(STORAGE_KEYS.configAuditLog).length === 0) {
+    writeJson(STORAGE_KEYS.configAuditLog, seedData.configAuditLog)
+  }
+
   globalThis.localStorage.setItem(
     STORAGE_KEYS.seedVersion,
     String(seedData.seedVersion)
@@ -1519,8 +1612,13 @@ export const storage = {
   setCurrentAgencyCode,
   clearCurrentAgencyCode,
   currentAgency,
+  setCurrentRegulatorUser,
+  clearCurrentRegulatorUser,
+  currentRegulatorUser,
+  regulatorUsersFor,
   getRegulatorTargets,
   saveRegulatorTargets,
+  listConfigAuditEntries,
   listAllProducers,
   listAllEvidence,
   approveScheme,

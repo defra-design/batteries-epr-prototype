@@ -10,11 +10,37 @@ const AGENCIES = [
   { code: 'NIEA', name: 'Northern Ireland Environment Agency' }
 ]
 
+const REGULATOR_USERS = {
+  EA: ['Priya Shah', 'Daniel Okafor', 'Rachel Bennett'],
+  NRW: ['Gareth Pugh', 'Ffion Davies'],
+  SEPA: ['Iain Cameron', 'Morag Sinclair'],
+  NIEA: ['Sean Doherty', 'Aoife Kelly']
+}
+
+const userField = (agencyCode) => `regulatorUser${agencyCode}`
+
 const schema = joi
   .object({
     agencyCode: joi.string().valid('EA', 'NRW', 'SEPA', 'NIEA').required()
   })
+  .pattern(/^regulatorUser(EA|NRW|SEPA|NIEA)$/, joi.string().allow(''))
   .options({ stripUnknown: true })
+
+const agencyViewModel = (formValues) =>
+  AGENCIES.map((agency) => ({
+    ...agency,
+    users: REGULATOR_USERS[agency.code].map((name) => ({
+      value: name,
+      text: name,
+      selected: formValues[userField(agency.code)] === name
+    }))
+  }))
+
+const resolveRegulatorUser = (payload) => {
+  const users = REGULATOR_USERS[payload.agencyCode]
+  const chosen = payload[userField(payload.agencyCode)]
+  return users.includes(chosen) ? chosen : users[0]
+}
 
 const renderView = (h, request, viewModel) => {
   const pageContent = content.regulatorSignIn(request)
@@ -37,7 +63,7 @@ export const signInController = {
         errorSummary: [],
         errors: {},
         formValues: {},
-        agencies: AGENCIES,
+        agencies: agencyViewModel({}),
         pagePayload: { target: 'hydrate' }
       })
     }
@@ -54,7 +80,7 @@ export const signInController = {
             ],
             errors: { agencyCode: pageContent.error.choice },
             formValues: request.payload,
-            agencies: AGENCIES,
+            agencies: agencyViewModel(request.payload),
             pagePayload: { target: 'hydrate' }
           }).takeover()
         }
@@ -65,10 +91,11 @@ export const signInController = {
         errorSummary: [],
         errors: {},
         formValues: request.payload,
-        agencies: AGENCIES,
+        agencies: agencyViewModel(request.payload),
         pagePayload: {
           target: 'setCurrentAgencyCode',
           agencyCode: request.payload.agencyCode,
+          regulatorUser: resolveRegulatorUser(request.payload),
           nextStep: paths.regulatorDashboard
         }
       })

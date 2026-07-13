@@ -37,6 +37,7 @@ import { complianceSchemeObligation } from './complianceScheme/obligation/index.
 import { regulatorSignIn } from './regulator/signIn/index.js'
 import { regulatorDashboard } from './regulator/dashboard/index.js'
 import { regulatorTargets } from './regulator/targets/index.js'
+import { regulatorAuditTrail } from './regulator/auditTrail/index.js'
 import { regulatorSchemeList } from './regulator/schemes/list/index.js'
 import { regulatorSchemeDetail } from './regulator/schemes/detail/index.js'
 import { regulatorOperatorList } from './regulator/operators/list/index.js'
@@ -120,6 +121,7 @@ export const router = {
         regulatorSignIn: regulatorSignIn.openRoutes,
         regulatorDashboard: regulatorDashboard.openRoutes,
         regulatorTargets: regulatorTargets.openRoutes,
+        regulatorAuditTrail: regulatorAuditTrail.openRoutes,
         regulatorSchemeList: regulatorSchemeList.openRoutes,
         regulatorSchemeDetail: regulatorSchemeDetail.openRoutes,
         regulatorOperatorList: regulatorOperatorList.openRoutes,
