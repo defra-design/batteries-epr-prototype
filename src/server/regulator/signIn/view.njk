@@ -2,7 +2,18 @@
 
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro userSelect(code, users, nameLabel) %}
+  {{ govukSelect({
+    id: "regulatorUser" + code,
+    name: "regulatorUser" + code,
+    label: { text: nameLabel },
+    items: users,
+    attributes: { "data-testid": "regulator-sign-in-user-" + code }
+  }) }}
+{% endmacro %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -21,10 +32,12 @@
       <form method="post" action="{{ action }}" novalidate data-testid="regulator-sign-in-form">
         {% set agencyItems = [] %}
         {% for agency in agencies %}
+          {% set userSelectHtml %}{{ userSelect(agency.code, agency.users, labels.nameLabel) }}{% endset %}
           {% set agencyItems = (agencyItems.push({
             value: agency.code,
             text: agency.name,
             checked: formValues.agencyCode == agency.code,
+            conditional: { html: userSelectHtml },
             attributes: { "data-testid": "regulator-sign-in-radio-" + agency.code }
           }), agencyItems) %}
         {% endfor %}

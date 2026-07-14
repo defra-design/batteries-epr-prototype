@@ -38,6 +38,31 @@ describe('#regulatorTargetsController', () => {
     expect(result).toEqual(expect.stringContaining('"target":"hydrate"'))
   })
 
+  test('GET without the saved flag does not render the success banner', async () => {
+    const { result } = await server.inject({
+      method: 'GET',
+      url: paths.regulatorTargets
+    })
+
+    expect(result).not.toEqual(
+      expect.stringContaining('data-testid="regulator-targets-saved"')
+    )
+  })
+
+  test('GET with saved=1 renders the success banner', async () => {
+    const { result, statusCode } = await server.inject({
+      method: 'GET',
+      url: `${paths.regulatorTargets}?saved=1`
+    })
+
+    expect(statusCode).toBe(statusCodes.ok)
+    const pageContent = content.regulator({}).targetsPage
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="regulator-targets-saved"')
+    )
+    expect(result).toEqual(expect.stringContaining(pageContent.savedMessage))
+  })
+
   test('POST renders with persist target and the submitted values', async () => {
     const { result, statusCode } = await server.inject({
       method: 'POST',

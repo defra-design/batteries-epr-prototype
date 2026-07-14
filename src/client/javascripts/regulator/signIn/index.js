@@ -9,6 +9,9 @@ export const runRegulatorSignIn = (
   if (payload?.target !== 'setCurrentAgencyCode') return 'hydrated'
 
   storage.setCurrentAgencyCode(payload.agencyCode)
+  if (payload.regulatorUser) {
+    storage.setCurrentRegulatorUser(payload.regulatorUser)
+  }
   loc.assign(payload.nextStep)
   return 'navigated'
 }

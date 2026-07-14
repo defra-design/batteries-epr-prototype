@@ -27,6 +27,7 @@ const renderView = (h, request, viewModel) => {
     categories: CATEGORIES,
     dashboardUrl: paths.regulatorDashboard,
     signInUrl: paths.regulatorSignIn,
+    auditTrailUrl: paths.regulatorAuditTrail,
     ...viewModel
   })
 }
@@ -35,7 +36,12 @@ export const targetsController = {
   get: {
     handler(request, h) {
       return renderView(h, request, {
-        pagePayload: { view: 'targets', target: 'hydrate' }
+        saved: Boolean(request.query.saved),
+        pagePayload: {
+          view: 'targets',
+          target: 'hydrate',
+          auditCopy: content.regulator(request).auditTrailPage
+        }
       })
     }
   },

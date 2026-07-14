@@ -3,10 +3,19 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+      {% if saved %}
+        {{ govukNotificationBanner({
+          type: "success",
+          text: labels.savedMessage,
+          attributes: { "data-testid": "regulator-targets-saved" }
+        }) }}
+      {% endif %}
+
       <h1 class="govuk-heading-l" data-testid="regulator-targets-heading">{{ heading }}</h1>
       <p class="govuk-body" data-testid="regulator-targets-agency" hidden></p>
       <p class="govuk-body">{{ intro }}</p>
@@ -57,6 +66,12 @@
           <a class="govuk-link" href="{{ dashboardUrl }}" data-testid="regulator-targets-cancel">{{ labels.backToDashboardAction }}</a>
         </div>
       </form>
+
+      <h2 class="govuk-heading-m govuk-!-margin-top-8">{{ labels.historyPreviewHeading }}</h2>
+      <ol class="govuk-list" data-testid="regulator-targets-history"></ol>
+      <p class="govuk-body">
+        <a class="govuk-link" href="{{ auditTrailUrl }}" data-testid="regulator-targets-history-link">{{ labels.historyViewAllAction }}</a>
+      </p>
     </div>
   </div>
 

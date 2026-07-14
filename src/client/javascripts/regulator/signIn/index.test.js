@@ -20,7 +20,22 @@ afterEach(() => {
 })
 
 describe('runRegulatorSignIn', () => {
-  test('on setCurrentAgencyCode target, persists the code and navigates to nextStep', () => {
+  test('on setCurrentAgencyCode target, persists the code and user and navigates', () => {
+    installPayload({
+      target: 'setCurrentAgencyCode',
+      agencyCode: 'EA',
+      regulatorUser: 'Priya Shah',
+      nextStep: '/regulator'
+    })
+    expect(runRegulatorSignIn(document, { assign: assignSpy })).toBe(
+      'navigated'
+    )
+    expect(storage.getCurrentAgencyCode()).toBe('EA')
+    expect(storage.currentRegulatorUser()).toBe('Priya Shah')
+    expect(assignSpy).toHaveBeenCalledWith('/regulator')
+  })
+
+  test('navigates without setting a user when none is supplied', () => {
     installPayload({
       target: 'setCurrentAgencyCode',
       agencyCode: 'EA',
@@ -29,8 +44,7 @@ describe('runRegulatorSignIn', () => {
     expect(runRegulatorSignIn(document, { assign: assignSpy })).toBe(
       'navigated'
     )
-    expect(storage.getCurrentAgencyCode()).toBe('EA')
-    expect(assignSpy).toHaveBeenCalledWith('/regulator')
+    expect(storage.currentRegulatorUser()).toBe('Regulator user')
   })
 
   test('on hydrate target, does nothing observable', () => {

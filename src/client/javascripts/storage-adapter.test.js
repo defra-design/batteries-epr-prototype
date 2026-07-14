@@ -2540,3 +2540,138 @@ describe('list-all submission functions', () => {
     expect(Array.isArray(storage.listAllOperatorAnnualReturns())).toBe(true)
   })
 })
+
+describe('regulator users', () => {
+  beforeEach(() => {
+    globalThis.localStorage.clear()
+  })
+
+  afterEach(() => {
+    globalThis.localStorage.clear()
+  })
+
+  test('regulatorUsersFor returns the demo users for an agency', () => {
+    expect(storage.regulatorUsersFor('EA')).toContain('Priya Shah')
+    expect(storage.regulatorUsersFor('UNKNOWN')).toEqual([])
+  })
+
+  test('currentRegulatorUser round-trips and defaults when unset', () => {
+    expect(storage.currentRegulatorUser()).toBe('Regulator user')
+    storage.setCurrentRegulatorUser('Priya Shah')
+    expect(storage.currentRegulatorUser()).toBe('Priya Shah')
+    storage.clearCurrentRegulatorUser()
+    expect(storage.currentRegulatorUser()).toBe('Regulator user')
+  })
+})
+
+describe('config audit log', () => {
+  beforeEach(() => {
+    globalThis.localStorage.clear()
+  })
+
+  afterEach(() => {
+    globalThis.localStorage.clear()
+  })
+
+  const seededTargets = () => ({
+    collection: { portable: 45, industrial: 100, automotive: 100 },
+    recycling: { portable: 45, industrial: 50, automotive: 50 }
+  })
+
+  test('seedDemoData populates example audit entries', () => {
+    storage.seedDemoData()
+    const entries = storage.listConfigAuditEntries()
+    expect(entries.length).toBe(seedData.configAuditLog.length)
+    expect(storage.listConfigAuditEntries('EA').length).toBe(3)
+    expect(storage.listConfigAuditEntries('NRW').length).toBe(1)
+  })
+
+  test('seedDemoData preserves existing audit entries on version upgrade', () => {
+    globalThis.localStorage.setItem(STORAGE_KEYS.seedVersion, '10')
+    const existing = [
+      {
+        id: 'user-entry',
+        at: '2026-01-01T00:00:00.000Z',
+        agencyCode: 'EA',
+        actorName: 'Someone',
+        field: 'collection',
+        category: 'portable',
+        previousValue: 1,
+        newValue: 2
+      }
+    ]
+    globalThis.localStorage.setItem(
+      STORAGE_KEYS.configAuditLog,
+      JSON.stringify(existing)
+    )
+    storage.seedDemoData()
+    const ea = storage.listConfigAuditEntries('EA')
+    expect(ea.length).toBe(1)
+    expect(ea[0].id).toBe('user-entry')
+  })
+
+  test('listConfigAuditEntries returns most-recent-first', () => {
+    storage.seedDemoData()
+    const ea = storage.listConfigAuditEntries('EA')
+    const timestamps = ea.map((entry) => entry.at)
+    const sortedDesc = [...timestamps].sort((a, b) => (a < b ? 1 : -1))
+    expect(timestamps).toEqual(sortedDesc)
+  })
+
+  test('saveRegulatorTargets records one entry per changed value with the actor', () => {
+    storage.seedDemoData()
+    const next = seededTargets()
+    next.recycling.portable = 48
+    next.collection.industrial = 90
+    storage.saveRegulatorTargets('EA', next, 'Priya Shah')
+
+    const ea = storage.listConfigAuditEntries('EA')
+    expect(ea.length).toBe(5)
+    const latest = ea[0]
+    expect(latest.actorName).toBe('Priya Shah')
+    expect(latest.agencyCode).toBe('EA')
+    const changed = ea
+      .slice(0, 2)
+      .map((entry) => `${entry.field}.${entry.category}`)
+    expect(changed).toContain('recycling.portable')
+    expect(changed).toContain('collection.industrial')
+    const recyclingChange = ea.find(
+      (entry) =>
+        entry.field === 'recycling' &&
+        entry.category === 'portable' &&
+        entry.previousValue === 45
+    )
+    expect(recyclingChange.newValue).toBe(48)
+  })
+
+  test('saveRegulatorTargets writes no entry when nothing changes', () => {
+    storage.seedDemoData()
+    const before = storage.listConfigAuditEntries('EA').length
+    storage.saveRegulatorTargets('EA', seededTargets(), 'Priya Shah')
+    expect(storage.listConfigAuditEntries('EA').length).toBe(before)
+  })
+
+  test('audit entries are append-only across sequential saves', () => {
+    storage.seedDemoData()
+    const first = seededTargets()
+    first.recycling.portable = 46
+    storage.saveRegulatorTargets('EA', first, 'Priya Shah')
+    const afterFirst = storage.listConfigAuditEntries('EA')
+
+    const second = seededTargets()
+    second.recycling.portable = 46
+    second.recycling.industrial = 55
+    storage.saveRegulatorTargets('EA', second, 'Daniel Okafor')
+    const afterSecond = storage.listConfigAuditEntries('EA')
+
+    expect(afterSecond.length).toBe(afterFirst.length + 1)
+    expect(afterSecond.at(-1)).toEqual(afterFirst.at(-1))
+  })
+
+  test('saveRegulatorTargets defaults the actor when none is supplied', () => {
+    storage.saveRegulatorTargets('SEPA', seededTargets())
+    const entry = storage.listConfigAuditEntries('SEPA')[0]
+    expect(entry.actorName).toBe('Regulator user')
+    expect(entry.previousValue).toBeNull()
+  })
+})

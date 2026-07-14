@@ -1,5 +1,5 @@
 {
-  "seedVersion": 10,
+  "seedVersion": 11,
   "regulatorTargets": {
     "EA": {
       "collection": { "portable": 45, "industrial": 100, "automotive": 100 },
@@ -18,6 +18,48 @@
       "recycling": { "portable": 45, "industrial": 50, "automotive": 50 }
     }
   },
+  "configAuditLog": [
+    {
+      "id": "33333333-0001-4000-a000-000000000001",
+      "at": "2026-01-05T09:14:00.000Z",
+      "agencyCode": "EA",
+      "actorName": "Priya Shah",
+      "field": "recycling",
+      "category": "portable",
+      "previousValue": 40,
+      "newValue": 45
+    },
+    {
+      "id": "33333333-0001-4000-a000-000000000002",
+      "at": "2026-01-20T11:02:00.000Z",
+      "agencyCode": "NRW",
+      "actorName": "Ffion Davies",
+      "field": "collection",
+      "category": "portable",
+      "previousValue": 45,
+      "newValue": 50
+    },
+    {
+      "id": "33333333-0001-4000-a000-000000000003",
+      "at": "2026-02-12T14:37:00.000Z",
+      "agencyCode": "EA",
+      "actorName": "Daniel Okafor",
+      "field": "collection",
+      "category": "industrial",
+      "previousValue": 90,
+      "newValue": 100
+    },
+    {
+      "id": "33333333-0001-4000-a000-000000000004",
+      "at": "2026-03-01T08:45:00.000Z",
+      "agencyCode": "EA",
+      "actorName": "Priya Shah",
+      "field": "recycling",
+      "category": "portable",
+      "previousValue": 45,
+      "newValue": 48
+    }
+  ],
   "schemes": [
     {
       "id": "22222222-0001-4000-a000-000000000001",

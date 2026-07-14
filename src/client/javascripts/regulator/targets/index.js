@@ -1,5 +1,8 @@
 import { storage } from '../../storage-adapter.js'
 import { readPagePayload } from '../../page-payload.js'
+import { renderAuditEntries } from '../auditTrail/render.js'
+
+const HISTORY_PREVIEW_LIMIT = 3
 
 const CATEGORIES = ['portable', 'industrial', 'automotive']
 const TYPES = ['collection', 'recycling']
@@ -48,8 +51,12 @@ export const runRegulatorTargets = (
   const payload = readPagePayload(doc)
 
   if (payload.target === 'persist') {
-    storage.saveRegulatorTargets(agency.code, collectValues(payload.values))
-    loc.assign('/regulator')
+    storage.saveRegulatorTargets(
+      agency.code,
+      collectValues(payload.values),
+      storage.currentRegulatorUser()
+    )
+    loc.assign('/regulator/targets?saved=1')
     return 'saved'
   }
 
@@ -57,5 +64,10 @@ export const runRegulatorTargets = (
   label.textContent = agency.name
   label.hidden = false
   fillInputs(doc, storage.getRegulatorTargets(agency.code))
+  renderAuditEntries(
+    doc.querySelector('[data-testid="regulator-targets-history"]'),
+    storage.listConfigAuditEntries(agency.code).slice(0, HISTORY_PREVIEW_LIMIT),
+    payload.auditCopy
+  )
   return 'hydrated'
 }
