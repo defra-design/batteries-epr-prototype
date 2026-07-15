@@ -2586,6 +2586,69 @@ describe('config audit log', () => {
     expect(storage.listConfigAuditEntries('NRW').length).toBe(1)
   })
 
+  test('seeded audit entries are recent and never in the future', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2030-06-15T00:00:00.000Z'))
+    storage.seedDemoData()
+    const now = Date.now()
+
+    const entries = storage.listConfigAuditEntries()
+    expect(entries.length).toBe(seedData.configAuditLog.length)
+    entries.forEach((entry) => {
+      expect(Date.parse(entry.at)).toBeLessThanOrEqual(now)
+      expect(new Date(entry.at).getUTCFullYear()).toBe(2030)
+    })
+    vi.useRealTimers()
+  })
+
+  test('seeded audit entries keep their relative order', () => {
+    storage.seedDemoData()
+    const timestamps = [...storage.listConfigAuditEntries()]
+      .reverse()
+      .map((entry) => Date.parse(entry.at))
+    const ascending = [...timestamps].sort((a, b) => a - b)
+    expect(timestamps).toEqual(ascending)
+  })
+
+  test('listConfigAuditEntries omits entries dated after the current time', () => {
+    const dayMs = 24 * 60 * 60 * 1000
+    const base = {
+      agencyCode: 'EA',
+      actorName: 'Priya Shah',
+      field: 'recycling',
+      category: 'portable',
+      previousValue: 40,
+      newValue: 45
+    }
+    globalThis.localStorage.setItem(
+      STORAGE_KEYS.configAuditLog,
+      JSON.stringify([
+        { ...base, id: 'past', at: new Date(Date.now() - dayMs).toISOString() },
+        {
+          ...base,
+          id: 'future',
+          at: new Date(Date.now() + dayMs).toISOString()
+        }
+      ])
+    )
+
+    expect(storage.listConfigAuditEntries('EA').map((e) => e.id)).toEqual([
+      'past'
+    ])
+    expect(storage.listConfigAuditEntries().map((e) => e.id)).toEqual(['past'])
+  })
+
+  test('travelling back in time hides more recent audit entries', () => {
+    storage.seedDemoData()
+    expect(storage.listConfigAuditEntries('EA').length).toBe(3)
+
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2000-01-01T00:00:00.000Z'))
+    expect(storage.listConfigAuditEntries('EA').length).toBe(0)
+    expect(storage.listConfigAuditEntries().length).toBe(0)
+    vi.useRealTimers()
+  })
+
   test('seedDemoData preserves existing audit entries on version upgrade', () => {
     globalThis.localStorage.setItem(STORAGE_KEYS.seedVersion, '10')
     const existing = [

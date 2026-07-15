@@ -23,10 +23,11 @@ describe('initDevData', () => {
     initDevData(globalThis.document)
 
     const journeys = Array.from(root().querySelectorAll('[data-dev-journey]'))
-    expect(journeys).toHaveLength(6)
+    expect(journeys).toHaveLength(7)
     expect(journeys.every((node) => node.tagName === 'DETAILS')).toBe(true)
     const names = journeys.map((node) => node.getAttribute('data-dev-journey'))
     expect(names).toContain('Producer (GB)')
+    expect(names).toContain('Regulator (GB)')
     expect(names).toContain('Northern Ireland (EUBR)')
   })
 
@@ -109,6 +110,57 @@ describe('initDevData', () => {
     const section = entity(NI_STORAGE_KEYS.registration)
     expect(section.querySelector('table')).not.toBeNull()
     expect(section.textContent).toContain('NIP1000001')
+  })
+
+  test('renders the audit log list titled by entry id with its schema', () => {
+    globalThis.localStorage.setItem(
+      STORAGE_KEYS.configAuditLog,
+      JSON.stringify([
+        {
+          id: 'audit-1',
+          at: '2030-01-05T09:14:00.000Z',
+          agencyCode: 'EA',
+          actorName: 'Priya Shah',
+          field: 'recycling',
+          category: 'portable',
+          previousValue: 40,
+          newValue: 45
+        }
+      ])
+    )
+
+    initDevData(globalThis.document)
+
+    const section = entity(STORAGE_KEYS.configAuditLog)
+    expect(section.querySelector('h3').textContent).toContain(
+      'Target change history (audit log)'
+    )
+    expect(section.querySelector('h3').textContent).toContain('(1)')
+    expect(section.querySelector('table')).not.toBeNull()
+    expect(section.querySelector('details summary').textContent).toBe('audit-1')
+    expect(section.textContent).toContain('Priya Shah')
+  })
+
+  test('renders an audit log entry with no id titled by its index', () => {
+    globalThis.localStorage.setItem(
+      STORAGE_KEYS.configAuditLog,
+      JSON.stringify([{ actorName: 'Anon' }])
+    )
+
+    initDevData(globalThis.document)
+
+    const section = entity(STORAGE_KEYS.configAuditLog)
+    expect(section.querySelector('details summary').textContent).toBe('0')
+  })
+
+  test('shows "No records stored" for a corrupt (non-array) audit log', () => {
+    globalThis.localStorage.setItem(STORAGE_KEYS.configAuditLog, '"oops"')
+
+    initDevData(globalThis.document)
+
+    expect(entity(STORAGE_KEYS.configAuditLog).textContent).toContain(
+      'No records stored.'
+    )
   })
 
   test('shows "No records stored" for empty and corrupt entities', () => {

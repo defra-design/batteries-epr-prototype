@@ -52,6 +52,7 @@ const PRODUCER = 'Producer (GB)'
 const SCHEME = 'Compliance scheme (GB)'
 const OPERATOR = 'Operator (GB)'
 const EVIDENCE = 'Evidence (GB)'
+const REGULATOR = 'Regulator (GB)'
 const SESSION = 'Session and dev (GB)'
 const NORTHERN_IRELAND = 'Northern Ireland (EUBR)'
 
@@ -60,9 +61,26 @@ const JOURNEYS = [
   SCHEME,
   OPERATOR,
   EVIDENCE,
+  REGULATOR,
   SESSION,
   NORTHERN_IRELAND
 ]
+
+const CONFIG_AUDIT_ENTRY_SCHEMA = {
+  id: 'uuid',
+  at: 'ISO date',
+  agencyCode: 'EA',
+  actorName: 'Regulator user',
+  field: 'recycling',
+  category: 'portable',
+  previousValue: 0,
+  newValue: 0
+}
+
+const REGULATOR_TARGETS_SCHEMA = {
+  collection: { portable: 0, industrial: 0, automotive: 0 },
+  recycling: { portable: 0, industrial: 0, automotive: 0 }
+}
 
 const REGISTRY = [
   {
@@ -150,6 +168,27 @@ const REGISTRY = [
     schema: createEvidence()
   },
   {
+    key: STORAGE_KEYS.regulatorTargets,
+    label: 'Regulator targets',
+    journey: REGULATOR,
+    kind: 'map',
+    schema: REGULATOR_TARGETS_SCHEMA
+  },
+  {
+    key: STORAGE_KEYS.configAuditLog,
+    label: 'Target change history (audit log)',
+    journey: REGULATOR,
+    kind: 'list',
+    schema: CONFIG_AUDIT_ENTRY_SCHEMA
+  },
+  {
+    key: STORAGE_KEYS.currentRegulatorUser,
+    label: 'Current regulator user',
+    journey: REGULATOR,
+    kind: 'scalar',
+    schema: null
+  },
+  {
     key: STORAGE_KEYS.currentUser,
     label: 'Current user',
     journey: SESSION,
@@ -229,6 +268,12 @@ const toEntries = (kind, key) => {
   if (kind === 'map') {
     return Object.entries(parsed ?? {}).map(([id, value]) => ({
       title: id,
+      value
+    }))
+  }
+  if (kind === 'list') {
+    return (Array.isArray(parsed) ? parsed : []).map((value, index) => ({
+      title: value.id ?? String(index),
       value
     }))
   }

@@ -1297,6 +1297,19 @@ const createConfigAuditEntry = ({
   newValue
 })
 
+const SEED_AUDIT_RECENT_BUFFER_MS = 5 * 24 * 60 * 60 * 1000
+const seedAuditLatestAt = Math.max(
+  ...seedData.configAuditLog.map((entry) => Date.parse(entry.at))
+)
+
+const withRecentSeedDate = (entry) => {
+  const offsetFromLatest = seedAuditLatestAt - Date.parse(entry.at)
+  const at = new Date(
+    Date.now() - SEED_AUDIT_RECENT_BUFFER_MS - offsetFromLatest
+  )
+  return { ...entry, at: at.toISOString() }
+}
+
 const appendConfigAuditEntries = (entries) => {
   if (entries.length === 0) return []
   const log = readList(STORAGE_KEYS.configAuditLog)
@@ -1305,11 +1318,12 @@ const appendConfigAuditEntries = (entries) => {
 }
 
 const listConfigAuditEntries = (agencyCode) => {
-  const entries = readList(STORAGE_KEYS.configAuditLog)
-  const scoped = agencyCode
-    ? entries.filter((entry) => entry.agencyCode === agencyCode)
-    : entries
-  return [...scoped].reverse()
+  const cutoff = Date.now()
+  const entries = readList(STORAGE_KEYS.configAuditLog).filter((entry) => {
+    if (Date.parse(entry.at) > cutoff) return false
+    return agencyCode ? entry.agencyCode === agencyCode : true
+  })
+  return entries.reverse()
 }
 
 const saveRegulatorTargets = (agencyCode, targets, actorName) => {
@@ -1518,7 +1532,10 @@ const seedDemoData = () => {
   writeJson(STORAGE_KEYS.regulatorTargets, regulatorTargets)
 
   if (readList(STORAGE_KEYS.configAuditLog).length === 0) {
-    writeJson(STORAGE_KEYS.configAuditLog, seedData.configAuditLog)
+    writeJson(
+      STORAGE_KEYS.configAuditLog,
+      seedData.configAuditLog.map(withRecentSeedDate)
+    )
   }
 
   globalThis.localStorage.setItem(
