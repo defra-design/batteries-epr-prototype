@@ -1,5 +1,11 @@
 import joi from 'joi'
 
+import {
+  BATTERY_CATEGORIES,
+  categoryFlagName,
+  categoryIds,
+  CATEGORY_CAVEAT
+} from '../../../config/battery-categories.js'
 import { content } from '../../../config/content.js'
 import { paths } from '../../../config/paths.js'
 import {
@@ -14,17 +20,27 @@ import {
 
 const STEP_ID = 'batteryTypes'
 
-const schema = joi
-  .object({
-    isPortable: joi.any().optional(),
-    isIndustrial: joi.any().optional(),
-    isAutomotive: joi.any().optional()
+const flagNames = categoryIds.map(categoryFlagName)
+
+const buildCategoryItems = (pageContent, formValues) =>
+  BATTERY_CATEGORIES.map((category) => {
+    const flag = categoryFlagName(category.id)
+    return {
+      value: 'on',
+      text: pageContent[`${category.id}Label`],
+      hint: { text: pageContent[`${category.id}Hint`] },
+      name: flag,
+      id: flag,
+      checked: Boolean(formValues[flag])
+    }
   })
+
+const schema = joi
+  .object(
+    Object.fromEntries(flagNames.map((flag) => [flag, joi.any().optional()]))
+  )
   .custom((value, helpers) => {
-    const any =
-      Boolean(value.isPortable) ||
-      Boolean(value.isIndustrial) ||
-      Boolean(value.isAutomotive)
+    const any = flagNames.some((flag) => Boolean(value[flag]))
     if (!any) return helpers.error('atLeastOne')
     return value
   })
@@ -34,11 +50,9 @@ const schema = joi
 const truthy = (value) => value === 'on' || value === true || value === 'true'
 
 const buildSavedFields = (payload) => ({
-  batteryTypes: {
-    isPortable: truthy(payload.isPortable),
-    isIndustrial: truthy(payload.isIndustrial),
-    isAutomotive: truthy(payload.isAutomotive)
-  }
+  batteryTypes: Object.fromEntries(
+    flagNames.map((flag) => [flag, truthy(payload[flag])])
+  )
 })
 
 const returnUrlFromRequest = (request) => {
@@ -52,6 +66,9 @@ const renderView = (h, pageContent, action, viewModel) =>
     heading: pageContent.heading,
     intro: pageContent.intro,
     labels: pageContent,
+    categoryItems: buildCategoryItems(pageContent, viewModel.formValues),
+    firstFlag: flagNames[0],
+    caveat: CATEGORY_CAVEAT,
     errorTitle: pageContent.error.title,
     action,
     ...viewModel
@@ -87,7 +104,7 @@ export const batteryTypesController = {
         failAction: (request, h, _err) => {
           const pageContent = content.onboardingBatteryTypes(request)
           const list = [
-            { text: pageContent.error.atLeastOne, href: '#isPortable' }
+            { text: pageContent.error.atLeastOne, href: `#${flagNames[0]}` }
           ]
           flashStepErrors(request, STEP_ID, list, request.payload)
           const returnUrl = returnUrlFromRequest(request)

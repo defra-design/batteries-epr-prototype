@@ -58,6 +58,11 @@ describe('runObligationPage', () => {
 
   test('escapes special characters in category labels', () => {
     const [scheme] = storage.listSchemes()
+    storage.saveRegulatorCategories(scheme.agencyCode, [
+      { id: 'portable', label: 'Portable & co', shortLabel: 'Portable' },
+      { id: 'industrial', label: 'Industrial', shortLabel: 'Industrial' },
+      { id: 'automotive', label: 'Automotive', shortLabel: 'Automotive' }
+    ])
     storage.saveQuarterlySubmission({
       schemeId: scheme.id,
       compliancePeriodYear: '2026',

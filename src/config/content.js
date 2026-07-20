@@ -1923,7 +1923,9 @@ export const content = {
                 industrial: 'Enter industrial tonnes',
                 industrialFormat: 'Enter industrial tonnes as a number',
                 automotive: 'Enter automotive tonnes',
-                automotiveFormat: 'Enter automotive tonnes as a number'
+                automotiveFormat: 'Enter automotive tonnes as a number',
+                generic: 'Enter the tonnes for this category',
+                genericFormat: 'Enter the tonnes for this category as a number'
               }
             },
             wasteData: {
@@ -1941,7 +1943,9 @@ export const content = {
                 industrial: 'Enter industrial tonnes',
                 industrialFormat: 'Enter industrial tonnes as a number',
                 automotive: 'Enter automotive tonnes',
-                automotiveFormat: 'Enter automotive tonnes as a number'
+                automotiveFormat: 'Enter automotive tonnes as a number',
+                generic: 'Enter the tonnes for this category',
+                genericFormat: 'Enter the tonnes for this category as a number'
               }
             },
             checkAnswers: {
@@ -2011,7 +2015,9 @@ export const content = {
                 industrial: 'Enter industrial tonnes',
                 industrialFormat: 'Enter industrial tonnes as a number',
                 automotive: 'Enter automotive tonnes',
-                automotiveFormat: 'Enter automotive tonnes as a number'
+                automotiveFormat: 'Enter automotive tonnes as a number',
+                generic: 'Enter the tonnes for this category',
+                genericFormat: 'Enter the tonnes for this category as a number'
               }
             },
             exported: {
@@ -2026,7 +2032,9 @@ export const content = {
                 industrial: 'Enter industrial tonnes',
                 industrialFormat: 'Enter industrial tonnes as a number',
                 automotive: 'Enter automotive tonnes',
-                automotiveFormat: 'Enter automotive tonnes as a number'
+                automotiveFormat: 'Enter automotive tonnes as a number',
+                generic: 'Enter the tonnes for this category',
+                genericFormat: 'Enter the tonnes for this category as a number'
               }
             },
             takenBack: {
@@ -2042,7 +2050,9 @@ export const content = {
                 industrial: 'Enter industrial tonnes',
                 industrialFormat: 'Enter industrial tonnes as a number',
                 automotive: 'Enter automotive tonnes',
-                automotiveFormat: 'Enter automotive tonnes as a number'
+                automotiveFormat: 'Enter automotive tonnes as a number',
+                generic: 'Enter the tonnes for this category',
+                genericFormat: 'Enter the tonnes for this category as a number'
               }
             },
             delivered: {
@@ -2058,7 +2068,9 @@ export const content = {
                 industrial: 'Enter industrial tonnes',
                 industrialFormat: 'Enter industrial tonnes as a number',
                 automotive: 'Enter automotive tonnes',
-                automotiveFormat: 'Enter automotive tonnes as a number'
+                automotiveFormat: 'Enter automotive tonnes as a number',
+                generic: 'Enter the tonnes for this category',
+                genericFormat: 'Enter the tonnes for this category as a number'
               }
             },
             checkAnswers: {
@@ -2524,7 +2536,9 @@ export const content = {
                 industrial: 'TODO welsh',
                 industrialFormat: 'TODO welsh',
                 automotive: 'TODO welsh',
-                automotiveFormat: 'TODO welsh'
+                automotiveFormat: 'TODO welsh',
+                generic: 'TODO welsh',
+                genericFormat: 'TODO welsh'
               }
             },
             wasteData: {
@@ -2541,7 +2555,9 @@ export const content = {
                 industrial: 'TODO welsh',
                 industrialFormat: 'TODO welsh',
                 automotive: 'TODO welsh',
-                automotiveFormat: 'TODO welsh'
+                automotiveFormat: 'TODO welsh',
+                generic: 'TODO welsh',
+                genericFormat: 'TODO welsh'
               }
             },
             checkAnswers: {
@@ -2603,7 +2619,9 @@ export const content = {
                 industrial: 'TODO welsh',
                 industrialFormat: 'TODO welsh',
                 automotive: 'TODO welsh',
-                automotiveFormat: 'TODO welsh'
+                automotiveFormat: 'TODO welsh',
+                generic: 'TODO welsh',
+                genericFormat: 'TODO welsh'
               }
             },
             exported: {
@@ -2617,7 +2635,9 @@ export const content = {
                 industrial: 'TODO welsh',
                 industrialFormat: 'TODO welsh',
                 automotive: 'TODO welsh',
-                automotiveFormat: 'TODO welsh'
+                automotiveFormat: 'TODO welsh',
+                generic: 'TODO welsh',
+                genericFormat: 'TODO welsh'
               }
             },
             takenBack: {
@@ -2631,7 +2651,9 @@ export const content = {
                 industrial: 'TODO welsh',
                 industrialFormat: 'TODO welsh',
                 automotive: 'TODO welsh',
-                automotiveFormat: 'TODO welsh'
+                automotiveFormat: 'TODO welsh',
+                generic: 'TODO welsh',
+                genericFormat: 'TODO welsh'
               }
             },
             delivered: {
@@ -2645,7 +2667,9 @@ export const content = {
                 industrial: 'TODO welsh',
                 industrialFormat: 'TODO welsh',
                 automotive: 'TODO welsh',
-                automotiveFormat: 'TODO welsh'
+                automotiveFormat: 'TODO welsh',
+                generic: 'TODO welsh',
+                genericFormat: 'TODO welsh'
               }
             },
             checkAnswers: {
@@ -2796,6 +2820,7 @@ export const content = {
           'Review applications, monitor compliance, and manage approvals for battery producers, compliance schemes, and operators.',
         switchAgencyAction: 'Switch agency',
         targetsAction: 'Manage collection and recycling targets',
+        categoriesAction: 'Manage battery categories',
         auditTrailAction: 'View target change history',
         tiles: {
           schemes: {
@@ -3070,6 +3095,27 @@ export const content = {
           historyPreviewHeading: 'Recent changes',
           historyViewAllAction: 'View full target change history'
         },
+        categoriesPage: {
+          title: 'Battery categories',
+          heading: 'Battery categories',
+          intro:
+            'Manage the battery categories that compliance schemes regulated by your agency use for market data, waste data, evidence and obligation calculations. Changes apply to this agency only.',
+          rowsHeading: 'Categories',
+          rowsHint:
+            'Each category has a name shown throughout the service. Reorder with the move buttons; add or remove categories as needed.',
+          nameLabel: 'Category name',
+          addAction: 'Add a category',
+          moveUpAction: 'Move up',
+          moveDownAction: 'Move down',
+          removeAction: 'Remove',
+          saveAction: 'Save categories',
+          savedMessage: 'Categories saved.',
+          backToDashboardAction: 'Back to regulator dashboard',
+          historyPreviewHeading: 'Recent changes',
+          historyEmpty:
+            'No category changes have been recorded for this agency yet.',
+          historyViewAllAction: 'View full change history'
+        },
         auditTrailPage: {
           title: 'Target change history',
           heading: 'Target change history',
@@ -3101,6 +3147,7 @@ export const content = {
         introParagraph: 'TODO welsh',
         switchAgencyAction: 'TODO welsh',
         targetsAction: 'TODO welsh',
+        categoriesAction: 'TODO welsh',
         auditTrailAction: 'TODO welsh',
         tiles: {
           schemes: {
@@ -3365,6 +3412,24 @@ export const content = {
           savedMessage: 'TODO welsh',
           backToDashboardAction: 'TODO welsh',
           historyPreviewHeading: 'TODO welsh',
+          historyViewAllAction: 'TODO welsh'
+        },
+        categoriesPage: {
+          title: 'TODO welsh',
+          heading: 'TODO welsh',
+          intro: 'TODO welsh',
+          rowsHeading: 'TODO welsh',
+          rowsHint: 'TODO welsh',
+          nameLabel: 'TODO welsh',
+          addAction: 'TODO welsh',
+          moveUpAction: 'TODO welsh',
+          moveDownAction: 'TODO welsh',
+          removeAction: 'TODO welsh',
+          saveAction: 'TODO welsh',
+          savedMessage: 'TODO welsh',
+          backToDashboardAction: 'TODO welsh',
+          historyPreviewHeading: 'TODO welsh',
+          historyEmpty: 'TODO welsh',
           historyViewAllAction: 'TODO welsh'
         },
         auditTrailPage: {

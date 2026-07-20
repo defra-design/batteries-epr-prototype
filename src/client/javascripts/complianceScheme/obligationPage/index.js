@@ -68,14 +68,23 @@ export const runObligationPage = (
   const quarterly = storage.listQuarterlySubmissions(scheme.id, year)
   const evidence = storage.listEvidence(scheme.id, year)
   const targets = resolveTargets(scheme.agencyCode)
-  const { rows, totals } = buildObligation({ quarterly, evidence, targets })
+  const categories = storage.resolveCategories(scheme.agencyCode)
+  const labelById = Object.fromEntries(
+    categories.map((category) => [category.id, category.label])
+  )
+  const { rows, totals } = buildObligation({
+    quarterly,
+    evidence,
+    targets,
+    categoryIds: categories.map((category) => category.id)
+  })
 
   const body = doc.querySelector('[data-testid="obligation-body"]')
   body.innerHTML = rows
     .map(
       (row) =>
         `<tr class="govuk-table__row" data-testid="obligation-row-${row.category}">
-          <th scope="row" class="govuk-table__header">${escape(payload.copy.categories[row.category])}</th>
+          <th scope="row" class="govuk-table__header">${escape(labelById[row.category])}</th>
           <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="obligation-row-${row.category}-placed">${fmt(row.placed)}</td>
           <td class="govuk-table__cell govuk-table__cell--numeric">${row.targetPercent}%</td>
           <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="obligation-row-${row.category}-obligation">${fmt(row.obligation)}</td>

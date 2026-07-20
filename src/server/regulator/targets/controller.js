@@ -1,17 +1,25 @@
+import {
+  categoryFieldName,
+  categoryIds,
+  CATEGORY_CAVEAT
+} from '../../../config/battery-categories.js'
 import { content } from '../../../config/content.js'
 import { paths } from '../../../config/paths.js'
 
-const CATEGORIES = ['portable', 'industrial', 'automotive']
-
-const fieldName = (type, category) =>
-  `${type}${category[0].toUpperCase()}${category.slice(1)}`
+const parseCategoryIds = (payload) => {
+  const raw = payload?.categoryIds
+  return typeof raw === 'string' && raw.length > 0
+    ? raw.split(',')
+    : categoryIds
+}
 
 const readTargets = (payload) => {
+  const ids = parseCategoryIds(payload)
   const pick = (type) =>
     Object.fromEntries(
-      CATEGORIES.map((category) => [
+      ids.map((category) => [
         category,
-        payload?.[fieldName(type, category)] ?? ''
+        payload?.[categoryFieldName(type, category)] ?? ''
       ])
     )
   return { collection: pick('collection'), recycling: pick('recycling') }
@@ -24,7 +32,7 @@ const renderView = (h, request, viewModel) => {
     heading: pageContent.heading,
     intro: pageContent.intro,
     labels: pageContent,
-    categories: CATEGORIES,
+    caveat: CATEGORY_CAVEAT,
     dashboardUrl: paths.regulatorDashboard,
     signInUrl: paths.regulatorSignIn,
     auditTrailUrl: paths.regulatorAuditTrail,

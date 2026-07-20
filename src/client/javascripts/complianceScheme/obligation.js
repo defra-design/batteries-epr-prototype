@@ -1,18 +1,29 @@
+import {
+  categoryIds,
+  emptyCategoryMap
+} from '../../../config/battery-categories.js'
 import { storage } from '../storage-adapter.js'
 
-export const CATEGORIES = ['portable', 'industrial', 'automotive']
+export const CATEGORIES = categoryIds
 
-export const TARGET_PERCENTAGES = {
+const DEFAULT_RECYCLING_RATES = {
   portable: 0.45,
   industrial: 0.5,
   automotive: 0.5
 }
-
-export const COLLECTION_TARGET_PERCENTAGES = {
+const DEFAULT_COLLECTION_RATES = {
   portable: 0.45,
   industrial: 1,
   automotive: 1
 }
+
+const ratesForAllCategories = (rates) => ({ ...emptyCategoryMap(), ...rates })
+
+export const TARGET_PERCENTAGES = ratesForAllCategories(DEFAULT_RECYCLING_RATES)
+
+export const COLLECTION_TARGET_PERCENTAGES = ratesForAllCategories(
+  DEFAULT_COLLECTION_RATES
+)
 
 const DEFAULT_TARGETS = {
   recycling: TARGET_PERCENTAGES,
@@ -21,9 +32,9 @@ const DEFAULT_TARGETS = {
 
 const toFractions = (percentByCategory) =>
   Object.fromEntries(
-    CATEGORIES.map((category) => [
+    Object.entries(percentByCategory).map(([category, value]) => [
       category,
-      Number(percentByCategory[category]) / 100
+      Number(value) / 100
     ])
   )
 
@@ -53,12 +64,13 @@ const sumEvidenceCategory = (evidence, category) =>
 export const buildObligation = ({
   quarterly,
   evidence,
-  targets = DEFAULT_TARGETS
+  targets = DEFAULT_TARGETS,
+  categoryIds: ids = categoryIds
 }) => {
-  const rows = CATEGORIES.map((category) => {
+  const rows = ids.map((category) => {
     const placed = sumQuarterCategory(quarterly, category)
-    const target = targets.recycling[category]
-    const collectionTarget = targets.collection[category]
+    const target = targets.recycling[category] ?? 0
+    const collectionTarget = targets.collection[category] ?? 0
     const obligation = placed * target
     const collectionObligation = placed * collectionTarget
     const accepted = sumEvidenceCategory(

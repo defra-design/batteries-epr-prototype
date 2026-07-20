@@ -7,7 +7,7 @@ import {
   flashStepErrors,
   readStepErrors
 } from '../../application/shared.js'
-import { STEPS, isKnownStep } from './steps.js'
+import { STEPS, isKnownStep, parseCategoryIds } from './steps.js'
 
 const flashKey = (step) => `evidence-issue:${step}`
 
@@ -83,7 +83,10 @@ export const issueController = {
       const compliancePeriodYear = getCompliancePeriod(request)
       const payload = request.payload
 
-      const { error, value } = stepConfig.schema.validate(payload)
+      const schema = stepConfig.buildSchema
+        ? stepConfig.buildSchema(parseCategoryIds(payload))
+        : stepConfig.schema
+      const { error, value } = schema.validate(payload)
       if (error) {
         const list = collectErrors(
           error,

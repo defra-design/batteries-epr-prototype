@@ -2386,6 +2386,104 @@ describe('regulator targets', () => {
   })
 })
 
+describe('regulator categories', () => {
+  beforeEach(() => {
+    globalThis.localStorage.clear()
+  })
+
+  const sampleCategories = () => [
+    { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+    {
+      id: 'industrial',
+      label: 'Industrial batteries',
+      shortLabel: 'Industrial'
+    }
+  ]
+
+  test('getRegulatorCategories returns null before anything is stored', () => {
+    expect(storage.getRegulatorCategories('EA')).toBeNull()
+  })
+
+  test('resolveCategories falls back to the default set when none stored', () => {
+    expect(storage.resolveCategories('EA')).toEqual([
+      { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+      {
+        id: 'industrial',
+        label: 'Industrial batteries',
+        shortLabel: 'Industrial'
+      },
+      {
+        id: 'automotive',
+        label: 'Automotive batteries',
+        shortLabel: 'Automotive'
+      }
+    ])
+  })
+
+  test('saveRegulatorCategories stores per agency and round-trips', () => {
+    const categories = sampleCategories()
+    expect(storage.saveRegulatorCategories('EA', categories)).toBe(categories)
+    expect(storage.getRegulatorCategories('EA')).toEqual(categories)
+    expect(storage.getRegulatorCategories('NRW')).toBeNull()
+    expect(storage.resolveCategories('EA')).toEqual(categories)
+  })
+
+  test('seedDemoData seeds default categories for every agency', () => {
+    storage.seedDemoData()
+    for (const { code } of AGENCIES) {
+      expect(storage.getRegulatorCategories(code)).toEqual(
+        seedData.regulatorCategories[code]
+      )
+    }
+  })
+
+  test('seedDemoData does not overwrite existing categories', () => {
+    const custom = sampleCategories()
+    storage.saveRegulatorCategories('EA', custom)
+    storage.seedDemoData()
+    expect(storage.getRegulatorCategories('EA')).toEqual(custom)
+  })
+
+  test('records add, rename, remove and reorder in the audit log', () => {
+    storage.seedDemoData()
+    storage.saveRegulatorCategories(
+      'EA',
+      [
+        {
+          id: 'automotive',
+          label: 'Automotive batteries',
+          shortLabel: 'Automotive'
+        },
+        { id: 'portable', label: 'Portable cells', shortLabel: 'Portable' },
+        { id: 'lmt', label: 'LMT batteries', shortLabel: 'LMT' }
+      ],
+      'Priya Shah'
+    )
+    const actions = storage
+      .listConfigAuditEntries('EA', { configType: 'category' })
+      .map((entry) => entry.action)
+    expect(actions).toContain('added')
+    expect(actions).toContain('renamed')
+    expect(actions).toContain('removed')
+    expect(actions).toContain('reordered')
+  })
+
+  test('listConfigAuditEntries can filter by config type', () => {
+    storage.seedDemoData()
+    storage.saveRegulatorCategories('EA', sampleCategories(), 'Priya Shah')
+    const categoryEntries = storage.listConfigAuditEntries('EA', {
+      configType: 'category'
+    })
+    const targetEntries = storage.listConfigAuditEntries('EA', {
+      configType: 'target'
+    })
+    expect(categoryEntries.every((e) => e.configType === 'category')).toBe(true)
+    expect(
+      targetEntries.every((e) => (e.configType ?? 'target') === 'target')
+    ).toBe(true)
+  })
+})
+
 describe('listAllProducers', () => {
   test('returns all producers', () => {
     storage.seedDemoData()

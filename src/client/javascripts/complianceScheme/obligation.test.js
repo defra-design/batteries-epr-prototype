@@ -151,6 +151,30 @@ describe('obligation', () => {
     expect(totals.accepted).toBe(20)
   })
 
+  test('builds rows for a supplied category list, defaulting missing targets to zero', () => {
+    const quarterly = [
+      {
+        memberData: [
+          {
+            memberId: 'm-1',
+            marketData: { portable: '100', lmt: '40' }
+          }
+        ]
+      }
+    ]
+    const { rows } = buildObligation({
+      quarterly,
+      evidence: [],
+      categoryIds: ['portable', 'lmt']
+    })
+    expect(rows.map((r) => r.category)).toEqual(['portable', 'lmt'])
+    const lmt = rows.find((r) => r.category === 'lmt')
+    expect(lmt.placed).toBe(40)
+    expect(lmt.targetPercent).toBe(0)
+    expect(lmt.obligation).toBe(0)
+    expect(lmt.collectionObligation).toBe(0)
+  })
+
   test('missing tonnes fields are treated as zero', () => {
     const quarterly = [
       { memberData: [{ memberId: 'm-1', marketData: { portable: undefined } }] }

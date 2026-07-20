@@ -22,17 +22,9 @@ const buildMemberListDom = (payload) => {
 const buildCheckDom = (payload) => {
   document.body.innerHTML = `
     <table>
+      <thead data-testid="quarterly-check-head"></thead>
       <tbody data-testid="quarterly-check-body"></tbody>
-      <tfoot>
-        <tr>
-          <td data-testid="quarterly-check-total-market-portable"></td>
-          <td data-testid="quarterly-check-total-market-industrial"></td>
-          <td data-testid="quarterly-check-total-market-automotive"></td>
-          <td data-testid="quarterly-check-total-waste-portable"></td>
-          <td data-testid="quarterly-check-total-waste-industrial"></td>
-          <td data-testid="quarterly-check-total-waste-automotive"></td>
-        </tr>
-      </tfoot>
+      <tfoot data-testid="quarterly-check-foot"></tfoot>
     </table>
     <script id="page-payload" type="application/json">${JSON.stringify(payload)}</script>
   `
@@ -42,9 +34,7 @@ const buildMemberFormDom = (payload) => {
   document.body.innerHTML = `
     <p data-testid="quarterly-member-name"></p>
     <form>
-      <input name="portable" />
-      <input name="industrial" />
-      <input name="automotive" />
+      <div data-testid="category-fields"></div>
     </form>
     <script id="page-payload" type="application/json">${JSON.stringify(payload)}</script>
   `
@@ -300,6 +290,34 @@ describe('runQuarterlyStep hydrate', () => {
     expect(nameEl.textContent).toContain('BPRN-EA-2026-000099')
   })
 
+  test('member hydrate builds fields, inline errors and a hidden category-id list', () => {
+    storage.initQuarterlyMemberData(scheme.id, '2026', 'Q1')
+
+    buildMemberFormDom({
+      view: 'quarterly-member',
+      quarter: 'Q1',
+      memberId: member.id,
+      dataType: 'market-data',
+      compliancePeriodYear: '2026',
+      target: 'hydrate',
+      fieldHint: 'Enter tonnes',
+      fieldErrors: { portable: 'Enter portable tonnes' }
+    })
+
+    runQuarterlyStep(document, globalThis.location)
+
+    expect(
+      document.querySelector('[data-testid="tonnes-portable"]')
+    ).not.toBeNull()
+    expect(
+      document.querySelector('[data-testid="tonnes-error-portable"]')
+        .textContent
+    ).toContain('Enter portable tonnes')
+    expect(document.querySelector('input[name="categoryIds"]').value).toBe(
+      'portable,industrial,automotive'
+    )
+  })
+
   test('check-answers shows em-dashes for members with no data', () => {
     storage.initQuarterlyMemberData(scheme.id, '2026', 'Q1')
 
@@ -384,7 +402,9 @@ describe('runQuarterlyStep hydrate', () => {
     })
 
     expect(runQuarterlyStep(document, globalThis.location)).toBe('hydrated')
-    expect(document.querySelector('input[name="portable"]').value).toBe('')
+    expect(
+      document.querySelector('[data-testid="category-fields"]').innerHTML
+    ).toBe('')
   })
 
   test('member hydrate is a no-op when no submission exists', () => {

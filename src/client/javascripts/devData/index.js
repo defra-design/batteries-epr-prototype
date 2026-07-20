@@ -1,3 +1,4 @@
+import { emptyCategoryMap } from '../../../config/battery-categories.js'
 import {
   STORAGE_KEYS,
   createProducer,
@@ -78,8 +79,8 @@ const CONFIG_AUDIT_ENTRY_SCHEMA = {
 }
 
 const REGULATOR_TARGETS_SCHEMA = {
-  collection: { portable: 0, industrial: 0, automotive: 0 },
-  recycling: { portable: 0, industrial: 0, automotive: 0 }
+  collection: emptyCategoryMap(),
+  recycling: emptyCategoryMap()
 }
 
 const REGISTRY = [

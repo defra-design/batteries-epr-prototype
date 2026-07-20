@@ -123,6 +123,29 @@ const renderRecipientRadios = (doc, scheme, payload) => {
     .join('')
 }
 
+const renderCategoryRadios = (doc, scheme) => {
+  const radios = doc.querySelector(
+    '[data-testid="evidence-issue-category-radios"]'
+  )
+  const categories = storage.resolveCategories(scheme.agencyCode)
+  const draft = readDraft()
+  radios.innerHTML = categories
+    .map((category) => {
+      const checked = draft.category === category.id ? ' checked' : ''
+      return `<div class="govuk-radios__item">
+        <input class="govuk-radios__input" id="category-${escape(category.id)}" name="category" type="radio" value="${escape(category.id)}"${checked}>
+        <label class="govuk-label govuk-radios__label" for="category-${escape(category.id)}" data-testid="evidence-issue-category-option">${escape(category.label)}</label>
+      </div>`
+    })
+    .join('')
+  const form = doc.querySelector('form')
+  const hidden = doc.createElement('input')
+  hidden.type = 'hidden'
+  hidden.name = 'categoryIds'
+  hidden.value = categories.map((category) => category.id).join(',')
+  form.appendChild(hidden)
+}
+
 const renderDeclarationSummary = (doc, scheme, payload) => {
   const draft = readDraft()
   const members = storage.membersForYear(
@@ -180,11 +203,9 @@ const runIssueView = (doc, loc, payload, scheme) => {
   }
 
   if (payload.step === 'tonnes') {
+    renderCategoryRadios(doc, scheme)
     const draft = readDraft()
-    hydrateForm(doc.querySelector('form'), {
-      category: draft.category,
-      tonnes: draft.tonnes
-    })
+    hydrateForm(doc.querySelector('form'), { tonnes: draft.tonnes })
     return 'hydrated'
   }
 

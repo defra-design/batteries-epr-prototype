@@ -74,6 +74,7 @@ export default {
     regulatorSignIn: './javascripts/regulator/signIn/entry.js',
     regulatorDashboard: './javascripts/regulator/dashboard/entry.js',
     regulatorTargets: './javascripts/regulator/targets/entry.js',
+    regulatorCategories: './javascripts/regulator/categories/entry.js',
     regulatorAuditTrail: './javascripts/regulator/auditTrail/entry.js',
     regulatorSchemes: './javascripts/regulator/schemes/entry.js',
     regulatorOperators: './javascripts/regulator/operators/entry.js',

@@ -4,20 +4,17 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import { runRegulatorTargets } from './index.js'
 import { storage } from '../../storage-adapter.js'
 
-const INPUT_IDS = [
-  'collectionPortable',
-  'collectionIndustrial',
-  'collectionAutomotive',
-  'recyclingPortable',
-  'recyclingIndustrial',
-  'recyclingAutomotive'
-]
+const FIELDS_HTML = `
+  <form data-testid="regulator-targets-form">
+    <div data-testid="regulator-targets-collection-fields"></div>
+    <div data-testid="regulator-targets-recycling-fields"></div>
+  </form>
+`
 
 const buildDom = (payload) => {
-  const inputs = INPUT_IDS.map((id) => `<input id="${id}" />`).join('')
   document.body.innerHTML = `
     <p data-testid="regulator-targets-agency" hidden></p>
-    ${inputs}
+    ${FIELDS_HTML}
     <script id="page-payload" type="application/json">${JSON.stringify(payload)}</script>
   `
 }
@@ -60,7 +57,7 @@ describe('runRegulatorTargets', () => {
     storage.setCurrentAgencyCode('EA')
     document.body.innerHTML = `
       <p data-testid="regulator-targets-agency" hidden></p>
-      ${INPUT_IDS.map((id) => `<input id="${id}" />`).join('')}
+      ${FIELDS_HTML}
       <ol data-testid="regulator-targets-history"></ol>
       <script id="page-payload" type="application/json">${JSON.stringify({
         view: 'targets',
@@ -79,6 +76,35 @@ describe('runRegulatorTargets', () => {
     expect(runRegulatorTargets(document)).toBe('hydrated')
     const items = document.querySelectorAll('[data-testid="audit-entry"]')
     expect(items.length).toBe(3)
+  })
+
+  test('builds an input per resolved category, defaulting missing targets to zero', () => {
+    storage.setCurrentAgencyCode('EA')
+    storage.saveRegulatorCategories('EA', [
+      { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+      { id: 'lmt', label: 'LMT batteries', shortLabel: 'LMT' }
+    ])
+    buildDom({ view: 'targets', target: 'hydrate' })
+    runRegulatorTargets(document)
+    expect(document.querySelector('#collectionPortable').value).toBe('45')
+    expect(document.querySelector('#collectionLmt').value).toBe('0')
+    expect(document.querySelector('input[name="categoryIds"]').value).toBe(
+      'portable,lmt'
+    )
+  })
+
+  test('escapes special characters in category labels', () => {
+    storage.setCurrentAgencyCode('EA')
+    storage.saveRegulatorCategories('EA', [
+      { id: 'portable', label: 'Portable', shortLabel: 'A & B' }
+    ])
+    buildDom({ view: 'targets', target: 'hydrate' })
+    runRegulatorTargets(document)
+    expect(
+      document.querySelector(
+        '[data-testid="regulator-targets-collection-fields"]'
+      ).innerHTML
+    ).toContain('A &amp; B')
   })
 
   test('hydrates from stored targets when the agency has customised them', () => {

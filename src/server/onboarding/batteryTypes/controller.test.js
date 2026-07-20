@@ -20,6 +20,9 @@ describe('#batteryTypes', () => {
     expect(result).toEqual(expect.stringContaining('id="isPortable"'))
     expect(result).toEqual(expect.stringContaining('id="isIndustrial"'))
     expect(result).toEqual(expect.stringContaining('id="isAutomotive"'))
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="battery-categories-caveat"')
+    )
   })
 
   test('POST with at least one true renders savedFields', async () => {

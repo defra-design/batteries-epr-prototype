@@ -1,5 +1,75 @@
 {
-  "seedVersion": 11,
+  "seedVersion": 12,
+  "regulatorCategories": {
+    "EA": [
+      {
+        "id": "portable",
+        "label": "Portable batteries",
+        "shortLabel": "Portable"
+      },
+      {
+        "id": "industrial",
+        "label": "Industrial batteries",
+        "shortLabel": "Industrial"
+      },
+      {
+        "id": "automotive",
+        "label": "Automotive batteries",
+        "shortLabel": "Automotive"
+      }
+    ],
+    "NRW": [
+      {
+        "id": "portable",
+        "label": "Portable batteries",
+        "shortLabel": "Portable"
+      },
+      {
+        "id": "industrial",
+        "label": "Industrial batteries",
+        "shortLabel": "Industrial"
+      },
+      {
+        "id": "automotive",
+        "label": "Automotive batteries",
+        "shortLabel": "Automotive"
+      }
+    ],
+    "SEPA": [
+      {
+        "id": "portable",
+        "label": "Portable batteries",
+        "shortLabel": "Portable"
+      },
+      {
+        "id": "industrial",
+        "label": "Industrial batteries",
+        "shortLabel": "Industrial"
+      },
+      {
+        "id": "automotive",
+        "label": "Automotive batteries",
+        "shortLabel": "Automotive"
+      }
+    ],
+    "NIEA": [
+      {
+        "id": "portable",
+        "label": "Portable batteries",
+        "shortLabel": "Portable"
+      },
+      {
+        "id": "industrial",
+        "label": "Industrial batteries",
+        "shortLabel": "Industrial"
+      },
+      {
+        "id": "automotive",
+        "label": "Automotive batteries",
+        "shortLabel": "Automotive"
+      }
+    ]
+  },
   "regulatorTargets": {
     "EA": {
       "collection": { "portable": 45, "industrial": 100, "automotive": 100 },

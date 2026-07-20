@@ -4,6 +4,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -20,36 +21,19 @@
       <p class="govuk-body" data-testid="regulator-targets-agency" hidden></p>
       <p class="govuk-body">{{ intro }}</p>
 
+      {{ govukInsetText({
+        text: caveat,
+        attributes: { "data-testid": "battery-categories-caveat" }
+      }) }}
+
       <form method="post" novalidate data-testid="regulator-targets-form">
         <h2 class="govuk-heading-m">{{ labels.collectionHeading }}</h2>
         <p class="govuk-hint">{{ labels.collectionHint }}</p>
-        {% for category in categories %}
-          {{ govukInput({
-            id: "collection" + (category | capitalize),
-            name: "collection" + (category | capitalize),
-            classes: "govuk-input--width-3",
-            label: { text: labels.categoryLabels[category] },
-            suffix: { text: labels.suffix },
-            inputmode: "numeric",
-            spellcheck: false,
-            attributes: { "data-testid": "regulator-targets-collection-" + category }
-          }) }}
-        {% endfor %}
+        <div data-testid="regulator-targets-collection-fields"></div>
 
         <h2 class="govuk-heading-m">{{ labels.recyclingHeading }}</h2>
         <p class="govuk-hint">{{ labels.recyclingHint }}</p>
-        {% for category in categories %}
-          {{ govukInput({
-            id: "recycling" + (category | capitalize),
-            name: "recycling" + (category | capitalize),
-            classes: "govuk-input--width-3",
-            label: { text: labels.categoryLabels[category] },
-            suffix: { text: labels.suffix },
-            inputmode: "numeric",
-            spellcheck: false,
-            attributes: { "data-testid": "regulator-targets-recycling-" + category }
-          }) }}
-        {% endfor %}
+        <div data-testid="regulator-targets-recycling-fields"></div>
 
         {{ govukDetails({
           summaryText: labels.explanationSummary,

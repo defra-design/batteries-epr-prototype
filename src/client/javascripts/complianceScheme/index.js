@@ -191,7 +191,15 @@ export const initComplianceSchemeDashboard = (
   const quarterly = storage.listQuarterlySubmissions(schemeId, year)
   const evidence = storage.listEvidence(schemeId, year)
   const targets = resolveTargets(scheme.agencyCode)
-  const obligation = buildObligation({ quarterly, evidence, targets })
+  const categoryIds = storage
+    .resolveCategories(scheme.agencyCode)
+    .map((category) => category.id)
+  const obligation = buildObligation({
+    quarterly,
+    evidence,
+    targets,
+    categoryIds
+  })
   const viewModel = buildDashboardViewModel({
     scheme,
     members: activeMembers,

@@ -1,16 +1,19 @@
 {% extends 'onboarding/_layout.njk' %}
 
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+
 {% block stepBody %}
   <form method="post" action="{{ action }}" novalidate data-testid="onboarding-form">
     {{ govukCheckboxes({
       idPrefix: "batteryTypes",
       name: "batteryTypes",
-      errorMessage: { text: errors.isPortable } if errors.isPortable,
-      items: [
-        { value: "on", text: labels.portableLabel, hint: { text: labels.portableHint }, name: "isPortable", id: "isPortable", checked: formValues.isPortable },
-        { value: "on", text: labels.industrialLabel, hint: { text: labels.industrialHint }, name: "isIndustrial", id: "isIndustrial", checked: formValues.isIndustrial },
-        { value: "on", text: labels.automotiveLabel, hint: { text: labels.automotiveHint }, name: "isAutomotive", id: "isAutomotive", checked: formValues.isAutomotive }
-      ]
+      errorMessage: { text: errors[firstFlag] } if errors[firstFlag],
+      items: categoryItems
+    }) }}
+
+    {{ govukInsetText({
+      text: caveat,
+      attributes: { "data-testid": "battery-categories-caveat" }
     }) }}
 
     {{ govukButton({
