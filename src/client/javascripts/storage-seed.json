@@ -1,5 +1,5 @@
 {
-  "seedVersion": 11,
+  "seedVersion": 12,
   "regulatorTargets": {
     "EA": {
       "collection": { "portable": 45, "industrial": 100, "automotive": 100 },
@@ -58,6 +58,67 @@
       "category": "portable",
       "previousValue": 45,
       "newValue": 48
+    }
+  ],
+  "obligationSnapshots": [
+    {
+      "id": "55555555-0001-4000-a000-000000000001",
+      "schemeId": "22222222-0001-4000-a000-000000000002",
+      "schemeName": "Recycling Lives Compliance Services Limited",
+      "agencyCode": "EA",
+      "compliancePeriodYear": "2026",
+      "calculatedAt": "2026-03-15T09:30:00.000Z",
+      "createdAt": "2026-03-15T09:30:00.000Z",
+      "batteryCategories": ["portable", "industrial", "automotive"],
+      "targets": {
+        "collection": { "portable": 45, "industrial": 100, "automotive": 100 },
+        "recycling": { "portable": 48, "industrial": 50, "automotive": 50 }
+      },
+      "rules": {
+        "version": "GB-playground-v1",
+        "configSource": "regulatorTargets",
+        "configVersion": "33333333-0001-4000-a000-000000000004",
+        "configDate": "2026-03-01T08:45:00.000Z",
+        "changedBy": "Priya Shah"
+      },
+      "rows": [
+        {
+          "category": "portable",
+          "placed": 100,
+          "targetPercent": 48,
+          "collectionTargetPercent": 45,
+          "obligation": 48,
+          "collectionObligation": 45,
+          "accepted": 10,
+          "outstanding": 38
+        },
+        {
+          "category": "industrial",
+          "placed": 50,
+          "targetPercent": 50,
+          "collectionTargetPercent": 100,
+          "obligation": 25,
+          "collectionObligation": 50,
+          "accepted": 0,
+          "outstanding": 25
+        },
+        {
+          "category": "automotive",
+          "placed": 0,
+          "targetPercent": 50,
+          "collectionTargetPercent": 100,
+          "obligation": 0,
+          "collectionObligation": 0,
+          "accepted": 0,
+          "outstanding": 0
+        }
+      ],
+      "totals": {
+        "placed": 150,
+        "obligation": 73,
+        "accepted": 10,
+        "outstanding": 63
+      }
     }
   ],
   "schemes": [

@@ -11,6 +11,27 @@
         <strong>Compliance period:</strong> <span data-testid="obligation-period">{{ compliancePeriodYear }}</span>
       </p>
 
+      <h2 class="govuk-heading-m" data-testid="obligation-certificate-heading">{{ labels.certificate.heading }}</h2>
+      <p class="govuk-body">{{ labels.certificate.intro }}</p>
+      <dl class="govuk-summary-list" data-testid="obligation-certificate-summary">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.certificate.calculatedAtLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="obligation-certificate-calculated-at"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.certificate.ruleVersionLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="obligation-certificate-rule-version"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">{{ labels.certificate.configLabel }}</dt>
+          <dd class="govuk-summary-list__value" data-testid="obligation-certificate-config"></dd>
+        </div>
+      </dl>
+
+      <h3 class="govuk-heading-s">{{ labels.certificate.targetsHeading }}</h3>
+      <ul class="govuk-list govuk-list--bullet" data-testid="obligation-certificate-targets"></ul>
+      <p class="govuk-body" data-testid="obligation-certificate-caveat">{{ labels.certificate.caveat }}</p>
+
       <table class="govuk-table" data-testid="obligation-table">
         <caption class="govuk-table__caption govuk-table__caption--m">{{ labels.tableCaption }}</caption>
         <thead class="govuk-table__head">

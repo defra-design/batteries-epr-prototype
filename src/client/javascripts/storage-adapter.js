@@ -23,7 +23,8 @@ export const STORAGE_KEYS = {
   currentAgencyCode: `${KEY_PREFIX}currentAgencyCode`,
   currentRegulatorUser: `${KEY_PREFIX}currentRegulatorUser`,
   regulatorTargets: `${KEY_PREFIX}regulatorTargets`,
-  configAuditLog: `${KEY_PREFIX}configAuditLog`
+  configAuditLog: `${KEY_PREFIX}configAuditLog`,
+  obligationSnapshots: `${KEY_PREFIX}obligationSnapshots`
 }
 
 const bprnSequenceKey = (agencyCode, compliancePeriod) =>
@@ -68,6 +69,8 @@ const allOurKeys = () => {
 const readMap = (key) => readJson(key) ?? {}
 
 const readList = (key) => readJson(key) ?? []
+
+const clone = (value) => JSON.parse(JSON.stringify(value))
 
 const coerceTonnes = (value) => {
   if (typeof value === 'string') return value
@@ -1227,6 +1230,56 @@ const upsertOperatorAnnualReturn = (
   return saveOperatorAnnualReturn({ ...existing, ...patch })
 }
 
+const obligationSnapshotKey = (schemeId, compliancePeriodYear) =>
+  `${schemeId}:${compliancePeriodYear}`
+
+const listObligationSnapshots = ({ schemeId, compliancePeriodYear } = {}) => {
+  const snapshots = Object.values(readMap(STORAGE_KEYS.obligationSnapshots))
+  return snapshots
+    .filter(
+      (snapshot) =>
+        (!schemeId || snapshot.schemeId === schemeId) &&
+        (!compliancePeriodYear ||
+          snapshot.compliancePeriodYear === compliancePeriodYear)
+    )
+    .sort((a, b) =>
+      String(b.calculatedAt).localeCompare(String(a.calculatedAt))
+    )
+    .map(clone)
+}
+
+const getObligationSnapshot = (schemeId, compliancePeriodYear) => {
+  if (!schemeId || !compliancePeriodYear) return null
+  const snapshot =
+    readMap(STORAGE_KEYS.obligationSnapshots)[
+      obligationSnapshotKey(schemeId, compliancePeriodYear)
+    ] ?? null
+  return snapshot ? clone(snapshot) : null
+}
+
+const saveObligationSnapshot = (snapshot) => {
+  if (!snapshot?.schemeId || !snapshot?.compliancePeriodYear) {
+    throw new Error(
+      'saveObligationSnapshot requires schemeId and compliancePeriodYear'
+    )
+  }
+  const snapshots = readMap(STORAGE_KEYS.obligationSnapshots)
+  const key = obligationSnapshotKey(
+    snapshot.schemeId,
+    snapshot.compliancePeriodYear
+  )
+  if (snapshots[key]) return clone(snapshots[key])
+  const saved = {
+    ...snapshot,
+    id: snapshot.id ?? newId(),
+    calculatedAt: snapshot.calculatedAt ?? now(),
+    createdAt: snapshot.createdAt ?? now()
+  }
+  snapshots[key] = saved
+  writeJson(STORAGE_KEYS.obligationSnapshots, snapshots)
+  return clone(saved)
+}
+
 const getAgencies = () => AGENCIES
 
 const getCurrentAgencyCode = () =>
@@ -1538,6 +1591,16 @@ const seedDemoData = () => {
     )
   }
 
+  const obligationSnapshots = readMap(STORAGE_KEYS.obligationSnapshots)
+  for (const snapshot of seedData.obligationSnapshots) {
+    const key = obligationSnapshotKey(
+      snapshot.schemeId,
+      snapshot.compliancePeriodYear
+    )
+    if (!obligationSnapshots[key]) obligationSnapshots[key] = snapshot
+  }
+  writeJson(STORAGE_KEYS.obligationSnapshots, obligationSnapshots)
+
   globalThis.localStorage.setItem(
     STORAGE_KEYS.seedVersion,
     String(seedData.seedVersion)
@@ -1624,6 +1687,9 @@ export const storage = {
   findOperatorAnnualReturn,
   saveOperatorAnnualReturn,
   upsertOperatorAnnualReturn,
+  listObligationSnapshots,
+  getObligationSnapshot,
+  saveObligationSnapshot,
   getAgencies,
   getCurrentAgencyCode,
   setCurrentAgencyCode,

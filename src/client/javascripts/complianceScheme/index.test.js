@@ -424,6 +424,54 @@ describe('initComplianceSchemeDashboard', () => {
     ).toBe('2 active members')
   })
 
+  test('uses a saved obligation snapshot for the evidence tile when one exists', () => {
+    buildDom()
+    const [scheme] = storage.listSchemes()
+    storage.saveQuarterlySubmission({
+      schemeId: scheme.id,
+      compliancePeriodYear: '2026',
+      quarter: 'Q1',
+      status: 'submitted',
+      memberData: [
+        {
+          memberId: 'm-1',
+          marketData: { portable: '100', industrial: '0', automotive: '0' }
+        }
+      ]
+    })
+    storage.saveObligationSnapshot({
+      schemeId: scheme.id,
+      schemeName: scheme.name,
+      agencyCode: scheme.agencyCode,
+      compliancePeriodYear: '2026',
+      calculatedAt: '2026-05-01T00:00:00.000Z',
+      batteryCategories: ['portable', 'industrial', 'automotive'],
+      targets: {
+        collection: { portable: 45, industrial: 100, automotive: 100 },
+        recycling: { portable: 60, industrial: 50, automotive: 50 }
+      },
+      rules: { version: 'GB-playground-v1' },
+      rows: [],
+      totals: {
+        placed: 100,
+        obligation: 60,
+        accepted: 0,
+        outstanding: 60
+      }
+    })
+    storage.saveRegulatorTargets('EA', {
+      collection: { portable: 45, industrial: 100, automotive: 100 },
+      recycling: { portable: 10, industrial: 50, automotive: 50 }
+    })
+
+    initComplianceSchemeDashboard(document)
+
+    expect(
+      document.querySelector('[data-testid="tile-evidence-obligation"]')
+        .textContent
+    ).toBe('60.000')
+  })
+
   test('redirects to the sign-in picker when no current scheme is selected', () => {
     buildDom()
     storage.clearCurrentSchemeId()

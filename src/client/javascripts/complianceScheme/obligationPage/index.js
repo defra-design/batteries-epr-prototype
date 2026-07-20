@@ -1,6 +1,6 @@
 import { storage } from '../../storage-adapter.js'
 import { readPagePayload } from '../../page-payload.js'
-import { buildObligation, resolveTargets } from '../obligation.js'
+import { buildObligationSnapshot, resolveTargets } from '../obligation.js'
 
 const HTML_ENTITIES = {
   '&': '&amp;',
@@ -15,6 +15,11 @@ const escape = (value) =>
 
 const setText = (doc, selector, text) => {
   doc.querySelector(selector).textContent = text
+}
+
+const setOptionalText = (doc, selector, text) => {
+  const node = doc.querySelector(selector)
+  if (node) node.textContent = text
 }
 
 const setAll = (doc, selector, text) => {
@@ -34,6 +39,57 @@ const ensureScheme = (loc) => {
 }
 
 const fmt = (value) => value.toFixed(3)
+
+const formatDateTime = (iso) =>
+  new Date(iso).toLocaleString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+
+const getOrCreateSnapshot = ({ scheme, year, quarterly, evidence }) => {
+  const existing = storage.getObligationSnapshot(scheme.id, year)
+  if (existing) return existing
+  return storage.saveObligationSnapshot(
+    buildObligationSnapshot({
+      scheme,
+      compliancePeriodYear: year,
+      quarterly,
+      evidence,
+      targets: resolveTargets(scheme.agencyCode)
+    })
+  )
+}
+
+const renderCertificate = (doc, snapshot, copy) => {
+  setOptionalText(
+    doc,
+    '[data-testid="obligation-certificate-calculated-at"]',
+    formatDateTime(snapshot.calculatedAt)
+  )
+  setOptionalText(
+    doc,
+    '[data-testid="obligation-certificate-rule-version"]',
+    snapshot.rules.version
+  )
+  setOptionalText(
+    doc,
+    '[data-testid="obligation-certificate-config"]',
+    `${snapshot.rules.configSource} ${snapshot.rules.configVersion}`
+  )
+  const targets = doc.querySelector(
+    '[data-testid="obligation-certificate-targets"]'
+  )
+  if (!targets) return
+  targets.innerHTML = snapshot.batteryCategories
+    .map((category) => {
+      const label = copy.categories[category]
+      return `<li class="govuk-body">${escape(label)}: collection ${snapshot.targets.collection[category]}%, recycling ${snapshot.targets.recycling[category]}%</li>`
+    })
+    .join('')
+}
 
 const setCalcFigures = (doc, row) => {
   const formulas = {
@@ -67,8 +123,9 @@ export const runObligationPage = (
 
   const quarterly = storage.listQuarterlySubmissions(scheme.id, year)
   const evidence = storage.listEvidence(scheme.id, year)
-  const targets = resolveTargets(scheme.agencyCode)
-  const { rows, totals } = buildObligation({ quarterly, evidence, targets })
+  const snapshot = getOrCreateSnapshot({ scheme, year, quarterly, evidence })
+  const { rows, totals } = snapshot
+  renderCertificate(doc, snapshot, payload.copy)
 
   const body = doc.querySelector('[data-testid="obligation-body"]')
   body.innerHTML = rows

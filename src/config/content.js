@@ -1847,6 +1847,17 @@ export const content = {
           heading: 'Obligation breakdown',
           intro:
             "How your scheme's obligation is calculated from quarterly market data, by category.",
+          certificate: {
+            heading: 'Obligations certificate',
+            intro:
+              'A point-in-time record of the calculation and the rules used.',
+            calculatedAtLabel: 'Calculated on',
+            ruleVersionLabel: 'Rule version',
+            configLabel: 'Target config',
+            targetsHeading: 'Targets used',
+            caveat:
+              'This is a playground demonstration, not a statutory certificate.'
+          },
           tableCaption: 'Obligation by battery category',
           totalsLabel: 'Total',
           backToDashboardAction: 'Back to compliance scheme dashboard',
@@ -2457,6 +2468,15 @@ export const content = {
           title: 'TODO welsh',
           heading: 'TODO welsh',
           intro: 'TODO welsh',
+          certificate: {
+            heading: 'TODO welsh',
+            intro: 'TODO welsh',
+            calculatedAtLabel: 'TODO welsh',
+            ruleVersionLabel: 'TODO welsh',
+            configLabel: 'TODO welsh',
+            targetsHeading: 'TODO welsh',
+            caveat: 'TODO welsh'
+          },
           tableCaption: 'TODO welsh',
           totalsLabel: 'TODO welsh',
           backToDashboardAction: 'TODO welsh',

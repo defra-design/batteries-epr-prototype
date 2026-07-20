@@ -23,6 +23,10 @@ const buildDom = (payload = PAYLOAD) => {
     <dd data-testid="obligation-total-obligation"></dd>
     <dd data-testid="obligation-total-accepted"></dd>
     <dd data-testid="obligation-total-outstanding"></dd>
+    <dd data-testid="obligation-certificate-calculated-at"></dd>
+    <dd data-testid="obligation-certificate-rule-version"></dd>
+    <dd data-testid="obligation-certificate-config"></dd>
+    <ul data-testid="obligation-certificate-targets"></ul>
     <span data-testid="obligation-calc-portable-collection-placed"></span>
     <span data-testid="obligation-calc-portable-collection-placed"></span>
     <span data-testid="obligation-calc-portable-collection-target"></span>
@@ -134,6 +138,82 @@ describe('runObligationPage', () => {
       document.querySelector('[data-testid="obligation-total-obligation"]')
         .textContent
     ).toBe('95.000')
+  })
+
+  test('shows certificate metadata from the saved snapshot', () => {
+    buildDom()
+    runObligationPage(document)
+
+    expect(
+      document.querySelector(
+        '[data-testid="obligation-certificate-rule-version"]'
+      ).textContent
+    ).toBe('GB-playground-v1')
+    expect(
+      document.querySelector('[data-testid="obligation-certificate-config"]')
+        .textContent
+    ).toContain('regulatorTargets')
+    expect(
+      document.querySelector('[data-testid="obligation-certificate-targets"]')
+        .textContent
+    ).toContain('Portable: collection 45%, recycling 45%')
+  })
+
+  test('renders when certificate nodes are not present', () => {
+    document.body.innerHTML = `
+      <table><tbody data-testid="obligation-body"></tbody></table>
+      <dd data-testid="obligation-total-placed"></dd>
+      <dd data-testid="obligation-total-obligation"></dd>
+      <dd data-testid="obligation-total-accepted"></dd>
+      <dd data-testid="obligation-total-outstanding"></dd>
+      <script id="page-payload" type="application/json">${JSON.stringify(PAYLOAD)}</script>
+    `
+
+    expect(runObligationPage(document)).toBe('rendered')
+    expect(
+      document.querySelectorAll('tr[data-testid^="obligation-row-"]')
+    ).toHaveLength(3)
+  })
+
+  test('renders from the saved snapshot after live targets change', () => {
+    const [scheme] = storage.listSchemes()
+    storage.saveQuarterlySubmission({
+      schemeId: scheme.id,
+      compliancePeriodYear: '2026',
+      quarter: 'Q1',
+      status: 'submitted',
+      memberData: [
+        {
+          memberId: 'm-1',
+          marketData: { portable: '100', industrial: '0', automotive: '0' }
+        }
+      ]
+    })
+    storage.saveRegulatorTargets('EA', {
+      collection: { portable: 45, industrial: 100, automotive: 100 },
+      recycling: { portable: 60, industrial: 50, automotive: 50 }
+    })
+
+    buildDom()
+    runObligationPage(document)
+    expect(
+      document.querySelector(
+        '[data-testid="obligation-row-portable-obligation"]'
+      ).textContent
+    ).toBe('60.000')
+
+    storage.saveRegulatorTargets('EA', {
+      collection: { portable: 45, industrial: 100, automotive: 100 },
+      recycling: { portable: 10, industrial: 50, automotive: 50 }
+    })
+
+    buildDom()
+    runObligationPage(document)
+    expect(
+      document.querySelector(
+        '[data-testid="obligation-row-portable-obligation"]'
+      ).textContent
+    ).toBe('60.000')
   })
 
   test('populates the collection and recycling formula figures', () => {
