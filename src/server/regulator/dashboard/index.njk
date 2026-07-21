@@ -13,15 +13,6 @@
       <p class="govuk-body">
         <a class="govuk-link" href="{{ regulatorSignInUrl }}" data-testid="regulator-switch">{{ switchAgencyAction }}</a>
       </p>
-      <p class="govuk-body">
-        <a class="govuk-link" href="{{ regulatorTargetsUrl }}" data-testid="regulator-targets-link">{{ targetsAction }}</a>
-      </p>
-      <p class="govuk-body">
-        <a class="govuk-link" href="{{ regulatorCategoriesUrl }}" data-testid="regulator-categories-link">{{ categoriesAction }}</a>
-      </p>
-      <p class="govuk-body">
-        <a class="govuk-link" href="{{ regulatorAuditTrailUrl }}" data-testid="regulator-audit-trail-link">{{ auditTrailAction }}</a>
-      </p>
     </div>
   </div>
 
@@ -74,6 +65,27 @@
             <p class="govuk-body" data-testid="tile-evidence-count"></p>
             <p class="govuk-body" data-testid="tile-evidence-action"></p>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <div class="govuk-summary-card govuk-!-margin-bottom-4" data-testid="regulator-configuration">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">{{ configurationHeading }}</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <p class="govuk-body">
+            <a class="govuk-link" href="{{ regulatorTargetsUrl }}" data-testid="regulator-targets-link">{{ targetsAction }}</a>
+          </p>
+          <p class="govuk-body">
+            <a class="govuk-link" href="{{ regulatorCategoriesUrl }}" data-testid="regulator-categories-link">{{ categoriesAction }}</a>
+          </p>
+          <p class="govuk-body">
+            <a class="govuk-link" href="{{ regulatorAuditTrailUrl }}" data-testid="regulator-audit-trail-link">{{ auditTrailAction }}</a>
+          </p>
         </div>
       </div>
     </div>

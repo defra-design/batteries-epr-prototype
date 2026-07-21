@@ -2819,9 +2819,10 @@ export const content = {
         introParagraph:
           'Review applications, monitor compliance, and manage approvals for battery producers, compliance schemes, and operators.',
         switchAgencyAction: 'Switch agency',
+        configurationHeading: 'Configuration',
         targetsAction: 'Manage collection and recycling targets',
         categoriesAction: 'Manage battery categories',
-        auditTrailAction: 'View target change history',
+        auditTrailAction: 'View config history',
         tiles: {
           schemes: {
             heading: 'Compliance schemes',
@@ -3117,10 +3118,10 @@ export const content = {
           historyViewAllAction: 'View full change history'
         },
         auditTrailPage: {
-          title: 'Target change history',
-          heading: 'Target change history',
+          title: 'Config history',
+          heading: 'Config history',
           intro:
-            'Every change to your agency’s collection and recycling targets is recorded here, most recent first. Each entry shows what changed, who changed it and when.',
+            'Every change to your agency’s targets and battery categories is recorded here, most recent first. Each entry shows what changed, who changed it and when.',
           warningText:
             'This is a playground audit trail — production audit infrastructure will be more robust.',
           empty: 'No target changes have been recorded for this agency yet.',
@@ -3146,6 +3147,7 @@ export const content = {
         heading: heading('TODO welsh', 'TODO welsh', null),
         introParagraph: 'TODO welsh',
         switchAgencyAction: 'TODO welsh',
+        configurationHeading: 'TODO welsh',
         targetsAction: 'TODO welsh',
         categoriesAction: 'TODO welsh',
         auditTrailAction: 'TODO welsh',
