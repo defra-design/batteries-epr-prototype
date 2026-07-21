@@ -32,8 +32,9 @@
 
         {{ govukButton({
           text: labels.addAction,
+          type: "button",
           classes: "govuk-button--secondary",
-          attributes: { type: "button", "data-testid": "regulator-categories-add" }
+          attributes: { "data-testid": "regulator-categories-add" }
         }) }}
 
         <input type="hidden" name="categoriesJson" id="categoriesJson" data-testid="regulator-categories-json" />

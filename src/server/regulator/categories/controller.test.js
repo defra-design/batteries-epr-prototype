@@ -36,6 +36,19 @@ describe('#regulatorCategoriesController', () => {
     expect(result).toEqual(expect.stringContaining('"nameLabel"'))
   })
 
+  test('the add button is a button, not a form-submitting button', async () => {
+    const { result } = await server.inject({
+      method: 'GET',
+      url: paths.regulatorCategories
+    })
+
+    const addButton = result.match(
+      /<button[^>]*data-testid="regulator-categories-add"[^>]*>/
+    )[0]
+    expect(addButton).toContain('type="button"')
+    expect(addButton).not.toContain('type="submit"')
+  })
+
   test('GET shows the saved banner when ?saved=1', async () => {
     const { result } = await server.inject({
       method: 'GET',
