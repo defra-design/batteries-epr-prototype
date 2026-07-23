@@ -1,6 +1,7 @@
 {% extends 'layouts/page.njk' %}
 
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -11,6 +12,14 @@
         <strong>Compliance period:</strong> <span data-testid="obligation-period">{{ compliancePeriodYear }}</span>
       </p>
 
+      {{ govukButton({
+        text: labels.calculateAction,
+        attributes: { "data-testid": "obligation-calculate", id: "obligation-calculate", type: "button" }
+      }) }}
+
+      <p class="govuk-body" data-testid="obligation-empty" hidden>{{ labels.emptyMessage }}</p>
+
+      <div data-testid="obligation-results" hidden>
       <h2 class="govuk-heading-m" data-testid="obligation-certificate-heading">{{ labels.certificate.heading }}</h2>
       <p class="govuk-body">{{ labels.certificate.intro }}</p>
       <dl class="govuk-summary-list" data-testid="obligation-certificate-summary">
@@ -116,6 +125,26 @@
         iconFallbackText: "Warning",
         attributes: { "data-testid": "obligation-calc-warning" }
       }) }}
+      </div>
+
+      <details class="govuk-details" data-testid="obligation-previous" hidden>
+        <summary class="govuk-details__summary">
+          <span class="govuk-details__summary-text">{{ labels.previous.heading }}</span>
+        </summary>
+        <div class="govuk-details__text">
+          <table class="govuk-table">
+            <thead class="govuk-table__head">
+              <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">{{ labels.previous.columns.period }}</th>
+                <th scope="col" class="govuk-table__header">{{ labels.previous.columns.calculatedAt }}</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ labels.previous.columns.obligation }}</th>
+                <th scope="col" class="govuk-table__header">{{ labels.previous.columns.ruleVersion }}</th>
+              </tr>
+            </thead>
+            <tbody class="govuk-table__body" data-testid="obligation-previous-list"></tbody>
+          </table>
+        </div>
+      </details>
 
       <p class="govuk-body">
         <a class="govuk-link" href="{{ dashboardUrl }}" data-testid="obligation-back-link">{{ labels.backToDashboardAction }}</a>

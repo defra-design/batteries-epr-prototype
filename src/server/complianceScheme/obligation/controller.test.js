@@ -24,6 +24,11 @@ describe('#obligationController', () => {
     expect(result).toEqual(expect.stringContaining(pageContent.heading))
     expect(result).toEqual(expect.stringContaining(pageContent.calcHeading))
     for (const id of [
+      'obligation-calculate',
+      'obligation-empty',
+      'obligation-results',
+      'obligation-previous',
+      'obligation-previous-list',
       'obligation-body',
       'obligation-foot',
       'obligation-total-placed',

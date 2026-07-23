@@ -2455,21 +2455,19 @@ describe('obligation snapshots', () => {
     ).toThrow(/schemeId and compliancePeriodYear/)
   })
 
-  test('saveObligationSnapshot does not overwrite an existing snapshot', () => {
-    const saved = storage.saveObligationSnapshot(snapshot)
-    storage.saveRegulatorTargets('EA', {
-      collection: { portable: 55, industrial: 100, automotive: 100 },
-      recycling: { portable: 60, industrial: 50, automotive: 50 }
-    })
-
+  test('saveObligationSnapshot keeps each calculation and returns the latest', () => {
+    const first = storage.saveObligationSnapshot(snapshot)
     const second = storage.saveObligationSnapshot({
       ...snapshot,
-      targets: storage.getRegulatorTargets('EA'),
+      calculatedAt: '2026-06-01T00:00:00.000Z',
       totals: { placed: 100, obligation: 60, accepted: 0, outstanding: 60 }
     })
 
-    expect(second).toEqual(saved)
-    expect(storage.getObligationSnapshot('scheme-1', '2026')).toEqual(saved)
+    expect(second.id).not.toBe(first.id)
+    expect(
+      storage.listObligationSnapshots({ schemeId: 'scheme-1' })
+    ).toHaveLength(2)
+    expect(storage.getObligationSnapshot('scheme-1', '2026')).toEqual(second)
   })
 
   test('getObligationSnapshot returns a copy', () => {
@@ -2495,9 +2493,10 @@ describe('obligation snapshots', () => {
     expect(storage.getRegulatorTargets('EA').recycling.portable).toBe(45)
   })
 
-  test('seedDemoData keeps an existing obligation snapshot', () => {
+  test('seedDemoData does not overwrite an existing snapshot with the same id', () => {
     storage.saveObligationSnapshot({
       ...snapshot,
+      id: '55555555-0001-4000-a000-000000000001',
       schemeId: '22222222-0001-4000-a000-000000000002',
       targets: {
         collection: { portable: 1, industrial: 1, automotive: 1 },
@@ -2512,6 +2511,12 @@ describe('obligation snapshots', () => {
         '2026'
       ).targets.recycling.portable
     ).toBe(1)
+    expect(
+      storage.listObligationSnapshots({
+        schemeId: '22222222-0001-4000-a000-000000000002',
+        compliancePeriodYear: '2026'
+      })
+    ).toHaveLength(1)
   })
 })
 

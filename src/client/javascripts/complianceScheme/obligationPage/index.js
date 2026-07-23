@@ -1,6 +1,7 @@
 import { storage } from '../../storage-adapter.js'
 import { readPagePayload } from '../../page-payload.js'
-import { buildObligationSnapshot, resolveTargets } from '../obligation.js'
+import { buildObligationSnapshot } from '../obligation.js'
+import { QUARTERS } from '../tile-builders.js'
 
 const HTML_ENTITIES = {
   '&': '&amp;',
@@ -49,18 +50,19 @@ const formatDateTime = (iso) =>
     minute: '2-digit'
   })
 
-const getOrCreateSnapshot = ({ scheme, year, quarterly, evidence }) => {
-  const existing = storage.getObligationSnapshot(scheme.id, year)
-  if (existing) return existing
-  return storage.saveObligationSnapshot(
-    buildObligationSnapshot({
-      scheme,
-      compliancePeriodYear: year,
-      quarterly,
-      evidence,
-      targets: resolveTargets(scheme.agencyCode)
-    })
-  )
+const setHidden = (doc, selector, hidden) => {
+  const node = doc.querySelector(selector)
+  if (node) node.hidden = hidden
+}
+
+const showResults = (doc) => {
+  setHidden(doc, '[data-testid="obligation-empty"]', true)
+  setHidden(doc, '[data-testid="obligation-results"]', false)
+}
+
+const showEmptyState = (doc) => {
+  setHidden(doc, '[data-testid="obligation-empty"]', false)
+  setHidden(doc, '[data-testid="obligation-results"]', true)
 }
 
 const renderCertificate = (doc, snapshot, copy) => {
@@ -112,27 +114,16 @@ const setCalcFigures = (doc, row) => {
   }
 }
 
-export const runObligationPage = (
-  doc = globalThis.document,
-  loc = globalThis.location
-) => {
-  const payload = readPagePayload(doc)
-  const scheme = ensureScheme(loc)
-  if (!scheme) return 'redirected-to-sign-in'
-  const year = payload.compliancePeriodYear
-
-  const quarterly = storage.listQuarterlySubmissions(scheme.id, year)
-  const evidence = storage.listEvidence(scheme.id, year)
-  const snapshot = getOrCreateSnapshot({ scheme, year, quarterly, evidence })
+const renderSnapshot = (doc, snapshot, copy) => {
   const { rows, totals } = snapshot
-  renderCertificate(doc, snapshot, payload.copy)
+  renderCertificate(doc, snapshot, copy)
 
   const body = doc.querySelector('[data-testid="obligation-body"]')
   body.innerHTML = rows
     .map(
       (row) =>
         `<tr class="govuk-table__row" data-testid="obligation-row-${row.category}">
-          <th scope="row" class="govuk-table__header">${escape(payload.copy.categories[row.category])}</th>
+          <th scope="row" class="govuk-table__header">${escape(copy.categories[row.category])}</th>
           <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="obligation-row-${row.category}-placed">${fmt(row.placed)}</td>
           <td class="govuk-table__cell govuk-table__cell--numeric">${row.targetPercent}%</td>
           <td class="govuk-table__cell govuk-table__cell--numeric" data-testid="obligation-row-${row.category}-obligation">${fmt(row.obligation)}</td>
@@ -162,6 +153,84 @@ export const runObligationPage = (
     '[data-testid="obligation-total-outstanding"]',
     fmt(totals.outstanding)
   )
+}
 
+const renderPrevious = (doc, snapshots) => {
+  const list = doc.querySelector('[data-testid="obligation-previous-list"]')
+  if (!list) return
+  list.innerHTML = snapshots
+    .map(
+      (snapshot) =>
+        `<tr class="govuk-table__row" data-testid="obligation-previous-item">
+          <td class="govuk-table__cell">${escape(snapshot.compliancePeriodYear)}</td>
+          <td class="govuk-table__cell">${escape(formatDateTime(snapshot.calculatedAt))}</td>
+          <td class="govuk-table__cell govuk-table__cell--numeric">${fmt(snapshot.totals.obligation)}</td>
+          <td class="govuk-table__cell">${escape(snapshot.rules.version)}</td>
+        </tr>`
+    )
+    .join('')
+  setHidden(doc, '[data-testid="obligation-previous"]', snapshots.length === 0)
+}
+
+const allQuartersSubmitted = (scheme, year) => {
+  const submissions = storage.listQuarterlySubmissions(scheme.id, year)
+  return QUARTERS.every((quarter) =>
+    submissions.some((s) => s.quarter === quarter && s.status === 'submitted')
+  )
+}
+
+// Once an obligation is calculated for a year it is final, so the button is
+// hidden whenever a snapshot already exists for the current compliance period.
+const render = (doc, scheme, year, copy) => {
+  const latest = storage.getObligationSnapshot(scheme.id, year)
+  const previous = storage
+    .listObligationSnapshots({ schemeId: scheme.id })
+    .filter((snapshot) => snapshot.id !== latest?.id)
+  renderPrevious(doc, previous)
+  setHidden(doc, '[data-testid="obligation-calculate"]', Boolean(latest))
+  if (!latest) {
+    showEmptyState(doc)
+    return 'awaiting-calculation'
+  }
+  renderSnapshot(doc, latest, copy)
+  showResults(doc)
   return 'rendered'
+}
+
+export const runObligationPage = (
+  doc = globalThis.document,
+  loc = globalThis.location
+) => {
+  const payload = readPagePayload(doc)
+  const scheme = ensureScheme(loc)
+  if (!scheme) return 'redirected-to-sign-in'
+  const year = payload.compliancePeriodYear
+
+  const status = render(doc, scheme, year, payload.copy)
+
+  const button = doc.querySelector('[data-testid="obligation-calculate"]')
+  if (button) {
+    button.addEventListener('click', (event) => {
+      event.preventDefault()
+      // Once-per-year guard: never calculate twice for the same period.
+      if (storage.getObligationSnapshot(scheme.id, year)) return
+      if (
+        !allQuartersSubmitted(scheme, year) &&
+        !globalThis.confirm(payload.copy.incompleteQuartersConfirm)
+      ) {
+        return
+      }
+      storage.saveObligationSnapshot(
+        buildObligationSnapshot({
+          scheme,
+          compliancePeriodYear: year,
+          quarterly: storage.listQuarterlySubmissions(scheme.id, year),
+          evidence: storage.listEvidence(scheme.id, year)
+        })
+      )
+      render(doc, scheme, year, payload.copy)
+    })
+  }
+
+  return status
 }

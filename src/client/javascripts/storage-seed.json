@@ -1,5 +1,5 @@
 {
-  "seedVersion": 12,
+  "seedVersion": 13,
   "regulatorTargets": {
     "EA": {
       "collection": { "portable": 45, "industrial": 100, "automotive": 100 },
