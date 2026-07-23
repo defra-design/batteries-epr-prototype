@@ -1,6 +1,11 @@
 packages:
   - .
 
+overrides:
+  brace-expansion@1: ^1.1.16
+  svgo: ^4.0.2
+  fast-uri: ^3.1.4
+
 allowBuilds:
   '@defra/hapi-secure-context': true
   '@defra/hapi-tracing': true
