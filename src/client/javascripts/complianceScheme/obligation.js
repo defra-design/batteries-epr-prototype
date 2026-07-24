@@ -19,6 +19,8 @@ const DEFAULT_TARGETS = {
   collection: COLLECTION_TARGET_PERCENTAGES
 }
 
+const RULE_VERSION = 'GB-playground-v1'
+
 const toFractions = (percentByCategory) =>
   Object.fromEntries(
     CATEGORIES.map((category) => [
@@ -88,4 +90,53 @@ export const buildObligation = ({
   )
 
   return { rows, totals }
+}
+
+const toWholePercentages = (targets) => ({
+  collection: Object.fromEntries(
+    CATEGORIES.map((category) => [
+      category,
+      Math.round(targets.collection[category] * 100)
+    ])
+  ),
+  recycling: Object.fromEntries(
+    CATEGORIES.map((category) => [
+      category,
+      Math.round(targets.recycling[category] * 100)
+    ])
+  )
+})
+
+const latestConfigEntry = (agencyCode) =>
+  agencyCode ? (storage.listConfigAuditEntries(agencyCode)[0] ?? null) : null
+
+export const buildObligationSnapshot = ({
+  scheme,
+  compliancePeriodYear,
+  quarterly,
+  evidence,
+  targets = resolveTargets(scheme?.agencyCode),
+  calculatedAt = new Date().toISOString()
+}) => {
+  const { rows, totals } = buildObligation({ quarterly, evidence, targets })
+  const config = latestConfigEntry(scheme?.agencyCode)
+
+  return {
+    schemeId: scheme.id,
+    schemeName: scheme.name,
+    agencyCode: scheme.agencyCode,
+    compliancePeriodYear,
+    calculatedAt,
+    batteryCategories: [...CATEGORIES],
+    targets: toWholePercentages(targets),
+    rules: {
+      version: RULE_VERSION,
+      configSource: 'regulatorTargets',
+      configVersion: config?.id ?? 'default',
+      configDate: config?.at ?? null,
+      changedBy: config?.actorName ?? null
+    },
+    rows,
+    totals
+  }
 }

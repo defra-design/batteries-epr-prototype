@@ -190,8 +190,13 @@ export const initComplianceSchemeDashboard = (
   const activeMembers = storage.membersForYear(schemeId, year).active
   const quarterly = storage.listQuarterlySubmissions(schemeId, year)
   const evidence = storage.listEvidence(schemeId, year)
-  const targets = resolveTargets(scheme.agencyCode)
-  const obligation = buildObligation({ quarterly, evidence, targets })
+  const obligation =
+    storage.getObligationSnapshot(schemeId, year) ??
+    buildObligation({
+      quarterly,
+      evidence,
+      targets: resolveTargets(scheme.agencyCode)
+    })
   const viewModel = buildDashboardViewModel({
     scheme,
     members: activeMembers,

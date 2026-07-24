@@ -6,6 +6,7 @@ import {
   TARGET_PERCENTAGES,
   COLLECTION_TARGET_PERCENTAGES,
   buildObligation,
+  buildObligationSnapshot,
   resolveTargets
 } from './obligation.js'
 import { storage } from '../storage-adapter.js'
@@ -187,5 +188,76 @@ describe('resolveTargets', () => {
       collection: { portable: 0.45, industrial: 1, automotive: 1 },
       recycling: { portable: 0.6, industrial: 0.5, automotive: 0.5 }
     })
+  })
+})
+
+describe('buildObligationSnapshot', () => {
+  test('captures the calculation, targets, categories and config metadata', () => {
+    storage.saveRegulatorTargets(
+      'EA',
+      {
+        collection: { portable: 45, industrial: 100, automotive: 100 },
+        recycling: { portable: 60, industrial: 50, automotive: 50 }
+      },
+      'Priya Shah'
+    )
+
+    const snapshot = buildObligationSnapshot({
+      scheme: { id: 'scheme-1', name: 'BatteryBack', agencyCode: 'EA' },
+      compliancePeriodYear: '2026',
+      calculatedAt: '2026-05-01T00:00:00.000Z',
+      quarterly: [
+        {
+          memberData: [
+            {
+              memberId: 'm-1',
+              marketData: { portable: '100', industrial: '0', automotive: '0' }
+            }
+          ]
+        }
+      ],
+      evidence: [],
+      targets: resolveTargets('EA')
+    })
+
+    expect(snapshot.schemeId).toBe('scheme-1')
+    expect(snapshot.compliancePeriodYear).toBe('2026')
+    expect(snapshot.calculatedAt).toBe('2026-05-01T00:00:00.000Z')
+    expect(snapshot.batteryCategories).toEqual(CATEGORIES)
+    expect(snapshot.targets.recycling.portable).toBe(60)
+    expect(
+      snapshot.rows.find((r) => r.category === 'portable').obligation
+    ).toBe(60)
+    expect(snapshot.rules).toMatchObject({
+      version: 'GB-playground-v1',
+      configSource: 'regulatorTargets',
+      changedBy: 'Priya Shah'
+    })
+  })
+
+  test('uses default config metadata when no agency config exists', () => {
+    const snapshot = buildObligationSnapshot({
+      scheme: { id: 'scheme-1', name: 'BatteryBack', agencyCode: null },
+      compliancePeriodYear: '2026',
+      quarterly: [],
+      evidence: []
+    })
+
+    expect(snapshot.rules).toMatchObject({
+      configVersion: 'default',
+      configDate: null,
+      changedBy: null
+    })
+  })
+
+  test('uses default config metadata when the agency has no audit entry yet', () => {
+    const snapshot = buildObligationSnapshot({
+      scheme: { id: 'scheme-1', name: 'BatteryBack', agencyCode: 'EA' },
+      compliancePeriodYear: '2026',
+      quarterly: [],
+      evidence: []
+    })
+
+    expect(snapshot.rules.configVersion).toBe('default')
   })
 })
