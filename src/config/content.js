@@ -1847,6 +1847,31 @@ export const content = {
           heading: 'Obligation breakdown',
           intro:
             "How your scheme's obligation is calculated from quarterly market data, by category.",
+          calculateAction: 'Calculate obligation',
+          emptyMessage:
+            'You have not calculated an obligation for this compliance period yet. You can calculate it once, and it will use the targets and rules in force now.',
+          incompleteQuartersConfirm:
+            'You have not completed all four quarters. You can only calculate your obligation once per compliance period. Are you sure you want to calculate it now?',
+          certificate: {
+            heading: 'Obligations certificate',
+            intro:
+              'A point-in-time record of the calculation and the rules used.',
+            calculatedAtLabel: 'Calculated on',
+            ruleVersionLabel: 'Rule version',
+            configLabel: 'Target config',
+            targetsHeading: 'Targets used',
+            caveat:
+              'This is a playground demonstration, not a statutory certificate.'
+          },
+          previous: {
+            heading: 'Previously calculated obligations',
+            columns: {
+              period: 'Compliance period',
+              calculatedAt: 'Calculated on',
+              obligation: 'Total obligation (tonnes)',
+              ruleVersion: 'Rule version'
+            }
+          },
           tableCaption: 'Obligation by battery category',
           totalsLabel: 'Total',
           backToDashboardAction: 'Back to compliance scheme dashboard',
@@ -2469,6 +2494,27 @@ export const content = {
           title: 'TODO welsh',
           heading: 'TODO welsh',
           intro: 'TODO welsh',
+          calculateAction: 'TODO welsh',
+          emptyMessage: 'TODO welsh',
+          incompleteQuartersConfirm: 'TODO welsh',
+          certificate: {
+            heading: 'TODO welsh',
+            intro: 'TODO welsh',
+            calculatedAtLabel: 'TODO welsh',
+            ruleVersionLabel: 'TODO welsh',
+            configLabel: 'TODO welsh',
+            targetsHeading: 'TODO welsh',
+            caveat: 'TODO welsh'
+          },
+          previous: {
+            heading: 'TODO welsh',
+            columns: {
+              period: 'TODO welsh',
+              calculatedAt: 'TODO welsh',
+              obligation: 'TODO welsh',
+              ruleVersion: 'TODO welsh'
+            }
+          },
           tableCaption: 'TODO welsh',
           totalsLabel: 'TODO welsh',
           backToDashboardAction: 'TODO welsh',

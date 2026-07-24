@@ -2484,6 +2484,140 @@ describe('regulator categories', () => {
   })
 })
 
+describe('obligation snapshots', () => {
+  const snapshot = {
+    schemeId: 'scheme-1',
+    schemeName: 'BatteryBack',
+    agencyCode: 'EA',
+    compliancePeriodYear: '2026',
+    calculatedAt: '2026-05-01T00:00:00.000Z',
+    batteryCategories: ['portable', 'industrial', 'automotive'],
+    targets: {
+      collection: { portable: 45, industrial: 100, automotive: 100 },
+      recycling: { portable: 45, industrial: 50, automotive: 50 }
+    },
+    rules: {
+      version: 'GB-playground-v1',
+      configSource: 'regulatorTargets',
+      configVersion: 'audit-entry-1',
+      configDate: '2026-03-01T00:00:00.000Z'
+    },
+    rows: [],
+    totals: { placed: 0, obligation: 0, accepted: 0, outstanding: 0 }
+  }
+
+  test('saveObligationSnapshot stores and round-trips by scheme and year', () => {
+    const saved = storage.saveObligationSnapshot(snapshot)
+
+    expect(saved.id).toMatch(/^[0-9a-f-]{36}$/)
+    expect(storage.getObligationSnapshot('scheme-1', '2026')).toEqual(saved)
+    expect(storage.listObligationSnapshots({ schemeId: 'scheme-1' })).toEqual([
+      saved
+    ])
+  })
+
+  test('saveObligationSnapshot fills missing dates', () => {
+    const saved = storage.saveObligationSnapshot({
+      ...snapshot,
+      calculatedAt: undefined,
+      createdAt: undefined
+    })
+
+    expect(saved.calculatedAt).toMatch(/T/)
+    expect(saved.createdAt).toMatch(/T/)
+  })
+
+  test('getObligationSnapshot returns null without scheme or year', () => {
+    expect(storage.getObligationSnapshot(null, '2026')).toBeNull()
+    expect(storage.getObligationSnapshot('scheme-1', null)).toBeNull()
+  })
+
+  test('listObligationSnapshots returns newest first', () => {
+    const older = storage.saveObligationSnapshot(snapshot)
+    const newer = storage.saveObligationSnapshot({
+      ...snapshot,
+      compliancePeriodYear: '2027',
+      calculatedAt: '2027-05-01T00:00:00.000Z'
+    })
+
+    expect(
+      storage
+        .listObligationSnapshots({ schemeId: 'scheme-1' })
+        .map((item) => item.id)
+    ).toEqual([newer.id, older.id])
+  })
+
+  test('saveObligationSnapshot requires scheme and year', () => {
+    expect(() =>
+      storage.saveObligationSnapshot({ schemeId: 'scheme-1' })
+    ).toThrow(/schemeId and compliancePeriodYear/)
+  })
+
+  test('saveObligationSnapshot keeps each calculation and returns the latest', () => {
+    const first = storage.saveObligationSnapshot(snapshot)
+    const second = storage.saveObligationSnapshot({
+      ...snapshot,
+      calculatedAt: '2026-06-01T00:00:00.000Z',
+      totals: { placed: 100, obligation: 60, accepted: 0, outstanding: 60 }
+    })
+
+    expect(second.id).not.toBe(first.id)
+    expect(
+      storage.listObligationSnapshots({ schemeId: 'scheme-1' })
+    ).toHaveLength(2)
+    expect(storage.getObligationSnapshot('scheme-1', '2026')).toEqual(second)
+  })
+
+  test('getObligationSnapshot returns a copy', () => {
+    storage.saveObligationSnapshot(snapshot)
+    const stored = storage.getObligationSnapshot('scheme-1', '2026')
+    stored.targets.recycling.portable = 99
+
+    expect(
+      storage.getObligationSnapshot('scheme-1', '2026').targets.recycling
+        .portable
+    ).toBe(45)
+  })
+
+  test('seedDemoData includes a GB snapshot with targets that differ from live config', () => {
+    storage.seedDemoData()
+    const [seeded] = storage.listObligationSnapshots({
+      schemeId: '22222222-0001-4000-a000-000000000002',
+      compliancePeriodYear: '2026'
+    })
+
+    expect(seeded.agencyCode).toBe('EA')
+    expect(seeded.targets.recycling.portable).toBe(48)
+    expect(storage.getRegulatorTargets('EA').recycling.portable).toBe(45)
+  })
+
+  test('seedDemoData does not overwrite an existing snapshot with the same id', () => {
+    storage.saveObligationSnapshot({
+      ...snapshot,
+      id: '55555555-0001-4000-a000-000000000001',
+      schemeId: '22222222-0001-4000-a000-000000000002',
+      targets: {
+        collection: { portable: 1, industrial: 1, automotive: 1 },
+        recycling: { portable: 1, industrial: 1, automotive: 1 }
+      }
+    })
+    storage.seedDemoData()
+
+    expect(
+      storage.getObligationSnapshot(
+        '22222222-0001-4000-a000-000000000002',
+        '2026'
+      ).targets.recycling.portable
+    ).toBe(1)
+    expect(
+      storage.listObligationSnapshots({
+        schemeId: '22222222-0001-4000-a000-000000000002',
+        compliancePeriodYear: '2026'
+      })
+    ).toHaveLength(1)
+  })
+})
+
 describe('listAllProducers', () => {
   test('returns all producers', () => {
     storage.seedDemoData()

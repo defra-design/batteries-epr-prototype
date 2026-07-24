@@ -11,6 +11,7 @@ coverage
 tsconfig.tsbuildinfo
 .env
 storyboard-screenshots/
+scratch/
 
 
 .pnpm-store
