@@ -41,12 +41,19 @@ const toFractions = (percentByCategory) =>
   )
 
 export const resolveTargets = (agencyCode) => {
+  const ids = storage
+    .resolveCategories(agencyCode)
+    .map((category) => category.id)
   const stored = agencyCode ? storage.getRegulatorTargets(agencyCode) : null
-  if (!stored) return DEFAULT_TARGETS
-  return {
-    recycling: toFractions(stored.recycling),
-    collection: toFractions(stored.collection)
-  }
+  const source = stored
+    ? {
+        recycling: toFractions(stored.recycling),
+        collection: toFractions(stored.collection)
+      }
+    : DEFAULT_TARGETS
+  const pick = (field) =>
+    Object.fromEntries(ids.map((id) => [id, source[field][id] ?? 0]))
+  return { recycling: pick('recycling'), collection: pick('collection') }
 }
 
 const sumQuarterCategory = (quarterly, category) =>

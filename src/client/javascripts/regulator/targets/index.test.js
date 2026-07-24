@@ -93,6 +93,18 @@ describe('runRegulatorTargets', () => {
     )
   })
 
+  test('fills a resolved category with 0 when its stored target is missing', () => {
+    storage.setCurrentAgencyCode('EA')
+    storage.saveRegulatorTargets('EA', {
+      collection: { portable: 45 },
+      recycling: { portable: 45 }
+    })
+    buildDom({ view: 'targets', target: 'hydrate' })
+    runRegulatorTargets(document)
+    expect(document.querySelector('#collectionPortable').value).toBe('45')
+    expect(document.querySelector('#collectionIndustrial').value).toBe('0')
+  })
+
   test('escapes special characters in category labels', () => {
     storage.setCurrentAgencyCode('EA')
     storage.saveRegulatorCategories('EA', [

@@ -2384,6 +2384,31 @@ describe('regulator targets', () => {
     storage.seedDemoData()
     expect(storage.getRegulatorTargets('EA')).toEqual(custom)
   })
+
+  test('records an audit entry for a non-base category target change', () => {
+    storage.saveRegulatorTargets('EA', {
+      collection: { portable: 45, industrial: 100, automotive: 100 },
+      recycling: { portable: 45, industrial: 50, automotive: 50 }
+    })
+    storage.saveRegulatorTargets(
+      'EA',
+      {
+        collection: { portable: 45, industrial: 100, automotive: 100, lmt: 60 },
+        recycling: { portable: 45, industrial: 50, automotive: 50, lmt: 50 }
+      },
+      'Priya Shah'
+    )
+    const lmtChange = storage
+      .listConfigAuditEntries('EA', { configType: 'target' })
+      .find((entry) => entry.category === 'lmt' && entry.field === 'recycling')
+    expect(lmtChange).toMatchObject({
+      field: 'recycling',
+      category: 'lmt',
+      previousValue: null,
+      newValue: 50,
+      actorName: 'Priya Shah'
+    })
+  })
 })
 
 describe('regulator categories', () => {
@@ -2459,6 +2484,58 @@ describe('regulator categories', () => {
   test('saveRegulatorCategories ignores a non-array value', () => {
     expect(storage.saveRegulatorCategories('EA', null)).toBeNull()
     expect(storage.getRegulatorCategories('EA')).toBeNull()
+  })
+
+  test('saveRegulatorCategories backfills a zero target for a new category and preserves existing', () => {
+    storage.saveRegulatorTargets('EA', {
+      collection: { portable: 45, industrial: 100, automotive: 100 },
+      recycling: { portable: 45, industrial: 50, automotive: 50 }
+    })
+    storage.saveRegulatorCategories('EA', [
+      { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+      {
+        id: 'industrial',
+        label: 'Industrial batteries',
+        shortLabel: 'Industrial'
+      },
+      {
+        id: 'automotive',
+        label: 'Automotive batteries',
+        shortLabel: 'Automotive'
+      },
+      { id: 'lmt', label: 'LMT batteries', shortLabel: 'LMT' }
+    ])
+
+    const targets = storage.getRegulatorTargets('EA')
+    expect(targets.collection.lmt).toBe(0)
+    expect(targets.recycling.lmt).toBe(0)
+    expect(targets.recycling.portable).toBe(45)
+    expect(targets.collection.automotive).toBe(100)
+  })
+
+  test('saveRegulatorCategories prunes target entries for a removed category', () => {
+    storage.saveRegulatorTargets('EA', {
+      collection: { portable: 45, industrial: 100, automotive: 100 },
+      recycling: { portable: 45, industrial: 50, automotive: 50 }
+    })
+    storage.saveRegulatorCategories('EA', [
+      { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+      {
+        id: 'industrial',
+        label: 'Industrial batteries',
+        shortLabel: 'Industrial'
+      }
+    ])
+
+    const targets = storage.getRegulatorTargets('EA')
+    expect(targets.collection).not.toHaveProperty('automotive')
+    expect(targets.recycling).not.toHaveProperty('automotive')
+    expect(targets.recycling.portable).toBe(45)
+  })
+
+  test('saveRegulatorCategories leaves targets untouched when none are stored', () => {
+    storage.saveRegulatorCategories('EA', sampleCategories())
+    expect(storage.getRegulatorTargets('EA')).toBeNull()
   })
 
   test('seedDemoData seeds default categories for every agency', () => {

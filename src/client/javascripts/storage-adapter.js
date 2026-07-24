@@ -1316,7 +1316,7 @@ const TARGET_TYPES = ['collection', 'recycling']
 const diffTargets = (previous, next) => {
   const changes = []
   for (const field of TARGET_TYPES) {
-    for (const category of categoryIds) {
+    for (const category of Object.keys(next[field])) {
       const previousValue = previous?.[field]?.[category] ?? null
       const newValue = next[field][category]
       if (previousValue !== newValue) {
@@ -1461,6 +1461,20 @@ const diffCategories = (previous, next) => {
   return changes
 }
 
+const reconcileTargetsToCategories = (agencyCode, categories) => {
+  const all = readMap(STORAGE_KEYS.regulatorTargets)
+  const current = all[agencyCode]
+  if (!current) return
+  const ids = categories.map((category) => category.id)
+  const reconcile = (field) =>
+    Object.fromEntries(ids.map((id) => [id, current[field]?.[id] ?? 0]))
+  all[agencyCode] = {
+    collection: reconcile('collection'),
+    recycling: reconcile('recycling')
+  }
+  writeJson(STORAGE_KEYS.regulatorTargets, all)
+}
+
 const saveRegulatorCategories = (agencyCode, categories, actorName) => {
   if (!Array.isArray(categories) || categories.length === 0) {
     return getRegulatorCategories(agencyCode)
@@ -1470,6 +1484,7 @@ const saveRegulatorCategories = (agencyCode, categories, actorName) => {
   const changes = diffCategories(previous, categories)
   all[agencyCode] = categories
   writeJson(STORAGE_KEYS.regulatorCategories, all)
+  reconcileTargetsToCategories(agencyCode, categories)
   appendConfigAuditEntries(
     changes.map((change) =>
       createConfigAuditEntry({
