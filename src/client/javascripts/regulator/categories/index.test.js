@@ -20,6 +20,7 @@ const buildDom = (payload) => {
   document.body.innerHTML = `
     <p data-testid="regulator-categories-agency" hidden></p>
     <form data-testid="regulator-categories-form">
+      <p data-testid="regulator-categories-error" hidden></p>
       <div id="category-rows"></div>
       <button type="button" data-testid="regulator-categories-add">Add</button>
       <input type="hidden" name="categoriesJson" id="categoriesJson" />
@@ -33,6 +34,7 @@ const hydratePayload = (extra = {}) => ({
   view: 'categories',
   target: 'hydrate',
   rowCopy,
+  emptyError: 'Add at least one battery category before saving.',
   auditCopy: { empty: 'No changes yet.' },
   ...extra
 })
@@ -205,6 +207,35 @@ describe('runRegulatorCategories', () => {
     container.dispatchEvent(new Event('input', { bubbles: true }))
     container.dispatchEvent(new Event('click', { bubbles: true }))
     expect(rows().length).toBe(3)
+  })
+
+  test('blocks submit and shows an error when every category is removed', () => {
+    storage.setCurrentAgencyCode('EA')
+    buildDom(hydratePayload())
+    runRegulatorCategories(document)
+
+    let remove = document.querySelector('[data-testid="category-remove"]')
+    while (remove) {
+      remove.click()
+      remove = document.querySelector('[data-testid="category-remove"]')
+    }
+    expect(rows().length).toBe(0)
+
+    const form = document.querySelector(
+      '[data-testid="regulator-categories-form"]'
+    )
+    const submitEvent = new Event('submit', { bubbles: true, cancelable: true })
+    form.dispatchEvent(submitEvent)
+
+    expect(submitEvent.defaultPrevented).toBe(true)
+    expect(document.querySelector('#categoriesJson').value).toBe('')
+    const error = document.querySelector(
+      '[data-testid="regulator-categories-error"]'
+    )
+    expect(error.hidden).toBe(false)
+    expect(error.textContent).toBe(
+      'Add at least one battery category before saving.'
+    )
   })
 
   test('renders a recent-changes preview scoped to the agency', () => {

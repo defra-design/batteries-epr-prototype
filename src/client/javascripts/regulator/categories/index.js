@@ -121,10 +121,20 @@ export const runRegulatorCategories = (
     })
 
   const jsonField = doc.querySelector('#categoriesJson')
+  const errorEl = doc.querySelector(
+    '[data-testid="regulator-categories-error"]'
+  )
   doc
     .querySelector('[data-testid="regulator-categories-form"]')
-    .addEventListener('submit', () => {
-      jsonField.value = JSON.stringify(serialiseCategories(working))
+    .addEventListener('submit', (event) => {
+      const serialised = serialiseCategories(working)
+      if (serialised.length === 0) {
+        event.preventDefault()
+        errorEl.textContent = payload.emptyError
+        errorEl.hidden = false
+        return
+      }
+      jsonField.value = JSON.stringify(serialised)
     })
 
   renderAuditEntries(

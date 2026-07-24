@@ -4,6 +4,20 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import { runObligationPage } from './index.js'
 import { storage, createEvidence } from '../../storage-adapter.js'
 
+const FORMULA_COPY = {
+  formulaEquation: 'X × Y = Z',
+  formula: {
+    collectionHeading: 'Collection obligation',
+    recyclingHeading: 'Recycling obligation',
+    placedTerm: 'the total tonnes placed on the UK market',
+    collectionTargetTerm: 'the collection target',
+    recyclingTargetTerm: 'the recycling target',
+    collectionResultLabel: 'Your collection obligation is:',
+    recyclingResultLabel: 'Your recycling obligation is:',
+    tonnesUnit: 'tonnes'
+  }
+}
+
 const PAYLOAD = {
   view: 'obligation',
   compliancePeriodYear: '2026',
@@ -13,7 +27,8 @@ const PAYLOAD = {
       portable: 'Portable',
       industrial: 'Industrial',
       automotive: 'Automotive'
-    }
+    },
+    ...FORMULA_COPY
   }
 }
 
@@ -28,12 +43,7 @@ const RESULTS = `
     <dd data-testid="obligation-certificate-rule-version"></dd>
     <dd data-testid="obligation-certificate-config"></dd>
     <ul data-testid="obligation-certificate-targets"></ul>
-    <span data-testid="obligation-calc-portable-collection-placed"></span>
-    <span data-testid="obligation-calc-portable-collection-placed"></span>
-    <span data-testid="obligation-calc-portable-collection-target"></span>
-    <span data-testid="obligation-calc-portable-collection-obligation"></span>
-    <span data-testid="obligation-calc-portable-recycling-target"></span>
-    <span data-testid="obligation-calc-portable-recycling-obligation"></span>
+    <div data-testid="obligation-calc-list"></div>
   </div>`
 
 const buildDom = (payload = PAYLOAD) => {
@@ -228,6 +238,7 @@ describe('runObligationPage', () => {
     buildDom({
       ...PAYLOAD,
       copy: {
+        ...PAYLOAD.copy,
         categories: {
           portable: 'Portable & co',
           industrial: 'Industrial',
@@ -310,7 +321,7 @@ describe('runObligationPage', () => {
     expect(
       document.querySelector('[data-testid="obligation-certificate-targets"]')
         .textContent
-    ).toContain('Portable: collection 45%, recycling 45%')
+    ).toContain('Portable batteries: collection 45%, recycling 45%')
   })
 
   test('renders when certificate nodes are not present', () => {
@@ -487,6 +498,96 @@ describe('runObligationPage', () => {
       document.querySelector('[data-testid="obligation-row-portable-placed"]')
         .textContent
     ).toBe('500.000')
+  })
+
+  test('renders a regulator-added category in the table, certificate and calc details', () => {
+    const [scheme] = storage.listSchemes()
+    storage.saveRegulatorCategories(scheme.agencyCode, [
+      { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+      {
+        id: 'industrial',
+        label: 'Industrial batteries',
+        shortLabel: 'Industrial'
+      },
+      {
+        id: 'automotive',
+        label: 'Automotive batteries',
+        shortLabel: 'Automotive'
+      },
+      { id: 'lmt', label: 'Light means of transport', shortLabel: 'LMT' }
+    ])
+    buildDom()
+    runObligationPage(document)
+    clickCalculate()
+
+    expect(
+      document.querySelector('[data-testid="obligation-row-lmt"]').innerHTML
+    ).toContain('Light means of transport')
+    expect(
+      document.querySelector('[data-testid="obligation-certificate-targets"]')
+        .textContent
+    ).toContain('Light means of transport: collection 0%, recycling 0%')
+    expect(
+      document.querySelector('[data-testid="obligation-calc-lmt"]')
+    ).not.toBeNull()
+  })
+
+  test('falls back to content labels when a snapshot has no categoryLabels', () => {
+    const [scheme] = storage.listSchemes()
+    storage.saveObligationSnapshot({
+      schemeId: scheme.id,
+      schemeName: scheme.name,
+      agencyCode: scheme.agencyCode,
+      compliancePeriodYear: '2026',
+      calculatedAt: '2026-05-01T00:00:00.000Z',
+      batteryCategories: ['portable', 'lmt'],
+      targets: {
+        collection: { portable: 45, lmt: 0 },
+        recycling: { portable: 45, lmt: 0 }
+      },
+      rules: {
+        version: 'GB-playground-v1',
+        configSource: 'regulatorTargets',
+        configVersion: 'default'
+      },
+      rows: [
+        {
+          category: 'portable',
+          placed: 0,
+          targetPercent: 45,
+          collectionTargetPercent: 45,
+          obligation: 0,
+          collectionObligation: 0,
+          accepted: 0,
+          outstanding: 0
+        },
+        {
+          category: 'lmt',
+          placed: 0,
+          targetPercent: 0,
+          collectionTargetPercent: 0,
+          obligation: 0,
+          collectionObligation: 0,
+          accepted: 0,
+          outstanding: 0
+        }
+      ],
+      totals: { placed: 0, obligation: 0, accepted: 0, outstanding: 0 }
+    })
+    buildDom()
+
+    expect(runObligationPage(document)).toBe('rendered')
+    expect(
+      document.querySelector('[data-testid="obligation-row-portable"]')
+        .innerHTML
+    ).toContain('Portable')
+    expect(
+      document.querySelector('[data-testid="obligation-certificate-targets"]')
+        .textContent
+    ).toContain('Portable: collection 45%, recycling 45%')
+    expect(
+      document.querySelector('[data-testid="obligation-row-lmt"]').innerHTML
+    ).toContain('lmt')
   })
 
   test('redirects to the sign-in picker when no current scheme is selected', () => {

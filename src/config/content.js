@@ -3157,6 +3157,7 @@ export const content = {
           removeAction: 'Remove',
           saveAction: 'Save categories',
           savedMessage: 'Categories saved.',
+          emptyError: 'Add at least one battery category before saving.',
           backToDashboardAction: 'Back to regulator dashboard',
           historyPreviewHeading: 'Recent changes',
           historyEmpty:
@@ -3475,6 +3476,7 @@ export const content = {
           removeAction: 'TODO welsh',
           saveAction: 'TODO welsh',
           savedMessage: 'TODO welsh',
+          emptyError: 'TODO welsh',
           backToDashboardAction: 'TODO welsh',
           historyPreviewHeading: 'TODO welsh',
           historyEmpty: 'TODO welsh',

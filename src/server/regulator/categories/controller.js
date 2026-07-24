@@ -41,6 +41,7 @@ export const categoriesController = {
             moveDownAction: pageContent.moveDownAction,
             removeAction: pageContent.removeAction
           },
+          emptyError: pageContent.emptyError,
           auditCopy: { empty: pageContent.historyEmpty }
         }
       })

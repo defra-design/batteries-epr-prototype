@@ -28,12 +28,14 @@ describe('#regulatorCategoriesController', () => {
       'regulator-categories-rows',
       'regulator-categories-add',
       'regulator-categories-save',
+      'regulator-categories-error',
       'battery-categories-caveat'
     ]) {
       expect(result).toEqual(expect.stringContaining(`data-testid="${id}"`))
     }
     expect(result).toEqual(expect.stringContaining('"target":"hydrate"'))
     expect(result).toEqual(expect.stringContaining('"nameLabel"'))
+    expect(result).toEqual(expect.stringContaining('"emptyError"'))
   })
 
   test('the add button is a button, not a form-submitting button', async () => {

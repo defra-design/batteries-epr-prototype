@@ -44,15 +44,15 @@ describe('#obligationController', () => {
       'obligation-certificate-caveat',
       'obligation-calc-heading',
       'obligation-calc-warning',
-      'obligation-calc-portable-collection-placed',
-      'obligation-calc-portable-collection-target',
-      'obligation-calc-portable-collection-obligation',
-      'obligation-calc-portable-recycling-obligation',
+      'obligation-calc-list',
       'obligation-period',
       'obligation-back-link'
     ]) {
       expect(result).toEqual(expect.stringContaining(`data-testid="${id}"`))
     }
+    expect(result).not.toEqual(
+      expect.stringContaining('data-testid="obligation-calc-portable"')
+    )
     expect(result).toEqual(expect.stringContaining('"view":"obligation"'))
     expect(result).toEqual(
       expect.stringContaining('"compliancePeriodYear":"2026"')

@@ -28,6 +28,8 @@
         <h2 class="govuk-heading-m">{{ labels.rowsHeading }}</h2>
         <p class="govuk-hint">{{ labels.rowsHint }}</p>
 
+        <p class="govuk-error-message" data-testid="regulator-categories-error" hidden></p>
+
         <div id="category-rows" data-testid="regulator-categories-rows"></div>
 
         {{ govukButton({

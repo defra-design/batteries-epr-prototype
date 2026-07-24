@@ -2420,12 +2420,45 @@ describe('regulator categories', () => {
     ])
   })
 
+  test('resolveCategories falls back to the default set when an empty array is stored', () => {
+    storage.saveRegulatorCategories('EA', sampleCategories())
+    globalThis.localStorage.setItem(
+      STORAGE_KEYS.regulatorCategories,
+      JSON.stringify({ EA: [] })
+    )
+    expect(storage.resolveCategories('EA')).toEqual([
+      { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+      {
+        id: 'industrial',
+        label: 'Industrial batteries',
+        shortLabel: 'Industrial'
+      },
+      {
+        id: 'automotive',
+        label: 'Automotive batteries',
+        shortLabel: 'Automotive'
+      }
+    ])
+  })
+
   test('saveRegulatorCategories stores per agency and round-trips', () => {
     const categories = sampleCategories()
     expect(storage.saveRegulatorCategories('EA', categories)).toBe(categories)
     expect(storage.getRegulatorCategories('EA')).toEqual(categories)
     expect(storage.getRegulatorCategories('NRW')).toBeNull()
     expect(storage.resolveCategories('EA')).toEqual(categories)
+  })
+
+  test('saveRegulatorCategories ignores an empty list and keeps existing categories', () => {
+    const categories = sampleCategories()
+    storage.saveRegulatorCategories('EA', categories)
+    expect(storage.saveRegulatorCategories('EA', [])).toEqual(categories)
+    expect(storage.getRegulatorCategories('EA')).toEqual(categories)
+  })
+
+  test('saveRegulatorCategories ignores a non-array value', () => {
+    expect(storage.saveRegulatorCategories('EA', null)).toBeNull()
+    expect(storage.getRegulatorCategories('EA')).toBeNull()
   })
 
   test('seedDemoData seeds default categories for every agency', () => {

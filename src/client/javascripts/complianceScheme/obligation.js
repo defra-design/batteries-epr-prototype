@@ -104,17 +104,17 @@ export const buildObligation = ({
   return { rows, totals }
 }
 
-const toWholePercentages = (targets) => ({
+const toWholePercentages = (targets, ids) => ({
   collection: Object.fromEntries(
-    CATEGORIES.map((category) => [
+    ids.map((category) => [
       category,
-      Math.round(targets.collection[category] * 100)
+      Math.round((targets.collection[category] ?? 0) * 100)
     ])
   ),
   recycling: Object.fromEntries(
-    CATEGORIES.map((category) => [
+    ids.map((category) => [
       category,
-      Math.round(targets.recycling[category] * 100)
+      Math.round((targets.recycling[category] ?? 0) * 100)
     ])
   )
 })
@@ -130,7 +130,14 @@ export const buildObligationSnapshot = ({
   targets = resolveTargets(scheme?.agencyCode),
   calculatedAt = new Date().toISOString()
 }) => {
-  const { rows, totals } = buildObligation({ quarterly, evidence, targets })
+  const categories = storage.resolveCategories(scheme?.agencyCode)
+  const ids = categories.map((category) => category.id)
+  const { rows, totals } = buildObligation({
+    quarterly,
+    evidence,
+    targets,
+    categoryIds: ids
+  })
   const config = latestConfigEntry(scheme?.agencyCode)
 
   return {
@@ -139,8 +146,11 @@ export const buildObligationSnapshot = ({
     agencyCode: scheme.agencyCode,
     compliancePeriodYear,
     calculatedAt,
-    batteryCategories: [...CATEGORIES],
-    targets: toWholePercentages(targets),
+    batteryCategories: ids,
+    categoryLabels: Object.fromEntries(
+      categories.map((category) => [category.id, category.label])
+    ),
+    targets: toWholePercentages(targets, ids),
     rules: {
       version: RULE_VERSION,
       configSource: 'regulatorTargets',

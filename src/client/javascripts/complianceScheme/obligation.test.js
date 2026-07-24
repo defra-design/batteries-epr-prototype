@@ -284,4 +284,39 @@ describe('buildObligationSnapshot', () => {
 
     expect(snapshot.rules.configVersion).toBe('default')
   })
+
+  test('includes a regulator-added category with its label and a zero target', () => {
+    storage.saveRegulatorCategories('EA', [
+      { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+      {
+        id: 'industrial',
+        label: 'Industrial batteries',
+        shortLabel: 'Industrial'
+      },
+      {
+        id: 'automotive',
+        label: 'Automotive batteries',
+        shortLabel: 'Automotive'
+      },
+      { id: 'lmt', label: 'Light means of transport', shortLabel: 'LMT' }
+    ])
+
+    const snapshot = buildObligationSnapshot({
+      scheme: { id: 'scheme-1', name: 'BatteryBack', agencyCode: 'EA' },
+      compliancePeriodYear: '2026',
+      quarterly: [
+        {
+          memberData: [{ memberId: 'm-1', marketData: { lmt: '100' } }]
+        }
+      ],
+      evidence: [],
+      targets: resolveTargets('EA')
+    })
+
+    expect(snapshot.batteryCategories).toContain('lmt')
+    expect(snapshot.categoryLabels.lmt).toBe('Light means of transport')
+    expect(snapshot.rows.find((r) => r.category === 'lmt')).toBeDefined()
+    expect(snapshot.targets.recycling.lmt).toBe(0)
+    expect(snapshot.targets.collection.lmt).toBe(0)
+  })
 })

@@ -1397,8 +1397,12 @@ const defaultCategories = () =>
 const getRegulatorCategories = (agencyCode) =>
   readMap(STORAGE_KEYS.regulatorCategories)[agencyCode] ?? null
 
-const resolveCategories = (agencyCode) =>
-  getRegulatorCategories(agencyCode) ?? defaultCategories()
+const resolveCategories = (agencyCode) => {
+  const stored = getRegulatorCategories(agencyCode)
+  return Array.isArray(stored) && stored.length > 0
+    ? stored
+    : defaultCategories()
+}
 
 const orderOfShared = (list, sharedIds) =>
   list.map((category) => category.id).filter((id) => sharedIds.has(id))
@@ -1458,6 +1462,9 @@ const diffCategories = (previous, next) => {
 }
 
 const saveRegulatorCategories = (agencyCode, categories, actorName) => {
+  if (!Array.isArray(categories) || categories.length === 0) {
+    return getRegulatorCategories(agencyCode)
+  }
   const all = readMap(STORAGE_KEYS.regulatorCategories)
   const previous = all[agencyCode] ?? defaultCategories()
   const changes = diffCategories(previous, categories)
