@@ -229,11 +229,18 @@ export const runQuarterlyStep = (
   }
 
   if (payload.target === 'persist') {
+    const patch =
+      payload.patch.status === 'submitted'
+        ? {
+            ...payload.patch,
+            categoryIds: categories.map((category) => category.id)
+          }
+        : payload.patch
     storage.upsertQuarterlySubmission(
       scheme.id,
       payload.compliancePeriodYear,
       payload.quarter,
-      payload.patch
+      patch
     )
     if (payload.next) {
       loc.assign(payload.next)

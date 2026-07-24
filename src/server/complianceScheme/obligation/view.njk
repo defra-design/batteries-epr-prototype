@@ -2,6 +2,7 @@
 
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -11,6 +12,16 @@
       <p class="govuk-body govuk-!-margin-bottom-2">
         <strong>Compliance period:</strong> <span data-testid="obligation-period">{{ compliancePeriodYear }}</span>
       </p>
+
+      {% set configChangedHtml %}
+        <p class="govuk-body">{{ labels.configChanged.intro }}</p>
+        <ul class="govuk-list" data-testid="obligation-config-changed-list"></ul>
+      {% endset %}
+      {{ govukNotificationBanner({
+        titleText: labels.configChanged.title,
+        html: configChangedHtml,
+        attributes: { "data-testid": "obligation-config-changed", hidden: "hidden" }
+      }) }}
 
       {{ govukButton({
         text: labels.calculateAction,

@@ -10,7 +10,8 @@ export const obligationController = {
     const pagePayload = {
       view: 'obligation',
       compliancePeriodYear,
-      copy: pageContent
+      copy: pageContent,
+      urls: { quarterly: paths.complianceSchemeQuarterly }
     }
 
     return h.view('complianceScheme/obligation/view', {

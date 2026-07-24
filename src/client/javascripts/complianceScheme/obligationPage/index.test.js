@@ -21,8 +21,14 @@ const FORMULA_COPY = {
 const PAYLOAD = {
   view: 'obligation',
   compliancePeriodYear: '2026',
+  urls: { quarterly: '/compliance-scheme/quarterly/{quarter}/{step}' },
   copy: {
     incompleteQuartersConfirm: 'Not all quarters done. Calculate anyway?',
+    configChanged: {
+      title: 'Battery categories have changed',
+      intro: 'Categories changed since you submitted.',
+      resubmitAction: 'Resubmit your {quarter} return'
+    },
     categories: {
       portable: 'Portable',
       industrial: 'Industrial',
@@ -48,6 +54,9 @@ const RESULTS = `
 
 const buildDom = (payload = PAYLOAD) => {
   document.body.innerHTML = `
+    <div data-testid="obligation-config-changed" hidden>
+      <ul data-testid="obligation-config-changed-list"></ul>
+    </div>
     <button data-testid="obligation-calculate" type="button">Calculate obligation</button>
     <p data-testid="obligation-empty" hidden></p>
     ${RESULTS}
@@ -588,6 +597,132 @@ describe('runObligationPage', () => {
     expect(
       document.querySelector('[data-testid="obligation-row-lmt"]').innerHTML
     ).toContain('lmt')
+  })
+
+  const baseCategories = () => [
+    { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+    {
+      id: 'industrial',
+      label: 'Industrial batteries',
+      shortLabel: 'Industrial'
+    },
+    {
+      id: 'automotive',
+      label: 'Automotive batteries',
+      shortLabel: 'Automotive'
+    }
+  ]
+
+  const submitQuarter = (scheme, extra = {}) =>
+    storage.saveQuarterlySubmission({
+      schemeId: scheme.id,
+      compliancePeriodYear: '2026',
+      quarter: 'Q1',
+      status: 'submitted',
+      memberData: [],
+      ...extra
+    })
+
+  const banner = () =>
+    document.querySelector('[data-testid="obligation-config-changed"]')
+
+  test('prompts to resubmit when a category is added after a return was submitted', () => {
+    const [scheme] = storage.listSchemes()
+    submitQuarter(scheme, {
+      categoryIds: ['portable', 'industrial', 'automotive']
+    })
+    storage.saveRegulatorCategories(scheme.agencyCode, [
+      ...baseCategories(),
+      { id: 'lmt', label: 'LMT batteries', shortLabel: 'LMT' }
+    ])
+    buildDom()
+
+    runObligationPage(document)
+
+    expect(banner().hidden).toBe(false)
+    const link = document.querySelector(
+      '[data-testid="obligation-config-changed-Q1"]'
+    )
+    expect(link.getAttribute('href')).toBe(
+      '/compliance-scheme/quarterly/Q1/member-list'
+    )
+    expect(link.textContent).toBe('Resubmit your Q1 return')
+
+    clickCalculate()
+    expect(
+      storage.listObligationSnapshots({ schemeId: scheme.id })
+    ).toHaveLength(1)
+    expect(banner().hidden).toBe(true)
+  })
+
+  test('prompts to resubmit when a category is removed after a return was submitted', () => {
+    const [scheme] = storage.listSchemes()
+    submitQuarter(scheme, {
+      categoryIds: ['portable', 'industrial', 'automotive']
+    })
+    storage.saveRegulatorCategories(scheme.agencyCode, [
+      { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+      {
+        id: 'industrial',
+        label: 'Industrial batteries',
+        shortLabel: 'Industrial'
+      }
+    ])
+    buildDom()
+
+    runObligationPage(document)
+    expect(banner().hidden).toBe(false)
+  })
+
+  test('does not prompt when the submitted categories still match', () => {
+    const [scheme] = storage.listSchemes()
+    submitQuarter(scheme, {
+      categoryIds: ['portable', 'industrial', 'automotive']
+    })
+    buildDom()
+
+    runObligationPage(document)
+    expect(banner().hidden).toBe(true)
+  })
+
+  test('infers the submitted categories from member data for legacy returns', () => {
+    const [scheme] = storage.listSchemes()
+    submitQuarter(scheme, {
+      memberData: [
+        {
+          memberId: 'm-1',
+          marketData: { portable: '1', industrial: '0', automotive: '0' },
+          wasteData: { portable: '0', industrial: '0', automotive: '0' }
+        },
+        { memberId: 'm-2', marketData: null, wasteData: null }
+      ]
+    })
+    storage.saveRegulatorCategories(scheme.agencyCode, [
+      ...baseCategories(),
+      { id: 'lmt', label: 'LMT batteries', shortLabel: 'LMT' }
+    ])
+    buildDom()
+
+    runObligationPage(document)
+    expect(banner().hidden).toBe(false)
+  })
+
+  test('does not prompt when the submitted category set cannot be determined', () => {
+    const [scheme] = storage.listSchemes()
+    storage.saveQuarterlySubmission({
+      schemeId: scheme.id,
+      compliancePeriodYear: '2026',
+      quarter: 'Q1',
+      status: 'submitted'
+    })
+    storage.saveRegulatorCategories(scheme.agencyCode, [
+      ...baseCategories(),
+      { id: 'lmt', label: 'LMT batteries', shortLabel: 'LMT' }
+    ])
+    buildDom()
+
+    runObligationPage(document)
+    expect(banner().hidden).toBe(true)
   })
 
   test('redirects to the sign-in picker when no current scheme is selected', () => {

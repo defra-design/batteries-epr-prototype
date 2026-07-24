@@ -88,6 +88,28 @@ describe('runQuarterlyStep persist (scheme-level)', () => {
     const submission = storage.findQuarterlySubmission(scheme.id, '2026', 'Q1')
     expect(submission.status).toBe('submitted')
     expect(submission.submittedOn).toBe('2026-05-01T00:00:00Z')
+    expect(submission.categoryIds).toEqual([
+      'portable',
+      'industrial',
+      'automotive'
+    ])
+  })
+
+  test('a non-submit persist does not stamp categoryIds', () => {
+    buildDom({
+      view: 'quarterly',
+      step: 'declaration',
+      quarter: 'Q1',
+      compliancePeriodYear: '2026',
+      target: 'persist',
+      patch: { status: 'in-progress' },
+      next: null
+    })
+
+    runQuarterlyStep(document, globalThis.location)
+
+    const submission = storage.findQuarterlySubmission(scheme.id, '2026', 'Q1')
+    expect(submission.categoryIds).toBeUndefined()
   })
 
   test('persist without next returns persisted without navigating', () => {

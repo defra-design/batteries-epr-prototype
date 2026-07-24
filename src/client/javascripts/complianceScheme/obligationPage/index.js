@@ -241,7 +241,61 @@ const allQuartersSubmitted = (scheme, year) => {
 
 // Once an obligation is calculated for a year it is final, so the button is
 // hidden whenever a snapshot already exists for the current compliance period.
-const render = (doc, scheme, year, copy) => {
+const submittedCategoryIds = (submission) => {
+  if (Array.isArray(submission.categoryIds)) return submission.categoryIds
+  const ids = new Set()
+  for (const member of submission.memberData ?? []) {
+    for (const key of Object.keys(member.marketData ?? {})) ids.add(key)
+    for (const key of Object.keys(member.wasteData ?? {})) ids.add(key)
+  }
+  return [...ids]
+}
+
+const sameIdSet = (a, b) =>
+  a.length === b.length && a.every((id) => b.includes(id))
+
+const divergedQuarters = (scheme, year) => {
+  const currentIds = storage
+    .resolveCategories(scheme.agencyCode)
+    .map((category) => category.id)
+  const submissions = storage.listQuarterlySubmissions(scheme.id, year)
+  return QUARTERS.filter((quarter) => {
+    const submission = submissions.find(
+      (item) => item.quarter === quarter && item.status === 'submitted'
+    )
+    if (!submission) return false
+    const submitted = submittedCategoryIds(submission)
+    return submitted.length > 0 && !sameIdSet(submitted, currentIds)
+  })
+}
+
+const renderConfigChangedWarning = (doc, scheme, year, copy, urls) => {
+  const banner = doc.querySelector('[data-testid="obligation-config-changed"]')
+  if (!banner) return
+  const quarters = divergedQuarters(scheme, year)
+  if (quarters.length === 0) {
+    banner.hidden = true
+    return
+  }
+  const list = doc.querySelector(
+    '[data-testid="obligation-config-changed-list"]'
+  )
+  list.innerHTML = quarters
+    .map((quarter) => {
+      const href = urls.quarterly
+        .replace('{quarter}', quarter)
+        .replace('{step}', 'member-list')
+      const text = copy.configChanged.resubmitAction.replace(
+        '{quarter}',
+        quarter
+      )
+      return `<li><a class="govuk-link" href="${escape(href)}" data-testid="obligation-config-changed-${escape(quarter)}">${escape(text)}</a></li>`
+    })
+    .join('')
+  banner.hidden = false
+}
+
+const render = (doc, scheme, year, copy, urls) => {
   const latest = storage.getObligationSnapshot(scheme.id, year)
   const previous = storage
     .listObligationSnapshots({ schemeId: scheme.id })
@@ -249,9 +303,11 @@ const render = (doc, scheme, year, copy) => {
   renderPrevious(doc, previous)
   setHidden(doc, '[data-testid="obligation-calculate"]', Boolean(latest))
   if (!latest) {
+    renderConfigChangedWarning(doc, scheme, year, copy, urls)
     showEmptyState(doc)
     return 'awaiting-calculation'
   }
+  setHidden(doc, '[data-testid="obligation-config-changed"]', true)
   renderSnapshot(doc, latest, copy)
   showResults(doc)
   return 'rendered'
@@ -266,7 +322,7 @@ export const runObligationPage = (
   if (!scheme) return 'redirected-to-sign-in'
   const year = payload.compliancePeriodYear
 
-  const status = render(doc, scheme, year, payload.copy)
+  const status = render(doc, scheme, year, payload.copy, payload.urls)
 
   const button = doc.querySelector('[data-testid="obligation-calculate"]')
   if (button) {
@@ -288,7 +344,7 @@ export const runObligationPage = (
           evidence: storage.listEvidence(scheme.id, year)
         })
       )
-      render(doc, scheme, year, payload.copy)
+      render(doc, scheme, year, payload.copy, payload.urls)
     })
   }
 

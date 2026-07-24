@@ -45,6 +45,8 @@ describe('#obligationController', () => {
       'obligation-calc-heading',
       'obligation-calc-warning',
       'obligation-calc-list',
+      'obligation-config-changed',
+      'obligation-config-changed-list',
       'obligation-period',
       'obligation-back-link'
     ]) {
@@ -56,6 +58,9 @@ describe('#obligationController', () => {
     expect(result).toEqual(expect.stringContaining('"view":"obligation"'))
     expect(result).toEqual(
       expect.stringContaining('"compliancePeriodYear":"2026"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining('/compliance-scheme/quarterly/{quarter}/{step}')
     )
   })
 })

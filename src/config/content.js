@@ -1895,6 +1895,12 @@ export const content = {
           },
           warningText:
             'If you believe your data is incorrect, contact your regulator immediately.',
+          configChanged: {
+            title: 'Battery categories have changed',
+            intro:
+              'The battery categories have changed since you submitted one or more quarterly returns. Resubmit the affected returns so your obligation reflects the current categories. You can still calculate now.',
+            resubmitAction: 'Resubmit your {quarter} return'
+          },
           columns: {
             category: 'Category',
             placed: 'Placed on market (tonnes)',
@@ -2532,6 +2538,11 @@ export const content = {
             tonnesUnit: 'TODO welsh'
           },
           warningText: 'TODO welsh',
+          configChanged: {
+            title: 'TODO welsh',
+            intro: 'TODO welsh',
+            resubmitAction: 'TODO welsh'
+          },
           columns: {
             category: 'TODO welsh',
             placed: 'TODO welsh',
