@@ -51,6 +51,12 @@ describe('describeAuditEntry', () => {
     )
   })
 
+  test('includes the compliance year for a year-specific target change', () => {
+    expect(describeAuditEntry(entry({ year: '2027' }), copy)).toBe(
+      'Priya Shah (EA) changed the portable recycling for 2027 target from 40% to 45%'
+    )
+  })
+
   test('describes a first-time set when there is no previous value', () => {
     expect(describeAuditEntry(entry({ previousValue: null }), copy)).toBe(
       'Priya Shah (EA) set the portable recycling target to 45%'
@@ -168,6 +174,12 @@ describe('renderAuditTable', () => {
     expect(cells[2].textContent).toBe('40%')
     expect(cells[3].textContent).toBe('45%')
     expect(cells[4].textContent).toBe('Priya Shah (EA)')
+  })
+
+  test('renders year-specific target labels in the audit table', () => {
+    renderAuditTable(tbody, empty, [entry({ year: '2027' })], copy)
+    const cells = tbody.querySelectorAll('td')
+    expect(cells[1].textContent).toBe('Portable recycling (2027)')
   })
 
   test('shows the not-set label when there is no previous value', () => {

@@ -1313,14 +1313,54 @@ const getRegulatorTargets = (agencyCode) =>
 
 const TARGET_TYPES = ['collection', 'recycling']
 
+const isPlainObject = (value) =>
+  value !== null && typeof value === 'object' && !Array.isArray(value)
+
+const targetYearEntries = (targets, field, category) => {
+  const value = targets?.[field]?.[category]
+  if (!isPlainObject(value)) return [['legacy', value]]
+  return Object.entries(value)
+}
+
+const targetValueAt = (targets, field, category, year) => {
+  const value = targets?.[field]?.[category]
+  if (!isPlainObject(value)) return value ?? null
+  const years = Object.keys(value)
+    .map(Number)
+    .filter((configuredYear) => Number.isInteger(configuredYear))
+    .filter((configuredYear) =>
+      year === 'legacy' ? true : configuredYear <= Number(year)
+    )
+    .sort((a, b) => (year === 'legacy' ? a - b : b - a))
+  const effectiveYear = years[0]
+  return effectiveYear ? value[String(effectiveYear)] : null
+}
+
+const configuredTargetYears = (targets) => [
+  ...new Set(
+    TARGET_TYPES.flatMap((field) =>
+      Object.values(targets?.[field] ?? {}).flatMap((value) =>
+        isPlainObject(value) ? Object.keys(value) : []
+      )
+    )
+  )
+]
+
 const diffTargets = (previous, next) => {
   const changes = []
   for (const field of TARGET_TYPES) {
     for (const category of Object.keys(next[field])) {
-      const previousValue = previous?.[field]?.[category] ?? null
-      const newValue = next[field][category]
-      if (previousValue !== newValue) {
-        changes.push({ field, category, previousValue, newValue })
+      for (const [year, newValue] of targetYearEntries(next, field, category)) {
+        const previousValue = targetValueAt(previous, field, category, year)
+        if (previousValue !== newValue) {
+          changes.push({
+            field,
+            category,
+            year: year === 'legacy' ? null : year,
+            previousValue,
+            newValue
+          })
+        }
       }
     }
   }
@@ -1466,8 +1506,13 @@ const reconcileTargetsToCategories = (agencyCode, categories) => {
   const current = all[agencyCode]
   if (!current) return
   const ids = categories.map((category) => category.id)
+  const years = configuredTargetYears(current)
+  const emptyTarget =
+    years.length > 0 ? Object.fromEntries(years.map((year) => [year, 0])) : 0
   const reconcile = (field) =>
-    Object.fromEntries(ids.map((id) => [id, current[field]?.[id] ?? 0]))
+    Object.fromEntries(
+      ids.map((id) => [id, current[field]?.[id] ?? emptyTarget])
+    )
   all[agencyCode] = {
     collection: reconcile('collection'),
     recycling: reconcile('recycling')

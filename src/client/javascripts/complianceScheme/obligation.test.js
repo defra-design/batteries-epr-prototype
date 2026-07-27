@@ -1,15 +1,15 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, test } from 'vitest'
 
+import { storage } from '../storage-adapter.js'
 import {
   CATEGORIES,
-  TARGET_PERCENTAGES,
   COLLECTION_TARGET_PERCENTAGES,
+  TARGET_PERCENTAGES,
   buildObligation,
   buildObligationSnapshot,
   resolveTargets
 } from './obligation.js'
-import { storage } from '../storage-adapter.js'
 
 beforeEach(() => {
   globalThis.localStorage.clear()
@@ -271,6 +271,61 @@ describe('resolveTargets', () => {
       collection: { portable: 0.45, industrial: 1, automotive: 1 },
       recycling: { portable: 0.6, industrial: 0.5, automotive: 0.5 }
     })
+  })
+
+  test('resolves explicit year targets and carries forward the latest prior year', () => {
+    storage.saveRegulatorTargets('EA', {
+      collection: {
+        portable: { 2026: 45, 2028: 55 },
+        industrial: { 2026: 100 },
+        automotive: { 2026: 100 }
+      },
+      recycling: {
+        portable: { 2026: 45, 2027: 48 },
+        industrial: { 2026: 50 },
+        automotive: { 2026: 50 }
+      }
+    })
+
+    expect(resolveTargets('EA', '2027').recycling.portable).toBe(0.48)
+    expect(resolveTargets('EA', '2027').collection.portable).toBe(0.45)
+    expect(resolveTargets('EA', '2029').collection.portable).toBe(0.55)
+    expect(resolveTargets('EA', '2025').collection.portable).toBe(0)
+  })
+
+  test('resolves year-keyed targets for the current year when no year is supplied', () => {
+    const currentYear = String(new Date().getUTCFullYear())
+    storage.saveRegulatorTargets('EA', {
+      collection: {
+        portable: { [currentYear]: 45 },
+        industrial: { [currentYear]: 100 },
+        automotive: { [currentYear]: 100 }
+      },
+      recycling: {
+        portable: { [currentYear]: 49 },
+        industrial: { [currentYear]: 50 },
+        automotive: { [currentYear]: 50 }
+      }
+    })
+
+    expect(resolveTargets('EA').recycling.portable).toBe(0.49)
+  })
+
+  test('treats a null configured year target as zero', () => {
+    storage.saveRegulatorTargets('EA', {
+      collection: {
+        portable: { 2026: null },
+        industrial: { 2026: 100 },
+        automotive: { 2026: 100 }
+      },
+      recycling: {
+        portable: { 2026: 45 },
+        industrial: { 2026: 50 },
+        automotive: { 2026: 50 }
+      }
+    })
+
+    expect(resolveTargets('EA', '2026').collection.portable).toBe(0)
   })
 
   test('covers exactly the resolved categories, defaulting a target-less one to 0', () => {

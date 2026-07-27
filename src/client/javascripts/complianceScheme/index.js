@@ -1,7 +1,7 @@
-import { storage } from '../storage-adapter.js'
 import { readPagePayload } from '../page-payload.js'
-import { buildDashboardViewModel } from './tile-builders.js'
+import { storage } from '../storage-adapter.js'
 import { buildObligation, resolveTargets } from './obligation.js'
+import { buildDashboardViewModel } from './tile-builders.js'
 
 const HTML_ENTITIES = {
   '&': '&amp;',
@@ -198,7 +198,7 @@ export const initComplianceSchemeDashboard = (
     buildObligation({
       quarterly,
       evidence,
-      targets: resolveTargets(scheme.agencyCode),
+      targets: resolveTargets(scheme.agencyCode, year),
       categoryIds
     })
   const viewModel = buildDashboardViewModel({

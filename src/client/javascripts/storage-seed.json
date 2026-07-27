@@ -72,20 +72,52 @@
   },
   "regulatorTargets": {
     "EA": {
-      "collection": { "portable": 45, "industrial": 100, "automotive": 100 },
-      "recycling": { "portable": 45, "industrial": 50, "automotive": 50 }
+      "collection": {
+        "portable": { "2026": 45, "2027": 50 },
+        "industrial": { "2026": 100, "2027": 100 },
+        "automotive": { "2026": 100, "2027": 100 }
+      },
+      "recycling": {
+        "portable": { "2026": 45, "2027": 48 },
+        "industrial": { "2026": 50, "2027": 52 },
+        "automotive": { "2026": 50, "2027": 50 }
+      }
     },
     "NRW": {
-      "collection": { "portable": 45, "industrial": 100, "automotive": 100 },
-      "recycling": { "portable": 45, "industrial": 50, "automotive": 50 }
+      "collection": {
+        "portable": { "2026": 45, "2027": 50 },
+        "industrial": { "2026": 100, "2027": 100 },
+        "automotive": { "2026": 100, "2027": 100 }
+      },
+      "recycling": {
+        "portable": { "2026": 45, "2027": 48 },
+        "industrial": { "2026": 50, "2027": 52 },
+        "automotive": { "2026": 50, "2027": 50 }
+      }
     },
     "SEPA": {
-      "collection": { "portable": 45, "industrial": 100, "automotive": 100 },
-      "recycling": { "portable": 45, "industrial": 50, "automotive": 50 }
+      "collection": {
+        "portable": { "2026": 45, "2027": 50 },
+        "industrial": { "2026": 100, "2027": 100 },
+        "automotive": { "2026": 100, "2027": 100 }
+      },
+      "recycling": {
+        "portable": { "2026": 45, "2027": 48 },
+        "industrial": { "2026": 50, "2027": 52 },
+        "automotive": { "2026": 50, "2027": 50 }
+      }
     },
     "NIEA": {
-      "collection": { "portable": 45, "industrial": 100, "automotive": 100 },
-      "recycling": { "portable": 45, "industrial": 50, "automotive": 50 }
+      "collection": {
+        "portable": { "2026": 45, "2027": 50 },
+        "industrial": { "2026": 100, "2027": 100 },
+        "automotive": { "2026": 100, "2027": 100 }
+      },
+      "recycling": {
+        "portable": { "2026": 45, "2027": 48 },
+        "industrial": { "2026": 50, "2027": 52 },
+        "automotive": { "2026": 50, "2027": 50 }
+      }
     }
   },
   "configAuditLog": [

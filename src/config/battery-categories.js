@@ -18,6 +18,9 @@ const capitalise = (value) => `${value[0].toUpperCase()}${value.slice(1)}`
 
 export const categoryFieldName = (prefix, id) => `${prefix}${capitalise(id)}`
 
+export const targetYearFieldName = (prefix, id, year) =>
+  `${categoryFieldName(prefix, id)}${year}`
+
 export const categoryFlagName = (id) => `is${capitalise(id)}`
 
 export const emptyCategoryMap = (value = 0) =>
@@ -25,3 +28,6 @@ export const emptyCategoryMap = (value = 0) =>
 
 export const CATEGORY_CAVEAT =
   'These are demonstration categories for the playground, not the authoritative statutory battery-category definitions.'
+
+export const TARGET_CAVEAT =
+  'These are demonstration target figures for the playground, not the authoritative statutory collection or recycling targets.'

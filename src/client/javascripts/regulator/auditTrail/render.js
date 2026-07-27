@@ -20,7 +20,8 @@ const formatDate = (iso) => {
 }
 
 export const describeAuditEntry = (entry, copy) => {
-  const change = `${copy.categoryLabels[entry.category]} ${copy.fieldLabels[entry.field]}`
+  const year = entry.year ? ` for ${entry.year}` : ''
+  const change = `${copy.categoryLabels[entry.category]} ${copy.fieldLabels[entry.field]}${year}`
   const actor = `${entry.actorName} (${entry.agencyCode})`
   if (entry.previousValue === null || entry.previousValue === undefined) {
     return `${actor} set the ${change} target to ${entry.newValue}%`
@@ -64,7 +65,7 @@ export const renderAuditEntries = (listEl, entries, copy) => {
 const capitalise = (value) => value.charAt(0).toUpperCase() + value.slice(1)
 
 const targetLabel = (entry, copy) =>
-  `${capitalise(copy.categoryLabels[entry.category])} ${copy.fieldLabels[entry.field]}`
+  `${capitalise(copy.categoryLabels[entry.category])} ${copy.fieldLabels[entry.field]}${entry.year ? ` (${entry.year})` : ''}`
 
 const CATEGORY_CHANGE_LABELS = {
   added: 'Added category',

@@ -1,7 +1,7 @@
-import { statusCodes } from '../../common/constants/status-codes.js'
-import { initialiseServer } from '../../../test-utils/initialise-server.js'
-import { paths } from '../../../config/paths.js'
 import { content } from '../../../config/content.js'
+import { paths } from '../../../config/paths.js'
+import { initialiseServer } from '../../../test-utils/initialise-server.js'
+import { statusCodes } from '../../common/constants/status-codes.js'
 
 describe('#regulatorTargetsController', () => {
   let server
@@ -69,22 +69,23 @@ describe('#regulatorTargetsController', () => {
       method: 'POST',
       url: paths.regulatorTargets,
       payload: {
-        collectionPortable: '50',
-        collectionIndustrial: '100',
-        collectionAutomotive: '100',
-        recyclingPortable: '60',
-        recyclingIndustrial: '50',
-        recyclingAutomotive: '50'
+        targetYears: '2026,2027,2028,2029,2030',
+        collectionPortable2026: '50',
+        collectionIndustrial2026: '100',
+        collectionAutomotive2026: '100',
+        recyclingPortable2026: '60',
+        recyclingIndustrial2026: '50',
+        recyclingAutomotive2026: '50'
       }
     })
 
     expect(statusCode).toBe(statusCodes.ok)
     expect(result).toEqual(expect.stringContaining('"target":"persist"'))
     expect(result).toEqual(
-      expect.stringContaining('"collection":{"portable":"50"')
+      expect.stringContaining('"collection":{"portable":{"2026":"50"')
     )
     expect(result).toEqual(
-      expect.stringContaining('"recycling":{"portable":"60"')
+      expect.stringContaining('"recycling":{"portable":{"2026":"60"')
     )
   })
 
@@ -93,17 +94,20 @@ describe('#regulatorTargetsController', () => {
       method: 'POST',
       url: paths.regulatorTargets,
       payload: {
+        targetYears: '2026',
         categoryIds: 'portable,lmt',
-        collectionPortable: '45',
-        collectionLmt: '30',
-        recyclingPortable: '45',
-        recyclingLmt: '20'
+        collectionPortable2026: '45',
+        collectionLmt2026: '30',
+        recyclingPortable2026: '45',
+        recyclingLmt2026: '20'
       }
     })
 
     expect(statusCode).toBe(statusCodes.ok)
     expect(result).toEqual(
-      expect.stringContaining('"collection":{"portable":"45","lmt":"30"}')
+      expect.stringContaining(
+        '"collection":{"portable":{"2026":"45"},"lmt":{"2026":"30"}}'
+      )
     )
   })
 
@@ -117,7 +121,7 @@ describe('#regulatorTargetsController', () => {
     expect(statusCode).toBe(statusCodes.ok)
     expect(result).toEqual(expect.stringContaining('"target":"persist"'))
     expect(result).toEqual(
-      expect.stringContaining('"collection":{"portable":"","industrial":""')
+      expect.stringContaining('"collection":{"portable":{"')
     )
   })
 })
