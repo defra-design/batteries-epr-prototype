@@ -1898,7 +1898,7 @@ export const content = {
           configChanged: {
             title: 'Battery categories have changed',
             intro:
-              'The battery categories have changed since you submitted one or more quarterly returns. Resubmit the affected returns so your obligation reflects the current categories. You can still calculate now.',
+              'The battery categories have changed since you submitted one or more quarterly returns. You must resubmit the affected returns before you can calculate your obligation.',
             resubmitAction: 'Resubmit your {quarter} return'
           },
           columns: {

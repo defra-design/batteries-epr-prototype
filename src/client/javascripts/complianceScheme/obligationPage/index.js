@@ -330,6 +330,18 @@ export const runObligationPage = (
       event.preventDefault()
       // Once-per-year guard: never calculate twice for the same period.
       if (storage.getObligationSnapshot(scheme.id, year)) return
+      // Categories changed since a return was submitted: the scheme must
+      // resubmit the affected returns before an obligation can be calculated.
+      if (divergedQuarters(scheme, year).length > 0) {
+        renderConfigChangedWarning(
+          doc,
+          scheme,
+          year,
+          payload.copy,
+          payload.urls
+        )
+        return
+      }
       if (
         !allQuartersSubmitted(scheme, year) &&
         !globalThis.confirm(payload.copy.incompleteQuartersConfirm)

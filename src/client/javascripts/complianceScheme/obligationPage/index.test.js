@@ -626,7 +626,7 @@ describe('runObligationPage', () => {
   const banner = () =>
     document.querySelector('[data-testid="obligation-config-changed"]')
 
-  test('prompts to resubmit when a category is added after a return was submitted', () => {
+  test('blocks calculation and prompts to resubmit when a category is added after a return was submitted', () => {
     const [scheme] = storage.listSchemes()
     submitQuarter(scheme, {
       categoryIds: ['portable', 'industrial', 'automotive']
@@ -651,11 +651,11 @@ describe('runObligationPage', () => {
     clickCalculate()
     expect(
       storage.listObligationSnapshots({ schemeId: scheme.id })
-    ).toHaveLength(1)
-    expect(banner().hidden).toBe(true)
+    ).toHaveLength(0)
+    expect(banner().hidden).toBe(false)
   })
 
-  test('prompts to resubmit when a category is removed after a return was submitted', () => {
+  test('blocks calculation when a category is removed after a return was submitted', () => {
     const [scheme] = storage.listSchemes()
     submitQuarter(scheme, {
       categoryIds: ['portable', 'industrial', 'automotive']
@@ -672,9 +672,14 @@ describe('runObligationPage', () => {
 
     runObligationPage(document)
     expect(banner().hidden).toBe(false)
+
+    clickCalculate()
+    expect(
+      storage.listObligationSnapshots({ schemeId: scheme.id })
+    ).toHaveLength(0)
   })
 
-  test('does not prompt when the submitted categories still match', () => {
+  test('allows calculation when the submitted categories still match', () => {
     const [scheme] = storage.listSchemes()
     submitQuarter(scheme, {
       categoryIds: ['portable', 'industrial', 'automotive']
@@ -683,6 +688,11 @@ describe('runObligationPage', () => {
 
     runObligationPage(document)
     expect(banner().hidden).toBe(true)
+
+    clickCalculate()
+    expect(
+      storage.listObligationSnapshots({ schemeId: scheme.id })
+    ).toHaveLength(1)
   })
 
   test('infers the submitted categories from member data for legacy returns', () => {
