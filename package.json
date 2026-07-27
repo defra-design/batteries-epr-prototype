@@ -101,14 +101,14 @@
         "globby": {
           "glob": {
             "minimatch": {
-              "brace-expansion": "5.0.5"
+              "brace-expansion": "5.0.8"
             }
           }
         },
         "rimraf": {
           "glob": {
             "minimatch": {
-              "brace-expansion": "5.0.5"
+              "brace-expansion": "5.0.8"
             }
           }
         }
@@ -116,13 +116,13 @@
     },
     "npm-run-all": {
       "minimatch": {
-        "brace-expansion": "5.0.5"
+        "brace-expansion": "5.0.8"
       }
     },
     "neostandard": {
       "eslint-plugin-react": {
         "minimatch": {
-          "brace-expansion": "5.0.5"
+          "brace-expansion": "5.0.8"
         }
       }
     }
