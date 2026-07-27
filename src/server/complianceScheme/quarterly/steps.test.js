@@ -5,7 +5,8 @@ import {
   QUARTERS,
   isKnownStep,
   isKnownMemberStep,
-  isKnownQuarter
+  isKnownQuarter,
+  parseCategoryIds
 } from './steps.js'
 
 describe('quarterly/steps', () => {
@@ -42,12 +43,11 @@ describe('quarterly/steps', () => {
     expect(typeof patch.submittedOn).toBe('string')
   })
 
-  test('MEMBER_STEPS market-data toPatch produces a marketData object', () => {
-    const patch = MEMBER_STEPS['market-data'].toPatch({
-      portable: '1.5',
-      industrial: '2.5',
-      automotive: '3.5'
-    })
+  test('MEMBER_STEPS market-data toPatch produces a marketData object for the given ids', () => {
+    const patch = MEMBER_STEPS['market-data'].toPatch(
+      { portable: '1.5', industrial: '2.5', automotive: '3.5' },
+      ['portable', 'industrial', 'automotive']
+    )
     expect(patch.marketData).toEqual({
       portable: '1.5',
       industrial: '2.5',
@@ -55,12 +55,38 @@ describe('quarterly/steps', () => {
     })
   })
 
-  test('MEMBER_STEPS waste-data toPatch produces a wasteData object', () => {
-    const patch = MEMBER_STEPS['waste-data'].toPatch({
-      portable: '0.5',
-      industrial: '0.25',
-      automotive: '0.125'
-    })
-    expect(patch.wasteData.industrial).toBe('0.25')
+  test('MEMBER_STEPS waste-data toPatch keys only the supplied ids', () => {
+    const patch = MEMBER_STEPS['waste-data'].toPatch(
+      { portable: '0.5', industrial: '0.25', lmt: '9' },
+      ['portable', 'lmt']
+    )
+    expect(patch.wasteData).toEqual({ portable: '0.5', lmt: '9' })
+  })
+
+  test('parseCategoryIds reads a comma-separated list or falls back to defaults', () => {
+    expect(parseCategoryIds({ categoryIds: 'portable,lmt' })).toEqual([
+      'portable',
+      'lmt'
+    ])
+    expect(parseCategoryIds({})).toEqual([
+      'portable',
+      'industrial',
+      'automotive'
+    ])
+  })
+
+  test('buildSchema validates the supplied ids and rejects a missing one', () => {
+    const schema = MEMBER_STEPS['market-data'].buildSchema(['portable', 'lmt'])
+    expect(schema.validate({ portable: '1', lmt: '2' }).error).toBeUndefined()
+    expect(schema.validate({ portable: '1' }).error).toBeDefined()
+  })
+
+  test('buildMessages falls back to a generic message for unknown ids', () => {
+    const messages = MEMBER_STEPS['market-data'].buildMessages(
+      { portable: 'Enter portable tonnes', generic: 'Enter the tonnes' },
+      ['portable', 'lmt']
+    )
+    expect(messages.portable.required).toBe('Enter portable tonnes')
+    expect(messages.lmt.required).toBe('Enter the tonnes')
   })
 })

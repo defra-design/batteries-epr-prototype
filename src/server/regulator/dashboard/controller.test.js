@@ -31,11 +31,33 @@ describe('#regulatorDashboardController', () => {
       'tile-operators-count',
       'tile-producers-count',
       'tile-evidence-count',
-      'regulator-targets-link'
+      'regulator-configuration',
+      'regulator-targets-link',
+      'regulator-categories-link',
+      'regulator-audit-trail-link'
     ]) {
       expect(result).toEqual(expect.stringContaining(`data-testid="${id}"`))
     }
     expect(result).toEqual(expect.stringContaining(paths.regulatorTargets))
+  })
+
+  test('groups the config links in the Configuration card with labels', async () => {
+    const { result } = await server.inject({
+      method: 'GET',
+      url: paths.regulatorDashboard
+    })
+
+    const pageContent = content.regulator({})
+    expect(result).toEqual(
+      expect.stringContaining(pageContent.configurationHeading)
+    )
+    expect(result).toEqual(expect.stringContaining(pageContent.targetsAction))
+    expect(result).toEqual(
+      expect.stringContaining(pageContent.categoriesAction)
+    )
+    expect(result).toEqual(
+      expect.stringContaining(pageContent.auditTrailAction)
+    )
   })
 
   test('emits a page-payload with copy', async () => {

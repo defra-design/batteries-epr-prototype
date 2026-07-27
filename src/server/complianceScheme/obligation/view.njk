@@ -2,6 +2,7 @@
 
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -11,6 +12,16 @@
       <p class="govuk-body govuk-!-margin-bottom-2">
         <strong>Compliance period:</strong> <span data-testid="obligation-period">{{ compliancePeriodYear }}</span>
       </p>
+
+      {% set configChangedHtml %}
+        <p class="govuk-body">{{ labels.configChanged.intro }}</p>
+        <ul class="govuk-list" data-testid="obligation-config-changed-list"></ul>
+      {% endset %}
+      {{ govukNotificationBanner({
+        titleText: labels.configChanged.title,
+        html: configChangedHtml,
+        attributes: { "data-testid": "obligation-config-changed", hidden: "hidden" }
+      }) }}
 
       {{ govukButton({
         text: labels.calculateAction,
@@ -69,56 +80,7 @@
       <h2 class="govuk-heading-m" data-testid="obligation-calc-heading">{{ labels.calcHeading }}</h2>
       <p class="govuk-body">{{ labels.calcIntro }}</p>
 
-      {% set formulaTypes = [
-        {
-          key: 'collection',
-          heading: labels.formula.collectionHeading,
-          targetTerm: labels.formula.collectionTargetTerm,
-          resultLabel: labels.formula.collectionResultLabel
-        },
-        {
-          key: 'recycling',
-          heading: labels.formula.recyclingHeading,
-          targetTerm: labels.formula.recyclingTargetTerm,
-          resultLabel: labels.formula.recyclingResultLabel
-        }
-      ] %}
-
-      {% for category, categoryLabel in labels.categories %}
-        <details class="govuk-details" data-testid="obligation-calc-{{ category }}">
-          <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">{{ categoryLabel }}</span>
-          </summary>
-          <div class="govuk-details__text">
-            {% for type in formulaTypes %}
-              <h3 class="govuk-heading-s">{{ type.heading }}</h3>
-              <p class="govuk-body"><strong>{{ labels.formulaEquation }}</strong></p>
-              <ul class="govuk-list govuk-list--bullet">
-                <li>
-                  <strong>X</strong> is
-                  <span data-testid="obligation-calc-{{ category }}-{{ type.key }}-placed">0.000</span>
-                  {{ labels.formula.tonnesUnit }} ({{ labels.formula.placedTerm }})
-                </li>
-                <li>
-                  <strong>Y</strong> is
-                  <span data-testid="obligation-calc-{{ category }}-{{ type.key }}-target">0</span>%
-                  ({{ type.targetTerm }})
-                </li>
-              </ul>
-              <p class="govuk-body">
-                {{ type.resultLabel }}<br>
-                <strong>
-                  <span data-testid="obligation-calc-{{ category }}-{{ type.key }}-placed">0.000</span>
-                  {{ labels.formula.tonnesUnit }} ×
-                  <span data-testid="obligation-calc-{{ category }}-{{ type.key }}-target">0</span>% =
-                  <span data-testid="obligation-calc-{{ category }}-{{ type.key }}-obligation">0.000</span>
-                  {{ labels.formula.tonnesUnit }}
-                </strong>
-              </p>
-            {% endfor %}
-          </div>
-        </details>
-      {% endfor %}
+      <div data-testid="obligation-calc-list"></div>
 
       {{ govukWarningText({
         text: labels.warningText,

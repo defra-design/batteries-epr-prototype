@@ -1,5 +1,14 @@
 import joi from 'joi'
 
+import { categoryIds } from '../../../../config/battery-categories.js'
+
+export const parseCategoryIds = (payload) => {
+  const raw = payload?.categoryIds
+  return typeof raw === 'string' && raw.length > 0
+    ? raw.split(',')
+    : categoryIds
+}
+
 const tonneSchema = joi
   .string()
   .trim()
@@ -25,15 +34,17 @@ export const STEPS = {
     view: 'complianceScheme/evidence/issue/views/tonnes',
     next: 'declaration',
     formStep: true,
-    schema: joi
-      .object({
-        category: joi
-          .string()
-          .valid('portable', 'industrial', 'automotive')
-          .required(),
-        tonnes: tonneSchema
-      })
-      .options({ stripUnknown: true }),
+    buildSchema: (ids) =>
+      joi
+        .object({
+          categoryIds: joi.any().optional(),
+          category: joi
+            .string()
+            .valid(...ids)
+            .required(),
+          tonnes: tonneSchema
+        })
+        .options({ stripUnknown: true }),
     fieldMessages: (errorContent) => ({
       category: { required: errorContent.category },
       tonnes: {

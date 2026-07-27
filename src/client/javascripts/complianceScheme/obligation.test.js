@@ -152,6 +152,30 @@ describe('obligation', () => {
     expect(totals.accepted).toBe(20)
   })
 
+  test('builds rows for a supplied category list, defaulting missing targets to zero', () => {
+    const quarterly = [
+      {
+        memberData: [
+          {
+            memberId: 'm-1',
+            marketData: { portable: '100', lmt: '40' }
+          }
+        ]
+      }
+    ]
+    const { rows } = buildObligation({
+      quarterly,
+      evidence: [],
+      categoryIds: ['portable', 'lmt']
+    })
+    expect(rows.map((r) => r.category)).toEqual(['portable', 'lmt'])
+    const lmt = rows.find((r) => r.category === 'lmt')
+    expect(lmt.placed).toBe(40)
+    expect(lmt.targetPercent).toBe(0)
+    expect(lmt.obligation).toBe(0)
+    expect(lmt.collectionObligation).toBe(0)
+  })
+
   test('missing tonnes fields are treated as zero', () => {
     const quarterly = [
       { memberData: [{ memberId: 'm-1', marketData: { portable: undefined } }] }
@@ -161,6 +185,65 @@ describe('obligation', () => {
     const portable = rows.find((r) => r.category === 'portable')
     expect(portable.placed).toBe(0)
     expect(portable.accepted).toBe(0)
+  })
+
+  test('calculates a non-zero obligation for a new category once its target is set', () => {
+    storage.saveRegulatorCategories('EA', [
+      { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+      {
+        id: 'industrial',
+        label: 'Industrial batteries',
+        shortLabel: 'Industrial'
+      },
+      {
+        id: 'automotive',
+        label: 'Automotive batteries',
+        shortLabel: 'Automotive'
+      },
+      { id: 'lmt', label: 'LMT batteries', shortLabel: 'LMT' }
+    ])
+    storage.saveRegulatorTargets('EA', {
+      collection: { portable: 45, industrial: 100, automotive: 100, lmt: 60 },
+      recycling: { portable: 45, industrial: 50, automotive: 50, lmt: 50 }
+    })
+
+    const quarterly = [
+      { memberData: [{ memberId: 'm-1', marketData: { lmt: '100' } }] }
+    ]
+    const { rows } = buildObligation({
+      quarterly,
+      evidence: [],
+      targets: resolveTargets('EA'),
+      categoryIds: storage
+        .resolveCategories('EA')
+        .map((category) => category.id)
+    })
+    const lmt = rows.find((row) => row.category === 'lmt')
+    expect(lmt.placed).toBe(100)
+    expect(lmt.targetPercent).toBe(50)
+    expect(lmt.obligation).toBe(50)
+  })
+
+  test('a new category with no target yields a zero obligation', () => {
+    storage.saveRegulatorCategories('EA', [
+      { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+      { id: 'lmt', label: 'LMT batteries', shortLabel: 'LMT' }
+    ])
+
+    const quarterly = [
+      { memberData: [{ memberId: 'm-1', marketData: { lmt: '100' } }] }
+    ]
+    const { rows } = buildObligation({
+      quarterly,
+      evidence: [],
+      targets: resolveTargets('EA'),
+      categoryIds: storage
+        .resolveCategories('EA')
+        .map((category) => category.id)
+    })
+    const lmt = rows.find((row) => row.category === 'lmt')
+    expect(lmt.placed).toBe(100)
+    expect(lmt.obligation).toBe(0)
   })
 })
 
@@ -188,6 +271,38 @@ describe('resolveTargets', () => {
       collection: { portable: 0.45, industrial: 1, automotive: 1 },
       recycling: { portable: 0.6, industrial: 0.5, automotive: 0.5 }
     })
+  })
+
+  test('covers exactly the resolved categories, defaulting a target-less one to 0', () => {
+    storage.saveRegulatorCategories('EA', [
+      { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+      {
+        id: 'industrial',
+        label: 'Industrial batteries',
+        shortLabel: 'Industrial'
+      },
+      {
+        id: 'automotive',
+        label: 'Automotive batteries',
+        shortLabel: 'Automotive'
+      },
+      { id: 'lmt', label: 'LMT batteries', shortLabel: 'LMT' }
+    ])
+    storage.saveRegulatorTargets('EA', {
+      collection: { portable: 45, industrial: 100, automotive: 100 },
+      recycling: { portable: 45, industrial: 50, automotive: 50 }
+    })
+
+    const targets = resolveTargets('EA')
+    expect(Object.keys(targets.recycling)).toEqual([
+      'portable',
+      'industrial',
+      'automotive',
+      'lmt'
+    ])
+    expect(targets.recycling.lmt).toBe(0)
+    expect(targets.collection.lmt).toBe(0)
+    expect(targets.recycling.portable).toBe(0.45)
   })
 })
 
@@ -259,5 +374,62 @@ describe('buildObligationSnapshot', () => {
     })
 
     expect(snapshot.rules.configVersion).toBe('default')
+  })
+
+  test('includes a regulator-added category with its label and a zero target', () => {
+    storage.saveRegulatorCategories('EA', [
+      { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+      {
+        id: 'industrial',
+        label: 'Industrial batteries',
+        shortLabel: 'Industrial'
+      },
+      {
+        id: 'automotive',
+        label: 'Automotive batteries',
+        shortLabel: 'Automotive'
+      },
+      { id: 'lmt', label: 'Light means of transport', shortLabel: 'LMT' }
+    ])
+
+    const snapshot = buildObligationSnapshot({
+      scheme: { id: 'scheme-1', name: 'BatteryBack', agencyCode: 'EA' },
+      compliancePeriodYear: '2026',
+      quarterly: [
+        {
+          memberData: [{ memberId: 'm-1', marketData: { lmt: '100' } }]
+        }
+      ],
+      evidence: [],
+      targets: resolveTargets('EA')
+    })
+
+    expect(snapshot.batteryCategories).toContain('lmt')
+    expect(snapshot.categoryLabels.lmt).toBe('Light means of transport')
+    expect(snapshot.rows.find((r) => r.category === 'lmt')).toBeDefined()
+    expect(snapshot.targets.recycling.lmt).toBe(0)
+    expect(snapshot.targets.collection.lmt).toBe(0)
+  })
+
+  test('target percentages default to 0 for a resolved category absent from the passed targets', () => {
+    storage.saveRegulatorCategories('EA', [
+      { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+      { id: 'lmt', label: 'LMT batteries', shortLabel: 'LMT' }
+    ])
+
+    const snapshot = buildObligationSnapshot({
+      scheme: { id: 'scheme-1', name: 'BatteryBack', agencyCode: 'EA' },
+      compliancePeriodYear: '2026',
+      quarterly: [],
+      evidence: [],
+      targets: {
+        collection: { portable: 0.45 },
+        recycling: { portable: 0.45 }
+      }
+    })
+
+    expect(snapshot.targets.collection.lmt).toBe(0)
+    expect(snapshot.targets.recycling.lmt).toBe(0)
+    expect(snapshot.targets.collection.portable).toBe(45)
   })
 })

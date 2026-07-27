@@ -28,10 +28,11 @@ describe('#regulatorTargetsController', () => {
     )
     for (const id of [
       'regulator-targets-form',
-      'regulator-targets-collection-portable',
-      'regulator-targets-recycling-automotive',
+      'regulator-targets-collection-fields',
+      'regulator-targets-recycling-fields',
       'regulator-targets-explanation',
-      'regulator-targets-save'
+      'regulator-targets-save',
+      'battery-categories-caveat'
     ]) {
       expect(result).toEqual(expect.stringContaining(`data-testid="${id}"`))
     }
@@ -84,6 +85,25 @@ describe('#regulatorTargetsController', () => {
     )
     expect(result).toEqual(
       expect.stringContaining('"recycling":{"portable":"60"')
+    )
+  })
+
+  test('POST reads the declared category-id list, including an added category', async () => {
+    const { result, statusCode } = await server.inject({
+      method: 'POST',
+      url: paths.regulatorTargets,
+      payload: {
+        categoryIds: 'portable,lmt',
+        collectionPortable: '45',
+        collectionLmt: '30',
+        recyclingPortable: '45',
+        recyclingLmt: '20'
+      }
+    })
+
+    expect(statusCode).toBe(statusCodes.ok)
+    expect(result).toEqual(
+      expect.stringContaining('"collection":{"portable":"45","lmt":"30"}')
     )
   })
 

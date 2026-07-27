@@ -252,14 +252,23 @@ describe('evidence issue wizard', () => {
     )
   })
 
-  test('tonnes hydrate fills form from draft', () => {
+  test('tonnes hydrate builds category radios and fills tonnes from draft', () => {
     __testing__.writeDraft({ category: 'portable', tonnes: '1.5' })
     buildDom(
       baseHydrate('tonnes'),
-      '<form><input name="category" /><input name="tonnes" /></form>'
+      '<form><div data-testid="evidence-issue-category-radios"></div><input name="tonnes" /></form>'
     )
     runEvidencePage(document, globalThis.location)
     expect(document.querySelector('input[name="tonnes"]').value).toBe('1.5')
+    expect(
+      document.querySelectorAll(
+        '[data-testid="evidence-issue-category-option"]'
+      ).length
+    ).toBe(3)
+    expect(document.querySelector('#category-portable').checked).toBe(true)
+    expect(document.querySelector('input[name="categoryIds"]').value).toBe(
+      'portable,industrial,automotive'
+    )
   })
 
   test('declaration hydrate renders summary from draft and active member', () => {

@@ -12,7 +12,8 @@ import {
   MEMBER_STEPS,
   isKnownQuarter,
   isKnownStep,
-  isKnownMemberStep
+  isKnownMemberStep,
+  parseCategoryIds
 } from './steps.js'
 
 const flashKey = (quarter, step) => `quarterly:${quarter}:${step}`
@@ -180,6 +181,9 @@ export const quarterlyMemberController = {
       const compliancePeriodYear = getCompliancePeriod(request)
       const flashId = flashKey(quarter, `member:${memberId}:${dataType}`)
       const { errors, values } = readStepErrors(request, flashId)
+      const quarterlyContent = content.complianceScheme(request).quarterlyPages
+      const stepContent =
+        quarterlyContent.steps[MEMBER_STEPS[dataType].contentKey]
 
       return renderMemberStep(h, request, quarter, memberId, dataType, {
         errorSummary: errors || [],
@@ -192,6 +196,8 @@ export const quarterlyMemberController = {
           dataType,
           compliancePeriodYear,
           target: 'hydrate',
+          fieldHint: stepContent.hint,
+          fieldErrors: errorListToMap(errors),
           next: stepUrl(quarter, 'member-list')
         }
       })
@@ -209,19 +215,20 @@ export const quarterlyMemberController = {
       const quarterlyContent = content.complianceScheme(request).quarterlyPages
       const stepContent = quarterlyContent.steps[stepConfig.contentKey]
       const payload = request.payload
-      const { error, value } = stepConfig.schema.validate(payload)
+      const ids = parseCategoryIds(payload)
+      const { error, value } = stepConfig.buildSchema(ids).validate(payload)
 
       if (error) {
         const flashId = flashKey(quarter, `member:${memberId}:${dataType}`)
         const list = collectErrors(
           error,
-          stepConfig.fieldMessages(stepContent.error)
+          stepConfig.buildMessages(stepContent.error, ids)
         )
         flashStepErrors(request, flashId, list, payload)
         return h.redirect(memberStepUrl(quarter, memberId, dataType))
       }
 
-      const patch = stepConfig.toPatch(value)
+      const patch = stepConfig.toPatch(value, ids)
 
       return renderMemberStep(h, request, quarter, memberId, dataType, {
         errorSummary: [],

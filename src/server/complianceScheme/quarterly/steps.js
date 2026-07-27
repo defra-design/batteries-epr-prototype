@@ -1,39 +1,41 @@
 import joi from 'joi'
 
+import { categoryIds } from '../../../config/battery-categories.js'
+
 const tonneSchema = joi
   .string()
   .trim()
   .pattern(/^\d+(\.\d{1,3})?$/)
   .required()
 
-const tonneTriple = joi
-  .object({
-    portable: tonneSchema,
-    industrial: tonneSchema,
-    automotive: tonneSchema
-  })
-  .options({ stripUnknown: true })
+export const parseCategoryIds = (payload) => {
+  const raw = payload?.categoryIds
+  return typeof raw === 'string' && raw.length > 0
+    ? raw.split(',')
+    : categoryIds
+}
 
-const tripleMessages = (errorContent) => ({
-  portable: {
-    required: errorContent.portable,
-    format: errorContent.portableFormat
-  },
-  industrial: {
-    required: errorContent.industrial,
-    format: errorContent.industrialFormat
-  },
-  automotive: {
-    required: errorContent.automotive,
-    format: errorContent.automotiveFormat
-  }
-})
+const buildTonneSchema = (ids) =>
+  joi
+    .object({
+      categoryIds: joi.any().optional(),
+      ...Object.fromEntries(ids.map((id) => [id, tonneSchema]))
+    })
+    .options({ stripUnknown: true })
 
-const triple = (payload) => ({
-  portable: payload.portable,
-  industrial: payload.industrial,
-  automotive: payload.automotive
-})
+const buildCategoryMessages = (errorContent, ids) =>
+  Object.fromEntries(
+    ids.map((id) => [
+      id,
+      {
+        required: errorContent[id] ?? errorContent.generic,
+        format: errorContent[`${id}Format`] ?? errorContent.genericFormat
+      }
+    ])
+  )
+
+const byCategory = (payload, ids) =>
+  Object.fromEntries(ids.map((id) => [id, payload[id]]))
 
 export const STEPS = {
   'member-list': {
@@ -77,17 +79,17 @@ export const MEMBER_STEPS = {
     contentKey: 'marketData',
     view: 'complianceScheme/quarterly/views/member-tonnes',
     formStep: true,
-    schema: tonneTriple,
-    fieldMessages: tripleMessages,
-    toPatch: (payload) => ({ marketData: triple(payload) })
+    buildSchema: buildTonneSchema,
+    buildMessages: buildCategoryMessages,
+    toPatch: (payload, ids) => ({ marketData: byCategory(payload, ids) })
   },
   'waste-data': {
     contentKey: 'wasteData',
     view: 'complianceScheme/quarterly/views/member-tonnes',
     formStep: true,
-    schema: tonneTriple,
-    fieldMessages: tripleMessages,
-    toPatch: (payload) => ({ wasteData: triple(payload) })
+    buildSchema: buildTonneSchema,
+    buildMessages: buildCategoryMessages,
+    toPatch: (payload, ids) => ({ wasteData: byCategory(payload, ids) })
   }
 }
 

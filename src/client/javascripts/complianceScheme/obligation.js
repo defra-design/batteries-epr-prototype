@@ -1,18 +1,29 @@
+import {
+  categoryIds,
+  emptyCategoryMap
+} from '../../../config/battery-categories.js'
 import { storage } from '../storage-adapter.js'
 
-export const CATEGORIES = ['portable', 'industrial', 'automotive']
+export const CATEGORIES = categoryIds
 
-export const TARGET_PERCENTAGES = {
+const DEFAULT_RECYCLING_RATES = {
   portable: 0.45,
   industrial: 0.5,
   automotive: 0.5
 }
-
-export const COLLECTION_TARGET_PERCENTAGES = {
+const DEFAULT_COLLECTION_RATES = {
   portable: 0.45,
   industrial: 1,
   automotive: 1
 }
+
+const ratesForAllCategories = (rates) => ({ ...emptyCategoryMap(), ...rates })
+
+export const TARGET_PERCENTAGES = ratesForAllCategories(DEFAULT_RECYCLING_RATES)
+
+export const COLLECTION_TARGET_PERCENTAGES = ratesForAllCategories(
+  DEFAULT_COLLECTION_RATES
+)
 
 const DEFAULT_TARGETS = {
   recycling: TARGET_PERCENTAGES,
@@ -23,19 +34,26 @@ const RULE_VERSION = 'GB-playground-v1'
 
 const toFractions = (percentByCategory) =>
   Object.fromEntries(
-    CATEGORIES.map((category) => [
+    Object.entries(percentByCategory).map(([category, value]) => [
       category,
-      Number(percentByCategory[category]) / 100
+      Number(value) / 100
     ])
   )
 
 export const resolveTargets = (agencyCode) => {
+  const ids = storage
+    .resolveCategories(agencyCode)
+    .map((category) => category.id)
   const stored = agencyCode ? storage.getRegulatorTargets(agencyCode) : null
-  if (!stored) return DEFAULT_TARGETS
-  return {
-    recycling: toFractions(stored.recycling),
-    collection: toFractions(stored.collection)
-  }
+  const source = stored
+    ? {
+        recycling: toFractions(stored.recycling),
+        collection: toFractions(stored.collection)
+      }
+    : DEFAULT_TARGETS
+  const pick = (field) =>
+    Object.fromEntries(ids.map((id) => [id, source[field][id] ?? 0]))
+  return { recycling: pick('recycling'), collection: pick('collection') }
 }
 
 const sumQuarterCategory = (quarterly, category) =>
@@ -55,12 +73,13 @@ const sumEvidenceCategory = (evidence, category) =>
 export const buildObligation = ({
   quarterly,
   evidence,
-  targets = DEFAULT_TARGETS
+  targets = DEFAULT_TARGETS,
+  categoryIds: ids = categoryIds
 }) => {
-  const rows = CATEGORIES.map((category) => {
+  const rows = ids.map((category) => {
     const placed = sumQuarterCategory(quarterly, category)
-    const target = targets.recycling[category]
-    const collectionTarget = targets.collection[category]
+    const target = targets.recycling[category] ?? 0
+    const collectionTarget = targets.collection[category] ?? 0
     const obligation = placed * target
     const collectionObligation = placed * collectionTarget
     const accepted = sumEvidenceCategory(
@@ -92,17 +111,17 @@ export const buildObligation = ({
   return { rows, totals }
 }
 
-const toWholePercentages = (targets) => ({
+const toWholePercentages = (targets, ids) => ({
   collection: Object.fromEntries(
-    CATEGORIES.map((category) => [
+    ids.map((category) => [
       category,
-      Math.round(targets.collection[category] * 100)
+      Math.round((targets.collection[category] ?? 0) * 100)
     ])
   ),
   recycling: Object.fromEntries(
-    CATEGORIES.map((category) => [
+    ids.map((category) => [
       category,
-      Math.round(targets.recycling[category] * 100)
+      Math.round((targets.recycling[category] ?? 0) * 100)
     ])
   )
 })
@@ -118,7 +137,14 @@ export const buildObligationSnapshot = ({
   targets = resolveTargets(scheme?.agencyCode),
   calculatedAt = new Date().toISOString()
 }) => {
-  const { rows, totals } = buildObligation({ quarterly, evidence, targets })
+  const categories = storage.resolveCategories(scheme?.agencyCode)
+  const ids = categories.map((category) => category.id)
+  const { rows, totals } = buildObligation({
+    quarterly,
+    evidence,
+    targets,
+    categoryIds: ids
+  })
   const config = latestConfigEntry(scheme?.agencyCode)
 
   return {
@@ -127,8 +153,11 @@ export const buildObligationSnapshot = ({
     agencyCode: scheme.agencyCode,
     compliancePeriodYear,
     calculatedAt,
-    batteryCategories: [...CATEGORIES],
-    targets: toWholePercentages(targets),
+    batteryCategories: ids,
+    categoryLabels: Object.fromEntries(
+      categories.map((category) => [category.id, category.label])
+    ),
+    targets: toWholePercentages(targets, ids),
     rules: {
       version: RULE_VERSION,
       configSource: 'regulatorTargets',

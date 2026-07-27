@@ -1,14 +1,22 @@
+import { categoryFieldName } from '../../../../config/battery-categories.js'
 import { storage } from '../../storage-adapter.js'
 import { readPagePayload } from '../../page-payload.js'
 import { renderAuditEntries } from '../auditTrail/render.js'
 
 const HISTORY_PREVIEW_LIMIT = 3
 
-const CATEGORIES = ['portable', 'industrial', 'automotive']
 const TYPES = ['collection', 'recycling']
 
-const fieldId = (type, category) =>
-  `${type}${category[0].toUpperCase()}${category.slice(1)}`
+const HTML_ENTITIES = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;'
+}
+
+const escapeHtml = (value) =>
+  String(value).replace(/[&<>"']/g, (char) => HTML_ENTITIES[char])
 
 const clampPercent = (value) => {
   const number = Number(value)
@@ -16,12 +24,32 @@ const clampPercent = (value) => {
   return Math.min(100, Math.max(0, number))
 }
 
-const fillInputs = (doc, targets) => {
+const inputMarkup = (type, category) => {
+  const fieldId = categoryFieldName(type, category.id)
+  return `<div class="govuk-form-group">
+    <label class="govuk-label" for="${escapeHtml(fieldId)}">${escapeHtml(category.shortLabel)}</label>
+    <div class="govuk-input__wrapper">
+      <input class="govuk-input govuk-input--width-3" id="${escapeHtml(fieldId)}" name="${escapeHtml(fieldId)}" inputmode="numeric" spellcheck="false" data-testid="regulator-targets-${type}-${escapeHtml(category.id)}">
+      <div class="govuk-input__suffix" aria-hidden="true">%</div>
+    </div>
+  </div>`
+}
+
+const renderFields = (doc, categories) => {
   for (const type of TYPES) {
-    for (const category of CATEGORIES) {
-      doc.querySelector(`#${fieldId(type, category)}`).value = String(
-        targets[type][category]
-      )
+    doc.querySelector(
+      `[data-testid="regulator-targets-${type}-fields"]`
+    ).innerHTML = categories
+      .map((category) => inputMarkup(type, category))
+      .join('')
+  }
+}
+
+const fillInputs = (doc, categories, targets) => {
+  for (const type of TYPES) {
+    for (const category of categories) {
+      doc.querySelector(`#${categoryFieldName(type, category.id)}`).value =
+        String(targets[type][category.id] ?? 0)
     }
   }
 }
@@ -29,7 +57,7 @@ const fillInputs = (doc, targets) => {
 const collectValues = (values) => {
   const build = (type) =>
     Object.fromEntries(
-      CATEGORIES.map((category) => [
+      Object.keys(values[type]).map((category) => [
         category,
         clampPercent(values[type][category])
       ])
@@ -63,10 +91,23 @@ export const runRegulatorTargets = (
   const label = doc.querySelector('[data-testid="regulator-targets-agency"]')
   label.textContent = agency.name
   label.hidden = false
-  fillInputs(doc, storage.getRegulatorTargets(agency.code))
+
+  const categories = storage.resolveCategories(agency.code)
+  renderFields(doc, categories)
+
+  const form = doc.querySelector('[data-testid="regulator-targets-form"]')
+  const hidden = doc.createElement('input')
+  hidden.type = 'hidden'
+  hidden.name = 'categoryIds'
+  hidden.value = categories.map((category) => category.id).join(',')
+  form.appendChild(hidden)
+
+  fillInputs(doc, categories, storage.getRegulatorTargets(agency.code))
   renderAuditEntries(
     doc.querySelector('[data-testid="regulator-targets-history"]'),
-    storage.listConfigAuditEntries(agency.code).slice(0, HISTORY_PREVIEW_LIMIT),
+    storage
+      .listConfigAuditEntries(agency.code, { configType: 'target' })
+      .slice(0, HISTORY_PREVIEW_LIMIT),
     payload.auditCopy
   )
   return 'hydrated'

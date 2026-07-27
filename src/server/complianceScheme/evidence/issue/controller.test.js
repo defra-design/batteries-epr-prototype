@@ -86,6 +86,16 @@ describe('#evidenceIssueController', () => {
     expect(result).toEqual(expect.stringContaining('"tonnes":"2.500"'))
   })
 
+  test('POST tonnes validates against the declared category-id list', async () => {
+    const { result } = await server.inject({
+      method: 'POST',
+      url: stepUrl('tonnes'),
+      payload: 'categoryIds=portable,lmt&category=lmt&tonnes=1.000',
+      headers: { 'content-type': 'application/x-www-form-urlencoded' }
+    })
+    expect(result).toEqual(expect.stringContaining('"category":"lmt"'))
+  })
+
   test('POST tonnes bad category redirects', async () => {
     const { statusCode } = await server.inject({
       method: 'POST',

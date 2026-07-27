@@ -2,18 +2,15 @@
 
 {% block stepBody %}
   <form method="post" action="{{ action }}" novalidate data-testid="evidence-issue-form">
-    {{ govukRadios({
-      idPrefix: "category",
-      name: "category",
-      fieldset: { legend: { text: labels.categoryLegend, classes: "govuk-fieldset__legend--m" } },
-      errorMessage: { text: errors.category } if errors.category,
-      items: [
-        { value: "portable", text: labels.portable, checked: formValues.category == "portable" },
-        { value: "industrial", text: labels.industrial, checked: formValues.category == "industrial" },
-        { value: "automotive", text: labels.automotive, checked: formValues.category == "automotive" }
-      ],
-      attributes: { "data-testid": "evidence-issue-category" }
-    }) }}
+    <div class="govuk-form-group{{ ' govuk-form-group--error' if errors.category }}">
+      <fieldset class="govuk-fieldset" data-testid="evidence-issue-category">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">{{ labels.categoryLegend }}</legend>
+        {% if errors.category %}
+          <p class="govuk-error-message" data-testid="evidence-issue-category-error">{{ errors.category }}</p>
+        {% endif %}
+        <div class="govuk-radios" data-testid="evidence-issue-category-radios"></div>
+      </fieldset>
+    </div>
 
     {{ govukInput({
       label: { text: labels.tonnesLabel },

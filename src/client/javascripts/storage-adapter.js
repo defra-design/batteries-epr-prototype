@@ -1,6 +1,15 @@
+import {
+  BATTERY_CATEGORIES,
+  categoryFlagName,
+  categoryIds,
+  emptyCategoryMap
+} from '../../config/battery-categories.js'
 import seedData from './storage-seed.json'
 
 const KEY_PREFIX = 'npwd-batteries:'
+
+const emptyBatteryTypes = () =>
+  Object.fromEntries(categoryIds.map((id) => [categoryFlagName(id), false]))
 
 export const STORAGE_KEYS = {
   currentUser: `${KEY_PREFIX}currentUser`,
@@ -23,6 +32,7 @@ export const STORAGE_KEYS = {
   currentAgencyCode: `${KEY_PREFIX}currentAgencyCode`,
   currentRegulatorUser: `${KEY_PREFIX}currentRegulatorUser`,
   regulatorTargets: `${KEY_PREFIX}regulatorTargets`,
+  regulatorCategories: `${KEY_PREFIX}regulatorCategories`,
   configAuditLog: `${KEY_PREFIX}configAuditLog`,
   obligationSnapshots: `${KEY_PREFIX}obligationSnapshots`
 }
@@ -100,11 +110,7 @@ export const createProducer = (input = {}) => ({
   serviceOfNoticeAddress: input.serviceOfNoticeAddress ?? null,
   primaryContact: input.primaryContact ?? null,
   brandNames: input.brandNames ?? [],
-  batteryTypes: input.batteryTypes ?? {
-    isPortable: false,
-    isIndustrial: false,
-    isAutomotive: false
-  },
+  batteryTypes: input.batteryTypes ?? emptyBatteryTypes(),
   agencyCode: input.agencyCode ?? null,
   status: input.status ?? 'Active',
   createdAt: input.createdAt ?? now(),
@@ -189,11 +195,7 @@ export const createOperator = (input = {}) => ({
   registeredAddress: input.registeredAddress ?? null,
   contactAddress: input.contactAddress ?? null,
   serviceOfNoticeAddress: input.serviceOfNoticeAddress ?? null,
-  batteryTypes: input.batteryTypes ?? {
-    isPortable: false,
-    isIndustrial: false,
-    isAutomotive: false
-  },
+  batteryTypes: input.batteryTypes ?? emptyBatteryTypes(),
   sites: input.sites ?? [],
   agencyCode: input.agencyCode ?? null,
   schemeId: input.schemeId ?? null,
@@ -1110,7 +1112,7 @@ const setEvidenceAvailability = (schemeId, evidenceAvailable) => {
 }
 
 const sumByCategory = (evidenceItems) => {
-  const totals = { portable: 0, industrial: 0, automotive: 0 }
+  const totals = emptyCategoryMap()
   for (const item of evidenceItems) {
     if (totals[item.category] !== undefined) {
       totals[item.category] += Number(item.tonnes) || 0
@@ -1310,12 +1312,11 @@ const getRegulatorTargets = (agencyCode) =>
   readMap(STORAGE_KEYS.regulatorTargets)[agencyCode] ?? null
 
 const TARGET_TYPES = ['collection', 'recycling']
-const TARGET_CATEGORIES = ['portable', 'industrial', 'automotive']
 
 const diffTargets = (previous, next) => {
   const changes = []
   for (const field of TARGET_TYPES) {
-    for (const category of TARGET_CATEGORIES) {
+    for (const category of Object.keys(next[field])) {
       const previousValue = previous?.[field]?.[category] ?? null
       const newValue = next[field][category]
       if (previousValue !== newValue) {
@@ -1329,19 +1330,15 @@ const diffTargets = (previous, next) => {
 const createConfigAuditEntry = ({
   agencyCode,
   actorName,
-  field,
-  category,
-  previousValue,
-  newValue
+  configType = 'target',
+  ...change
 }) => ({
   id: newId(),
   at: now(),
   agencyCode,
   actorName,
-  field,
-  category,
-  previousValue,
-  newValue
+  configType,
+  ...change
 })
 
 const SEED_AUDIT_RECENT_BUFFER_MS = 5 * 24 * 60 * 60 * 1000
@@ -1364,11 +1361,14 @@ const appendConfigAuditEntries = (entries) => {
   return entries
 }
 
-const listConfigAuditEntries = (agencyCode) => {
+const listConfigAuditEntries = (agencyCode, { configType } = {}) => {
   const cutoff = Date.now()
   const entries = readList(STORAGE_KEYS.configAuditLog).filter((entry) => {
     if (Date.parse(entry.at) > cutoff) return false
-    return agencyCode ? entry.agencyCode === agencyCode : true
+    if (agencyCode && entry.agencyCode !== agencyCode) return false
+    const type = entry.configType ?? 'target'
+    if (configType && type !== configType) return false
+    return true
   })
   return entries.reverse()
 }
@@ -1389,6 +1389,113 @@ const saveRegulatorTargets = (agencyCode, targets, actorName) => {
     )
   )
   return targets
+}
+
+const defaultCategories = () =>
+  BATTERY_CATEGORIES.map((category) => ({ ...category }))
+
+const getRegulatorCategories = (agencyCode) =>
+  readMap(STORAGE_KEYS.regulatorCategories)[agencyCode] ?? null
+
+const resolveCategories = (agencyCode) => {
+  const stored = getRegulatorCategories(agencyCode)
+  return Array.isArray(stored) && stored.length > 0
+    ? stored
+    : defaultCategories()
+}
+
+const orderOfShared = (list, sharedIds) =>
+  list.map((category) => category.id).filter((id) => sharedIds.has(id))
+
+const diffCategories = (previous, next) => {
+  const previousById = new Map(
+    previous.map((category) => [category.id, category])
+  )
+  const nextById = new Map(next.map((category) => [category.id, category]))
+  const changes = []
+
+  for (const category of next) {
+    const before = previousById.get(category.id)
+    if (!before) {
+      changes.push({
+        action: 'added',
+        category: category.id,
+        previousValue: null,
+        newValue: category.label
+      })
+    } else if (before.label !== category.label) {
+      changes.push({
+        action: 'renamed',
+        category: category.id,
+        previousValue: before.label,
+        newValue: category.label
+      })
+    }
+  }
+
+  for (const category of previous) {
+    if (!nextById.has(category.id)) {
+      changes.push({
+        action: 'removed',
+        category: category.id,
+        previousValue: category.label,
+        newValue: null
+      })
+    }
+  }
+
+  const sharedIds = new Set(
+    previous.map((category) => category.id).filter((id) => nextById.has(id))
+  )
+  const previousOrder = orderOfShared(previous, sharedIds).join(', ')
+  const nextOrder = orderOfShared(next, sharedIds).join(', ')
+  if (previousOrder !== nextOrder) {
+    changes.push({
+      action: 'reordered',
+      category: null,
+      previousValue: previousOrder,
+      newValue: nextOrder
+    })
+  }
+
+  return changes
+}
+
+const reconcileTargetsToCategories = (agencyCode, categories) => {
+  const all = readMap(STORAGE_KEYS.regulatorTargets)
+  const current = all[agencyCode]
+  if (!current) return
+  const ids = categories.map((category) => category.id)
+  const reconcile = (field) =>
+    Object.fromEntries(ids.map((id) => [id, current[field]?.[id] ?? 0]))
+  all[agencyCode] = {
+    collection: reconcile('collection'),
+    recycling: reconcile('recycling')
+  }
+  writeJson(STORAGE_KEYS.regulatorTargets, all)
+}
+
+const saveRegulatorCategories = (agencyCode, categories, actorName) => {
+  if (!Array.isArray(categories) || categories.length === 0) {
+    return getRegulatorCategories(agencyCode)
+  }
+  const all = readMap(STORAGE_KEYS.regulatorCategories)
+  const previous = all[agencyCode] ?? defaultCategories()
+  const changes = diffCategories(previous, categories)
+  all[agencyCode] = categories
+  writeJson(STORAGE_KEYS.regulatorCategories, all)
+  reconcileTargetsToCategories(agencyCode, categories)
+  appendConfigAuditEntries(
+    changes.map((change) =>
+      createConfigAuditEntry({
+        agencyCode,
+        actorName: actorName ?? DEFAULT_REGULATOR_USER,
+        configType: 'category',
+        ...change
+      })
+    )
+  )
+  return categories
 }
 
 const listAllProducers = () => Object.values(readMap(STORAGE_KEYS.producers))
@@ -1578,6 +1685,14 @@ const seedDemoData = () => {
   }
   writeJson(STORAGE_KEYS.regulatorTargets, regulatorTargets)
 
+  const regulatorCategories = readMap(STORAGE_KEYS.regulatorCategories)
+  for (const [code, categories] of Object.entries(
+    seedData.regulatorCategories
+  )) {
+    if (!regulatorCategories[code]) regulatorCategories[code] = categories
+  }
+  writeJson(STORAGE_KEYS.regulatorCategories, regulatorCategories)
+
   if (readList(STORAGE_KEYS.configAuditLog).length === 0) {
     writeJson(
       STORAGE_KEYS.configAuditLog,
@@ -1693,6 +1808,9 @@ export const storage = {
   regulatorUsersFor,
   getRegulatorTargets,
   saveRegulatorTargets,
+  getRegulatorCategories,
+  resolveCategories,
+  saveRegulatorCategories,
   listConfigAuditEntries,
   listAllProducers,
   listAllEvidence,

@@ -1895,6 +1895,12 @@ export const content = {
           },
           warningText:
             'If you believe your data is incorrect, contact your regulator immediately.',
+          configChanged: {
+            title: 'Battery categories have changed',
+            intro:
+              'The battery categories have changed since you submitted one or more quarterly returns. You must resubmit the affected returns before you can calculate your obligation.',
+            resubmitAction: 'Resubmit your {quarter} return'
+          },
           columns: {
             category: 'Category',
             placed: 'Placed on market (tonnes)',
@@ -1948,7 +1954,9 @@ export const content = {
                 industrial: 'Enter industrial tonnes',
                 industrialFormat: 'Enter industrial tonnes as a number',
                 automotive: 'Enter automotive tonnes',
-                automotiveFormat: 'Enter automotive tonnes as a number'
+                automotiveFormat: 'Enter automotive tonnes as a number',
+                generic: 'Enter the tonnes for this category',
+                genericFormat: 'Enter the tonnes for this category as a number'
               }
             },
             wasteData: {
@@ -1966,7 +1974,9 @@ export const content = {
                 industrial: 'Enter industrial tonnes',
                 industrialFormat: 'Enter industrial tonnes as a number',
                 automotive: 'Enter automotive tonnes',
-                automotiveFormat: 'Enter automotive tonnes as a number'
+                automotiveFormat: 'Enter automotive tonnes as a number',
+                generic: 'Enter the tonnes for this category',
+                genericFormat: 'Enter the tonnes for this category as a number'
               }
             },
             checkAnswers: {
@@ -2036,7 +2046,9 @@ export const content = {
                 industrial: 'Enter industrial tonnes',
                 industrialFormat: 'Enter industrial tonnes as a number',
                 automotive: 'Enter automotive tonnes',
-                automotiveFormat: 'Enter automotive tonnes as a number'
+                automotiveFormat: 'Enter automotive tonnes as a number',
+                generic: 'Enter the tonnes for this category',
+                genericFormat: 'Enter the tonnes for this category as a number'
               }
             },
             exported: {
@@ -2051,7 +2063,9 @@ export const content = {
                 industrial: 'Enter industrial tonnes',
                 industrialFormat: 'Enter industrial tonnes as a number',
                 automotive: 'Enter automotive tonnes',
-                automotiveFormat: 'Enter automotive tonnes as a number'
+                automotiveFormat: 'Enter automotive tonnes as a number',
+                generic: 'Enter the tonnes for this category',
+                genericFormat: 'Enter the tonnes for this category as a number'
               }
             },
             takenBack: {
@@ -2067,7 +2081,9 @@ export const content = {
                 industrial: 'Enter industrial tonnes',
                 industrialFormat: 'Enter industrial tonnes as a number',
                 automotive: 'Enter automotive tonnes',
-                automotiveFormat: 'Enter automotive tonnes as a number'
+                automotiveFormat: 'Enter automotive tonnes as a number',
+                generic: 'Enter the tonnes for this category',
+                genericFormat: 'Enter the tonnes for this category as a number'
               }
             },
             delivered: {
@@ -2083,7 +2099,9 @@ export const content = {
                 industrial: 'Enter industrial tonnes',
                 industrialFormat: 'Enter industrial tonnes as a number',
                 automotive: 'Enter automotive tonnes',
-                automotiveFormat: 'Enter automotive tonnes as a number'
+                automotiveFormat: 'Enter automotive tonnes as a number',
+                generic: 'Enter the tonnes for this category',
+                genericFormat: 'Enter the tonnes for this category as a number'
               }
             },
             checkAnswers: {
@@ -2520,6 +2538,11 @@ export const content = {
             tonnesUnit: 'TODO welsh'
           },
           warningText: 'TODO welsh',
+          configChanged: {
+            title: 'TODO welsh',
+            intro: 'TODO welsh',
+            resubmitAction: 'TODO welsh'
+          },
           columns: {
             category: 'TODO welsh',
             placed: 'TODO welsh',
@@ -2570,7 +2593,9 @@ export const content = {
                 industrial: 'TODO welsh',
                 industrialFormat: 'TODO welsh',
                 automotive: 'TODO welsh',
-                automotiveFormat: 'TODO welsh'
+                automotiveFormat: 'TODO welsh',
+                generic: 'TODO welsh',
+                genericFormat: 'TODO welsh'
               }
             },
             wasteData: {
@@ -2587,7 +2612,9 @@ export const content = {
                 industrial: 'TODO welsh',
                 industrialFormat: 'TODO welsh',
                 automotive: 'TODO welsh',
-                automotiveFormat: 'TODO welsh'
+                automotiveFormat: 'TODO welsh',
+                generic: 'TODO welsh',
+                genericFormat: 'TODO welsh'
               }
             },
             checkAnswers: {
@@ -2649,7 +2676,9 @@ export const content = {
                 industrial: 'TODO welsh',
                 industrialFormat: 'TODO welsh',
                 automotive: 'TODO welsh',
-                automotiveFormat: 'TODO welsh'
+                automotiveFormat: 'TODO welsh',
+                generic: 'TODO welsh',
+                genericFormat: 'TODO welsh'
               }
             },
             exported: {
@@ -2663,7 +2692,9 @@ export const content = {
                 industrial: 'TODO welsh',
                 industrialFormat: 'TODO welsh',
                 automotive: 'TODO welsh',
-                automotiveFormat: 'TODO welsh'
+                automotiveFormat: 'TODO welsh',
+                generic: 'TODO welsh',
+                genericFormat: 'TODO welsh'
               }
             },
             takenBack: {
@@ -2677,7 +2708,9 @@ export const content = {
                 industrial: 'TODO welsh',
                 industrialFormat: 'TODO welsh',
                 automotive: 'TODO welsh',
-                automotiveFormat: 'TODO welsh'
+                automotiveFormat: 'TODO welsh',
+                generic: 'TODO welsh',
+                genericFormat: 'TODO welsh'
               }
             },
             delivered: {
@@ -2691,7 +2724,9 @@ export const content = {
                 industrial: 'TODO welsh',
                 industrialFormat: 'TODO welsh',
                 automotive: 'TODO welsh',
-                automotiveFormat: 'TODO welsh'
+                automotiveFormat: 'TODO welsh',
+                generic: 'TODO welsh',
+                genericFormat: 'TODO welsh'
               }
             },
             checkAnswers: {
@@ -2841,8 +2876,10 @@ export const content = {
         introParagraph:
           'Review applications, monitor compliance, and manage approvals for battery producers, compliance schemes, and operators.',
         switchAgencyAction: 'Switch agency',
+        configurationHeading: 'Configuration',
         targetsAction: 'Manage collection and recycling targets',
-        auditTrailAction: 'View target change history',
+        categoriesAction: 'Manage battery categories',
+        auditTrailAction: 'View config history',
         tiles: {
           schemes: {
             heading: 'Compliance schemes',
@@ -3116,11 +3153,33 @@ export const content = {
           historyPreviewHeading: 'Recent changes',
           historyViewAllAction: 'View full target change history'
         },
-        auditTrailPage: {
-          title: 'Target change history',
-          heading: 'Target change history',
+        categoriesPage: {
+          title: 'Battery categories',
+          heading: 'Battery categories',
           intro:
-            'Every change to your agency’s collection and recycling targets is recorded here, most recent first. Each entry shows what changed, who changed it and when.',
+            'Manage the battery categories that compliance schemes regulated by your agency use for market data, waste data, evidence and obligation calculations. Changes apply to this agency only.',
+          rowsHeading: 'Categories',
+          rowsHint:
+            'Each category has a name shown throughout the service. Reorder with the move buttons; add or remove categories as needed.',
+          nameLabel: 'Category name',
+          addAction: 'Add a category',
+          moveUpAction: 'Move up',
+          moveDownAction: 'Move down',
+          removeAction: 'Remove',
+          saveAction: 'Save categories',
+          savedMessage: 'Categories saved.',
+          emptyError: 'Add at least one battery category before saving.',
+          backToDashboardAction: 'Back to regulator dashboard',
+          historyPreviewHeading: 'Recent changes',
+          historyEmpty:
+            'No category changes have been recorded for this agency yet.',
+          historyViewAllAction: 'View full change history'
+        },
+        auditTrailPage: {
+          title: 'Config history',
+          heading: 'Config history',
+          intro:
+            'Every change to your agency’s targets and battery categories is recorded here, most recent first. Each entry shows what changed, who changed it and when.',
           warningText:
             'This is a playground audit trail — production audit infrastructure will be more robust.',
           empty: 'No target changes have been recorded for this agency yet.',
@@ -3146,7 +3205,9 @@ export const content = {
         heading: heading('TODO welsh', 'TODO welsh', null),
         introParagraph: 'TODO welsh',
         switchAgencyAction: 'TODO welsh',
+        configurationHeading: 'TODO welsh',
         targetsAction: 'TODO welsh',
+        categoriesAction: 'TODO welsh',
         auditTrailAction: 'TODO welsh',
         tiles: {
           schemes: {
@@ -3411,6 +3472,25 @@ export const content = {
           savedMessage: 'TODO welsh',
           backToDashboardAction: 'TODO welsh',
           historyPreviewHeading: 'TODO welsh',
+          historyViewAllAction: 'TODO welsh'
+        },
+        categoriesPage: {
+          title: 'TODO welsh',
+          heading: 'TODO welsh',
+          intro: 'TODO welsh',
+          rowsHeading: 'TODO welsh',
+          rowsHint: 'TODO welsh',
+          nameLabel: 'TODO welsh',
+          addAction: 'TODO welsh',
+          moveUpAction: 'TODO welsh',
+          moveDownAction: 'TODO welsh',
+          removeAction: 'TODO welsh',
+          saveAction: 'TODO welsh',
+          savedMessage: 'TODO welsh',
+          emptyError: 'TODO welsh',
+          backToDashboardAction: 'TODO welsh',
+          historyPreviewHeading: 'TODO welsh',
+          historyEmpty: 'TODO welsh',
           historyViewAllAction: 'TODO welsh'
         },
         auditTrailPage: {

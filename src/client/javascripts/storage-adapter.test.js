@@ -2384,6 +2384,214 @@ describe('regulator targets', () => {
     storage.seedDemoData()
     expect(storage.getRegulatorTargets('EA')).toEqual(custom)
   })
+
+  test('records an audit entry for a non-base category target change', () => {
+    storage.saveRegulatorTargets('EA', {
+      collection: { portable: 45, industrial: 100, automotive: 100 },
+      recycling: { portable: 45, industrial: 50, automotive: 50 }
+    })
+    storage.saveRegulatorTargets(
+      'EA',
+      {
+        collection: { portable: 45, industrial: 100, automotive: 100, lmt: 60 },
+        recycling: { portable: 45, industrial: 50, automotive: 50, lmt: 50 }
+      },
+      'Priya Shah'
+    )
+    const lmtChange = storage
+      .listConfigAuditEntries('EA', { configType: 'target' })
+      .find((entry) => entry.category === 'lmt' && entry.field === 'recycling')
+    expect(lmtChange).toMatchObject({
+      field: 'recycling',
+      category: 'lmt',
+      previousValue: null,
+      newValue: 50,
+      actorName: 'Priya Shah'
+    })
+  })
+})
+
+describe('regulator categories', () => {
+  beforeEach(() => {
+    globalThis.localStorage.clear()
+  })
+
+  const sampleCategories = () => [
+    { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+    {
+      id: 'industrial',
+      label: 'Industrial batteries',
+      shortLabel: 'Industrial'
+    }
+  ]
+
+  test('getRegulatorCategories returns null before anything is stored', () => {
+    expect(storage.getRegulatorCategories('EA')).toBeNull()
+  })
+
+  test('resolveCategories falls back to the default set when none stored', () => {
+    expect(storage.resolveCategories('EA')).toEqual([
+      { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+      {
+        id: 'industrial',
+        label: 'Industrial batteries',
+        shortLabel: 'Industrial'
+      },
+      {
+        id: 'automotive',
+        label: 'Automotive batteries',
+        shortLabel: 'Automotive'
+      }
+    ])
+  })
+
+  test('resolveCategories falls back to the default set when an empty array is stored', () => {
+    storage.saveRegulatorCategories('EA', sampleCategories())
+    globalThis.localStorage.setItem(
+      STORAGE_KEYS.regulatorCategories,
+      JSON.stringify({ EA: [] })
+    )
+    expect(storage.resolveCategories('EA')).toEqual([
+      { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+      {
+        id: 'industrial',
+        label: 'Industrial batteries',
+        shortLabel: 'Industrial'
+      },
+      {
+        id: 'automotive',
+        label: 'Automotive batteries',
+        shortLabel: 'Automotive'
+      }
+    ])
+  })
+
+  test('saveRegulatorCategories stores per agency and round-trips', () => {
+    const categories = sampleCategories()
+    expect(storage.saveRegulatorCategories('EA', categories)).toBe(categories)
+    expect(storage.getRegulatorCategories('EA')).toEqual(categories)
+    expect(storage.getRegulatorCategories('NRW')).toBeNull()
+    expect(storage.resolveCategories('EA')).toEqual(categories)
+  })
+
+  test('saveRegulatorCategories ignores an empty list and keeps existing categories', () => {
+    const categories = sampleCategories()
+    storage.saveRegulatorCategories('EA', categories)
+    expect(storage.saveRegulatorCategories('EA', [])).toEqual(categories)
+    expect(storage.getRegulatorCategories('EA')).toEqual(categories)
+  })
+
+  test('saveRegulatorCategories ignores a non-array value', () => {
+    expect(storage.saveRegulatorCategories('EA', null)).toBeNull()
+    expect(storage.getRegulatorCategories('EA')).toBeNull()
+  })
+
+  test('saveRegulatorCategories backfills a zero target for a new category and preserves existing', () => {
+    storage.saveRegulatorTargets('EA', {
+      collection: { portable: 45, industrial: 100, automotive: 100 },
+      recycling: { portable: 45, industrial: 50, automotive: 50 }
+    })
+    storage.saveRegulatorCategories('EA', [
+      { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+      {
+        id: 'industrial',
+        label: 'Industrial batteries',
+        shortLabel: 'Industrial'
+      },
+      {
+        id: 'automotive',
+        label: 'Automotive batteries',
+        shortLabel: 'Automotive'
+      },
+      { id: 'lmt', label: 'LMT batteries', shortLabel: 'LMT' }
+    ])
+
+    const targets = storage.getRegulatorTargets('EA')
+    expect(targets.collection.lmt).toBe(0)
+    expect(targets.recycling.lmt).toBe(0)
+    expect(targets.recycling.portable).toBe(45)
+    expect(targets.collection.automotive).toBe(100)
+  })
+
+  test('saveRegulatorCategories prunes target entries for a removed category', () => {
+    storage.saveRegulatorTargets('EA', {
+      collection: { portable: 45, industrial: 100, automotive: 100 },
+      recycling: { portable: 45, industrial: 50, automotive: 50 }
+    })
+    storage.saveRegulatorCategories('EA', [
+      { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+      {
+        id: 'industrial',
+        label: 'Industrial batteries',
+        shortLabel: 'Industrial'
+      }
+    ])
+
+    const targets = storage.getRegulatorTargets('EA')
+    expect(targets.collection).not.toHaveProperty('automotive')
+    expect(targets.recycling).not.toHaveProperty('automotive')
+    expect(targets.recycling.portable).toBe(45)
+  })
+
+  test('saveRegulatorCategories leaves targets untouched when none are stored', () => {
+    storage.saveRegulatorCategories('EA', sampleCategories())
+    expect(storage.getRegulatorTargets('EA')).toBeNull()
+  })
+
+  test('seedDemoData seeds default categories for every agency', () => {
+    storage.seedDemoData()
+    for (const { code } of AGENCIES) {
+      expect(storage.getRegulatorCategories(code)).toEqual(
+        seedData.regulatorCategories[code]
+      )
+    }
+  })
+
+  test('seedDemoData does not overwrite existing categories', () => {
+    const custom = sampleCategories()
+    storage.saveRegulatorCategories('EA', custom)
+    storage.seedDemoData()
+    expect(storage.getRegulatorCategories('EA')).toEqual(custom)
+  })
+
+  test('records add, rename, remove and reorder in the audit log', () => {
+    storage.seedDemoData()
+    storage.saveRegulatorCategories(
+      'EA',
+      [
+        {
+          id: 'automotive',
+          label: 'Automotive batteries',
+          shortLabel: 'Automotive'
+        },
+        { id: 'portable', label: 'Portable cells', shortLabel: 'Portable' },
+        { id: 'lmt', label: 'LMT batteries', shortLabel: 'LMT' }
+      ],
+      'Priya Shah'
+    )
+    const actions = storage
+      .listConfigAuditEntries('EA', { configType: 'category' })
+      .map((entry) => entry.action)
+    expect(actions).toContain('added')
+    expect(actions).toContain('renamed')
+    expect(actions).toContain('removed')
+    expect(actions).toContain('reordered')
+  })
+
+  test('listConfigAuditEntries can filter by config type', () => {
+    storage.seedDemoData()
+    storage.saveRegulatorCategories('EA', sampleCategories(), 'Priya Shah')
+    const categoryEntries = storage.listConfigAuditEntries('EA', {
+      configType: 'category'
+    })
+    const targetEntries = storage.listConfigAuditEntries('EA', {
+      configType: 'target'
+    })
+    expect(categoryEntries.every((e) => e.configType === 'category')).toBe(true)
+    expect(
+      targetEntries.every((e) => (e.configType ?? 'target') === 'target')
+    ).toBe(true)
+  })
 })
 
 describe('obligation snapshots', () => {

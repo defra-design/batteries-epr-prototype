@@ -3,9 +3,23 @@ import { beforeEach, describe, expect, test } from 'vitest'
 
 import {
   describeAuditEntry,
+  describeCategoryAuditEntry,
   renderAuditEntries,
   renderAuditTable
 } from './render.js'
+
+const categoryEntry = (overrides) => ({
+  id: 'c',
+  at: '2026-01-06T09:14:00.000Z',
+  agencyCode: 'EA',
+  actorName: 'Priya Shah',
+  configType: 'category',
+  action: 'added',
+  category: 'lmt',
+  previousValue: null,
+  newValue: 'LMT batteries',
+  ...overrides
+})
 
 const copy = {
   empty: 'No changes yet.',
@@ -41,6 +55,46 @@ describe('describeAuditEntry', () => {
     expect(describeAuditEntry(entry({ previousValue: null }), copy)).toBe(
       'Priya Shah (EA) set the portable recycling target to 45%'
     )
+  })
+})
+
+describe('describeCategoryAuditEntry', () => {
+  test('describes an added category', () => {
+    expect(describeCategoryAuditEntry(categoryEntry())).toBe(
+      'Priya Shah (EA) added the LMT batteries category'
+    )
+  })
+
+  test('describes a removed category', () => {
+    expect(
+      describeCategoryAuditEntry(
+        categoryEntry({
+          action: 'removed',
+          previousValue: 'Industrial batteries',
+          newValue: null
+        })
+      )
+    ).toBe('Priya Shah (EA) removed the Industrial batteries category')
+  })
+
+  test('describes a renamed category', () => {
+    expect(
+      describeCategoryAuditEntry(
+        categoryEntry({
+          action: 'renamed',
+          previousValue: 'Automotive batteries',
+          newValue: 'Automotive/SLI batteries'
+        })
+      )
+    ).toBe(
+      'Priya Shah (EA) renamed a category from Automotive batteries to Automotive/SLI batteries'
+    )
+  })
+
+  test('describes a reorder', () => {
+    expect(
+      describeCategoryAuditEntry(categoryEntry({ action: 'reordered' }))
+    ).toBe('Priya Shah (EA) reordered the categories')
   })
 })
 
@@ -134,5 +188,32 @@ describe('renderAuditTable', () => {
     renderAuditTable(tbody, empty, [entry({ actorName: 'Ben & <Co>' })], copy)
     const changedBy = tbody.querySelectorAll('td')[4]
     expect(changedBy.innerHTML).toContain('Ben &amp; &lt;Co&gt;')
+  })
+
+  test('renders category rows with labels and a not-set previous value', () => {
+    renderAuditTable(tbody, empty, [categoryEntry()], copy)
+    const cells = tbody.querySelectorAll('td')
+    expect(cells[1].textContent).toBe('Added category')
+    expect(cells[2].textContent).toBe('Not set')
+    expect(cells[3].textContent).toBe('LMT batteries')
+  })
+
+  test('renders a renamed category row with both labels', () => {
+    renderAuditTable(
+      tbody,
+      empty,
+      [
+        categoryEntry({
+          action: 'renamed',
+          previousValue: 'Automotive batteries',
+          newValue: 'Automotive/SLI batteries'
+        })
+      ],
+      copy
+    )
+    const cells = tbody.querySelectorAll('td')
+    expect(cells[1].textContent).toBe('Renamed category')
+    expect(cells[2].textContent).toBe('Automotive batteries')
+    expect(cells[3].textContent).toBe('Automotive/SLI batteries')
   })
 })
