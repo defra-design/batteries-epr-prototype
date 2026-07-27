@@ -32,25 +32,39 @@ const DEFAULT_TARGETS = {
 
 const RULE_VERSION = 'GB-playground-v1'
 
-const toFractions = (percentByCategory) =>
-  Object.fromEntries(
-    Object.entries(percentByCategory).map(([category, value]) => [
-      category,
-      Number(value) / 100
-    ])
-  )
+const isYearMap = (value) =>
+  value !== null && typeof value === 'object' && !Array.isArray(value)
 
-export const resolveTargets = (agencyCode) => {
+const targetForYear = (value, compliancePeriodYear) => {
+  if (!isYearMap(value)) return Number(value ?? 0)
+  const year = Number(compliancePeriodYear ?? new Date().getUTCFullYear())
+  const configuredYears = Object.keys(value)
+    .map(Number)
+    .filter((configuredYear) => Number.isInteger(configuredYear))
+    .filter((configuredYear) => configuredYear <= year)
+    .sort((a, b) => b - a)
+  const effectiveYear = configuredYears[0]
+  return effectiveYear ? Number(value[String(effectiveYear)] ?? 0) : 0
+}
+
+const toFractionsForYear = (targets, ids, compliancePeriodYear) => {
+  const pick = (field) =>
+    Object.fromEntries(
+      ids.map((id) => [
+        id,
+        targetForYear(targets?.[field]?.[id], compliancePeriodYear) / 100
+      ])
+    )
+  return { recycling: pick('recycling'), collection: pick('collection') }
+}
+
+export const resolveTargets = (agencyCode, compliancePeriodYear) => {
   const ids = storage
     .resolveCategories(agencyCode)
     .map((category) => category.id)
   const stored = agencyCode ? storage.getRegulatorTargets(agencyCode) : null
-  const source = stored
-    ? {
-        recycling: toFractions(stored.recycling),
-        collection: toFractions(stored.collection)
-      }
-    : DEFAULT_TARGETS
+  if (stored) return toFractionsForYear(stored, ids, compliancePeriodYear)
+  const source = DEFAULT_TARGETS
   const pick = (field) =>
     Object.fromEntries(ids.map((id) => [id, source[field][id] ?? 0]))
   return { recycling: pick('recycling'), collection: pick('collection') }
@@ -134,7 +148,7 @@ export const buildObligationSnapshot = ({
   compliancePeriodYear,
   quarterly,
   evidence,
-  targets = resolveTargets(scheme?.agencyCode),
+  targets = resolveTargets(scheme?.agencyCode, compliancePeriodYear),
   calculatedAt = new Date().toISOString()
 }) => {
   const categories = storage.resolveCategories(scheme?.agencyCode)

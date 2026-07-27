@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
+import { createEvidence, storage } from '../../storage-adapter.js'
 import { runObligationPage } from './index.js'
-import { storage, createEvidence } from '../../storage-adapter.js'
 
 const FORMULA_COPY = {
   formulaEquation: 'X × Y = Z',

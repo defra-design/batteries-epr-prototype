@@ -12,3 +12,26 @@
     font-family: sans-serif;
   }
 }
+
+.app-target-grid {
+  overflow-x: auto;
+}
+
+.app-target-grid__row {
+  display: grid;
+  grid-template-columns: minmax(8rem, 10rem) repeat(5, minmax(6.5rem, 1fr));
+  align-items: start;
+  min-width: 44rem;
+  column-gap: 1rem;
+}
+
+.app-target-grid__row--head {
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.app-target-grid__category,
+.app-target-grid__year,
+.app-target-grid__cell {
+  min-width: 0;
+}

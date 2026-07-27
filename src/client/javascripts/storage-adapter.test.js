@@ -2,20 +2,20 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 import {
-  STORAGE_KEYS,
   AGENCIES,
+  createEvidence,
+  createIaSubmission,
+  createOperator,
+  createOperatorAnnualReturn,
+  createOperatorQuarterlyReturn,
   createProducer,
+  createQuarterlySubmission,
   createRegistration,
-  createSubmission,
   createScheme,
   createSchemeMember,
-  createQuarterlySubmission,
-  createIaSubmission,
-  createEvidence,
-  createOperator,
-  createOperatorQuarterlyReturn,
-  createOperatorAnnualReturn,
-  storage
+  createSubmission,
+  storage,
+  STORAGE_KEYS
 } from './storage-adapter.js'
 import seedData from './storage-seed.json'
 
@@ -2409,6 +2409,74 @@ describe('regulator targets', () => {
       actorName: 'Priya Shah'
     })
   })
+
+  test('compares legacy flat saves against the earliest configured year', () => {
+    storage.saveRegulatorTargets('EA', {
+      collection: { portable: { 2026: 45, 2027: 50 } },
+      recycling: { portable: { 2026: 45, 2027: 48 } }
+    })
+    globalThis.localStorage.setItem(STORAGE_KEYS.configAuditLog, '[]')
+
+    storage.saveRegulatorTargets(
+      'EA',
+      {
+        collection: { portable: 45 },
+        recycling: { portable: 45 }
+      },
+      'Priya Shah'
+    )
+
+    expect(
+      storage.listConfigAuditEntries('EA', { configType: 'target' })
+    ).toEqual([])
+  })
+
+  test('records a null previous value when no prior configured year applies', () => {
+    storage.saveRegulatorTargets('EA', {
+      collection: { portable: { 2028: 50 } },
+      recycling: { portable: { 2028: 45 } }
+    })
+    globalThis.localStorage.setItem(STORAGE_KEYS.configAuditLog, '[]')
+
+    storage.saveRegulatorTargets(
+      'EA',
+      {
+        collection: { portable: { 2027: 45 } },
+        recycling: { portable: { 2027: 45 } }
+      },
+      'Priya Shah'
+    )
+
+    const entry = storage
+      .listConfigAuditEntries('EA', { configType: 'target' })
+      .find((item) => item.field === 'collection')
+    expect(entry).toMatchObject({
+      year: '2027',
+      previousValue: null,
+      newValue: 45
+    })
+  })
+
+  test('reconciles categories when one target stream is missing from stored data', () => {
+    globalThis.localStorage.setItem(
+      STORAGE_KEYS.regulatorTargets,
+      JSON.stringify({
+        EA: {
+          collection: { portable: { 2026: 45 } }
+        }
+      })
+    )
+
+    storage.saveRegulatorCategories('EA', [
+      { id: 'portable', label: 'Portable batteries', shortLabel: 'Portable' },
+      { id: 'lmt', label: 'LMT batteries', shortLabel: 'LMT' }
+    ])
+
+    expect(storage.getRegulatorTargets('EA')).toEqual({
+      collection: { portable: { 2026: 45 }, lmt: { 2026: 0 } },
+      recycling: { portable: { 2026: 0 }, lmt: { 2026: 0 } }
+    })
+  })
 })
 
 describe('regulator categories', () => {
@@ -2698,7 +2766,10 @@ describe('obligation snapshots', () => {
 
     expect(seeded.agencyCode).toBe('EA')
     expect(seeded.targets.recycling.portable).toBe(48)
-    expect(storage.getRegulatorTargets('EA').recycling.portable).toBe(45)
+    expect(storage.getRegulatorTargets('EA').recycling.portable).toEqual({
+      2026: 45,
+      2027: 48
+    })
   })
 
   test('seedDemoData does not overwrite an existing snapshot with the same id', () => {
