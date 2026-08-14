@@ -32,7 +32,9 @@ describe('#regulatorSignIn', () => {
     expect(result).toEqual(
       expect.stringContaining('data-testid="regulator-sign-in-cancel"')
     )
-    expect(result).toEqual(expect.stringContaining(`href="${paths.home}"`))
+    expect(result).toEqual(
+      expect.stringContaining(`href="${paths.playground}"`)
+    )
   })
 
   test('GET renders a name select for each agency', async () => {

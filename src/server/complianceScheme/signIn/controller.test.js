@@ -27,7 +27,9 @@ describe('#complianceSchemeSignIn', () => {
     expect(result).toEqual(
       expect.stringContaining('data-testid="compliance-scheme-sign-in-cancel"')
     )
-    expect(result).toEqual(expect.stringContaining(`href="${paths.home}"`))
+    expect(result).toEqual(
+      expect.stringContaining(`href="${paths.playground}"`)
+    )
     expect(result).toEqual(
       expect.stringContaining(
         'data-testid="compliance-scheme-sign-in-register"'

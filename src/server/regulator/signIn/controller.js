@@ -51,7 +51,7 @@ const renderView = (h, request, viewModel) => {
     labels: pageContent,
     errorTitle: pageContent.error.title,
     action: paths.regulatorSignIn,
-    cancelUrl: paths.home,
+    cancelUrl: paths.playground,
     ...viewModel
   })
 }

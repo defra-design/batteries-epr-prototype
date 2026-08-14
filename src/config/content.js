@@ -10,7 +10,64 @@ const getContentForLanguage = (request, data) => {
 }
 
 export const content = {
-  home: (request) =>
+  landing: (request) =>
+    getContentForLanguage(request, {
+      en: {
+        title: 'Battery EPR prototypes',
+        heading: 'Battery EPR prototypes',
+        intro: 'Choose an area to explore.',
+        areas: {
+          playground: {
+            title: 'Playground',
+            description:
+              'The full end-to-end walkthrough of the Battery Extended Producer Responsibility service journeys for producers, compliance schemes, treatment operators and regulators.',
+            linkText: 'Open the playground'
+          },
+          prototype: {
+            title: 'Prototype',
+            description:
+              'New design prototypes being explored. Nothing has been added here yet.',
+            linkText: 'Open the prototypes'
+          }
+        }
+      },
+      cy: {
+        title: 'TODO welsh',
+        heading: 'TODO welsh',
+        intro: 'TODO welsh',
+        areas: {
+          playground: {
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            linkText: 'TODO welsh'
+          },
+          prototype: {
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            linkText: 'TODO welsh'
+          }
+        }
+      }
+    }),
+  prototype: (request) =>
+    getContentForLanguage(request, {
+      en: {
+        title: 'Prototype',
+        heading: 'Prototype',
+        intro:
+          'This area is where new Battery EPR design prototypes will be built.',
+        empty: 'No prototypes have been added yet.',
+        backLinkText: 'Back to Battery EPR prototypes'
+      },
+      cy: {
+        title: 'TODO welsh',
+        heading: 'TODO welsh',
+        intro: 'TODO welsh',
+        empty: 'TODO welsh',
+        backLinkText: 'TODO welsh'
+      }
+    }),
+  playground: (request) =>
     getContentForLanguage(request, {
       en: {
         title: 'Battery EPR Playground',

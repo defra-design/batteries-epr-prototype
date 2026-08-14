@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs'
 
 import { config } from '../../config.js'
 import { buildNavigation } from './build-navigation.js'
+import { resolveArea } from './resolve-area.js'
 import { createLogger } from '../../../server/common/helpers/logging/logger.js'
 
 const logger = createLogger()
@@ -23,8 +24,12 @@ export function context(request) {
     }
   }
 
+  const { areaTag, showDevLinks } = resolveArea(request)
+
   return {
     assetPath: `${assetPath}/assets`,
+    areaTag,
+    showDevLinks,
     serviceName: config.get('serviceName'),
     serviceUrl: '/',
     feedbackUrl: config.get('links.feedback'),

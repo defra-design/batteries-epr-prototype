@@ -1,0 +1,48 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+      <p class="govuk-body-l">{{ intro }}</p>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row app-task-cards" data-testid="landing-areas">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-summary-card" data-testid="landing-area-playground">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">{{ areas.playground.title }}</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <p class="govuk-body">{{ areas.playground.description }}</p>
+          {{ govukButton({
+            text: areas.playground.linkText,
+            href: playgroundUrl,
+            isStartButton: true,
+            attributes: { "data-testid": "landing-area-playground-cta" }
+          }) }}
+        </div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-summary-card" data-testid="landing-area-prototype">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">{{ areas.prototype.title }}</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <p class="govuk-body">{{ areas.prototype.description }}</p>
+          {{ govukButton({
+            text: areas.prototype.linkText,
+            href: prototypeUrl,
+            isStartButton: true,
+            attributes: { "data-testid": "landing-area-prototype-cta" }
+          }) }}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

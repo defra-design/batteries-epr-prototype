@@ -1,6 +1,8 @@
 /* v8 ignore start */
 export const paths = {
   home: '/',
+  playground: '/playground',
+  prototype: '/prototype',
   about: '/about',
   cookies: '/cookies',
   terms: '/terms',

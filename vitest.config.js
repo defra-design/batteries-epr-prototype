@@ -6,6 +6,8 @@ export default defineConfig({
     environment: 'node',
     clearMocks: true,
     testTimeout: 20000,
+    hookTimeout: 30000,
+    maxWorkers: 4,
     coverage: {
       provider: 'v8',
       reportsDirectory: './coverage',

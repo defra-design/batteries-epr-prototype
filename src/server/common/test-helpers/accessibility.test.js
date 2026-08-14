@@ -60,6 +60,8 @@ describe('Accessibility audit across all primary GET routes', () => {
 
   const staticRoutes = [
     paths.home,
+    paths.playground,
+    paths.prototype,
     paths.about,
     paths.cookies,
     paths.terms,

@@ -8,13 +8,13 @@
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-xl">{{ heading }}</h1>
       <p class="govuk-body-l">{{ intro }}</p>
-      <p class="govuk-body" data-testid="home-prototype-banner">{{ prototypeBanner }}</p>
+      <p class="govuk-body" data-testid="playground-prototype-banner">{{ prototypeBanner }}</p>
     </div>
   </div>
 
-  <div class="govuk-grid-row app-task-cards" data-testid="home-journeys">
+  <div class="govuk-grid-row app-task-cards" data-testid="playground-journeys">
     <div class="govuk-grid-column-one-half">
-      <div class="govuk-summary-card" data-testid="home-journey-producer">
+      <div class="govuk-summary-card" data-testid="playground-journey-producer">
         <div class="govuk-summary-card__title-wrapper">
           <h2 class="govuk-summary-card__title">{{ journeys.producer.title }}</h2>
         </div>
@@ -29,17 +29,17 @@
             text: journeys.producer.primaryAction,
             href: producerSignInUrl,
             isStartButton: true,
-            attributes: { "data-testid": "home-journey-producer-cta" }
+            attributes: { "data-testid": "playground-journey-producer-cta" }
           }) }}
           <p class="govuk-body">
-            <a class="govuk-link" href="{{ publicRegisterUrl }}" data-testid="home-public-register-cta">{{ journeys.producer.secondaryAction }}</a>
+            <a class="govuk-link" href="{{ publicRegisterUrl }}" data-testid="playground-public-register-cta">{{ journeys.producer.secondaryAction }}</a>
           </p>
         </div>
       </div>
     </div>
 
     <div class="govuk-grid-column-one-half">
-      <div class="govuk-summary-card" data-testid="home-journey-compliance-scheme">
+      <div class="govuk-summary-card" data-testid="playground-journey-compliance-scheme">
         <div class="govuk-summary-card__title-wrapper">
           <h2 class="govuk-summary-card__title">{{ journeys.complianceScheme.title }}</h2>
         </div>
@@ -54,16 +54,16 @@
             text: journeys.complianceScheme.primaryAction,
             href: complianceSchemeSignInUrl,
             isStartButton: true,
-            attributes: { "data-testid": "home-journey-compliance-scheme-cta" }
+            attributes: { "data-testid": "playground-journey-compliance-scheme-cta" }
           }) }}
         </div>
       </div>
     </div>
   </div>
 
-  <div class="govuk-grid-row app-task-cards" data-testid="home-journeys-row-2">
+  <div class="govuk-grid-row app-task-cards" data-testid="playground-journeys-row-2">
     <div class="govuk-grid-column-one-half">
-      <div class="govuk-summary-card" data-testid="home-journey-operator">
+      <div class="govuk-summary-card" data-testid="playground-journey-operator">
         <div class="govuk-summary-card__title-wrapper">
           <h2 class="govuk-summary-card__title">{{ journeys.operator.title }}</h2>
         </div>
@@ -78,14 +78,14 @@
             text: journeys.operator.primaryAction,
             href: operatorSignInUrl,
             isStartButton: true,
-            attributes: { "data-testid": "home-journey-operator-cta" }
+            attributes: { "data-testid": "playground-journey-operator-cta" }
           }) }}
         </div>
       </div>
     </div>
 
     <div class="govuk-grid-column-one-half">
-      <div class="govuk-summary-card" data-testid="home-journey-regulator">
+      <div class="govuk-summary-card" data-testid="playground-journey-regulator">
         <div class="govuk-summary-card__title-wrapper">
           <h2 class="govuk-summary-card__title">{{ journeys.regulator.title }}</h2>
         </div>
@@ -100,7 +100,7 @@
             text: journeys.regulator.primaryAction,
             href: regulatorSignInUrl,
             isStartButton: true,
-            attributes: { "data-testid": "home-journey-regulator-cta" }
+            attributes: { "data-testid": "playground-journey-regulator-cta" }
           }) }}
         </div>
       </div>
@@ -108,9 +108,9 @@
   </div>
 
   {% if showNi %}
-  <div class="govuk-grid-row" data-testid="home-journeys-row-3">
+  <div class="govuk-grid-row" data-testid="playground-journeys-row-3">
     <div class="govuk-grid-column-full">
-      <div class="govuk-summary-card" data-testid="home-journey-ni">
+      <div class="govuk-summary-card" data-testid="playground-journey-ni">
         <div class="govuk-summary-card__title-wrapper">
           <h2 class="govuk-summary-card__title">{{ niJourney.title }}</h2>
           <div class="app-task-cards__status">
@@ -128,7 +128,7 @@
             text: niJourney.primaryAction,
             href: niSignInUrl,
             isStartButton: true,
-            attributes: { "data-testid": "home-journey-ni-cta" }
+            attributes: { "data-testid": "playground-journey-ni-cta" }
           }) }}
         </div>
       </div>
@@ -137,12 +137,12 @@
   {% endif %}
 
   {% if reference %}
-  <div class="govuk-grid-row" data-testid="home-reference">
+  <div class="govuk-grid-row" data-testid="playground-reference">
     <div class="govuk-grid-column-two-thirds">
       <h2 class="govuk-heading-m">{{ reference.heading }}</h2>
       <p class="govuk-body">{{ reference.description }}</p>
       <p class="govuk-body">
-        <a class="govuk-link" href="{{ npwdPackagingComparisonUrl }}" data-testid="home-npwd-comparison-link">{{ reference.npwdComparisonLinkText }}</a>
+        <a class="govuk-link" href="{{ npwdPackagingComparisonUrl }}" data-testid="playground-npwd-comparison-link">{{ reference.npwdComparisonLinkText }}</a>
       </p>
     </div>
   </div>

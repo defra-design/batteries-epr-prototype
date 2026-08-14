@@ -27,7 +27,9 @@ describe('#operatorSignIn', () => {
     expect(result).toEqual(
       expect.stringContaining('data-testid="operator-sign-in-cancel"')
     )
-    expect(result).toEqual(expect.stringContaining(`href="${paths.home}"`))
+    expect(result).toEqual(
+      expect.stringContaining(`href="${paths.playground}"`)
+    )
     expect(result).toEqual(
       expect.stringContaining('data-testid="operator-sign-in-register"')
     )

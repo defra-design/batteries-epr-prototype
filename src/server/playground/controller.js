@@ -2,11 +2,11 @@ import { content } from '../../config/content.js'
 import { niContent } from '../../config/ni-content.js'
 import { paths } from '../../config/paths.js'
 
-export const homeController = {
+export const playgroundController = {
   handler(request, h) {
-    const pageContent = content.home(request)
+    const pageContent = content.playground(request)
 
-    return h.view('home/index', {
+    return h.view('playground/index', {
       pageTitle: pageContent.title,
       heading: pageContent.heading,
       intro: pageContent.intro,

@@ -55,7 +55,7 @@ export const config = convict({
   serviceName: {
     doc: 'Applications Service Name',
     format: String,
-    default: 'Playground Home'
+    default: 'Battery EPR'
   },
   root: {
     doc: 'Project root',

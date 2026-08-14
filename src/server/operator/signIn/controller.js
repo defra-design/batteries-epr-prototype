@@ -27,7 +27,7 @@ const renderView = (h, request, viewModel) => {
     labels: pageContent,
     errorTitle: pageContent.error.title,
     action: paths.operatorSignIn,
-    cancelUrl: paths.home,
+    cancelUrl: paths.playground,
     registerUrl: paths.operatorRegister,
     ...viewModel
   })

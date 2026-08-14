@@ -1,12 +1,12 @@
 import { paths } from '../../config/paths.js'
-import { homeController } from './controller.js'
+import { landingController } from './controller.js'
 
-export const home = {
+export const landing = {
   openRoutes: [
     {
       method: 'GET',
       path: paths.home,
-      ...homeController
+      ...landingController
     }
   ]
 }

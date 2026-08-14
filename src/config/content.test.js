@@ -41,12 +41,12 @@ describe('content registry', () => {
   })
 
   test('defaults to English when no language header is present', () => {
-    const result = content.home({})
-    expect(result.title).toBe(content.home(englishRequest).title)
+    const result = content.playground({})
+    expect(result.title).toBe(content.playground(englishRequest).title)
   })
 
   test('defaults to English when request is undefined', () => {
-    const result = content.home()
-    expect(result.title).toBe(content.home(englishRequest).title)
+    const result = content.playground()
+    expect(result.title).toBe(content.playground(englishRequest).title)
   })
 })
