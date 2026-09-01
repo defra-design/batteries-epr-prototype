@@ -4,6 +4,7 @@ import { landing } from './landing/index.js'
 import { playground } from './playground/index.js'
 import { prototype } from './prototype/index.js'
 import { prototypeRegistration } from './prototype/registration/index.js'
+import { prototypeSubmission } from './prototype/submission/index.js'
 import { blueprint } from './blueprint/index.js'
 import { bcsRegistrationWalkthrough } from './bcsRegistrationWalkthrough/index.js'
 import { about } from './about/index.js'
@@ -94,6 +95,7 @@ export const router = {
         playground: playground.openRoutes,
         prototype: prototype.openRoutes,
         prototypeRegistration: prototypeRegistration.openRoutes,
+        prototypeSubmission: prototypeSubmission.openRoutes,
         blueprint: blueprint.openRoutes,
         bcsRegistrationWalkthrough: bcsRegistrationWalkthrough.openRoutes,
         about: about.openRoutes,

@@ -30,6 +30,7 @@ export default {
     publicRegisterDetail: './javascripts/publicRegister/detail/entry.js',
     onboarding: './javascripts/onboarding/entry.js',
     prototypeRegistration: './javascripts/prototype/registration/entry.js',
+    prototypeSubmission: './javascripts/prototype/submission/entry.js',
     onboardingConfirmation: './javascripts/onboardingConfirmation/entry.js',
     annualReturnSmallTonnages:
       './javascripts/annualReturn/smallProducer/tonnages/entry.js',

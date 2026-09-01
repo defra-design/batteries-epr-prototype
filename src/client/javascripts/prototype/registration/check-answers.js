@@ -7,7 +7,7 @@ const setRowValue = (doc, rowKey, value) => {
   el.textContent = value || '—'
 }
 
-const batteryTypesSummary = (draft) => {
+export const batteryTypesSummary = (draft) => {
   const categoryContent = prototypeRegistrationContent.batteryCategory
   return [
     draft.isPortable && categoryContent.portableLabel,

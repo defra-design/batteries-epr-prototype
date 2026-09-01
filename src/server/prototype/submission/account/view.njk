@@ -1,0 +1,33 @@
+{% extends 'layouts/page.njk' %}
+{% from "prototypeSubmission/_account-chrome.njk" import accountChrome %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ accountChrome(labels, urls, 'home') }}
+
+      <h1 class="govuk-heading-m" data-testid="account-company-name">{{ labels.defaultCompanyName }}</h1>
+
+      {% set activityRows = [] %}
+      {% for row in labels.activityRows %}
+        {% set activityRows = (activityRows.push([{ text: row.date }, { text: row.activity }]), activityRows) %}
+      {% endfor %}
+      {{ govukTable({
+        head: [
+          { text: labels.activityDateColumn },
+          { text: labels.activityColumn }
+        ],
+        rows: activityRows,
+        attributes: { "data-testid": "account-activity" }
+      }) }}
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('prototypeSubmission.js') }}"></script>
+{% endblock %}

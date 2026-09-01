@@ -36,7 +36,8 @@ export const STORAGE_KEYS = {
   configAuditLog: `${KEY_PREFIX}configAuditLog`,
   obligationSnapshots: `${KEY_PREFIX}obligationSnapshots`,
   prototypeRegistrationDraft: `${KEY_PREFIX}prototype:registrationDraft`,
-  prototypeBprnSequence: `${KEY_PREFIX}prototype:seq:bprn`
+  prototypeBprnSequence: `${KEY_PREFIX}prototype:seq:bprn`,
+  prototypeSubmissionDraft: `${KEY_PREFIX}prototype:submissionDraft`
 }
 
 const bprnSequenceKey = (agencyCode, compliancePeriod) =>
@@ -1795,6 +1796,38 @@ const clearPrototypeRegistration = () => {
   removeKey(STORAGE_KEYS.prototypeRegistrationDraft)
 }
 
+const getPrototypeSubmission = () =>
+  readJson(STORAGE_KEYS.prototypeSubmissionDraft) ?? {}
+
+const savePrototypeSubmission = (fields) => {
+  const next = { ...getPrototypeSubmission(), ...fields }
+  writeJson(STORAGE_KEYS.prototypeSubmissionDraft, next)
+  return next
+}
+
+const submitPrototypeSubmission = () =>
+  savePrototypeSubmission({ status: 'submitted', submittedAt: now() })
+
+const ensurePrototypePaymentReference = () => {
+  const existing = getPrototypeSubmission().paymentReference
+  if (existing) return existing
+  const stamp = now().replace(/\D/g, '').slice(0, 14)
+  const reference = `S185756-${stamp}`
+  savePrototypeSubmission({ paymentReference: reference })
+  return reference
+}
+
+const completePrototypeSubmissionPayment = () =>
+  savePrototypeSubmission({
+    status: 'paid',
+    paidAt: now(),
+    paymentReference: ensurePrototypePaymentReference()
+  })
+
+const clearPrototypeSubmission = () => {
+  removeKey(STORAGE_KEYS.prototypeSubmissionDraft)
+}
+
 export const storage = {
   getCurrentUser,
   setCurrentUser,
@@ -1912,5 +1945,11 @@ export const storage = {
   getPrototypeRegistration,
   savePrototypeRegistration,
   submitPrototypeRegistration,
-  clearPrototypeRegistration
+  clearPrototypeRegistration,
+  getPrototypeSubmission,
+  savePrototypeSubmission,
+  submitPrototypeSubmission,
+  ensurePrototypePaymentReference,
+  completePrototypeSubmissionPayment,
+  clearPrototypeSubmission
 }

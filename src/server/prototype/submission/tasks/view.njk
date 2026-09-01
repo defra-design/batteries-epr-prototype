@@ -1,0 +1,38 @@
+{% extends 'layouts/page.njk' %}
+{% from "prototypeSubmission/_account-chrome.njk" import accountChrome %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ accountChrome(labels, urls, 'tasks') }}
+
+      <h1 class="govuk-heading-m" data-testid="account-company-name">{{ labels.defaultCompanyName }}</h1>
+
+      <table class="govuk-table" data-testid="account-task-list">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">{{ labels.taskColumn }}</th>
+            <th scope="col" class="govuk-table__header">{{ labels.taskDueColumn }}</th>
+            <th scope="col" class="govuk-table__header">{{ labels.taskStatusColumn }}</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+              <a class="govuk-link" href="{{ urls.taskStart }}" data-testid="account-task-link">{{ labels.taskName }}</a>
+            </td>
+            <td class="govuk-table__cell">{{ labels.taskDue }}</td>
+            <td class="govuk-table__cell">{{ labels.taskStatus }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('prototypeSubmission.js') }}"></script>
+{% endblock %}

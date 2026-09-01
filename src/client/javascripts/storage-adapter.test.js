@@ -3218,3 +3218,51 @@ describe('prototype registration draft', () => {
     )
   })
 })
+
+describe('prototype submission draft', () => {
+  test('getPrototypeSubmission returns an empty object when nothing is stored', () => {
+    expect(storage.getPrototypeSubmission()).toEqual({})
+  })
+
+  test('savePrototypeSubmission merges fields into the draft', () => {
+    storage.savePrototypeSubmission({ hasBrand: 'yes' })
+    const draft = storage.savePrototypeSubmission({
+      brandNames: ['Bunny Batteries']
+    })
+    expect(draft).toEqual({
+      hasBrand: 'yes',
+      brandNames: ['Bunny Batteries']
+    })
+  })
+
+  test('submitPrototypeSubmission stamps the submitted status', () => {
+    const submitted = storage.submitPrototypeSubmission()
+    expect(submitted.status).toBe('submitted')
+    expect(submitted.submittedAt).toEqual(expect.any(String))
+  })
+
+  test('ensurePrototypePaymentReference generates once and then reuses the reference', () => {
+    const first = storage.ensurePrototypePaymentReference()
+    expect(first).toMatch(/^S185756-\d{14}$/)
+    expect(storage.ensurePrototypePaymentReference()).toBe(first)
+  })
+
+  test('completePrototypeSubmissionPayment marks the draft paid with a reference', () => {
+    const paid = storage.completePrototypeSubmissionPayment()
+    expect(paid.status).toBe('paid')
+    expect(paid.paidAt).toEqual(expect.any(String))
+    expect(paid.paymentReference).toMatch(/^S185756-\d{14}$/)
+  })
+
+  test('clearPrototypeSubmission removes the draft', () => {
+    storage.savePrototypeSubmission({ hasBrand: 'no' })
+    storage.clearPrototypeSubmission()
+    expect(storage.getPrototypeSubmission()).toEqual({})
+  })
+
+  test('the submission draft key is namespaced under the prototype prefix', () => {
+    expect(STORAGE_KEYS.prototypeSubmissionDraft).toBe(
+      'npwd-batteries:prototype:submissionDraft'
+    )
+  })
+})

@@ -1,0 +1,33 @@
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+
+{% macro accountChrome(labels, urls, activeTab) %}
+  {% set bannerHtml %}
+    <p class="govuk-notification-banner__heading">{{ labels.bannerHeading }}</p>
+    <p class="govuk-body">
+      {{ labels.bannerBody }}
+      <a class="govuk-notification-banner__link" href="{{ urls.taskStart }}" data-testid="account-start-submission">{{ labels.bannerLink }}</a>
+    </p>
+  {% endset %}
+  {{ govukNotificationBanner({
+    titleText: labels.bannerTitle,
+    html: bannerHtml,
+    attributes: { "data-testid": "account-banner" }
+  }) }}
+
+  <nav class="govuk-tabs" aria-label="Account sections" data-testid="account-tabs">
+    <ul class="govuk-tabs__list">
+      <li class="govuk-tabs__list-item {% if activeTab == 'home' %}govuk-tabs__list-item--selected{% endif %}">
+        <a class="govuk-tabs__tab" href="{{ urls.account }}" data-testid="account-tab-home">{{ labels.tabHome }}</a>
+      </li>
+      <li class="govuk-tabs__list-item {% if activeTab == 'tasks' %}govuk-tabs__list-item--selected{% endif %}">
+        <a class="govuk-tabs__tab" href="{{ urls.tasks }}" data-testid="account-tab-tasks">{{ labels.tabTasks }}</a>
+      </li>
+      <li class="govuk-tabs__list-item">
+        <a class="govuk-tabs__tab" href="#" data-testid="account-tab-messages">{{ labels.tabMessages }}</a>
+      </li>
+      <li class="govuk-tabs__list-item">
+        <a class="govuk-tabs__tab" href="#" data-testid="account-tab-manage">{{ labels.tabManageAccount }}</a>
+      </li>
+    </ul>
+  </nav>
+{% endmacro %}

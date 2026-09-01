@@ -1,0 +1,22 @@
+{% extends 'prototypeSubmission/_layout.njk' %}
+
+{% block stepBody %}
+  <p class="govuk-hint">{{ labels.hint }}</p>
+
+  <form method="post" action="{{ action }}" novalidate data-testid="tonnage-form">
+    {{ govukRadios({
+      idPrefix: "tonnageBand",
+      name: "tonnageBand",
+      errorMessage: { text: errors.tonnageBand } if errors.tonnageBand,
+      items: [
+        { value: "upTo1Tonne", text: labels.upTo1TonneLabel, checked: formValues.tonnageBand == "upTo1Tonne", id: "tonnageBand", attributes: { "data-testid": "tonnage-up-to-1-tonne" } },
+        { value: "over1Tonne", text: labels.over1TonneLabel, checked: formValues.tonnageBand == "over1Tonne", attributes: { "data-testid": "tonnage-over-1-tonne" } }
+      ]
+    }) }}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "tonnage-continue" }
+    }) }}
+  </form>
+{% endblock %}

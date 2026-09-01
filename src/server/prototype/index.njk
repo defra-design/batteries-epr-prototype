@@ -27,6 +27,23 @@
         </div>
       </div>
     </div>
+
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-summary-card" data-testid="prototype-journey-submission">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">{{ journeys.smallProducerSubmission.title }}</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <p class="govuk-body">{{ journeys.smallProducerSubmission.description }}</p>
+          {{ govukButton({
+            text: journeys.smallProducerSubmission.linkText,
+            href: submissionUrl,
+            isStartButton: true,
+            attributes: { "data-testid": "prototype-journey-submission-cta" }
+          }) }}
+        </div>
+      </div>
+    </div>
   </div>
 
   <p class="govuk-body">

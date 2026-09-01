@@ -12,6 +12,7 @@ export const prototypeController = {
       journeys: pageContent.journeys,
       backLinkText: pageContent.backLinkText,
       registrationUrl: paths.prototypeRegistrationStart,
+      submissionUrl: paths.prototypeSubmissionSignIn,
       homeUrl: paths.home
     })
   }

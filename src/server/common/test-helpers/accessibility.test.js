@@ -100,7 +100,23 @@ describe('Accessibility audit across all primary GET routes', () => {
     paths.prototypeRegistrationSchemeSelect,
     paths.prototypeRegistrationCheckAnswers,
     paths.prototypeRegistrationDeclaration,
-    paths.prototypeRegistrationComplete
+    paths.prototypeRegistrationComplete,
+    paths.prototypeSubmissionSignIn,
+    paths.prototypeSubmissionTerms,
+    paths.prototypeSubmissionAccount,
+    paths.prototypeSubmissionTasks,
+    paths.prototypeSubmissionTaskStart,
+    paths.prototypeSubmissionBatteryCategory,
+    paths.prototypeSubmissionTonnage,
+    paths.prototypeSubmissionCheckRegistration,
+    paths.prototypeSubmissionBrandQuestion,
+    paths.prototypeSubmissionBrandAdd,
+    paths.prototypeSubmissionBrandConfirm,
+    paths.prototypeSubmissionData,
+    paths.prototypeSubmissionCheckData,
+    paths.prototypeSubmissionPayFee,
+    paths.prototypeSubmissionPayment,
+    paths.prototypeSubmissionPaymentConfirmed
   ]
 
   for (const route of staticRoutes) {

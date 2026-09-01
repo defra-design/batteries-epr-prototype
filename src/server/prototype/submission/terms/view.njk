@@ -1,0 +1,63 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorSummary and errorSummary.length %}
+        {{ govukErrorSummary({
+          titleText: errorTitle,
+          errorList: errorSummary,
+          attributes: { "data-testid": "prototype-submission-error-summary" }
+        }) }}
+      {% endif %}
+
+      <h1 class="govuk-heading-l">{{ heading }}</h1>
+
+      <p class="govuk-body">{{ labels.intro }}</p>
+
+      {% set summaryHtml %}
+        <ul class="govuk-list govuk-list--bullet">
+          {% for bullet in labels.summaryBullets %}
+            <li>{{ bullet }}</li>
+          {% endfor %}
+        </ul>
+      {% endset %}
+      {{ govukDetails({
+        summaryText: labels.summaryLabel,
+        html: summaryHtml,
+        attributes: { "data-testid": "terms-summary" }
+      }) }}
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="#" data-testid="terms-full-link">{{ labels.fullTermsLink }}</a>
+      </p>
+
+      {{ govukWarningText({
+        text: labels.important,
+        iconFallbackText: "Warning"
+      }) }}
+
+      <form method="post" action="{{ action }}" novalidate data-testid="terms-form">
+        {{ govukCheckboxes({
+          idPrefix: "agree",
+          name: "agree",
+          errorMessage: { text: errors.agree } if errors.agree,
+          items: [
+            { value: "on", text: labels.checkboxLabel, id: "agree", attributes: { "data-testid": "terms-agree" } }
+          ]
+        }) }}
+
+        {{ govukButton({
+          text: labels.continueAction,
+          attributes: { "data-testid": "terms-continue" }
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -48,6 +48,33 @@ export const paths = {
   prototypeRegistrationComplete:
     '/prototype/small-producer/registration/complete',
 
+  prototypeSubmissionSignIn: '/prototype/small-producer/submission/sign-in',
+  prototypeSubmissionTerms: '/prototype/small-producer/submission/terms',
+  prototypeSubmissionAccount: '/prototype/small-producer/submission/account',
+  prototypeSubmissionTasks:
+    '/prototype/small-producer/submission/account/tasks',
+  prototypeSubmissionTaskStart:
+    '/prototype/small-producer/submission/reconfirm',
+  prototypeSubmissionBatteryCategory:
+    '/prototype/small-producer/submission/battery-category',
+  prototypeSubmissionTonnage: '/prototype/small-producer/submission/tonnage',
+  prototypeSubmissionCheckRegistration:
+    '/prototype/small-producer/submission/check-registration-details',
+  prototypeSubmissionBrandQuestion:
+    '/prototype/small-producer/submission/brand-names',
+  prototypeSubmissionBrandAdd:
+    '/prototype/small-producer/submission/brand-names/add',
+  prototypeSubmissionBrandConfirm:
+    '/prototype/small-producer/submission/brand-names/confirm',
+  prototypeSubmissionData: '/prototype/small-producer/submission/battery-data',
+  prototypeSubmissionCheckData:
+    '/prototype/small-producer/submission/check-battery-data',
+  prototypeSubmissionPayFee:
+    '/prototype/small-producer/submission/pay-your-fee',
+  prototypeSubmissionPayment: '/prototype/small-producer/submission/payment',
+  prototypeSubmissionPaymentConfirmed:
+    '/prototype/small-producer/submission/payment-confirmed',
+
   health: '/health',
 
   password: '/password',

@@ -1,0 +1,24 @@
+{% extends 'prototypeSubmission/_layout.njk' %}
+
+{% block stepBody %}
+  <p class="govuk-body">{{ labels.intro }}</p>
+  <p class="govuk-body" data-testid="brand-confirm-check" hidden>{{ labels.checkBody }}</p>
+  <p class="govuk-body" data-testid="brand-confirm-empty" hidden>{{ labels.emptyBody }}</p>
+
+  <p class="govuk-body">
+    <a class="govuk-link" href="{{ addUrl }}" data-testid="brand-confirm-add">{{ labels.addLink }}</a>
+  </p>
+
+  <dl class="govuk-summary-list" data-testid="brand-confirm-list"></dl>
+
+  {{ govukButton({
+    text: labels.continueAction,
+    href: continueUrl,
+    attributes: { "data-testid": "brand-confirm-continue" }
+  }) }}
+
+  <p class="govuk-body">
+    <a class="govuk-link govuk-!-margin-right-4" href="{{ accountUrl }}" data-testid="brand-confirm-save">{{ labels.saveLink }}</a>
+    <a class="govuk-link" href="{{ accountUrl }}" data-testid="brand-confirm-exit">{{ labels.exitLink }}</a>
+  </p>
+{% endblock %}

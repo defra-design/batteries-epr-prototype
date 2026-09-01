@@ -73,6 +73,12 @@ export const content = {
             description:
               'Register as a small producer of portable batteries — from the GOV.UK start page through organisation details, the appropriate person and compliance scheme membership to a submitted registration.',
             linkText: 'Start small producer registration'
+          },
+          smallProducerSubmission: {
+            title: 'Small producer annual data submission',
+            description:
+              'Sign in to your account, reconfirm your registration details and brand names, report the weight of portable batteries placed on the market by chemistry, and pay the £30 submission fee.',
+            linkText: 'Start annual data submission'
           }
         },
         backLinkText: 'Back to Battery EPR prototypes'
@@ -83,6 +89,11 @@ export const content = {
         intro: 'TODO welsh',
         journeys: {
           smallProducerRegistration: {
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            linkText: 'TODO welsh'
+          },
+          smallProducerSubmission: {
             title: 'TODO welsh',
             description: 'TODO welsh',
             linkText: 'TODO welsh'

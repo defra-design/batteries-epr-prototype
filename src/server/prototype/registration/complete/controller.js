@@ -11,7 +11,7 @@ export const completeController = {
     return h.view('prototype/registration/complete/view', {
       ...basePageModel(pageContent),
       heading: pageContent.bprnPanelTitle,
-      returnUrl: paths.prototype,
+      returnUrl: paths.prototypeSubmissionAccount,
       pagePayload: buildHydrationPayload(STEP_ID)
     })
   }

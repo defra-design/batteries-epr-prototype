@@ -1,0 +1,83 @@
+{% extends 'prototypeSubmission/_layout.njk' %}
+
+{% block stepBody %}
+  <h2 class="govuk-heading-s">{{ labels.orderHeading }}</h2>
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ labels.referenceLabel }}</dt>
+      <dd class="govuk-summary-list__value" data-testid="payment-reference"></dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ labels.descriptionLabel }}</dt>
+      <dd class="govuk-summary-list__value">{{ labels.description }}</dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ labels.amountLabel }}</dt>
+      <dd class="govuk-summary-list__value" data-testid="payment-amount">{{ labels.amount }}</dd>
+    </div>
+  </dl>
+
+  <h2 class="govuk-heading-s">{{ labels.paymentDetailsHeading }}</h2>
+  <p class="govuk-hint">{{ labels.acceptNote }}</p>
+
+  <form method="post" action="{{ action }}" novalidate data-testid="payment-form">
+    {{ govukInput({
+      id: "cardNumber",
+      name: "cardNumber",
+      label: { text: labels.cardNumberLabel, classes: "govuk-label--m" },
+      classes: "govuk-!-width-two-thirds",
+      attributes: { "data-testid": "payment-card-number", "inputmode": "numeric" }
+    }) }}
+
+    {{ govukInput({
+      id: "cardholderName",
+      name: "cardholderName",
+      label: { text: labels.cardholderLabel, classes: "govuk-label--m" },
+      classes: "govuk-!-width-two-thirds",
+      attributes: { "data-testid": "payment-cardholder" }
+    }) }}
+
+    <fieldset class="govuk-fieldset">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">{{ labels.expiryLegend }}</legend>
+      <div class="govuk-date-input">
+        <div class="govuk-date-input__item">
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="expiryMonth">{{ labels.expiryMonthLabel }}</label>
+            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="expiryMonth" name="expiryMonth" inputmode="numeric" data-testid="payment-expiry-month">
+          </div>
+        </div>
+        <div class="govuk-date-input__item">
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="expiryYear">{{ labels.expiryYearLabel }}</label>
+            <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="expiryYear" name="expiryYear" inputmode="numeric" data-testid="payment-expiry-year">
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    {{ govukInput({
+      id: "securityCode",
+      name: "securityCode",
+      label: { text: labels.securityLabel, classes: "govuk-label--m" },
+      hint: { text: labels.securityHint },
+      classes: "govuk-input--width-4",
+      attributes: { "data-testid": "payment-security-code", "inputmode": "numeric" }
+    }) }}
+
+    {{ govukButton({
+      text: labels.cancelAction,
+      href: cancelUrl,
+      classes: "govuk-button--secondary govuk-!-margin-right-2",
+      attributes: { "data-testid": "payment-cancel" }
+    }) }}
+    {{ govukButton({
+      text: labels.payAction,
+      attributes: { "data-testid": "payment-make-payment" }
+    }) }}
+  </form>
+
+  <p class="govuk-body-s">{{ labels.privacyNote }}</p>
+  <p class="govuk-body-s">
+    <a class="govuk-link" href="#" data-testid="payment-terms-link">{{ labels.termsLink }}</a>
+  </p>
+{% endblock %}

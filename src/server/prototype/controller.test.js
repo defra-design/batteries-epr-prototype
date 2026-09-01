@@ -38,6 +38,12 @@ describe('#prototypeController', () => {
       expect.stringContaining(`href="${paths.prototypeRegistrationStart}"`)
     )
     expect(result).toEqual(
+      expect.stringContaining('data-testid="prototype-journey-submission-cta"')
+    )
+    expect(result).toEqual(
+      expect.stringContaining(`href="${paths.prototypeSubmissionSignIn}"`)
+    )
+    expect(result).toEqual(
       expect.stringContaining('data-testid="prototype-home-link"')
     )
     expect(result).toEqual(expect.stringContaining(`href="${paths.home}"`))

@@ -1,0 +1,86 @@
+{% extends 'prototypeSubmission/_layout.njk' %}
+
+{% macro dataRow(rowKey, label, changeHref, changeLabel) %}
+  <div class="govuk-summary-list__row" data-testid="check-data-row-{{ rowKey }}">
+    <dt class="govuk-summary-list__key">{{ label }}</dt>
+    <dd class="govuk-summary-list__value" data-testid="check-data-value-{{ rowKey }}"></dd>
+    <dd class="govuk-summary-list__actions">
+      {% if changeHref %}
+        <a class="govuk-link" href="{{ changeHref }}" data-testid="check-data-change-{{ rowKey }}">
+          {{ changeLabel }}<span class="govuk-visually-hidden"> {{ label | lower }}</span>
+        </a>
+      {% endif %}
+    </dd>
+  </div>
+{% endmacro %}
+
+{% block stepBody %}
+  <p class="govuk-body">{{ labels.intro }}</p>
+
+  <dl class="govuk-summary-list" data-testid="check-data-list">
+    {{ dataRow('batteryTypes', labels.rows.batteryTypes, brandChangeUrl, labels.changeAction) }}
+    {{ dataRow('brandNames', labels.rows.brandNames, brandChangeUrl, labels.changeAction) }}
+  </dl>
+
+  <h2 class="govuk-heading-s">{{ labels.rows.weightsHeading }}</h2>
+  <dl class="govuk-summary-list" data-testid="check-data-weights">
+    {{ dataRow('leadAcid', labels.rows.leadAcid, changeUrl, labels.changeAction) }}
+    {{ dataRow('nickelCadmium', labels.rows.nickelCadmium, changeUrl, labels.changeAction) }}
+    {{ dataRow('other', labels.rows.other, changeUrl, labels.changeAction) }}
+    {{ dataRow('total', labels.rows.total, null, null) }}
+  </dl>
+
+  <h2 class="govuk-heading-m">{{ labels.declarationHeading }}</h2>
+  <p class="govuk-body">{{ labels.declarationIntro }}</p>
+
+  <form method="post" action="{{ action }}" novalidate data-testid="check-data-form">
+    {{ govukInput({
+      id: "declFirstName",
+      name: "declFirstName",
+      value: formValues.declFirstName,
+      label: { text: labels.firstNameLabel, classes: "govuk-label--m" },
+      errorMessage: { text: errors.declFirstName } if errors.declFirstName,
+      classes: "govuk-!-width-two-thirds",
+      attributes: { "data-testid": "check-data-first-name" }
+    }) }}
+
+    {{ govukInput({
+      id: "declLastName",
+      name: "declLastName",
+      value: formValues.declLastName,
+      label: { text: labels.lastNameLabel, classes: "govuk-label--m" },
+      errorMessage: { text: errors.declLastName } if errors.declLastName,
+      classes: "govuk-!-width-two-thirds",
+      attributes: { "data-testid": "check-data-last-name" }
+    }) }}
+
+    {{ govukInput({
+      id: "declRole",
+      name: "declRole",
+      value: formValues.declRole,
+      label: { text: labels.roleLabel, classes: "govuk-label--m" },
+      errorMessage: { text: errors.declRole } if errors.declRole,
+      classes: "govuk-!-width-two-thirds",
+      attributes: { "data-testid": "check-data-role" }
+    }) }}
+
+    {{ govukCheckboxes({
+      idPrefix: "acknowledged",
+      name: "acknowledged",
+      errorMessage: { text: errors.acknowledged } if errors.acknowledged,
+      items: [
+        { value: "on", text: labels.acknowledgeLabel, id: "acknowledged", checked: formValues.acknowledged, attributes: { "data-testid": "check-data-acknowledge" } }
+      ]
+    }) }}
+
+    {{ govukWarningText({
+      text: labels.warning,
+      iconFallbackText: "Warning"
+    }) }}
+
+    {{ govukButton({
+      text: labels.submitAction,
+      attributes: { "data-testid": "check-data-submit" }
+    }) }}
+  </form>
+{% endblock %}

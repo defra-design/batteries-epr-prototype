@@ -27,6 +27,8 @@ describe('#prototypeRegistrationComplete', () => {
       expect.stringContaining('data-testid="complete-bprn-bullet"')
     )
     expect(result).toEqual(expect.stringContaining('"step":"complete"'))
-    expect(result).toEqual(expect.stringContaining(`href="${paths.prototype}"`))
+    expect(result).toEqual(
+      expect.stringContaining(`href="${paths.prototypeSubmissionAccount}"`)
+    )
   })
 })

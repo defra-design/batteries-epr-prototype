@@ -1,0 +1,36 @@
+{% extends 'prototypeSubmission/_layout.njk' %}
+
+{% macro answerRow(rowKey, label, changeHref, changeLabel) %}
+  <div class="govuk-summary-list__row" data-testid="check-answers-row-{{ rowKey }}">
+    <dt class="govuk-summary-list__key">{{ label }}</dt>
+    <dd class="govuk-summary-list__value" data-testid="check-answers-value-{{ rowKey }}"></dd>
+    <dd class="govuk-summary-list__actions">
+      {% if changeHref %}
+        <a class="govuk-link" href="{{ changeHref }}" data-testid="check-answers-change-{{ rowKey }}">
+          {{ changeLabel }}<span class="govuk-visually-hidden"> {{ label | lower }}</span>
+        </a>
+      {% endif %}
+    </dd>
+  </div>
+{% endmacro %}
+
+{% block stepBody %}
+  <dl class="govuk-summary-list" data-testid="check-registration-list">
+    {{ answerRow('batteryTypes', rowLabels.batteryTypes, changeUrls.batteryTypes, changeAction) }}
+    {{ answerRow('tonnage', rowLabels.tonnage, changeUrls.tonnage, changeAction) }}
+    {{ answerRow('organisationType', rowLabels.organisationType, changeUrls.organisationType, changeAction) }}
+    {{ answerRow('organisationName', rowLabels.organisationName, changeUrls.organisationType, changeAction) }}
+    {{ answerRow('organisationAddress', rowLabels.organisationAddress, changeUrls.organisationType, changeAction) }}
+    {{ answerRow('appropriatePersonName', rowLabels.appropriatePersonName, changeUrls.appropriatePerson, changeAction) }}
+    {{ answerRow('appropriatePersonEmail', rowLabels.appropriatePersonEmail, changeUrls.appropriatePerson, changeAction) }}
+    {{ answerRow('appropriatePersonRole', rowLabels.appropriatePersonRole, changeUrls.appropriatePerson, changeAction) }}
+    {{ answerRow('schemeMembership', rowLabels.schemeMembership, changeUrls.schemeMembership, changeAction) }}
+    {{ answerRow('scheme', rowLabels.scheme, changeUrls.schemeMembership, changeAction) }}
+  </dl>
+
+  {{ govukButton({
+    text: labels.continueAction,
+    href: continueUrl,
+    attributes: { "data-testid": "check-registration-continue" }
+  }) }}
+{% endblock %}

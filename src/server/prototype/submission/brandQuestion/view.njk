@@ -1,0 +1,25 @@
+{% extends 'prototypeSubmission/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="brand-question-form">
+    {{ govukRadios({
+      idPrefix: "hasBrand",
+      name: "hasBrand",
+      errorMessage: { text: errors.hasBrand } if errors.hasBrand,
+      items: [
+        { value: "yes", text: labels.yesLabel, checked: formValues.hasBrand == "yes", id: "hasBrand", attributes: { "data-testid": "brand-question-yes" } },
+        { value: "no", text: labels.noLabel, checked: formValues.hasBrand == "no", attributes: { "data-testid": "brand-question-no" } }
+      ]
+    }) }}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "brand-question-continue" }
+    }) }}
+  </form>
+
+  <p class="govuk-body">
+    <a class="govuk-link govuk-!-margin-right-4" href="{{ accountUrl }}" data-testid="brand-question-save">{{ labels.saveLink }}</a>
+    <a class="govuk-link" href="{{ accountUrl }}" data-testid="brand-question-exit">{{ labels.exitLink }}</a>
+  </p>
+{% endblock %}

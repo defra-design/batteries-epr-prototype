@@ -1,0 +1,75 @@
+{% extends 'prototypeSubmission/_layout.njk' %}
+
+{% block stepBody %}
+  <p class="govuk-hint">{{ labels.hint }}</p>
+
+  <form method="post" action="{{ action }}" novalidate data-testid="battery-data-form">
+    {{ govukRadios({
+      idPrefix: "unit",
+      name: "unit",
+      classes: "govuk-radios--inline",
+      fieldset: {
+        legend: { text: labels.unitLegend, classes: "govuk-fieldset__legend--m" }
+      },
+      errorMessage: { text: errors.unit } if errors.unit,
+      items: [
+        { value: "kilograms", text: labels.kilogramsLabel, checked: formValues.unit != "tonnes", id: "unit", attributes: { "data-testid": "data-unit-kilograms" } },
+        { value: "tonnes", text: labels.tonnesLabel, checked: formValues.unit == "tonnes", attributes: { "data-testid": "data-unit-tonnes" } }
+      ]
+    }) }}
+
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+    {{ govukInput({
+      id: "weightLeadAcid",
+      name: "weightLeadAcid",
+      value: formValues.weightLeadAcid,
+      label: { text: labels.leadAcidLabel, classes: "govuk-label--m" },
+      errorMessage: { text: errors.weightLeadAcid } if errors.weightLeadAcid,
+      classes: "govuk-input--width-5",
+      suffix: { text: "kg" },
+      attributes: { "data-testid": "data-weight-lead-acid", "inputmode": "decimal" }
+    }) }}
+
+    {{ govukInput({
+      id: "weightNickelCadmium",
+      name: "weightNickelCadmium",
+      value: formValues.weightNickelCadmium,
+      label: { text: labels.nickelCadmiumLabel, classes: "govuk-label--m" },
+      errorMessage: { text: errors.weightNickelCadmium } if errors.weightNickelCadmium,
+      classes: "govuk-input--width-5",
+      suffix: { text: "kg" },
+      attributes: { "data-testid": "data-weight-nickel-cadmium", "inputmode": "decimal" }
+    }) }}
+
+    {{ govukInput({
+      id: "weightOther",
+      name: "weightOther",
+      value: formValues.weightOther,
+      label: { text: labels.otherLabel, classes: "govuk-label--m" },
+      errorMessage: { text: errors.weightOther } if errors.weightOther,
+      classes: "govuk-input--width-5",
+      suffix: { text: "kg" },
+      attributes: { "data-testid": "data-weight-other", "inputmode": "decimal" }
+    }) }}
+
+    <p class="govuk-body govuk-!-font-weight-bold">
+      {{ labels.totalPrefix }} <span data-testid="data-total">0kg</span>
+    </p>
+
+    {{ govukButton({
+      text: labels.backAction,
+      href: backLink,
+      classes: "govuk-button--secondary govuk-!-margin-right-2",
+      attributes: { "data-testid": "data-back" }
+    }) }}
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "data-continue" }
+    }) }}
+  </form>
+
+  <p class="govuk-body">
+    <a class="govuk-link" href="{{ accountUrl }}" data-testid="data-save">{{ labels.saveLink }}</a>
+  </p>
+{% endblock %}

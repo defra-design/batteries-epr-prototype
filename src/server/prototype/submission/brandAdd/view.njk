@@ -1,0 +1,27 @@
+{% extends 'prototypeSubmission/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="brand-add-form">
+    <div class="govuk-form-group {% if errors.brandNames %}govuk-form-group--error{% endif %}" data-testid="brand-add-fields">
+      <label class="govuk-label govuk-visually-hidden" for="brandNames">{{ labels.brandLabel }}</label>
+      {% if errors.brandNames %}
+        <p class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span> {{ errors.brandNames }}</p>
+      {% endif %}
+      <input class="govuk-input govuk-!-width-two-thirds" id="brandNames" name="brandNames" data-testid="brand-add-input">
+    </div>
+
+    <p class="govuk-body">
+      <a class="govuk-link" href="#" data-testid="brand-add-another">{{ labels.addAnotherLink }}</a>
+    </p>
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "brand-add-continue" }
+    }) }}
+  </form>
+
+  <p class="govuk-body">
+    <a class="govuk-link govuk-!-margin-right-4" href="{{ accountUrl }}" data-testid="brand-add-save">{{ labels.saveLink }}</a>
+    <a class="govuk-link" href="{{ accountUrl }}" data-testid="brand-add-exit">{{ labels.exitLink }}</a>
+  </p>
+{% endblock %}

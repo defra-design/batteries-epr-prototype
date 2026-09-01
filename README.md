@@ -29,7 +29,7 @@ the resulting approval changes.
 
 ### Prototype — Small producer registration
 
-The first journey in the `/prototype` area, built from the Figma design "NPWD — Small producer registration". State is isolated from the playground under the `npwd-batteries:prototype:*` localStorage keys. `/prototype/small-producer/submission/*` is reserved for the annual data submission journey that follows.
+The `/prototype` area journeys, built from the Figma design "NPWD — Small producer registration". State is isolated from the playground under the `npwd-batteries:prototype:*` localStorage keys.
 
 - `/prototype` — prototype area landing with the journey card
 - `/prototype/small-producer/registration` — GOV.UK-style start page
@@ -40,6 +40,18 @@ The first journey in the `/prototype` area, built from the Figma design "NPWD �
 - `…/choosing-the-appropriate-person` → `…/appropriate-person`
 - `…/scheme-membership` — members pick their scheme at `…/scheme-select`
 - `…/check-answers` → `…/declaration` → `…/complete` — BPRN allocated on submission unless the producer is a scheme member
+
+### Prototype — Small producer annual data submission
+
+- `/prototype/small-producer/submission/sign-in` — NPWD-style sign in (pass-through) → `…/terms` (agree checkbox) → `…/account`
+- `…/account` and `…/account/tasks` — welcome page with the submission-due banner, tabs and activity/task tables
+- `…/reconfirm` — task start: reconfirm details, report 2026 weights, pay the £30 fee
+- `…/battery-category` and `…/tonnage` — reconfirm registration answers (saved back to the registration draft)
+- `…/check-registration-details` — registration summary with Change links into both journeys
+- `…/brand-names` → `…/brand-names/add` (add another) → `…/brand-names/confirm` (remove links) — skipped when the producer has no brands
+- `…/battery-data` — weights by chemistry with a kg/tonnes unit selector and running total
+- `…/check-battery-data` — data summary plus the declaration (first name, last name, role, acknowledgement)
+- `…/pay-your-fee` → `…/payment` (fake card form with order summary) → `…/payment-confirmed`
 
 ### Producer journey
 

@@ -1,0 +1,20 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-m">{{ heading }}</h1>
+
+      <p class="govuk-body">{{ labels.body1 }}</p>
+      <p class="govuk-body">{{ labels.body2 }}</p>
+
+      {{ govukButton({
+        text: labels.continueAction,
+        href: paymentUrl,
+        attributes: { "data-testid": "pay-fee-continue" }
+      }) }}
+    </div>
+  </div>
+{% endblock %}
