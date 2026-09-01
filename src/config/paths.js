@@ -11,6 +11,43 @@ export const paths = {
   npwdPackagingComparison: '/npwd-vs-packaging',
   bcsRegistrationWalkthrough: '/bcs-registration-walkthrough',
 
+  prototypeRegistrationStart: '/prototype/small-producer/registration',
+  prototypeRegistrationOneLogin:
+    '/prototype/small-producer/registration/one-login',
+  prototypeRegistrationSignIn: '/prototype/small-producer/registration/sign-in',
+  prototypeRegistrationBatteryCategory:
+    '/prototype/small-producer/registration/battery-category',
+  prototypeRegistrationDifferentService:
+    '/prototype/small-producer/registration/different-service',
+  prototypeRegistrationTonnage:
+    '/prototype/small-producer/registration/tonnage',
+  prototypeRegistrationOrganisationType:
+    '/prototype/small-producer/registration/organisation-type',
+  prototypeRegistrationCompaniesHouse:
+    '/prototype/small-producer/registration/companies-house-search',
+  prototypeRegistrationPartnershipDetails:
+    '/prototype/small-producer/registration/partnership-details',
+  prototypeRegistrationSoleTraderDetails:
+    '/prototype/small-producer/registration/sole-trader-details',
+  prototypeRegistrationOverseasDetails:
+    '/prototype/small-producer/registration/overseas-details',
+  prototypeRegistrationOverseasExit:
+    '/prototype/small-producer/registration/overseas-cannot-register',
+  prototypeRegistrationAppropriatePersonGuidance:
+    '/prototype/small-producer/registration/choosing-the-appropriate-person',
+  prototypeRegistrationAppropriatePerson:
+    '/prototype/small-producer/registration/appropriate-person',
+  prototypeRegistrationSchemeMembership:
+    '/prototype/small-producer/registration/scheme-membership',
+  prototypeRegistrationSchemeSelect:
+    '/prototype/small-producer/registration/scheme-select',
+  prototypeRegistrationCheckAnswers:
+    '/prototype/small-producer/registration/check-answers',
+  prototypeRegistrationDeclaration:
+    '/prototype/small-producer/registration/declaration',
+  prototypeRegistrationComplete:
+    '/prototype/small-producer/registration/complete',
+
   health: '/health',
 
   password: '/password',

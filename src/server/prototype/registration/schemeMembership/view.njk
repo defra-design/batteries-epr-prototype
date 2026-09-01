@@ -1,0 +1,21 @@
+{% extends 'prototypeRegistration/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="scheme-membership-form">
+    {{ govukRadios({
+      idPrefix: "schemeMembership",
+      name: "schemeMembership",
+      errorMessage: { text: errors.schemeMembership } if errors.schemeMembership,
+      items: [
+        { value: "yes", text: labels.yesLabel, checked: formValues.schemeMembership == "yes", id: "schemeMembership", attributes: { "data-testid": "scheme-membership-yes" } },
+        { value: "no", text: labels.noLabel, checked: formValues.schemeMembership == "no", attributes: { "data-testid": "scheme-membership-no" } },
+        { value: "intendToJoin", text: labels.intendToJoinLabel, checked: formValues.schemeMembership == "intendToJoin", attributes: { "data-testid": "scheme-membership-intend" } }
+      ]
+    }) }}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "scheme-membership-continue" }
+    }) }}
+  </form>
+{% endblock %}

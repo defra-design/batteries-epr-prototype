@@ -1,0 +1,25 @@
+{% extends 'prototypeRegistration/_layout.njk' %}
+
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+{% block stepBody %}
+  <p class="govuk-body">{{ labels.intro }}</p>
+
+  <ul class="govuk-list govuk-list--bullet">
+    {% for bullet in labels.bullets %}
+      <li>{{ bullet }}</li>
+    {% endfor %}
+  </ul>
+
+  {{ govukWarningText({
+    text: labels.warning,
+    iconFallbackText: "Warning"
+  }) }}
+
+  <form method="post" action="{{ action }}" novalidate data-testid="declaration-form">
+    {{ govukButton({
+      text: labels.submitAction,
+      attributes: { "data-testid": "declaration-submit" }
+    }) }}
+  </form>
+{% endblock %}

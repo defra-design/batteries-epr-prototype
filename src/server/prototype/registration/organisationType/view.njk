@@ -1,0 +1,23 @@
+{% extends 'prototypeRegistration/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="organisation-type-form">
+    {{ govukRadios({
+      idPrefix: "organisationType",
+      name: "organisationType",
+      errorMessage: { text: errors.organisationType } if errors.organisationType,
+      items: [
+        { value: "limitedCompany", text: labels.limitedCompanyLabel, checked: formValues.organisationType == "limitedCompany", id: "organisationType", attributes: { "data-testid": "organisation-type-limited-company" } },
+        { value: "llp", text: labels.llpLabel, checked: formValues.organisationType == "llp", attributes: { "data-testid": "organisation-type-llp" } },
+        { value: "partnership", text: labels.partnershipLabel, checked: formValues.organisationType == "partnership", attributes: { "data-testid": "organisation-type-partnership" } },
+        { value: "soleTrader", text: labels.soleTraderLabel, checked: formValues.organisationType == "soleTrader", attributes: { "data-testid": "organisation-type-sole-trader" } },
+        { value: "overseas", text: labels.overseasLabel, checked: formValues.organisationType == "overseas", attributes: { "data-testid": "organisation-type-overseas" } }
+      ]
+    }) }}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "organisation-type-continue" }
+    }) }}
+  </form>
+{% endblock %}

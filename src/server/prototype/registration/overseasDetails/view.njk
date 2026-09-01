@@ -1,0 +1,46 @@
+{% extends 'prototypeRegistration/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="overseas-details-form">
+    {{ govukInput({
+      id: "overseasName",
+      name: "overseasName",
+      value: formValues.overseasName,
+      label: { text: labels.overseasNameLabel, classes: "govuk-label--m" },
+      errorMessage: { text: errors.overseasName } if errors.overseasName,
+      classes: "govuk-!-width-two-thirds",
+      attributes: { "data-testid": "overseas-name" }
+    }) }}
+
+    {{ govukInput({
+      id: "overseasAddress",
+      name: "overseasAddress",
+      value: formValues.overseasAddress,
+      label: { text: labels.overseasAddressLabel, classes: "govuk-label--m" },
+      errorMessage: { text: errors.overseasAddress } if errors.overseasAddress,
+      classes: "govuk-!-width-two-thirds",
+      attributes: { "data-testid": "overseas-address" }
+    }) }}
+
+    <h2 class="govuk-heading-m">{{ labels.ukPresenceHeading }}</h2>
+
+    {{ govukInput({
+      id: "addressPostcode",
+      name: "addressPostcode",
+      value: formValues.addressPostcode,
+      label: { text: labels.postcodeLabel, classes: "govuk-label--s" },
+      errorMessage: { text: errors.addressPostcode } if errors.addressPostcode,
+      classes: "govuk-input--width-10",
+      attributes: { "data-testid": "details-postcode" }
+    }) }}
+
+    <p class="govuk-body">
+      <a class="govuk-link" href="{{ noUkPresenceUrl }}" data-testid="overseas-no-uk-presence">{{ labels.noUkPresenceLink }}</a>
+    </p>
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "details-continue" }
+    }) }}
+  </form>
+{% endblock %}

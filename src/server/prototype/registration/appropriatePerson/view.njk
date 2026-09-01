@@ -1,0 +1,43 @@
+{% extends 'prototypeRegistration/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="appropriate-person-form">
+    {{ govukInput({
+      id: "appropriatePersonName",
+      name: "appropriatePersonName",
+      value: formValues.appropriatePersonName,
+      label: { text: labels.fullNameLabel, classes: "govuk-label--m" },
+      errorMessage: { text: errors.appropriatePersonName } if errors.appropriatePersonName,
+      classes: "govuk-!-width-two-thirds",
+      attributes: { "data-testid": "appropriate-person-name" }
+    }) }}
+
+    {{ govukInput({
+      id: "appropriatePersonEmail",
+      name: "appropriatePersonEmail",
+      type: "email",
+      value: formValues.appropriatePersonEmail,
+      label: { text: labels.emailLabel, classes: "govuk-label--m" },
+      hint: { text: labels.emailHint },
+      errorMessage: { text: errors.appropriatePersonEmail } if errors.appropriatePersonEmail,
+      classes: "govuk-!-width-two-thirds",
+      attributes: { "data-testid": "appropriate-person-email" }
+    }) }}
+
+    {{ govukInput({
+      id: "appropriatePersonRole",
+      name: "appropriatePersonRole",
+      value: formValues.appropriatePersonRole,
+      label: { text: labels.roleLabel, classes: "govuk-label--m" },
+      hint: { text: labels.roleHint },
+      errorMessage: { text: errors.appropriatePersonRole } if errors.appropriatePersonRole,
+      classes: "govuk-!-width-two-thirds",
+      attributes: { "data-testid": "appropriate-person-role" }
+    }) }}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "appropriate-person-continue" }
+    }) }}
+  </form>
+{% endblock %}

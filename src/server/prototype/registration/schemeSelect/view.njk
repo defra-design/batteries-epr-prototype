@@ -1,0 +1,28 @@
+{% extends 'prototypeRegistration/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="scheme-select-form">
+    {% set schemeItems = [] %}
+    {% for scheme in schemes %}
+      {% set schemeItems = (schemeItems.push({
+        value: scheme.id,
+        text: scheme.name,
+        checked: formValues.schemeId == scheme.id,
+        id: "schemeId" if loop.first,
+        attributes: { "data-testid": "scheme-select-" + scheme.id }
+      }), schemeItems) %}
+    {% endfor %}
+
+    {{ govukRadios({
+      idPrefix: "schemeId",
+      name: "schemeId",
+      errorMessage: { text: errors.schemeId } if errors.schemeId,
+      items: schemeItems
+    }) }}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "scheme-select-continue" }
+    }) }}
+  </form>
+{% endblock %}

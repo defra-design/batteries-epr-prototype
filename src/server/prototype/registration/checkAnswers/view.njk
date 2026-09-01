@@ -1,0 +1,36 @@
+{% extends 'prototypeRegistration/_layout.njk' %}
+
+{% macro answerRow(rowKey, label, changeHref, changeLabel) %}
+  <div class="govuk-summary-list__row" data-testid="check-answers-row-{{ rowKey }}">
+    <dt class="govuk-summary-list__key">{{ label }}</dt>
+    <dd class="govuk-summary-list__value" data-testid="check-answers-value-{{ rowKey }}"></dd>
+    <dd class="govuk-summary-list__actions">
+      {% if changeHref %}
+        <a class="govuk-link" href="{{ changeHref }}" data-testid="check-answers-change-{{ rowKey }}">
+          {{ changeLabel }}<span class="govuk-visually-hidden"> {{ label | lower }}</span>
+        </a>
+      {% endif %}
+    </dd>
+  </div>
+{% endmacro %}
+
+{% block stepBody %}
+  <dl class="govuk-summary-list" data-testid="check-answers-list">
+    {{ answerRow('batteryTypes', labels.rows.batteryTypes, changeUrls.batteryTypes, labels.changeAction) }}
+    {{ answerRow('tonnage', labels.rows.tonnage, changeUrls.tonnage, labels.changeAction) }}
+    {{ answerRow('organisationType', labels.rows.organisationType, changeUrls.organisationType, labels.changeAction) }}
+    {{ answerRow('organisationName', labels.rows.organisationName, changeUrls.organisationType, labels.changeAction) }}
+    {{ answerRow('organisationAddress', labels.rows.organisationAddress, changeUrls.organisationType, labels.changeAction) }}
+    {{ answerRow('appropriatePersonName', labels.rows.appropriatePersonName, changeUrls.appropriatePerson, labels.changeAction) }}
+    {{ answerRow('appropriatePersonEmail', labels.rows.appropriatePersonEmail, changeUrls.appropriatePerson, labels.changeAction) }}
+    {{ answerRow('appropriatePersonRole', labels.rows.appropriatePersonRole, changeUrls.appropriatePerson, labels.changeAction) }}
+    {{ answerRow('schemeMembership', labels.rows.schemeMembership, changeUrls.schemeMembership, labels.changeAction) }}
+    {{ answerRow('scheme', labels.rows.scheme, changeUrls.schemeMembership, labels.changeAction) }}
+  </dl>
+
+  {{ govukButton({
+    text: labels.continueAction,
+    href: continueUrl,
+    attributes: { "data-testid": "check-answers-continue" }
+  }) }}
+{% endblock %}

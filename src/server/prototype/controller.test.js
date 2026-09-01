@@ -14,7 +14,7 @@ describe('#prototypeController', () => {
     await server.stop({ timeout: 0 })
   })
 
-  test('renders the placeholder page with a link back to the area chooser', async () => {
+  test('renders the journey card linking to the small producer registration', async () => {
     const { result, statusCode } = await server.inject({
       method: 'GET',
       url: paths.prototype
@@ -25,7 +25,17 @@ describe('#prototypeController', () => {
     expect(result).toEqual(expect.stringContaining(pageContent.heading))
     expect(result).toEqual(expect.stringContaining(pageContent.intro))
     expect(result).toEqual(
-      expect.stringContaining('data-testid="prototype-empty"')
+      expect.stringContaining(
+        pageContent.journeys.smallProducerRegistration.title
+      )
+    )
+    expect(result).toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-registration-cta"'
+      )
+    )
+    expect(result).toEqual(
+      expect.stringContaining(`href="${paths.prototypeRegistrationStart}"`)
     )
     expect(result).toEqual(
       expect.stringContaining('data-testid="prototype-home-link"')

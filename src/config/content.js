@@ -26,7 +26,7 @@ export const content = {
           prototype: {
             title: 'Prototype',
             description:
-              'New design prototypes being explored. Nothing has been added here yet.',
+              'New design prototypes being explored, starting with the small producer registration journey.',
             linkText: 'Open the prototypes'
           },
           bcsRegistrationWalkthrough: {
@@ -67,14 +67,27 @@ export const content = {
         heading: 'Prototype',
         intro:
           'This area is where new Battery EPR design prototypes will be built.',
-        empty: 'No prototypes have been added yet.',
+        journeys: {
+          smallProducerRegistration: {
+            title: 'Small producer registration',
+            description:
+              'Register as a small producer of portable batteries — from the GOV.UK start page through organisation details, the appropriate person and compliance scheme membership to a submitted registration.',
+            linkText: 'Start small producer registration'
+          }
+        },
         backLinkText: 'Back to Battery EPR prototypes'
       },
       cy: {
         title: 'TODO welsh',
         heading: 'TODO welsh',
         intro: 'TODO welsh',
-        empty: 'TODO welsh',
+        journeys: {
+          smallProducerRegistration: {
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            linkText: 'TODO welsh'
+          }
+        },
         backLinkText: 'TODO welsh'
       }
     }),

@@ -9,8 +9,9 @@ export const prototypeController = {
       pageTitle: pageContent.title,
       heading: pageContent.heading,
       intro: pageContent.intro,
-      empty: pageContent.empty,
+      journeys: pageContent.journeys,
       backLinkText: pageContent.backLinkText,
+      registrationUrl: paths.prototypeRegistrationStart,
       homeUrl: paths.home
     })
   }

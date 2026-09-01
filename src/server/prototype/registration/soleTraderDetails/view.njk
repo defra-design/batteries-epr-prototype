@@ -1,0 +1,32 @@
+{% extends 'prototypeRegistration/_layout.njk' %}
+{% from "prototypeRegistration/_address-fields.njk" import addressFields %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="sole-trader-details-form">
+    {{ govukInput({
+      id: "contactFullName",
+      name: "contactFullName",
+      value: formValues.contactFullName,
+      label: { text: labels.fullNameLabel, classes: "govuk-label--m" },
+      errorMessage: { text: errors.contactFullName } if errors.contactFullName,
+      classes: "govuk-!-width-two-thirds",
+      attributes: { "data-testid": "details-full-name" }
+    }) }}
+
+    {{ govukInput({
+      id: "tradingName",
+      name: "tradingName",
+      value: formValues.tradingName,
+      label: { text: labels.tradingNameLabel, classes: "govuk-label--m" },
+      classes: "govuk-!-width-two-thirds",
+      attributes: { "data-testid": "details-trading-name" }
+    }) }}
+
+    {{ addressFields(labels, errors, formValues) }}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "details-continue" }
+    }) }}
+  </form>
+{% endblock %}

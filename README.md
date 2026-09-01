@@ -27,6 +27,20 @@ the resulting approval changes.
 
 ## Useful URLs in development
 
+### Prototype — Small producer registration
+
+The first journey in the `/prototype` area, built from the Figma design "NPWD — Small producer registration". State is isolated from the playground under the `npwd-batteries:prototype:*` localStorage keys. `/prototype/small-producer/submission/*` is reserved for the annual data submission journey that follows.
+
+- `/prototype` — prototype area landing with the journey card
+- `/prototype/small-producer/registration` — GOV.UK-style start page
+- `/prototype/small-producer/registration/one-login` → `…/sign-in` — fake GOV.UK One Login pass-through
+- `…/battery-category` — portable / industrial / automotive (industrial or automotive only exits to `…/different-service`)
+- `…/tonnage` — 1 tonne or less / more than 1 tonne
+- `…/organisation-type` — forks to `…/companies-house-search` (limited company, LLP), `…/partnership-details`, `…/sole-trader-details` or `…/overseas-details` (with the `…/overseas-cannot-register` exit)
+- `…/choosing-the-appropriate-person` → `…/appropriate-person`
+- `…/scheme-membership` — members pick their scheme at `…/scheme-select`
+- `…/check-answers` → `…/declaration` → `…/complete` — BPRN allocated on submission unless the producer is a scheme member
+
 ### Producer journey
 
 - `/` — landing page

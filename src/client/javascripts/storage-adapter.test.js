@@ -3151,3 +3151,70 @@ describe('config audit log', () => {
     expect(entry.previousValue).toBeNull()
   })
 })
+
+describe('prototype registration draft', () => {
+  test('getPrototypeRegistration returns an empty object when nothing is stored', () => {
+    expect(storage.getPrototypeRegistration()).toEqual({})
+  })
+
+  test('savePrototypeRegistration merges fields into the draft', () => {
+    storage.savePrototypeRegistration({
+      isPortable: true,
+      tonnageBand: 'upTo1Tonne'
+    })
+    const draft = storage.savePrototypeRegistration({
+      organisationType: 'limitedCompany'
+    })
+    expect(draft).toEqual({
+      isPortable: true,
+      tonnageBand: 'upTo1Tonne',
+      organisationType: 'limitedCompany'
+    })
+    expect(storage.getPrototypeRegistration()).toEqual(draft)
+  })
+
+  test('submitPrototypeRegistration allocates a BPRN for non scheme members', () => {
+    storage.savePrototypeRegistration({ schemeMembership: 'no' })
+    const submitted = storage.submitPrototypeRegistration()
+    expect(submitted.status).toBe('submitted')
+    expect(submitted.submittedAt).toEqual(expect.any(String))
+    expect(submitted.bprn).toBe('BPR00234567')
+  })
+
+  test('submitPrototypeRegistration increments the BPRN sequence per allocation', () => {
+    storage.savePrototypeRegistration({ schemeMembership: 'intendToJoin' })
+    storage.submitPrototypeRegistration()
+    storage.clearPrototypeRegistration()
+    storage.savePrototypeRegistration({ schemeMembership: 'no' })
+    const second = storage.submitPrototypeRegistration()
+    expect(second.bprn).toBe('BPR00234568')
+  })
+
+  test('submitPrototypeRegistration keeps an existing BPRN on resubmission', () => {
+    storage.savePrototypeRegistration({ schemeMembership: 'no' })
+    const first = storage.submitPrototypeRegistration()
+    const second = storage.submitPrototypeRegistration()
+    expect(second.bprn).toBe(first.bprn)
+  })
+
+  test('submitPrototypeRegistration leaves scheme members without a BPRN', () => {
+    storage.savePrototypeRegistration({ schemeMembership: 'yes' })
+    const submitted = storage.submitPrototypeRegistration()
+    expect(submitted.bprn).toBeNull()
+  })
+
+  test('clearPrototypeRegistration removes the draft', () => {
+    storage.savePrototypeRegistration({ isPortable: true })
+    storage.clearPrototypeRegistration()
+    expect(storage.getPrototypeRegistration()).toEqual({})
+  })
+
+  test('prototype draft keys are namespaced under the prototype prefix', () => {
+    expect(STORAGE_KEYS.prototypeRegistrationDraft).toBe(
+      'npwd-batteries:prototype:registrationDraft'
+    )
+    expect(STORAGE_KEYS.prototypeBprnSequence).toBe(
+      'npwd-batteries:prototype:seq:bprn'
+    )
+  })
+})

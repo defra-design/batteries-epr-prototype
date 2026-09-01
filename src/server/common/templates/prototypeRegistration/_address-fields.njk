@@ -1,0 +1,55 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+{% macro addressFields(labels, errors, formValues) %}
+  <h2 class="govuk-heading-m">{{ labels.addressHeading }}</h2>
+
+  <div class="govuk-form-group {% if errors.addressPostcode %}govuk-form-group--error{% endif %}">
+    <label class="govuk-label govuk-label--s" for="addressPostcode">{{ labels.postcodeLabel }}</label>
+    {% if errors.addressPostcode %}
+      <p class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span> {{ errors.addressPostcode }}</p>
+    {% endif %}
+    <input class="govuk-input govuk-input--width-10" id="addressPostcode" name="addressPostcode" value="{{ formValues.addressPostcode }}" data-testid="details-postcode">
+    {{ govukButton({
+      text: labels.findAddressAction,
+      type: "button",
+      classes: "govuk-button--secondary govuk-!-margin-left-2 govuk-!-margin-bottom-0",
+      attributes: { "data-testid": "details-find-address" }
+    }) }}
+  </div>
+
+  <div data-testid="details-address-select-wrapper" hidden>
+    {{ govukSelect({
+      id: "addressChoice",
+      name: "addressChoice",
+      label: { text: labels.selectAddressLabel, classes: "govuk-label--s" },
+      items: [],
+      attributes: { "data-testid": "details-address-select" }
+    }) }}
+  </div>
+
+  <p class="govuk-body">
+    <a class="govuk-link" href="#" data-testid="details-manual-link">{{ labels.manualLink }}</a>
+  </p>
+
+  <div data-testid="details-manual-address" hidden>
+    {{ govukInput({
+      id: "addressLine1",
+      name: "addressLine1",
+      value: formValues.addressLine1,
+      label: { text: labels.addressLine1Label, classes: "govuk-label--s" },
+      classes: "govuk-!-width-two-thirds",
+      attributes: { "data-testid": "details-address-line1" }
+    }) }}
+
+    {{ govukInput({
+      id: "addressTown",
+      name: "addressTown",
+      value: formValues.addressTown,
+      label: { text: labels.addressTownLabel, classes: "govuk-label--s" },
+      classes: "govuk-!-width-two-thirds",
+      attributes: { "data-testid": "details-address-town" }
+    }) }}
+  </div>
+{% endmacro %}

@@ -34,7 +34,9 @@ export const STORAGE_KEYS = {
   regulatorTargets: `${KEY_PREFIX}regulatorTargets`,
   regulatorCategories: `${KEY_PREFIX}regulatorCategories`,
   configAuditLog: `${KEY_PREFIX}configAuditLog`,
-  obligationSnapshots: `${KEY_PREFIX}obligationSnapshots`
+  obligationSnapshots: `${KEY_PREFIX}obligationSnapshots`,
+  prototypeRegistrationDraft: `${KEY_PREFIX}prototype:registrationDraft`,
+  prototypeBprnSequence: `${KEY_PREFIX}prototype:seq:bprn`
 }
 
 const bprnSequenceKey = (agencyCode, compliancePeriod) =>
@@ -1760,6 +1762,39 @@ const seedDemoData = () => {
   return true
 }
 
+const PROTOTYPE_BPRN_SEQUENCE_START = 234567
+
+const getPrototypeRegistration = () =>
+  readJson(STORAGE_KEYS.prototypeRegistrationDraft) ?? {}
+
+const savePrototypeRegistration = (fields) => {
+  const next = { ...getPrototypeRegistration(), ...fields }
+  writeJson(STORAGE_KEYS.prototypeRegistrationDraft, next)
+  return next
+}
+
+const allocatePrototypeBprn = () => {
+  const current =
+    readJson(STORAGE_KEYS.prototypeBprnSequence) ??
+    PROTOTYPE_BPRN_SEQUENCE_START
+  writeJson(STORAGE_KEYS.prototypeBprnSequence, current + 1)
+  return `BPR${String(current).padStart(8, '0')}`
+}
+
+const submitPrototypeRegistration = () => {
+  const draft = getPrototypeRegistration()
+  const isSchemeMember = draft.schemeMembership === 'yes'
+  return savePrototypeRegistration({
+    status: 'submitted',
+    submittedAt: now(),
+    bprn: isSchemeMember ? null : (draft.bprn ?? allocatePrototypeBprn())
+  })
+}
+
+const clearPrototypeRegistration = () => {
+  removeKey(STORAGE_KEYS.prototypeRegistrationDraft)
+}
+
 export const storage = {
   getCurrentUser,
   setCurrentUser,
@@ -1873,5 +1908,9 @@ export const storage = {
   listAllOperatorQuarterlyReturns,
   listAllOperatorAnnualReturns,
   withdrawSchemeApproval,
-  withdrawOperatorApproval
+  withdrawOperatorApproval,
+  getPrototypeRegistration,
+  savePrototypeRegistration,
+  submitPrototypeRegistration,
+  clearPrototypeRegistration
 }

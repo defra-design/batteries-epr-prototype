@@ -1,0 +1,46 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <div class="govuk-panel govuk-panel--confirmation" data-testid="complete-panel">
+        <h1 class="govuk-panel__title" data-testid="complete-panel-title">{{ heading }}</h1>
+        <div class="govuk-panel__body" data-testid="complete-panel-body">
+          {{ labels.bprnPanelBody }}
+          <br>
+          <strong data-testid="complete-bprn"></strong>
+        </div>
+      </div>
+
+      <p class="govuk-body">
+        {{ labels.emailBodyPrefix }} <span data-testid="complete-email"></span>
+      </p>
+
+      <h2 class="govuk-heading-m">{{ labels.whatNextHeading }}</h2>
+      <p class="govuk-body">{{ labels.whatNext1 }}</p>
+      <p class="govuk-body">{{ labels.whatNext2 }}</p>
+
+      <h3 class="govuk-heading-s">{{ labels.whileHeading }}</h3>
+      <p class="govuk-body">{{ labels.whileIntro }}</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li data-testid="complete-bprn-bullet">{{ labels.whileBulletBprn }}</li>
+        <li>{{ labels.whileBulletProgress }}</li>
+      </ul>
+
+      {{ govukButton({
+        text: labels.returnAction,
+        href: returnUrl,
+        attributes: { "data-testid": "complete-return" }
+      }) }}
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('prototypeRegistration.js') }}"></script>
+{% endblock %}

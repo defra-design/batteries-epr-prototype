@@ -1,0 +1,50 @@
+{% extends 'prototypeRegistration/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="companies-house-form">
+    {{ govukInput({
+      id: "organisationName",
+      name: "organisationName",
+      value: formValues.organisationName,
+      label: { text: labels.nameLabel, classes: "govuk-label--m", isPageHeading: false },
+      hint: { text: labels.nameHint },
+      errorMessage: { text: errors.organisationName } if errors.organisationName,
+      classes: "govuk-!-width-two-thirds",
+      attributes: { "data-testid": "companies-house-name" }
+    }) }}
+
+    {{ govukInput({
+      id: "companyNumber",
+      name: "companyNumber",
+      value: formValues.companyNumber,
+      label: { text: labels.numberLabel, classes: "govuk-label--m" },
+      hint: { text: labels.numberHint },
+      errorMessage: { text: errors.companyNumber } if errors.companyNumber,
+      classes: "govuk-input--width-10",
+      attributes: { "data-testid": "companies-house-number" }
+    }) }}
+
+    {{ govukButton({
+      text: labels.searchAction,
+      type: "button",
+      classes: "govuk-button--secondary",
+      attributes: { "data-testid": "companies-house-search" }
+    }) }}
+
+    <div data-testid="companies-house-result" hidden>
+      <h2 class="govuk-heading-s">{{ labels.resultHeading }}</h2>
+      <p class="govuk-body" data-testid="companies-house-result-summary"></p>
+    </div>
+
+    <p class="govuk-body" data-testid="companies-house-not-found" hidden>{{ labels.notFound }}</p>
+
+    <input type="hidden" name="addressLine1" data-testid="companies-house-address-line1">
+    <input type="hidden" name="addressTown" data-testid="companies-house-address-town">
+    <input type="hidden" name="addressPostcode" data-testid="companies-house-address-postcode">
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "companies-house-continue" }
+    }) }}
+  </form>
+{% endblock %}

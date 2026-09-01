@@ -1,0 +1,36 @@
+{% extends 'prototypeRegistration/_layout.njk' %}
+
+{% block stepBody %}
+  <p class="govuk-hint">{{ labels.hint }}</p>
+
+  <form method="post" action="{{ action }}" novalidate data-testid="battery-category-form">
+    {{ govukCheckboxes({
+      idPrefix: "isPortable",
+      name: "isPortable",
+      errorMessage: { text: errors.isPortable } if errors.isPortable,
+      items: [
+        { value: "on", text: labels.portableLabel, name: "isPortable", id: "isPortable", checked: formValues.isPortable, attributes: { "data-testid": "battery-category-portable" } },
+        { value: "on", text: labels.industrialLabel, name: "isIndustrial", id: "isIndustrial", checked: formValues.isIndustrial, attributes: { "data-testid": "battery-category-industrial" } },
+        { value: "on", text: labels.automotiveLabel, name: "isAutomotive", id: "isAutomotive", checked: formValues.isAutomotive, attributes: { "data-testid": "battery-category-automotive" } }
+      ]
+    }) }}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "battery-category-continue" }
+    }) }}
+  </form>
+{% endblock %}
+
+{% block sidebar %}
+  <div class="govuk-grid-column-one-third">
+    <aside class="app-related-content" data-testid="battery-category-sidebar">
+      <h2 class="govuk-heading-s">{{ labels.sidebarHeading }}</h2>
+      <ul class="govuk-list govuk-body-s">
+        {% for link in labels.sidebarLinks %}
+          <li><a class="govuk-link" href="#">{{ link }}</a></li>
+        {% endfor %}
+      </ul>
+    </aside>
+  </div>
+{% endblock %}

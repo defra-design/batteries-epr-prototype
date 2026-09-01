@@ -1,21 +1,35 @@
 {% extends 'layouts/page.njk' %}
 
-{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-xl">{{ heading }}</h1>
       <p class="govuk-body-l">{{ intro }}</p>
-
-      {{ govukInsetText({
-        text: empty,
-        attributes: { "data-testid": "prototype-empty" }
-      }) }}
-
-      <p class="govuk-body">
-        <a class="govuk-link" href="{{ homeUrl }}" data-testid="prototype-home-link">{{ backLinkText }}</a>
-      </p>
     </div>
   </div>
+
+  <div class="govuk-grid-row app-task-cards" data-testid="prototype-journeys">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-summary-card" data-testid="prototype-journey-registration">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">{{ journeys.smallProducerRegistration.title }}</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <p class="govuk-body">{{ journeys.smallProducerRegistration.description }}</p>
+          {{ govukButton({
+            text: journeys.smallProducerRegistration.linkText,
+            href: registrationUrl,
+            isStartButton: true,
+            attributes: { "data-testid": "prototype-journey-registration-cta" }
+          }) }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="govuk-body">
+    <a class="govuk-link" href="{{ homeUrl }}" data-testid="prototype-home-link">{{ backLinkText }}</a>
+  </p>
 {% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ heading }}</h1>
+
+      <p class="govuk-body">{{ labels.intro }}</p>
+
+      <form method="post" action="{{ action }}" novalidate data-testid="one-login-sign-in-form">
+        {{ govukInput({
+          id: "email",
+          name: "email",
+          type: "email",
+          autocomplete: "email",
+          label: { text: labels.emailLabel, classes: "govuk-label--s" },
+          classes: "govuk-!-width-two-thirds",
+          attributes: { "data-testid": "one-login-email" }
+        }) }}
+
+        {{ govukInput({
+          id: "password",
+          name: "password",
+          type: "password",
+          label: { text: labels.passwordLabel, classes: "govuk-label--s" },
+          classes: "govuk-!-width-two-thirds",
+          attributes: { "data-testid": "one-login-password" }
+        }) }}
+
+        {{ govukButton({
+          text: labels.continueAction,
+          attributes: { "data-testid": "one-login-continue" }
+        }) }}
+      </form>
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="#" data-testid="one-login-create-link">{{ labels.createLink }}</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}
