@@ -9,6 +9,7 @@ export const paths = {
   privacyNotice: '/privacy-notice',
   accessibility: '/accessibility-statement',
   npwdPackagingComparison: '/npwd-vs-packaging',
+  bcsRegistrationWalkthrough: '/bcs-registration-walkthrough',
 
   health: '/health',
 

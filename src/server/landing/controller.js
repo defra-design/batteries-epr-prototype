@@ -11,7 +11,8 @@ export const landingController = {
       intro: pageContent.intro,
       areas: pageContent.areas,
       playgroundUrl: paths.playground,
-      prototypeUrl: paths.prototype
+      prototypeUrl: paths.prototype,
+      bcsRegistrationWalkthroughUrl: paths.bcsRegistrationWalkthrough
     })
   }
 }

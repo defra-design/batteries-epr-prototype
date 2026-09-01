@@ -28,6 +28,12 @@ export const content = {
             description:
               'New design prototypes being explored. Nothing has been added here yet.',
             linkText: 'Open the prototypes'
+          },
+          bcsRegistrationWalkthrough: {
+            title: 'BCS registration walkthrough',
+            description:
+              'A screen-by-screen record of how a new Battery Compliance Scheme is registered and approved on the legacy NPWD system, captured from the Environment Agency walkthrough.',
+            linkText: 'Open the walkthrough'
           }
         }
       },
@@ -42,6 +48,11 @@ export const content = {
             linkText: 'TODO welsh'
           },
           prototype: {
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            linkText: 'TODO welsh'
+          },
+          bcsRegistrationWalkthrough: {
             title: 'TODO welsh',
             description: 'TODO welsh',
             linkText: 'TODO welsh'

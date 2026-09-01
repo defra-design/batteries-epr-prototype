@@ -4,6 +4,7 @@ import { landing } from './landing/index.js'
 import { playground } from './playground/index.js'
 import { prototype } from './prototype/index.js'
 import { blueprint } from './blueprint/index.js'
+import { bcsRegistrationWalkthrough } from './bcsRegistrationWalkthrough/index.js'
 import { about } from './about/index.js'
 import { cookies } from './cookies/index.js'
 import { terms } from './terms/index.js'
@@ -92,6 +93,7 @@ export const router = {
         playground: playground.openRoutes,
         prototype: prototype.openRoutes,
         blueprint: blueprint.openRoutes,
+        bcsRegistrationWalkthrough: bcsRegistrationWalkthrough.openRoutes,
         about: about.openRoutes,
         cookies: cookies.openRoutes,
         terms: terms.openRoutes,

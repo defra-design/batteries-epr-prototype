@@ -34,5 +34,13 @@ describe('#landingController', () => {
       expect.stringContaining('data-testid="landing-area-prototype-cta"')
     )
     expect(result).toEqual(expect.stringContaining(`href="${paths.prototype}"`))
+    expect(result).toEqual(
+      expect.stringContaining(
+        'data-testid="landing-area-bcs-registration-walkthrough-cta"'
+      )
+    )
+    expect(result).toEqual(
+      expect.stringContaining(`href="${paths.bcsRegistrationWalkthrough}"`)
+    )
   })
 })

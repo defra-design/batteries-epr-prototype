@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>BCS Registration on NPWD</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --paper: #faf9f5;
+  --card: #ffffff;
+  --ink: #20281e;
+  --ink-soft: #4d564a;
+  --ink-faint: #78816f;
+  --line: #ddddd0;
+  --accent: #2f6b38;
+  --accent-ink: #2f6b38;
+  --reg: #3d5a80;
+  --reg-bg: #e8edf4;
+  --sch: #2f6b38;
+  --sch-bg: #e7efe4;
+  --off: #6b6456;
+  --off-bg: #eeeadf;
+  --note-bg: #f7efdd;
+  --note-edge: #a06616;
+  --note-ink: #6d4a12;
+  --shot-bg: #f1f0e9;
+  --focus: #2f6b38;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #161a14;
+    --card: #1d221b;
+    --ink: #e6e8df;
+    --ink-soft: #b2b8a8;
+    --ink-faint: #848c7a;
+    --line: #333a2f;
+    --accent: #7fb388;
+    --accent-ink: #93c29b;
+    --reg: #93b2d8;
+    --reg-bg: #232c38;
+    --sch: #8cbd94;
+    --sch-bg: #22301f;
+    --off: #b3a992;
+    --off-bg: #2a2820;
+    --note-bg: #2b2416;
+    --note-edge: #c98f3d;
+    --note-ink: #dcb277;
+    --shot-bg: #10130e;
+    --focus: #93c29b;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #161a14;
+  --card: #1d221b;
+  --ink: #e6e8df;
+  --ink-soft: #b2b8a8;
+  --ink-faint: #848c7a;
+  --line: #333a2f;
+  --accent: #7fb388;
+  --accent-ink: #93c29b;
+  --reg: #93b2d8;
+  --reg-bg: #232c38;
+  --sch: #8cbd94;
+  --sch-bg: #22301f;
+  --off: #b3a992;
+  --off-bg: #2a2820;
+  --note-bg: #2b2416;
+  --note-edge: #c98f3d;
+  --note-ink: #dcb277;
+  --shot-bg: #10130e;
+  --focus: #93c29b;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+.wrap { max-width: 1500px; margin: 0 auto; padding: 0 24px 72px; }
+a { color: var(--accent-ink); }
+h1, h2, h3 { font-family: "IBM Plex Serif", Georgia, serif; text-wrap: balance; margin: 0; }
+.mono, .ts, .toc-range, .step-no, .phase-kicker {
+  font-family: "IBM Plex Mono", "Courier New", monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.masthead { padding: 36px 0 28px; border-bottom: 1px solid var(--line); }
+.masthead .kicker {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent-ink); margin: 0 0 14px;
+}
+.masthead h1 { font-size: clamp(1.9rem, 5vw, 2.7rem); font-weight: 600; line-height: 1.15; }
+.masthead .standfirst {
+  max-width: 62ch; color: var(--ink-soft);
+  font-size: 1.05rem; margin: 12px 0 0;
+}
+.masthead .provenance {
+  margin: 14px 0 0; font-size: 0.85rem; color: var(--ink-faint);
+  display: flex; flex-wrap: wrap; gap: 6px 22px;
+}
+.masthead .provenance span { white-space: nowrap; }
+
+.toc {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px; margin: 22px 0 0;
+}
+.toc a {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 12px 14px; border: 1px solid var(--line); border-radius: 6px;
+  background: var(--card); text-decoration: none; color: var(--ink);
+}
+.toc a:hover { border-color: var(--accent); }
+.toc-range { font-size: 0.72rem; color: var(--accent-ink); letter-spacing: 0.08em; }
+.toc-name { font-weight: 600; font-size: 0.92rem; line-height: 1.3; }
+
+.legend {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  margin: 16px 0 0; font-size: 0.82rem; color: var(--ink-faint);
+}
+.chip {
+  display: inline-block; padding: 2px 10px; border-radius: 999px;
+  font-size: 0.74rem; font-weight: 600; letter-spacing: 0.03em;
+}
+.chip-regulator { background: var(--reg-bg); color: var(--reg); }
+.chip-scheme { background: var(--sch-bg); color: var(--sch); }
+.chip-offsystem { background: var(--off-bg); color: var(--off); }
+
+.phase { padding: 36px 0 4px; }
+.phase-head { margin: 0 0 6px; }
+.phase-kicker {
+  font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--accent-ink); margin: 0 0 10px;
+}
+.phase h2 { font-size: clamp(1.45rem, 3.5vw, 1.85rem); font-weight: 600; }
+.phase-intro { max-width: 66ch; color: var(--ink-soft); margin: 12px 0 0; }
+
+.step {
+  display: grid; grid-template-columns: minmax(260px, 340px) 1fr;
+  gap: 12px 28px; align-items: start; padding: 18px 0;
+}
+.step + .step { border-top: 1px solid var(--line); }
+.step-head { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+.step-no { font-size: 0.9rem; color: var(--ink-faint); }
+.step-head h3 { font-size: 1.12rem; font-weight: 600; }
+.ts { font-size: 0.78rem; color: var(--ink-faint); }
+.ts::before { content: "\2192 "; color: var(--line); }
+
+.shot { margin: 0; }
+.shot-btn {
+  display: block; width: 100%; padding: 6px; margin: 0;
+  border: 1px solid var(--line); border-radius: 6px;
+  background: var(--shot-bg); cursor: zoom-in;
+}
+.shot-btn:hover { border-color: var(--accent); }
+.shot-btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.shot-btn img { display: block; width: 100%; height: auto; border-radius: 2px; }
+.step-body { max-width: 68ch; margin: 8px 0 0; }
+@media (max-width: 720px) {
+  .step { grid-template-columns: 1fr; }
+}
+
+.note {
+  max-width: 68ch; margin: 12px 0 0; padding: 10px 14px;
+  background: var(--note-bg); border-left: 3px solid var(--note-edge);
+  border-radius: 0 6px 6px 0;
+}
+.note-label {
+  display: block; font-family: "IBM Plex Mono", monospace;
+  font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--note-edge); margin-bottom: 4px;
+}
+.note p { margin: 0; color: var(--note-ink); font-size: 0.95rem; }
+
+.closing { padding: 40px 0 0; }
+.closing h2 { font-size: clamp(1.45rem, 3.5vw, 1.85rem); font-weight: 600; }
+.closing > p { max-width: 66ch; color: var(--ink-soft); }
+.imps {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 14px; margin: 24px 0 0;
+}
+.imp {
+  border: 1px solid var(--line); border-radius: 8px; background: var(--card);
+  padding: 16px 18px;
+}
+.imp h3 { font-size: 1rem; font-weight: 600; font-family: "IBM Plex Sans", sans-serif; }
+.imp p { margin: 8px 0 0; font-size: 0.92rem; color: var(--ink-soft); }
+
+.fit { margin-top: 48px; border-top: 1px solid var(--line); padding-top: 40px; }
+.fit p { max-width: 66ch; }
+.footer {
+  margin-top: 64px; border-top: 1px solid var(--line); padding-top: 20px;
+  font-size: 0.82rem; color: var(--ink-faint);
+}
+
+.lightbox {
+  position: fixed; inset: 0; z-index: 50; display: none;
+  background: rgba(12, 15, 11, 0.88); padding: 24px;
+  overflow: auto; cursor: zoom-out;
+}
+.lightbox.open { display: block; }
+.lightbox img {
+  display: block; margin: 0 auto; max-width: none;
+  width: min(1400px, 96vw); height: auto;
+  border-radius: 4px; background: #fff;
+}
+.lightbox .hint {
+  position: fixed; top: 14px; right: 20px; color: #cfd4c9;
+  font-family: "IBM Plex Mono", monospace; font-size: 0.78rem;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .toc a, .shot-btn { transition: border-color 120ms ease; }
+}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="masthead">
+    <p class="kicker">Batteries EPR · as-is journey record</p>
+    <h1>BCS Registration on NPWD</h1>
+    <p class="standfirst">How a new Battery Compliance Scheme is registered and approved on the legacy National Packaging Waste Database — every screen of the journey, captured from Gareth Winter’s Environment Agency walkthrough, with the observations that should shape the replacement service.</p>
+    <p class="provenance">
+      <span>Recorded 28 Aug 2026</span>
+      <span>Gareth Winter (EA) · Mak McLaren · Philip Morris</span>
+      <span>stage.npwd.org.uk · test data throughout</span>
+    </p>
+    <nav class="toc" aria-label="Phases"><a href="#before"><span class="toc-range">01–02</span><span class="toc-name">Before the system</span></a><a href="#setup"><span class="toc-range">03–09</span><span class="toc-name">Regulator sets up the account</span></a><a href="#apply"><span class="toc-range">10–16</span><span class="toc-name">The scheme applies</span></a><a href="#review"><span class="toc-range">17–24</span><span class="toc-name">Regulator reviews and approves</span></a><a href="#after"><span class="toc-range">25</span><span class="toc-name">After approval</span></a></nav>
+    <p class="legend">Who acts at each step:
+      <span class="chip chip-offsystem">Off-system</span>
+      <span class="chip chip-regulator">Regulator (EA)</span>
+      <span class="chip chip-scheme">Compliance scheme</span>
+      · timestamps reference the meeting recording · click any screenshot to enlarge
+    </p>
+  </header>
+
+  
+<section class="phase" id="before">
+  <header class="phase-head">
+    <p class="phase-kicker">Phase 1 · steps 01–02</p>
+    <h2>Before the system</h2>
+    <p class="phase-intro">The journey starts outside NPWD. A prospective scheme finds an information page, phones the Environment Agency, and the EA runs informal viability checks before anything is created on the system — the fee is substantial, so there is no point setting up an account for an applicant who cannot qualify.</p>
+  </header>
+  
+<article class="step" id="step-1">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: The public entry point">
+      <img src="/bcs-registration-walkthrough/images/01-npwd-public-info.png" alt="NPWD screenshot — The public entry point" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">01</span>
+      <h3>The public entry point</h3>
+      <span class="chip chip-offsystem">Off-system</span><span class="ts" title="Timestamp in the meeting recording">02:07</span>
+    </header>
+    <p class="step-body">New battery users land on the NPWD public welcome page — a news and guidance page, not a service start point. “New Batteries Users Start Here” in the sidebar is as close as NPWD gets to onboarding.</p>
+    
+  </div>
+</article>
+<article class="step" id="step-2">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: “Please call your appropriate authority”">
+      <img src="/bcs-registration-walkthrough/images/02-call-appropriate-authority.png" alt="NPWD screenshot — “Please call your appropriate authority”" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">02</span>
+      <h3>“Please call your appropriate authority”</h3>
+      <span class="chip chip-offsystem">Off-system</span><span class="ts" title="Timestamp in the meeting recording">02:18</span>
+    </header>
+    <p class="step-body">The Batteries Home page tells would-be compliance schemes to phone their appropriate authority. The first real step — discussing whether the applicant has a viable operational plan and can meet its obligations — happens entirely off-system, against a working checklist the EA keeps.</p>
+    <aside class="note"><span class="note-label">Observation</span><p>The pre-application questions are asked again, formally, during the approval stage. Gareth will share the checklist spreadsheet.</p></aside>
+  </div>
+</article>
+</section>
+<section class="phase" id="setup">
+  <header class="phase-head">
+    <p class="phase-kicker">Phase 2 · steps 03–09</p>
+    <h2>Regulator sets up the account</h2>
+    <p class="phase-intro">Once the EA is satisfied the applicant could operate as a scheme, a regulator super user creates the organisation and its first user by hand. Everything here is done for the scheme, before the scheme has ever logged in.</p>
+  </header>
+  
+<article class="step" id="step-3">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: Add a new compliance scheme">
+      <img src="/bcs-registration-walkthrough/images/03-scheme-list-add-new.png" alt="NPWD screenshot — Add a new compliance scheme" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">03</span>
+      <h3>Add a new compliance scheme</h3>
+      <span class="chip chip-regulator">Regulator (EA)</span><span class="ts" title="Timestamp in the meeting recording">03:57</span>
+    </header>
+    <p class="step-body">From Batteries Home → Compliance Schemes, the scheme list has a plain “To add a new compliance scheme click here” link. Adding a scheme needs regulator super user access. The demo scheme “MPG” is invented test data on the stage system.</p>
+    
+  </div>
+</article>
+<article class="step" id="step-4">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: The organisation record">
+      <img src="/bcs-registration-walkthrough/images/04-org-details-created.png" alt="NPWD screenshot — The organisation record" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">04</span>
+      <h3>The organisation record</h3>
+      <span class="chip chip-regulator">Regulator (EA)</span><span class="ts" title="Timestamp in the meeting recording">03:40</span>
+    </header>
+    <p class="step-body">The new organisation gets an NPWD code, operator name, company registration number and registered office. At this point it is nothing more than a record — it does not appear in any compliance-year data.</p>
+    
+  </div>
+</article>
+<article class="step" id="step-5">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: Created, but inert">
+      <img src="/bcs-registration-walkthrough/images/05-org-unapproved-no-users.png" alt="NPWD screenshot — Created, but inert" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">05</span>
+      <h3>Created, but inert</h3>
+      <span class="chip chip-regulator">Regulator (EA)</span><span class="ts" title="Timestamp in the meeting recording">04:45</span>
+    </header>
+    <p class="step-body">The bottom of the same record makes the state explicit: no users, no applications for approval, “This scheme is not approved.”</p>
+    
+  </div>
+</article>
+<article class="step" id="step-6">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: Add the first user">
+      <img src="/bcs-registration-walkthrough/images/06-add-user-roles.png" alt="NPWD screenshot — Add the first user" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">06</span>
+      <h3>Add the first user</h3>
+      <span class="chip chip-regulator">Regulator (EA)</span><span class="ts" title="Timestamp in the meeting recording">05:10</span>
+    </header>
+    <p class="step-body">The regulator creates the scheme’s first user: username, contact details, a primary role (read only / standard / super user) and the additional roles of authorised signatory and delegated authority — so authority information is captured before the scheme ever signs in.</p>
+    <aside class="note"><span class="note-label">Observation</span><p>There is essentially no validation on this form.</p></aside>
+  </div>
+</article>
+<article class="step" id="step-7">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: The email log">
+      <img src="/bcs-registration-walkthrough/images/07-email-log.png" alt="NPWD screenshot — The email log" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">07</span>
+      <h3>The email log</h3>
+      <span class="chip chip-regulator">Regulator (EA)</span><span class="ts" title="Timestamp in the meeting recording">06:15</span>
+    </header>
+    <p class="step-body">On the stage system all outbound mail is blocked and listed here; in live, the user gets the message directly. The same screen doubles as a log of every notification NPWD has sent.</p>
+    <aside class="note"><span class="note-label">Observation</span><p>Gareth flagged this as genuinely useful — being able to prove someone was (or wasn’t) notified. Worth keeping in the new service.</p></aside>
+  </div>
+</article>
+<article class="step" id="step-8">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: The invitation email">
+      <img src="/bcs-registration-walkthrough/images/08-set-password-email.png" alt="NPWD screenshot — The invitation email" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">08</span>
+      <h3>The invitation email</h3>
+      <span class="chip chip-scheme">Compliance scheme</span><span class="ts" title="Timestamp in the meeting recording">06:35</span>
+    </header>
+    <p class="step-body">The new user receives an email with an active link to set their password and PIN — they do not have to find their own way back to the service.</p>
+    
+  </div>
+</article>
+<article class="step" id="step-9">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: Set a PIN">
+      <img src="/bcs-registration-walkthrough/images/09-set-pin.png" alt="NPWD screenshot — Set a PIN" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">09</span>
+      <h3>Set a PIN</h3>
+      <span class="chip chip-scheme">Compliance scheme</span><span class="ts" title="Timestamp in the meeting recording">07:05</span>
+    </header>
+    <p class="step-body">Alongside the password, every user sets a six-digit PIN, which NPWD then demands as a signature on nearly every significant action.</p>
+    <aside class="note"><span class="note-label">Observation</span><p>Re-entering the PIN at every step is a recognised pain point. A pen test recommended adding multi-factor authentication at every step on top — unaffordable to build in NPWD, and painful if it had been.</p></aside>
+  </div>
+</article>
+</section>
+<section class="phase" id="apply">
+  <header class="phase-head">
+    <p class="phase-kicker">Phase 3 · steps 10–16</p>
+    <h2>The scheme applies</h2>
+    <p class="phase-intro">The scheme logs in for the first time and works through a ten-step application for approval — started early in the compliance year because it applies to the following one. Most of the form is generic organisation detail; the batteries-specific substance is the scheme rules, conviction declarations and the operational plan.</p>
+  </header>
+  
+<article class="step" id="step-10">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: Terms and conditions">
+      <img src="/bcs-registration-walkthrough/images/10-terms-and-conditions.png" alt="NPWD screenshot — Terms and conditions" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">10</span>
+      <h3>Terms and conditions</h3>
+      <span class="chip chip-scheme">Compliance scheme</span><span class="ts" title="Timestamp in the meeting recording">07:45</span>
+    </header>
+    <p class="step-body">First login lands on a very long terms page, © 2010. “I Agree” sits at the very bottom.</p>
+    <aside class="note"><span class="note-label">Observation</span><p>A real user recently got stuck here because they couldn’t find the I Agree button.</p></aside>
+  </div>
+</article>
+<article class="step" id="step-11">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: The pre-approval dashboard">
+      <img src="/bcs-registration-walkthrough/images/11-scheme-dashboard-pre-approval.png" alt="NPWD screenshot — The pre-approval dashboard" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">11</span>
+      <h3>The pre-approval dashboard</h3>
+      <span class="chip chip-scheme">Compliance scheme</span><span class="ts" title="Timestamp in the meeting recording">08:05</span>
+    </header>
+    <p class="step-body">The welcome page shows the application for approval as “Not Started”, and everything else — member templates, quarterly returns, evidence — locked until approval. Starting the application is the only thing the scheme can do.</p>
+    
+  </div>
+</article>
+<article class="step" id="step-12">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: Start the application">
+      <img src="/bcs-registration-walkthrough/images/12-start-application-2027.png" alt="NPWD screenshot — Start the application" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">12</span>
+      <h3>Start the application</h3>
+      <span class="chip chip-scheme">Compliance scheme</span><span class="ts" title="Timestamp in the meeting recording">08:35</span>
+    </header>
+    <p class="step-body">The scheme picks the year it is applying for — here 2027, the following compliance year. The on-screen guidance sets the statutory window: apply between 15 April and 15 May for approval effective the next compliance period.</p>
+    
+  </div>
+</article>
+<article class="step" id="step-13">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: Ten steps of organisation detail">
+      <img src="/bcs-registration-walkthrough/images/13-service-of-notice-address.png" alt="NPWD screenshot — Ten steps of organisation detail" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">13</span>
+      <h3>Ten steps of organisation detail</h3>
+      <span class="chip chip-scheme">Compliance scheme</span><span class="ts" title="Timestamp in the meeting recording">10:50</span>
+    </header>
+    <p class="step-body">Steps 1–6 collect operator, contact and address details. Little conveniences matter at this scale: “To copy the Contact Address click here” saves re-keying the same address across steps — a pattern Gareth would like kept.</p>
+    
+  </div>
+</article>
+<article class="step" id="step-14">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: Step 7 — proposed scheme rules">
+      <img src="/bcs-registration-walkthrough/images/14-scheme-rules.png" alt="NPWD screenshot — Step 7 — proposed scheme rules" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">14</span>
+      <h3>Step 7 — proposed scheme rules</h3>
+      <span class="chip chip-scheme">Compliance scheme</span><span class="ts" title="Timestamp in the meeting recording">12:15</span>
+    </header>
+    <p class="step-body">The regulatory heart of the application. The scheme confirms its rules provide for: minimum one-period membership (cancellation taking effect at period end); an arbitration procedure for disputes; accurate and timely dissemination of information to members; and allocation of battery evidence notes in proportion to each member’s share of batteries placed on the market. A copy of the scheme rules must be uploaded.</p>
+    <aside class="note"><span class="note-label">Observation</span><p>These four confirmations map directly to the Waste Batteries and Accumulators Regulations 2009 — the part of the journey that fed straight into the data model. Upload validation is presence-only: any document passes.</p></aside>
+  </div>
+</article>
+<article class="step" id="step-15">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: Step 8 — conviction declarations">
+      <img src="/bcs-registration-walkthrough/images/15-convictions-declarations.png" alt="NPWD screenshot — Step 8 — conviction declarations" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">15</span>
+      <h3>Step 8 — conviction declarations</h3>
+      <span class="chip chip-scheme">Compliance scheme</span><span class="ts" title="Timestamp in the meeting recording">13:20</span>
+    </header>
+    <p class="step-body">Yes/no declarations of convictions under Regulation 89(2) of the batteries regulations, Regulation 73 of the WEEE regulations and Regulation 40 of the packaging regulations, each with an optional evidence upload.</p>
+    <aside class="note"><span class="note-label">Observation</span><p>In practice a tick-box for the regs: if a scheme answered dishonestly, the EA would only find out through its own investigatory work. Step 9, the operational plan upload, follows — shown later in the regulator’s review.</p></aside>
+  </div>
+</article>
+<article class="step" id="step-16">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: Submitted">
+      <img src="/bcs-registration-walkthrough/images/16-application-submitted.png" alt="NPWD screenshot — Submitted" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">16</span>
+      <h3>Submitted</h3>
+      <span class="chip chip-scheme">Compliance scheme</span><span class="ts" title="Timestamp in the meeting recording">15:45</span>
+    </header>
+    <p class="step-body">With all ten steps complete the scheme submits, signing with PIN characters. NPWD confirms the application for approval has been submitted online.</p>
+    
+  </div>
+</article>
+</section>
+<section class="phase" id="review">
+  <header class="phase-head">
+    <p class="phase-kicker">Phase 4 · steps 17–24</p>
+    <h2>Regulator reviews and approves</h2>
+    <p class="phase-intro">The application now moves through Started → Submitted → Accepted → Approved on the regulator’s side, with a per-step query mechanism, a hard-coded fee, and a manually typed approval number along the way.</p>
+  </header>
+  
+<article class="step" id="step-17">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: The regulator’s dashboard">
+      <img src="/bcs-registration-walkthrough/images/17-regulator-batteries-home.png" alt="NPWD screenshot — The regulator’s dashboard" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">17</span>
+      <h3>The regulator’s dashboard</h3>
+      <span class="chip chip-regulator">Regulator (EA)</span><span class="ts" title="Timestamp in the meeting recording">16:20</span>
+    </header>
+    <p class="step-body">Batteries Home shows submissions by type for the selected year — applications for approval, member detail submissions, quarterly returns. The regulator switches the year to 2027 to find the new application.</p>
+    <aside class="note"><span class="note-label">Observation</span><p>There is no notification when an application is submitted; the dashboard is the only signal. The two sides are usually in regular contact anyway, but an email alert would be a welcome improvement, given how rarely new schemes appear.</p></aside>
+  </div>
+</article>
+<article class="step" id="step-18">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: Applications by stage">
+      <img src="/bcs-registration-walkthrough/images/18-applications-submitted-list.png" alt="NPWD screenshot — Applications by stage" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">18</span>
+      <h3>Applications by stage</h3>
+      <span class="chip chip-regulator">Regulator (EA)</span><span class="ts" title="Timestamp in the meeting recording">16:45</span>
+    </header>
+    <p class="step-body">Applications are listed by stage — including ones started but never finished, which Gareth finds handy. MPG’s application sits in the Submitted list with its dates.</p>
+    
+  </div>
+</article>
+<article class="step" id="step-19">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: Review each step — and query it">
+      <img src="/bcs-registration-walkthrough/images/19-review-operational-plan.png" alt="NPWD screenshot — Review each step — and query it" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">19</span>
+      <h3>Review each step — and query it</h3>
+      <span class="chip chip-regulator">Regulator (EA)</span><span class="ts" title="Timestamp in the meeting recording">17:50</span>
+    </header>
+    <p class="step-body">The regulator opens the application and works through all ten steps, here step 9’s uploaded operational plan. To query one part, they untick that step’s acknowledgement, “Return to Steps”, and return the application — a per-step query rather than rejecting the whole application, which sends the scheme a notification.</p>
+    <aside class="note"><span class="note-label">Observation</span><p>The operational plan is the substance of the review — is the scheme viable with the members it has? The EA offers templates but the regulations don’t mandate them, so plans arrive in every shape. Plans are only legally required at approval, though the EA asks yearly. Gareth will arrange an example plan to share. Keeping the per-step query in the new service matters.</p></aside>
+  </div>
+</article>
+<article class="step" id="step-20">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: Accept — enter the fee">
+      <img src="/bcs-registration-walkthrough/images/20-fee-entry.png" alt="NPWD screenshot — Accept — enter the fee" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">20</span>
+      <h3>Accept — enter the fee</h3>
+      <span class="chip chip-regulator">Regulator (EA)</span><span class="ts" title="Timestamp in the meeting recording">18:45</span>
+    </header>
+    <p class="step-body">Accepting the application requires recording the application fee in a “For Agency Use Only” panel: amount, received date, payment method. Here £1,000 is deliberately entered to test the validation.</p>
+    
+  </div>
+</article>
+<article class="step" id="step-21">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: “The correct fee has not been received”">
+      <img src="/bcs-registration-walkthrough/images/21-fee-validation-error.png" alt="NPWD screenshot — “The correct fee has not been received”" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">21</span>
+      <h3>“The correct fee has not been received”</h3>
+      <span class="chip chip-regulator">Regulator (EA)</span><span class="ts" title="Timestamp in the meeting recording">19:00</span>
+    </header>
+    <p class="step-body">NPWD rejects anything other than £17,000 — the fee is hard-coded, as all NPWD fees are. No payment actually moves through the system; this is just a record. Invoicing happens separately in SOP, where matching a payment back to submissions can take real detective work — one operator can pay for packaging and batteries in a single payment.</p>
+    <aside class="note"><span class="note-label">Observation</span><p>Make fees configurable in the new service. The £17k fee is itself a barrier to entry — if it ever changes, the trickle of new schemes could become a queue.</p></aside>
+  </div>
+</article>
+<article class="step" id="step-22">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: Accepted">
+      <img src="/bcs-registration-walkthrough/images/22-accepted-stage.png" alt="NPWD screenshot — Accepted" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">22</span>
+      <h3>Accepted</h3>
+      <span class="chip chip-regulator">Regulator (EA)</span><span class="ts" title="Timestamp in the meeting recording">20:35</span>
+    </header>
+    <p class="step-body">With the correct fee recorded, the application moves to the Accepted stage. Internally this is where sign-off above the account manager (the STO) happens, but functionally little separates accepted from approved — it is an extra fail-safe in the process.</p>
+    
+  </div>
+</article>
+<article class="step" id="step-23">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: Type the approval number">
+      <img src="/bcs-registration-walkthrough/images/23-approval-number-entry.png" alt="NPWD screenshot — Type the approval number" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">23</span>
+      <h3>Type the approval number</h3>
+      <span class="chip chip-regulator">Regulator (EA)</span><span class="ts" title="Timestamp in the meeting recording">22:05</span>
+    </header>
+    <p class="step-body">Approval requires the regulator to enter an approval number by hand — “BCS…” — in a format set by the operational instruction “Determination of applications for approval of schemes under the Waste Batteries and Accumulators Regulations 2009”. There is no generator and no format validation.</p>
+    <aside class="note"><span class="note-label">Observation</span><p>Gareth couldn’t find the number format in the regulations themselves and is checking the operational instruction.</p></aside>
+  </div>
+</article>
+<article class="step" id="step-24">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: Approved">
+      <img src="/bcs-registration-walkthrough/images/24-approved.png" alt="NPWD screenshot — Approved" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">24</span>
+      <h3>Approved</h3>
+      <span class="chip chip-regulator">Regulator (EA)</span><span class="ts" title="Timestamp in the meeting recording">22:35</span>
+    </header>
+    <p class="step-body">The application status becomes Approved with the approval number recorded (here BCS812394). The scheme is now in operation for the following compliance year.</p>
+    
+  </div>
+</article>
+</section>
+<section class="phase" id="after">
+  <header class="phase-head">
+    <p class="phase-kicker">Phase 5 · steps 25</p>
+    <h2>After approval</h2>
+    <p class="phase-intro">Approval transforms what the scheme can do — the dashboard unlocks, and the annual rhythm of member confirmations and data returns begins.</p>
+  </header>
+  
+<article class="step" id="step-25">
+  <figure class="shot">
+    <button class="shot-btn" type="button" aria-label="Enlarge screenshot: The unlocked dashboard">
+      <img src="/bcs-registration-walkthrough/images/25-scheme-dashboard-post-approval.png" alt="NPWD screenshot — The unlocked dashboard" loading="lazy">
+    </button>
+  </figure>
+  <div class="step-text">
+    <header class="step-head">
+      <span class="step-no">25</span>
+      <h3>The unlocked dashboard</h3>
+      <span class="chip chip-scheme">Compliance scheme</span><span class="ts" title="Timestamp in the meeting recording">24:25</span>
+    </header>
+    <p class="step-body">The scheme’s welcome page now shows the approval, an evidence and obligation summary for the approved year, member detail submissions and the four quarterly data returns. The first member upload is all joiners; from then on, every submission confirms joiners and leavers against the member list — the “registration” spreadsheet in the team’s notes (v2013, provenance unknown) belongs to this annual confirmation, not to account creation.</p>
+    
+  </div>
+</article>
+</section>
+
+  <section class="closing" id="improvements">
+    <h2>What the walkthrough says about the new service</h2>
+    <p>New schemes are rare — a handful exist, all regulated by the EA in England, and the £17,000 fee keeps the queue short — so this journey is not an early build priority. It was captured for the data model and the service blueprint. The improvements Gareth raised along the way:</p>
+    <div class="imps"><div class="imp"><h3>Notify on submission</h3><p>An email to the regulator when an application (or any stage change) lands, instead of dashboard-watching.</p></div><div class="imp"><h3>Configurable fees</h3><p>All NPWD fees are hard-coded; the new service should hold them as data.</p></div><div class="imp"><h3>Guidance where the work happens</h3><p>A place in the service to hold or link best-practice operational-plan guidance — a prompt, not a mandated wizard; the regs let schemes submit plans in any form, and a full wizard would be too heavy.</p></div><div class="imp"><h3>Assisted document review</h3><p>Tooling that scans an uploaded operational plan against the review questions. The EA is already exploring Copilot for this; in-service would be better.</p></div><div class="imp"><h3>Keep the per-step query</h3><p>Returning individual steps, and seeing every stage an application has been through, is valued — preserve it.</p></div><div class="imp"><h3>Keep the communications log</h3><p>A record of every notification sent, to prove who was told what and when.</p></div><div class="imp"><h3>Rethink the PIN</h3><p>Signing every action with a six-digit PIN adds friction without modern assurance — Defra ID sign-in replaces the model.</p></div></div>
+    <div class="fit">
+      <h2>Fit with the shared account model</h2>
+      <p>Seen end to end, the journey is mostly generic: create an organisation, create a user, apply, review, approve. Only the scheme rules, conviction declarations and operational plan are batteries-specific — the rest overlays almost exactly onto the Manage Account team’s EPR account structure. One caution from the EA: a name shared across waste streams is not a shared team. Valpack-the-packaging-scheme and Valpack-the-batteries-scheme are entirely different groups of people, so each waste stream needs its own scheme instance beneath any parent organisation — with a parent-level view for those who need the whole picture.</p>
+    </div>
+    <p class="footer">Source: BCS Registration meeting recording and transcript, 28 August 2026. All screenshots are from the NPWD stage environment; the “MPG” scheme and its users are invented test data. Full-resolution captures live alongside the recording in <span class="mono">screenshots/</span>.</p>
+  </section>
+</div>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged screenshot">
+  <span class="hint">esc / click to close</span>
+  <img alt="">
+</div>
+
+<script>
+(function () {
+  var lb = document.getElementById("lightbox");
+  var lbImg = lb.querySelector("img");
+  var lastFocus = null;
+  document.querySelectorAll(".shot-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      lastFocus = btn;
+      lbImg.src = btn.querySelector("img").src;
+      lbImg.alt = btn.querySelector("img").alt;
+      lb.classList.add("open");
+      document.body.style.overflow = "hidden";
+    });
+  });
+  function close() {
+    lb.classList.remove("open");
+    lbImg.src = "";
+    document.body.style.overflow = "";
+    if (lastFocus) lastFocus.focus();
+  }
+  lb.addEventListener("click", close);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && lb.classList.contains("open")) close();
+  });
+})();
+</script>
+
+</body>
+</html>
