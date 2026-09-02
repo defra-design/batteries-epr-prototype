@@ -77,6 +77,10 @@ The `/prototype` area journeys, built from the Figma design "NPWD — Small prod
 - `/compliance-scheme/evidence`, `/compliance-scheme/evidence/issue/{step}`, `/compliance-scheme/evidence/{evidenceId}`, `/compliance-scheme/evidence/{evidenceId}/transfer`, `/compliance-scheme/evidence/availability`
 - `/compliance-scheme/obligation` — obligation breakdown for the scheme's members
 
+### Showcase pages
+
+- `/alpha-assessment` — interactive presentation for the GDS alpha assessment team. The structure and body content are copied from the [Green List Waste discovery readout](https://defra.github.io/green-list-waste-discovery/) as a placeholder, re-themed blue with a battery-themed hero; content replacement is in progress. See `src/server/alphaAssessment/EXTRACT-TO-REPO.md` for the plan to move it to its own repo.
+
 ### Dev tools
 
 - `/dev/reset` — wipe all browser state and reseed demo data

@@ -12,7 +12,8 @@ export const landingController = {
       areas: pageContent.areas,
       playgroundUrl: paths.playground,
       prototypeUrl: paths.prototype,
-      bcsRegistrationWalkthroughUrl: paths.bcsRegistrationWalkthrough
+      bcsRegistrationWalkthroughUrl: paths.bcsRegistrationWalkthrough,
+      alphaAssessmentUrl: paths.alphaAssessment
     })
   }
 }

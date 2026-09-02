@@ -34,6 +34,12 @@ export const content = {
             description:
               'A screen-by-screen record of how a new Battery Compliance Scheme is registered and approved on the legacy NPWD system, captured from the Environment Agency walkthrough.',
             linkText: 'Open the walkthrough'
+          },
+          alphaAssessment: {
+            title: 'Alpha assessment presentation',
+            description:
+              'An interactive presentation of the Batteries EPR project for the GDS alpha assessment team. Currently a themed copy of the Green List Waste discovery readout while our content is produced.',
+            linkText: 'Open the presentation'
           }
         }
       },
@@ -53,6 +59,11 @@ export const content = {
             linkText: 'TODO welsh'
           },
           bcsRegistrationWalkthrough: {
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            linkText: 'TODO welsh'
+          },
+          alphaAssessment: {
             title: 'TODO welsh',
             description: 'TODO welsh',
             linkText: 'TODO welsh'

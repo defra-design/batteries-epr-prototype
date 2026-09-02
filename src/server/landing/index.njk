@@ -61,5 +61,22 @@
         </div>
       </div>
     </div>
+
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-summary-card" data-testid="landing-area-alpha-assessment">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">{{ areas.alphaAssessment.title }}</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <p class="govuk-body">{{ areas.alphaAssessment.description }}</p>
+          {{ govukButton({
+            text: areas.alphaAssessment.linkText,
+            href: alphaAssessmentUrl,
+            isStartButton: true,
+            attributes: { "data-testid": "landing-area-alpha-assessment-cta" }
+          }) }}
+        </div>
+      </div>
+    </div>
   </div>
 {% endblock %}

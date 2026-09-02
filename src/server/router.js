@@ -7,6 +7,7 @@ import { prototypeRegistration } from './prototype/registration/index.js'
 import { prototypeSubmission } from './prototype/submission/index.js'
 import { blueprint } from './blueprint/index.js'
 import { bcsRegistrationWalkthrough } from './bcsRegistrationWalkthrough/index.js'
+import { alphaAssessment } from './alphaAssessment/index.js'
 import { about } from './about/index.js'
 import { cookies } from './cookies/index.js'
 import { terms } from './terms/index.js'
@@ -98,6 +99,7 @@ export const router = {
         prototypeSubmission: prototypeSubmission.openRoutes,
         blueprint: blueprint.openRoutes,
         bcsRegistrationWalkthrough: bcsRegistrationWalkthrough.openRoutes,
+        alphaAssessment: alphaAssessment.openRoutes,
         about: about.openRoutes,
         cookies: cookies.openRoutes,
         terms: terms.openRoutes,
