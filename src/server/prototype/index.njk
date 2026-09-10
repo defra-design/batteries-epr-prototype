@@ -1,6 +1,7 @@
 {% extends 'layouts/page.njk' %}
 
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -10,39 +11,57 @@
     </div>
   </div>
 
-  <div class="govuk-grid-row app-task-cards" data-testid="prototype-journeys">
-    <div class="govuk-grid-column-one-half">
-      <div class="govuk-summary-card" data-testid="prototype-journey-registration">
-        <div class="govuk-summary-card__title-wrapper">
-          <h2 class="govuk-summary-card__title">{{ journeys.smallProducerRegistration.title }}</h2>
-        </div>
-        <div class="govuk-summary-card__content">
-          <p class="govuk-body">{{ journeys.smallProducerRegistration.description }}</p>
-          {{ govukButton({
-            text: journeys.smallProducerRegistration.linkText,
-            href: registrationUrl,
-            isStartButton: true,
-            attributes: { "data-testid": "prototype-journey-registration-cta" }
-          }) }}
-        </div>
-      </div>
-    </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full" data-testid="prototype-journeys">
+      {% for section in sections %}
+        <h2 class="govuk-heading-l" data-testid="prototype-section-{{ section.type }}">{{ section.heading }}</h2>
 
-    <div class="govuk-grid-column-one-half">
-      <div class="govuk-summary-card" data-testid="prototype-journey-submission">
-        <div class="govuk-summary-card__title-wrapper">
-          <h2 class="govuk-summary-card__title">{{ journeys.smallProducerSubmission.title }}</h2>
-        </div>
-        <div class="govuk-summary-card__content">
-          <p class="govuk-body">{{ journeys.smallProducerSubmission.description }}</p>
-          {{ govukButton({
-            text: journeys.smallProducerSubmission.linkText,
-            href: submissionUrl,
-            isStartButton: true,
-            attributes: { "data-testid": "prototype-journey-submission-cta" }
-          }) }}
-        </div>
-      </div>
+        {% for group in section.personaGroups %}
+          <h3 class="govuk-heading-m" data-testid="prototype-persona-heading-{{ section.type }}-{{ group.persona }}">{{ group.heading }}</h3>
+
+          {% for journey in group.journeys %}
+            <div class="govuk-summary-card" data-testid="prototype-journey-{{ journey.id }}">
+              <div class="govuk-summary-card__title-wrapper">
+                <h4 class="govuk-summary-card__title">{{ journey.title }}</h4>
+              </div>
+              <div class="govuk-summary-card__content">
+                <p class="govuk-body">{{ journey.description }}</p>
+                {% if journey.href %}
+                  {% if section.type == 'figma' %}
+                    {{ govukButton({
+                      text: journey.linkText + " (opens in new tab)",
+                      href: journey.href,
+                      isStartButton: true,
+                      attributes: {
+                        "data-testid": "prototype-journey-" + journey.id + "-cta",
+                        "target": "_blank",
+                        "rel": "noopener noreferrer"
+                      }
+                    }) }}
+                  {% else %}
+                    {{ govukButton({
+                      text: journey.linkText,
+                      href: journey.href,
+                      isStartButton: true,
+                      attributes: { "data-testid": "prototype-journey-" + journey.id + "-cta" }
+                    }) }}
+                  {% endif %}
+                {% elif journey.comingSoon %}
+                  <p data-testid="prototype-journey-{{ journey.id }}-coming-soon">
+                    {{ govukTag({ text: "Coming soon", classes: "govuk-tag--blue" }) }}
+                  </p>
+                {% else %}
+                  <p data-testid="prototype-journey-{{ journey.id }}-not-built">
+                    {{ govukTag({ text: "Not yet built", classes: "govuk-tag--grey" }) }}
+                  </p>
+                {% endif %}
+              </div>
+            </div>
+          {% else %}
+            <p class="govuk-body" data-testid="prototype-persona-group-{{ section.type }}-{{ group.persona }}-empty">No prototypes yet for this group.</p>
+          {% endfor %}
+        {% endfor %}
+      {% endfor %}
     </div>
   </div>
 

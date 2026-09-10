@@ -78,18 +78,173 @@ export const content = {
         heading: 'Prototype',
         intro:
           'This area is where new Battery EPR design prototypes will be built.',
+        sections: {
+          coded: 'Coded prototypes',
+          figma: 'Figma prototypes'
+        },
+        personas: {
+          producer: 'Producer',
+          complianceScheme: 'Compliance scheme',
+          operator: 'Treatment operator',
+          regulator: 'Regulator'
+        },
         journeys: {
           smallProducerRegistration: {
+            type: 'coded',
+            persona: 'producer',
             title: 'Small producer registration',
             description:
               'Register as a small producer of portable batteries — from the GOV.UK start page through organisation details, the appropriate person and compliance scheme membership to a submitted registration.',
             linkText: 'Start small producer registration'
           },
           smallProducerSubmission: {
+            type: 'coded',
+            persona: 'producer',
             title: 'Small producer annual data submission',
             description:
               'Sign in to your account, reconfirm your registration details and brand names, report the weight of portable batteries placed on the market by chemistry, and pay the £30 submission fee.',
             linkText: 'Start annual data submission'
+          },
+          complianceSchemeQuarterlySubmission: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title: 'Compliance scheme quarterly PoM submission',
+            description:
+              'Quarterly submission of placed-on-market battery data by an approved compliance scheme on behalf of its members.',
+            linkText: 'Start journey'
+          },
+          bcsEnquiresHowToApply: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title:
+              'BCS enquires about how to apply to operate a batteries producer compliance scheme',
+            description: '',
+            comingSoon: true
+          },
+          bcsReceivesRegisterLink: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title:
+              'BCS receives register as a compliance scheme link and begins application process',
+            description: '',
+            comingSoon: true
+          },
+          bcsReceivesAccountCreationLink: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title:
+              'BCS receives scheme account creation link and creates account',
+            description: '',
+            comingSoon: true
+          },
+          bcsAuthorisedSignatoryConfirms: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title: 'Authorised signatory receives an email to confirm',
+            description: '',
+            comingSoon: true
+          },
+          bcsReceivesRegistrationDecision: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title: 'BCS receives regulator decision on registration',
+            description: '',
+            comingSoon: true
+          },
+          bcsRegistration: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title: 'BCS registration',
+            description: '',
+            comingSoon: true
+          },
+          bcsSendsMembersList: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title: 'BCS sends regulator members list',
+            description: '',
+            comingSoon: true
+          },
+          bcsReceivesAcceptanceAndPaysFee: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title: 'BCS receives registration acceptance and pays fee',
+            description: '',
+            comingSoon: true
+          },
+          bcsSubmissionOfWasteData: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title: 'BCS submission of waste data',
+            description: '',
+            comingSoon: true
+          },
+          bcsReceivesPomDecisionAndResubmits: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title:
+              'BCS receives a PoM submission accept or reject and resubmits',
+            description: '',
+            comingSoon: true
+          },
+          abtoGeneratesEvidenceNote: {
+            type: 'coded',
+            persona: 'operator',
+            title: 'ABTO generates evidence note',
+            description: '',
+            comingSoon: true
+          },
+          abtoReceivesNotesDecision: {
+            type: 'coded',
+            persona: 'operator',
+            title: 'ABTO receives notes decision',
+            description: '',
+            comingSoon: true
+          },
+          abtoTreatsOrRecyclesBatteries: {
+            type: 'coded',
+            persona: 'operator',
+            title:
+              'ABTO takes in the batteries the BCS handed over and treats or recycles them across the quarter',
+            description: '',
+            comingSoon: true
+          },
+          abtoMakesWasteSubmission: {
+            type: 'coded',
+            persona: 'operator',
+            title: 'ABTO makes waste submission',
+            description: '',
+            comingSoon: true
+          },
+          abtoReceivesQueryAndResponds: {
+            type: 'coded',
+            persona: 'operator',
+            title: 'ABTO receives query and responds',
+            description: '',
+            comingSoon: true
+          },
+          regulatorReceivesPomSubmission: {
+            type: 'coded',
+            persona: 'regulator',
+            title: 'PoM submission received by regulator',
+            description: '',
+            comingSoon: true
+          },
+          regulatorReviewsAbtoWasteFigures: {
+            type: 'coded',
+            persona: 'regulator',
+            title: "Regulator reviews ABTO's submitted waste figures",
+            description: '',
+            comingSoon: true
+          },
+          bcsRegulatorReview: {
+            type: 'figma',
+            persona: 'regulator',
+            title: 'BCS: Regulator review journey',
+            description:
+              'Figma designs for the regulator dashboard, automated findings, swing/variance table and accept, query or reject decision flow.',
+            linkText: 'Open in Figma',
+            href: 'https://www.figma.com/design/bYwqXLtafJh9OGWE9J7hqd/BCS'
           }
         },
         backLinkText: 'Back to Battery EPR prototypes'
@@ -98,16 +253,164 @@ export const content = {
         title: 'TODO welsh',
         heading: 'TODO welsh',
         intro: 'TODO welsh',
+        sections: {
+          coded: 'TODO welsh',
+          figma: 'TODO welsh'
+        },
+        personas: {
+          producer: 'TODO welsh',
+          complianceScheme: 'TODO welsh',
+          operator: 'TODO welsh',
+          regulator: 'TODO welsh'
+        },
         journeys: {
           smallProducerRegistration: {
+            type: 'coded',
+            persona: 'producer',
             title: 'TODO welsh',
             description: 'TODO welsh',
             linkText: 'TODO welsh'
           },
           smallProducerSubmission: {
+            type: 'coded',
+            persona: 'producer',
             title: 'TODO welsh',
             description: 'TODO welsh',
             linkText: 'TODO welsh'
+          },
+          complianceSchemeQuarterlySubmission: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            linkText: 'TODO welsh'
+          },
+          bcsEnquiresHowToApply: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            comingSoon: true
+          },
+          bcsReceivesRegisterLink: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            comingSoon: true
+          },
+          bcsReceivesAccountCreationLink: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            comingSoon: true
+          },
+          bcsAuthorisedSignatoryConfirms: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            comingSoon: true
+          },
+          bcsReceivesRegistrationDecision: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            comingSoon: true
+          },
+          bcsRegistration: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            comingSoon: true
+          },
+          bcsSendsMembersList: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            comingSoon: true
+          },
+          bcsReceivesAcceptanceAndPaysFee: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            comingSoon: true
+          },
+          bcsSubmissionOfWasteData: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            comingSoon: true
+          },
+          bcsReceivesPomDecisionAndResubmits: {
+            type: 'coded',
+            persona: 'complianceScheme',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            comingSoon: true
+          },
+          abtoGeneratesEvidenceNote: {
+            type: 'coded',
+            persona: 'operator',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            comingSoon: true
+          },
+          abtoReceivesNotesDecision: {
+            type: 'coded',
+            persona: 'operator',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            comingSoon: true
+          },
+          abtoTreatsOrRecyclesBatteries: {
+            type: 'coded',
+            persona: 'operator',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            comingSoon: true
+          },
+          abtoMakesWasteSubmission: {
+            type: 'coded',
+            persona: 'operator',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            comingSoon: true
+          },
+          abtoReceivesQueryAndResponds: {
+            type: 'coded',
+            persona: 'operator',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            comingSoon: true
+          },
+          regulatorReceivesPomSubmission: {
+            type: 'coded',
+            persona: 'regulator',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            comingSoon: true
+          },
+          regulatorReviewsAbtoWasteFigures: {
+            type: 'coded',
+            persona: 'regulator',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            comingSoon: true
+          },
+          bcsRegulatorReview: {
+            type: 'figma',
+            persona: 'regulator',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            linkText: 'TODO welsh',
+            href: 'https://www.figma.com/design/bYwqXLtafJh9OGWE9J7hqd/BCS'
           }
         },
         backLinkText: 'TODO welsh'
