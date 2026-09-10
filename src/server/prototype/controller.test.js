@@ -178,6 +178,10 @@ describe('#prototypeController', () => {
     const pageContent = content.prototype({})
     const journey = pageContent.journeys.bcsEnquiresHowToApply
     expect(result).toEqual(expect.stringContaining(journey.title))
+    expect(journey.description).not.toEqual('')
+    expect(result).toEqual(
+      expect.stringContaining(journey.description.replace(/'/g, '&#39;'))
+    )
     expect(result).toEqual(
       expect.stringContaining(
         'data-testid="prototype-journey-bcsEnquiresHowToApply-coming-soon"'
@@ -200,6 +204,8 @@ describe('#prototypeController', () => {
     const pageContent = content.prototype({})
     const journey = pageContent.journeys.abtoGeneratesEvidenceNote
     expect(result).toEqual(expect.stringContaining(journey.title))
+    expect(journey.description).not.toEqual('')
+    expect(result).toEqual(expect.stringContaining(journey.description))
     expect(result).toEqual(
       expect.stringContaining(
         'data-testid="prototype-journey-abtoGeneratesEvidenceNote-coming-soon"'
@@ -225,11 +231,27 @@ describe('#prototypeController', () => {
     const pageContent = content.prototype({})
     const journey = pageContent.journeys.regulatorReceivesPomSubmission
     expect(result).toEqual(expect.stringContaining(journey.title))
+    expect(journey.description).not.toEqual('')
+    expect(result).toEqual(
+      expect.stringContaining(journey.description.replace(/'/g, '&#39;'))
+    )
     expect(result).toEqual(
       expect.stringContaining(
         'data-testid="prototype-journey-regulatorReceivesPomSubmission-coming-soon"'
       )
     )
+  })
+
+  test('every coming soon journey in the coded section has a non-empty description', () => {
+    const pageContent = content.prototype({})
+    const comingSoonJourneys = Object.values(pageContent.journeys).filter(
+      (journey) => journey.comingSoon
+    )
+
+    expect(comingSoonJourneys.length).toBeGreaterThan(0)
+    comingSoonJourneys.forEach((journey) => {
+      expect(journey.description).not.toEqual('')
+    })
   })
 
   test('renders the journey card linking to the compliance scheme sign in', async () => {

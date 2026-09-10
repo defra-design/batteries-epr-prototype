@@ -118,7 +118,8 @@ export const content = {
             persona: 'complianceScheme',
             title:
               'BCS enquires about how to apply to operate a batteries producer compliance scheme',
-            description: '',
+            description:
+              "A prospective scheme operator finds out what's involved in running a batteries producer compliance scheme and whether they're eligible.",
             comingSoon: true
           },
           bcsReceivesRegisterLink: {
@@ -126,7 +127,8 @@ export const content = {
             persona: 'complianceScheme',
             title:
               'BCS receives register as a compliance scheme link and begins application process',
-            description: '',
+            description:
+              'The operator follows a registration link and starts the application to become an approved compliance scheme.',
             comingSoon: true
           },
           bcsReceivesAccountCreationLink: {
@@ -134,49 +136,56 @@ export const content = {
             persona: 'complianceScheme',
             title:
               'BCS receives scheme account creation link and creates account',
-            description: '',
+            description:
+              'The operator sets up their scheme account so they can complete the application.',
             comingSoon: true
           },
           bcsAuthorisedSignatoryConfirms: {
             type: 'coded',
             persona: 'complianceScheme',
             title: 'Authorised signatory receives an email to confirm',
-            description: '',
+            description:
+              'The person named as authorised signatory receives an email and confirms they hold that role for the scheme.',
             comingSoon: true
           },
           bcsReceivesRegistrationDecision: {
             type: 'coded',
             persona: 'complianceScheme',
             title: 'BCS receives regulator decision on registration',
-            description: '',
+            description:
+              'The scheme is told whether the regulator has approved or refused its application to operate.',
             comingSoon: true
           },
           bcsRegistration: {
             type: 'coded',
             persona: 'complianceScheme',
             title: 'BCS registration',
-            description: '',
+            description:
+              'The scheme completes its registration details with the regulator.',
             comingSoon: true
           },
           bcsSendsMembersList: {
             type: 'coded',
             persona: 'complianceScheme',
             title: 'BCS sends regulator members list',
-            description: '',
+            description:
+              'The scheme submits the list of producers registered as its members.',
             comingSoon: true
           },
           bcsReceivesAcceptanceAndPaysFee: {
             type: 'coded',
             persona: 'complianceScheme',
             title: 'BCS receives registration acceptance and pays fee',
-            description: '',
+            description:
+              'The scheme is accepted and pays the registration fee.',
             comingSoon: true
           },
           bcsSubmissionOfWasteData: {
             type: 'coded',
             persona: 'complianceScheme',
             title: 'BCS submission of waste data',
-            description: '',
+            description:
+              'The scheme reports waste batteries collected across the quarter.',
             comingSoon: true
           },
           bcsReceivesPomDecisionAndResubmits: {
@@ -184,21 +193,24 @@ export const content = {
             persona: 'complianceScheme',
             title:
               'BCS receives a PoM submission accept or reject and resubmits',
-            description: '',
+            description:
+              'The scheme is told its placed-on-market submission was accepted, queried or rejected, and corrects and resubmits where needed.',
             comingSoon: true
           },
           abtoGeneratesEvidenceNote: {
             type: 'coded',
             persona: 'operator',
             title: 'ABTO generates evidence note',
-            description: '',
+            description:
+              'An approved treatment operator issues an evidence note for batteries it has treated.',
             comingSoon: true
           },
           abtoReceivesNotesDecision: {
             type: 'coded',
             persona: 'operator',
             title: 'ABTO receives notes decision',
-            description: '',
+            description:
+              'The operator is told whether its evidence notes have been accepted or rejected.',
             comingSoon: true
           },
           abtoTreatsOrRecyclesBatteries: {
@@ -206,35 +218,40 @@ export const content = {
             persona: 'operator',
             title:
               'ABTO takes in the batteries the BCS handed over and treats or recycles them across the quarter',
-            description: '',
+            description:
+              'The operator receives batteries handed over by a compliance scheme and treats or recycles them across the quarter.',
             comingSoon: true
           },
           abtoMakesWasteSubmission: {
             type: 'coded',
             persona: 'operator',
             title: 'ABTO makes waste submission',
-            description: '',
+            description:
+              'The operator reports the tonnage it has treated for the quarter.',
             comingSoon: true
           },
           abtoReceivesQueryAndResponds: {
             type: 'coded',
             persona: 'operator',
             title: 'ABTO receives query and responds',
-            description: '',
+            description:
+              'The operator answers a regulator query about figures it has submitted.',
             comingSoon: true
           },
           regulatorReceivesPomSubmission: {
             type: 'coded',
             persona: 'regulator',
             title: 'PoM submission received by regulator',
-            description: '',
+            description:
+              "The regulator reviews a compliance scheme's placed-on-market return and accepts, queries or rejects it.",
             comingSoon: true
           },
           regulatorReviewsAbtoWasteFigures: {
             type: 'coded',
             persona: 'regulator',
             title: "Regulator reviews ABTO's submitted waste figures",
-            description: '',
+            description:
+              'The regulator checks the tonnages an approved treatment operator has reported.',
             comingSoon: true
           },
           bcsRegulatorReview: {
