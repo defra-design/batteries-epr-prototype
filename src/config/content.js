@@ -205,7 +205,8 @@ export const content = {
             persona: 'regulator',
             title: 'PoM submission received by regulator',
             description:
-              "The regulator reviews a compliance scheme's placed-on-market return and accepts, queries or rejects it."
+              "The regulator reviews a compliance scheme's placed-on-market return and accepts, queries or rejects it.",
+            figmaHref: 'https://cow-true-59622750.figma.site/'
           },
           regulatorReviewsAbtoWasteFigures: {
             persona: 'regulator',
@@ -331,7 +332,8 @@ export const content = {
           regulatorReceivesPomSubmission: {
             persona: 'regulator',
             title: 'TODO welsh',
-            description: 'TODO welsh'
+            description: 'TODO welsh',
+            figmaHref: 'https://cow-true-59622750.figma.site/'
           },
           regulatorReviewsAbtoWasteFigures: {
             persona: 'regulator',

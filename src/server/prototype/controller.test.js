@@ -198,13 +198,46 @@ describe('#prototypeController', () => {
     })
 
     const pageContent = content.prototype({})
-    const journey = pageContent.journeys.regulatorReceivesPomSubmission
-    expect(result).toEqual(expect.stringContaining(journey.title))
+    const journey = pageContent.journeys.regulatorReviewsAbtoWasteFigures
+    expect(result).toEqual(
+      expect.stringContaining(journey.title.replace(/'/g, '&#39;'))
+    )
     expect(journey.description).not.toEqual('')
     expect(result).toEqual(
       expect.stringContaining(journey.description.replace(/'/g, '&#39;'))
     )
     expect(result).toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-regulatorReviewsAbtoWasteFigures-coming-soon"'
+      )
+    )
+  })
+
+  test('renders the PoM submission received by regulator journey with a Figma link, opening in a new tab', async () => {
+    const { result } = await server.inject({
+      method: 'GET',
+      url: paths.prototype
+    })
+
+    const pageContent = content.prototype({})
+    const journey = pageContent.journeys.regulatorReceivesPomSubmission
+    expect(result).toEqual(expect.stringContaining(journey.title))
+    expect(result).toEqual(
+      expect.stringContaining(journey.description.replace(/'/g, '&#39;'))
+    )
+
+    const cta = result.match(
+      /<a[^>]*data-testid="prototype-journey-regulatorReceivesPomSubmission-figma-cta"[^>]*>/
+    )[0]
+    expect(cta).toEqual(expect.stringContaining(`href="${journey.figmaHref}"`))
+    expect(cta).toEqual(expect.stringContaining('target="_blank"'))
+    expect(cta).toEqual(expect.stringContaining('rel="noopener noreferrer"'))
+    expect(result).not.toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-regulatorReceivesPomSubmission-coded-cta"'
+      )
+    )
+    expect(result).not.toEqual(
       expect.stringContaining(
         'data-testid="prototype-journey-regulatorReceivesPomSubmission-coming-soon"'
       )
