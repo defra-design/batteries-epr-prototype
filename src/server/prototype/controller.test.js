@@ -3,6 +3,12 @@ import { initialiseServer } from '../../test-utils/initialise-server.js'
 import { paths } from '../../config/paths.js'
 import { content } from '../../config/content.js'
 
+const CODED_JOURNEY_IDS = new Set([
+  'smallProducerRegistration',
+  'smallProducerSubmission',
+  'complianceSchemeQuarterlySubmission'
+])
+
 describe('#prototypeController', () => {
   let server
 
@@ -31,7 +37,7 @@ describe('#prototypeController', () => {
     )
     expect(result).toEqual(
       expect.stringContaining(
-        'data-testid="prototype-journey-smallProducerRegistration-cta"'
+        'data-testid="prototype-journey-smallProducerRegistration-coded-cta"'
       )
     )
     expect(result).toEqual(
@@ -39,7 +45,7 @@ describe('#prototypeController', () => {
     )
     expect(result).toEqual(
       expect.stringContaining(
-        'data-testid="prototype-journey-smallProducerSubmission-cta"'
+        'data-testid="prototype-journey-smallProducerSubmission-coded-cta"'
       )
     )
     expect(result).toEqual(
@@ -51,31 +57,17 @@ describe('#prototypeController', () => {
     expect(result).toEqual(expect.stringContaining(`href="${paths.home}"`))
   })
 
-  test('renders two headed sections, Coded prototypes before Figma prototypes, not tabs', async () => {
+  test('renders a single list of journeys grouped by persona, not split into coded/figma sections or tabs', async () => {
     const { result } = await server.inject({
       method: 'GET',
       url: paths.prototype
     })
 
-    const pageContent = content.prototype({})
-    expect(result).toEqual(
-      expect.stringContaining('data-testid="prototype-section-coded"')
-    )
-    expect(result).toEqual(
-      expect.stringContaining('data-testid="prototype-section-figma"')
-    )
-    expect(result).toEqual(expect.stringContaining(pageContent.sections.coded))
-    expect(result).toEqual(expect.stringContaining(pageContent.sections.figma))
-
-    const codedIndex = result.indexOf('data-testid="prototype-section-coded"')
-    const figmaIndex = result.indexOf('data-testid="prototype-section-figma"')
-    expect(codedIndex).toBeGreaterThan(-1)
-    expect(figmaIndex).toBeGreaterThan(codedIndex)
-
+    expect(result).not.toEqual(expect.stringContaining('prototype-section-'))
     expect(result).not.toEqual(expect.stringContaining('govuk-tabs'))
   })
 
-  test('groups journeys by persona within the coded section, in persona order', async () => {
+  test('groups journeys by persona, in persona order', async () => {
     const { result } = await server.inject({
       method: 'GET',
       url: paths.prototype
@@ -83,16 +75,16 @@ describe('#prototypeController', () => {
 
     const pageContent = content.prototype({})
     const producerIndex = result.indexOf(
-      'data-testid="prototype-persona-heading-coded-producer"'
+      'data-testid="prototype-persona-heading-producer"'
     )
     const complianceSchemeIndex = result.indexOf(
-      'data-testid="prototype-persona-heading-coded-complianceScheme"'
+      'data-testid="prototype-persona-heading-complianceScheme"'
     )
     const operatorIndex = result.indexOf(
-      'data-testid="prototype-persona-heading-coded-operator"'
+      'data-testid="prototype-persona-heading-operator"'
     )
     const regulatorIndex = result.indexOf(
-      'data-testid="prototype-persona-heading-coded-regulator"'
+      'data-testid="prototype-persona-heading-regulator"'
     )
 
     expect(producerIndex).toBeGreaterThan(-1)
@@ -113,30 +105,7 @@ describe('#prototypeController', () => {
     )
   })
 
-  test('renders an empty state for figma persona groups with no journeys', async () => {
-    const { result } = await server.inject({
-      method: 'GET',
-      url: paths.prototype
-    })
-
-    expect(result).toEqual(
-      expect.stringContaining(
-        'data-testid="prototype-persona-group-figma-producer-empty"'
-      )
-    )
-    expect(result).toEqual(
-      expect.stringContaining(
-        'data-testid="prototype-persona-group-figma-complianceScheme-empty"'
-      )
-    )
-    expect(result).toEqual(
-      expect.stringContaining(
-        'data-testid="prototype-persona-group-figma-operator-empty"'
-      )
-    )
-  })
-
-  test('does not render an empty state for a persona group with journeys', async () => {
+  test('does not render an empty state for any persona group', async () => {
     const { result } = await server.inject({
       method: 'GET',
       url: paths.prototype
@@ -144,32 +113,27 @@ describe('#prototypeController', () => {
 
     expect(result).not.toEqual(
       expect.stringContaining(
-        'data-testid="prototype-persona-group-coded-producer-empty"'
+        'data-testid="prototype-persona-group-producer-empty"'
       )
     )
     expect(result).not.toEqual(
       expect.stringContaining(
-        'data-testid="prototype-persona-group-coded-complianceScheme-empty"'
+        'data-testid="prototype-persona-group-complianceScheme-empty"'
       )
     )
     expect(result).not.toEqual(
       expect.stringContaining(
-        'data-testid="prototype-persona-group-coded-operator-empty"'
+        'data-testid="prototype-persona-group-operator-empty"'
       )
     )
     expect(result).not.toEqual(
       expect.stringContaining(
-        'data-testid="prototype-persona-group-coded-regulator-empty"'
-      )
-    )
-    expect(result).not.toEqual(
-      expect.stringContaining(
-        'data-testid="prototype-persona-group-figma-regulator-empty"'
+        'data-testid="prototype-persona-group-regulator-empty"'
       )
     )
   })
 
-  test('renders coming soon journeys with a tag and no start link', async () => {
+  test('renders coming soon journeys with a tag and no links', async () => {
     const { result } = await server.inject({
       method: 'GET',
       url: paths.prototype
@@ -189,7 +153,12 @@ describe('#prototypeController', () => {
     )
     expect(result).not.toEqual(
       expect.stringContaining(
-        'data-testid="prototype-journey-bcsEnquiresHowToApply-cta"'
+        'data-testid="prototype-journey-bcsEnquiresHowToApply-coded-cta"'
+      )
+    )
+    expect(result).not.toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-bcsEnquiresHowToApply-figma-cta"'
       )
     )
     expect(result).toEqual(expect.stringContaining('Coming soon'))
@@ -213,7 +182,7 @@ describe('#prototypeController', () => {
     )
 
     const operatorHeadingIndex = result.indexOf(
-      'data-testid="prototype-persona-heading-coded-operator"'
+      'data-testid="prototype-persona-heading-operator"'
     )
     const journeyIndex = result.indexOf(
       'data-testid="prototype-journey-abtoGeneratesEvidenceNote"'
@@ -242,11 +211,13 @@ describe('#prototypeController', () => {
     )
   })
 
-  test('every coming soon journey in the coded section has a non-empty description', () => {
+  test('every journey without a coded or figma link has a non-empty description', () => {
     const pageContent = content.prototype({})
-    const comingSoonJourneys = Object.values(pageContent.journeys).filter(
-      (journey) => journey.comingSoon
-    )
+    const comingSoonJourneys = Object.entries(pageContent.journeys)
+      .filter(
+        ([id, journey]) => !CODED_JOURNEY_IDS.has(id) && !journey.figmaHref
+      )
+      .map(([, journey]) => journey)
 
     expect(comingSoonJourneys.length).toBeGreaterThan(0)
     comingSoonJourneys.forEach((journey) => {
@@ -273,7 +244,7 @@ describe('#prototypeController', () => {
     )
     expect(result).toEqual(
       expect.stringContaining(
-        'data-testid="prototype-journey-complianceSchemeQuarterlySubmission-cta"'
+        'data-testid="prototype-journey-complianceSchemeQuarterlySubmission-coded-cta"'
       )
     )
     expect(result).toEqual(
@@ -281,17 +252,12 @@ describe('#prototypeController', () => {
         `href="${paths.prototypeComplianceSchemeSubmissionSignIn}"`
       )
     )
-    expect(result).toEqual(
-      expect.stringContaining(
-        pageContent.journeys.complianceSchemeQuarterlySubmission.linkText
-      )
-    )
+    expect(result).toEqual(expect.stringContaining(pageContent.links.coded))
     expect(result).not.toEqual(
       expect.stringContaining(
-        'data-testid="prototype-journey-complianceSchemeQuarterlySubmission-not-built"'
+        'data-testid="prototype-journey-complianceSchemeQuarterlySubmission-coming-soon"'
       )
     )
-    expect(result).not.toEqual(expect.stringContaining('Not yet built'))
     expect(result).not.toEqual(
       expect.stringContaining('/compliance-scheme/quarterly')
     )
@@ -309,13 +275,20 @@ describe('#prototypeController', () => {
     expect(result).toEqual(expect.stringContaining(figmaJourney.description))
 
     const cta = result.match(
-      /<a[^>]*data-testid="prototype-journey-bcsRegulatorReview-cta"[^>]*>/
+      /<a[^>]*data-testid="prototype-journey-bcsRegulatorReview-figma-cta"[^>]*>/
     )[0]
-    expect(cta).toEqual(expect.stringContaining(`href="${figmaJourney.href}"`))
+    expect(cta).toEqual(
+      expect.stringContaining(`href="${figmaJourney.figmaHref}"`)
+    )
     expect(cta).toEqual(expect.stringContaining('target="_blank"'))
     expect(cta).toEqual(expect.stringContaining('rel="noopener noreferrer"'))
     expect(result).toEqual(
-      expect.stringContaining(`${figmaJourney.linkText} (opens in new tab)`)
+      expect.stringContaining(`${pageContent.links.figma} (opens in new tab)`)
+    )
+    expect(result).not.toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-bcsRegulatorReview-coded-cta"'
+      )
     )
   })
 
@@ -326,7 +299,7 @@ describe('#prototypeController', () => {
     })
 
     const cta = result.match(
-      /<a[^>]*data-testid="prototype-journey-smallProducerRegistration-cta"[^>]*>/
+      /<a[^>]*data-testid="prototype-journey-smallProducerRegistration-coded-cta"[^>]*>/
     )[0]
     expect(cta).not.toEqual(expect.stringContaining('target="_blank"'))
   })
