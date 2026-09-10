@@ -1,0 +1,32 @@
+{% extends 'layouts/page.njk' %}
+
+{% block head %}
+  {{ super() }}
+  <meta http-equiv="refresh" content="5;url={{ nextStep }}">
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <span class="govuk-caption-l" data-testid="uploading-caption">{{ caption }}</span>
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+      <p class="govuk-body" data-testid="uploading-checking">{{ checkingBody }}</p>
+      <p class="govuk-body">{{ labels.body1 }}</p>
+      <p class="govuk-body">{{ labels.body2 }}</p>
+
+      <div class="app-spinner" aria-hidden="true" data-testid="uploading-spinner"></div>
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="{{ nextStep }}" data-testid="uploading-continue">{{ labels.continueLink }}</a>
+      </p>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('prototypeComplianceScheme.js') }}"></script>
+{% endblock %}

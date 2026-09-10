@@ -1,0 +1,11 @@
+{% macro complianceSchemeTabs(tabs, tabsLabel) %}
+  <nav class="govuk-tabs" aria-label="{{ tabsLabel }}" data-testid="compliance-scheme-tabs">
+    <ul class="govuk-tabs__list">
+      {% for tab in tabs %}
+        <li class="govuk-tabs__list-item{% if tab.current %} govuk-tabs__list-item--selected{% endif %}">
+          <a class="govuk-tabs__tab" href="{{ tab.href }}" data-testid="compliance-scheme-tab-{{ tab.id }}">{{ tab.text }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+{% endmacro %}

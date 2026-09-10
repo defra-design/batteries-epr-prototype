@@ -31,6 +31,8 @@ export default {
     onboarding: './javascripts/onboarding/entry.js',
     prototypeRegistration: './javascripts/prototype/registration/entry.js',
     prototypeSubmission: './javascripts/prototype/submission/entry.js',
+    prototypeComplianceScheme:
+      './javascripts/prototype/complianceScheme/entry.js',
     onboardingConfirmation: './javascripts/onboardingConfirmation/entry.js',
     annualReturnSmallTonnages:
       './javascripts/annualReturn/smallProducer/tonnages/entry.js',

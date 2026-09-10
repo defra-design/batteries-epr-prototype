@@ -1,5 +1,5 @@
 {
-  "seedVersion": 14,
+  "seedVersion": 17,
   "regulatorCategories": {
     "EA": [
       {
@@ -1571,6 +1571,171 @@
       "contactEmail": "approvals@northfieldbp.co.uk",
       "createdAt": "2026-04-18T00:00:00Z",
       "updatedAt": "2026-04-20T00:00:00Z"
+    }
+  ],
+  "prototypeComplianceSchemeMembers": [
+    {
+      "id": "55555555-0001-4000-a000-000000000001",
+      "version": 0,
+      "schemeId": null,
+      "producerBprn": null,
+      "producerEmail": null,
+      "companyName": "Halton Battery Processing Ltd",
+      "companyRegistrationNo": "07456123",
+      "compliancePeriod": "2026",
+      "status": "active",
+      "joinedOn": "2024-01-12T00:00:00Z",
+      "acceptedOn": "2024-01-12T00:00:00Z",
+      "leftOn": null,
+      "reasonForLeaving": null,
+      "replacedById": null,
+      "createdAt": "2024-01-12T00:00:00Z",
+      "updatedAt": "2024-01-12T00:00:00Z"
+    },
+    {
+      "id": "55555555-0001-4000-a000-000000000002",
+      "version": 0,
+      "schemeId": null,
+      "producerBprn": null,
+      "producerEmail": null,
+      "companyName": "Ecobat Treatment (Nottingham)",
+      "companyRegistrationNo": "05821990",
+      "compliancePeriod": "2026",
+      "status": "active",
+      "joinedOn": "2024-03-03T00:00:00Z",
+      "acceptedOn": "2024-03-03T00:00:00Z",
+      "leftOn": null,
+      "reasonForLeaving": null,
+      "replacedById": null,
+      "createdAt": "2024-03-03T00:00:00Z",
+      "updatedAt": "2024-03-03T00:00:00Z"
+    },
+    {
+      "id": "55555555-0001-4000-a000-000000000003",
+      "version": 0,
+      "schemeId": null,
+      "producerBprn": null,
+      "producerEmail": null,
+      "companyName": "Northgate Retail Group plc",
+      "companyRegistrationNo": "09234871",
+      "compliancePeriod": "2026",
+      "status": "active",
+      "joinedOn": "2024-06-28T00:00:00Z",
+      "acceptedOn": "2024-06-28T00:00:00Z",
+      "leftOn": null,
+      "reasonForLeaving": null,
+      "replacedById": null,
+      "createdAt": "2024-06-28T00:00:00Z",
+      "updatedAt": "2024-06-28T00:00:00Z"
+    },
+    {
+      "id": "55555555-0001-4000-a000-000000000004",
+      "version": 0,
+      "schemeId": null,
+      "producerBprn": null,
+      "producerEmail": null,
+      "companyName": "Aldermoor Home & Garden Ltd",
+      "companyRegistrationNo": "11098345",
+      "compliancePeriod": "2026",
+      "status": "pendingReview",
+      "joinedOn": "2025-02-15T00:00:00Z",
+      "acceptedOn": null,
+      "leftOn": null,
+      "reasonForLeaving": null,
+      "replacedById": null,
+      "createdAt": "2025-02-15T00:00:00Z",
+      "updatedAt": "2025-02-15T00:00:00Z"
+    },
+    {
+      "id": "55555555-0001-4000-a000-000000000005",
+      "version": 0,
+      "schemeId": null,
+      "producerBprn": null,
+      "producerEmail": null,
+      "companyName": "Valpak Compliance Partners",
+      "companyRegistrationNo": "03345621",
+      "compliancePeriod": "2026",
+      "status": "active",
+      "joinedOn": "2025-09-09T00:00:00Z",
+      "acceptedOn": "2025-09-09T00:00:00Z",
+      "leftOn": null,
+      "reasonForLeaving": null,
+      "replacedById": null,
+      "createdAt": "2025-09-09T00:00:00Z",
+      "updatedAt": "2025-09-09T00:00:00Z"
+    }
+  ],
+  "prototypeComplianceSchemeQuarters": [
+    {
+      "id": "66666666-0001-4000-a000-000000000001",
+      "version": 0,
+      "year": 2026,
+      "quarter": 1,
+      "availableOn": "2026-04-01",
+      "dueOn": "2026-04-30",
+      "status": "submitted",
+      "note": "Submitted on 30 Jun 2026",
+      "createdAt": "2026-04-01T00:00:00Z",
+      "updatedAt": "2026-06-30T00:00:00Z"
+    },
+    {
+      "id": "66666666-0001-4000-a000-000000000002",
+      "version": 0,
+      "year": 2026,
+      "quarter": 2,
+      "availableOn": "2026-07-01",
+      "dueOn": "2026-07-31",
+      "status": "open",
+      "note": "25 days left (30 Sep)",
+      "createdAt": "2026-07-01T00:00:00Z",
+      "updatedAt": "2026-07-01T00:00:00Z"
+    },
+    {
+      "id": "66666666-0001-4000-a000-000000000003",
+      "version": 0,
+      "year": 2026,
+      "quarter": 3,
+      "availableOn": "2026-10-01",
+      "dueOn": "2026-10-31",
+      "status": "notYetOpen",
+      "note": "Opens 1 Oct 2026",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z"
+    },
+    {
+      "id": "66666666-0001-4000-a000-000000000004",
+      "version": 0,
+      "year": 2026,
+      "quarter": 4,
+      "availableOn": "2027-01-01",
+      "dueOn": "2027-01-31",
+      "status": "notYetOpen",
+      "note": "Opens 1 Jan 2027",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z"
+    }
+  ],
+  "prototypeComplianceSchemeUploadErrors": [
+    {
+      "id": "77777777-0001-4000-a000-000000000001",
+      "error": "Chemistry code is required",
+      "row": 3,
+      "column": "chemistry_code",
+      "howToFix": "Add a chemistry code. Use one of: PBA (Lead-acid), NCD (Ni-Cad), NMH (Nickel Metal Hydride), LIO (Lithium-ion), ALK (Alkaline), OTH (Other)."
+    },
+    {
+      "id": "77777777-0001-4000-a000-000000000002",
+      "error": "Tonnage must be a number",
+      "row": 5,
+      "column": "tonnage_kg",
+      "howToFix": "Enter weight as a whole number. Enter kilograms without units, commas or letters – for example, 1000 for 1,000 kg."
+    },
+    {
+      "id": "77777777-0001-4000-a000-000000000003",
+      "error": "Category code is required",
+      "row": 7,
+      "column": "category_code",
+      "howToFix": "Add a category code. Use one of: GEN (General use), CBC (Coin & button cells), LMT (Light means of transport), OTH (Other)."
     }
   ]
 }

@@ -76,6 +76,27 @@ export const paths = {
   prototypeSubmissionPaymentConfirmed:
     '/prototype/small-producer/submission/payment-confirmed',
 
+  prototypeComplianceSchemeSubmissionSignIn:
+    '/prototype/compliance-scheme/pom-submission/sign-in',
+  prototypeComplianceSchemeSubmissionDashboard:
+    '/prototype/compliance-scheme/pom-submission/dashboard',
+  prototypeComplianceSchemeSubmissionMembers:
+    '/prototype/compliance-scheme/pom-submission/members',
+  prototypeComplianceSchemeSubmissionSubmissions:
+    '/prototype/compliance-scheme/pom-submission/submissions',
+  prototypeComplianceSchemeSubmissionBeforeYouStart:
+    '/prototype/compliance-scheme/pom-submission/{year}/{quarter}/before-you-start',
+  prototypeComplianceSchemeSubmissionReportingMethod:
+    '/prototype/compliance-scheme/pom-submission/{year}/{quarter}/reporting-method',
+  prototypeComplianceSchemeSubmissionBulkUpload:
+    '/prototype/compliance-scheme/pom-submission/{year}/{quarter}/bulk-upload',
+  prototypeComplianceSchemeSubmissionUploading:
+    '/prototype/compliance-scheme/pom-submission/{year}/{quarter}/uploading',
+  prototypeComplianceSchemeSubmissionErrors:
+    '/prototype/compliance-scheme/pom-submission/{year}/{quarter}/errors',
+  prototypeComplianceSchemeSubmissionUploadSuccess:
+    '/prototype/compliance-scheme/pom-submission/{year}/{quarter}/upload-success',
+
   health: '/health',
 
   password: '/password',

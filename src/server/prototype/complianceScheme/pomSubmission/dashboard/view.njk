@@ -1,0 +1,48 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "prototypeComplianceScheme/_tabs.njk" import complianceSchemeTabs %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+      {{ complianceSchemeTabs(tabs, tabsLabel) }}
+
+      <h2 class="govuk-heading-m">{{ labels.obligationHeading }}</h2>
+      <p class="govuk-body">{{ labels.obligationIntro }}</p>
+
+      {{ govukSummaryList({
+        rows: [
+          { key: { text: labels.obligationTargetLabel }, value: { text: labels.obligationTargetValue } },
+          { key: { text: labels.obligationAcceptedLabel }, value: { text: labels.obligationAcceptedValue } },
+          { key: { text: labels.obligationOutstandingLabel }, value: { text: labels.obligationOutstandingValue } }
+        ],
+        attributes: { "data-testid": "compliance-scheme-dashboard-obligation" }
+      }) }}
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="#" data-testid="compliance-scheme-dashboard-evidence-link">{{ labels.obligationEvidenceLink }}</a>
+      </p>
+
+      <p class="govuk-body">{{ labels.intro }}</p>
+
+      {{ govukSummaryList({
+        rows: summaryListRows,
+        attributes: { "data-testid": "compliance-scheme-dashboard-summary" }
+      }) }}
+
+      {{ govukButton({
+        text: labels.updateAction,
+        classes: "govuk-button--secondary",
+        attributes: { "data-testid": "compliance-scheme-dashboard-update" }
+      }) }}
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="#" data-testid="compliance-scheme-dashboard-certificate">{{ labels.certificateLink }}</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}

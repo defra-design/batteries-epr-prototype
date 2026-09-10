@@ -1,0 +1,25 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <span class="govuk-caption-l" data-testid="before-you-start-caption">{{ caption }}</span>
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+      <h2 class="govuk-heading-m">{{ labels.optionalCheckHeading }}</h2>
+      <p class="govuk-body">{{ labels.optionalCheckBody }}</p>
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="{{ checkSchemeUrl }}" data-testid="before-you-start-check-scheme">{{ labels.checkSchemeLink }}</a>
+      </p>
+
+      {{ govukButton({
+        text: labels.beginAction,
+        href: beginUrl,
+        attributes: { "data-testid": "before-you-start-begin" }
+      }) }}
+    </div>
+  </div>
+{% endblock %}

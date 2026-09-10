@@ -1,0 +1,23 @@
+@use "govuk-frontend" as *;
+
+.app-spinner {
+  width: 40px;
+  height: 40px;
+  margin: govuk-spacing(4) 0;
+  border: 4px solid govuk-colour("mid-grey");
+  border-top-color: govuk-colour("blue");
+  border-radius: 50%;
+  animation: app-spinner-rotate 1s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-spinner {
+    animation-duration: 3s;
+  }
+}
+
+@keyframes app-spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,56 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <span class="govuk-caption-l" data-testid="errors-caption">{{ caption }}</span>
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+      {{ govukErrorSummary({
+        titleText: errorSummaryTitle,
+        errorList: [],
+        attributes: { "data-testid": "errors-summary" }
+      }) }}
+
+      {{ govukTable({
+        head: [
+          { text: labels.columns.error },
+          { text: labels.columns.row },
+          { text: labels.columns.column },
+          { text: labels.columns.howToFix }
+        ],
+        rows: errorRows,
+        attributes: { "data-testid": "errors-table" }
+      }) }}
+
+      {{ govukButton({
+        text: labels.downloadAction,
+        href: "#",
+        classes: "govuk-button--secondary",
+        attributes: { "data-testid": "errors-download" }
+      }) }}
+
+      <h2 class="govuk-heading-m">{{ labels.fixHeading }}</h2>
+      <p class="govuk-body">{{ labels.fixBody }}</p>
+
+      <form method="post" action="{{ action }}" novalidate data-testid="errors-upload-form">
+        {{ govukFileUpload({
+          id: "batteryDataFile",
+          name: "batteryDataFile",
+          label: { text: labels.fileLabel },
+          attributes: { "data-testid": "errors-file" }
+        }) }}
+
+        {{ govukButton({
+          text: labels.uploadAction,
+          attributes: { "data-testid": "errors-upload-submit" }
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

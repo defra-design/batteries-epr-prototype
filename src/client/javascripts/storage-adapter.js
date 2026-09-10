@@ -37,7 +37,11 @@ export const STORAGE_KEYS = {
   obligationSnapshots: `${KEY_PREFIX}obligationSnapshots`,
   prototypeRegistrationDraft: `${KEY_PREFIX}prototype:registrationDraft`,
   prototypeBprnSequence: `${KEY_PREFIX}prototype:seq:bprn`,
-  prototypeSubmissionDraft: `${KEY_PREFIX}prototype:submissionDraft`
+  prototypeSubmissionDraft: `${KEY_PREFIX}prototype:submissionDraft`,
+  prototypeComplianceSchemeMembers: `${KEY_PREFIX}prototype:complianceSchemeMembers`,
+  prototypeComplianceSchemeQuarters: `${KEY_PREFIX}prototype:complianceSchemeQuarters`,
+  prototypeComplianceSchemeSubmissionDraft: `${KEY_PREFIX}prototype:complianceSchemeSubmissionDraft`,
+  prototypeComplianceSchemeUploadErrors: `${KEY_PREFIX}prototype:complianceSchemeUploadErrors`
 }
 
 const bprnSequenceKey = (agencyCode, compliancePeriod) =>
@@ -281,6 +285,7 @@ export const createSchemeMember = (input = {}) => ({
   producerBprn: input.producerBprn ?? null,
   producerEmail: input.producerEmail ?? null,
   companyName: input.companyName ?? null,
+  companyRegistrationNo: input.companyRegistrationNo ?? null,
   compliancePeriod: input.compliancePeriod ?? null,
   status: input.status ?? 'active',
   joinedOn: input.joinedOn ?? now(),
@@ -673,6 +678,34 @@ const saveOperator = (operator) => {
 const listSchemeMembers = (schemeId) => {
   const members = Object.values(readMap(STORAGE_KEYS.schemeMembers))
   return schemeId ? members.filter((m) => m.schemeId === schemeId) : members
+}
+
+const listPrototypeComplianceSchemeMembers = () =>
+  Object.values(readMap(STORAGE_KEYS.prototypeComplianceSchemeMembers))
+
+const listPrototypeComplianceSchemeQuarters = () =>
+  Object.values(readMap(STORAGE_KEYS.prototypeComplianceSchemeQuarters))
+
+const listPrototypeComplianceSchemeUploadErrors = () =>
+  Object.values(readMap(STORAGE_KEYS.prototypeComplianceSchemeUploadErrors))
+
+const draftKey = (year, quarter) => `${year}-${quarter}`
+
+const getPrototypeComplianceSchemeSubmissionDraft = (year, quarter) =>
+  readMap(STORAGE_KEYS.prototypeComplianceSchemeSubmissionDraft)[
+    draftKey(year, quarter)
+  ] ?? {}
+
+const savePrototypeComplianceSchemeSubmissionDraft = (
+  year,
+  quarter,
+  fields
+) => {
+  const drafts = readMap(STORAGE_KEYS.prototypeComplianceSchemeSubmissionDraft)
+  const key = draftKey(year, quarter)
+  drafts[key] = { ...drafts[key], ...fields }
+  writeJson(STORAGE_KEYS.prototypeComplianceSchemeSubmissionDraft, drafts)
+  return drafts[key]
 }
 
 const listActiveSchemeMembers = (schemeId) =>
@@ -1756,6 +1789,45 @@ const seedDemoData = () => {
   }
   writeJson(STORAGE_KEYS.obligationSnapshots, obligationSnapshots)
 
+  const prototypeComplianceSchemeMembers = readMap(
+    STORAGE_KEYS.prototypeComplianceSchemeMembers
+  )
+  for (const member of seedData.prototypeComplianceSchemeMembers) {
+    if (!prototypeComplianceSchemeMembers[member.id]) {
+      prototypeComplianceSchemeMembers[member.id] = member
+    }
+  }
+  writeJson(
+    STORAGE_KEYS.prototypeComplianceSchemeMembers,
+    prototypeComplianceSchemeMembers
+  )
+
+  const prototypeComplianceSchemeQuarters = readMap(
+    STORAGE_KEYS.prototypeComplianceSchemeQuarters
+  )
+  for (const quarter of seedData.prototypeComplianceSchemeQuarters) {
+    if (!prototypeComplianceSchemeQuarters[quarter.id]) {
+      prototypeComplianceSchemeQuarters[quarter.id] = quarter
+    }
+  }
+  writeJson(
+    STORAGE_KEYS.prototypeComplianceSchemeQuarters,
+    prototypeComplianceSchemeQuarters
+  )
+
+  const prototypeComplianceSchemeUploadErrors = readMap(
+    STORAGE_KEYS.prototypeComplianceSchemeUploadErrors
+  )
+  for (const error of seedData.prototypeComplianceSchemeUploadErrors) {
+    if (!prototypeComplianceSchemeUploadErrors[error.id]) {
+      prototypeComplianceSchemeUploadErrors[error.id] = error
+    }
+  }
+  writeJson(
+    STORAGE_KEYS.prototypeComplianceSchemeUploadErrors,
+    prototypeComplianceSchemeUploadErrors
+  )
+
   globalThis.localStorage.setItem(
     STORAGE_KEYS.seedVersion,
     String(seedData.seedVersion)
@@ -1868,6 +1940,11 @@ export const storage = {
   currentOperator,
   saveOperator,
   listSchemeMembers,
+  listPrototypeComplianceSchemeMembers,
+  listPrototypeComplianceSchemeQuarters,
+  listPrototypeComplianceSchemeUploadErrors,
+  getPrototypeComplianceSchemeSubmissionDraft,
+  savePrototypeComplianceSchemeSubmissionDraft,
   listActiveSchemeMembers,
   listPendingSchemeMembers,
   membersForYear,

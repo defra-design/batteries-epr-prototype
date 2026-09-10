@@ -5,6 +5,7 @@ import { playground } from './playground/index.js'
 import { prototype } from './prototype/index.js'
 import { prototypeRegistration } from './prototype/registration/index.js'
 import { prototypeSubmission } from './prototype/submission/index.js'
+import { prototypeComplianceSchemePomSubmission } from './prototype/complianceScheme/pomSubmission/index.js'
 import { blueprint } from './blueprint/index.js'
 import { bcsRegistrationWalkthrough } from './bcsRegistrationWalkthrough/index.js'
 import { alphaAssessment } from './alphaAssessment/index.js'
@@ -97,6 +98,8 @@ export const router = {
         prototype: prototype.openRoutes,
         prototypeRegistration: prototypeRegistration.openRoutes,
         prototypeSubmission: prototypeSubmission.openRoutes,
+        prototypeComplianceSchemePomSubmission:
+          prototypeComplianceSchemePomSubmission.openRoutes,
         blueprint: blueprint.openRoutes,
         bcsRegistrationWalkthrough: bcsRegistrationWalkthrough.openRoutes,
         alphaAssessment: alphaAssessment.openRoutes,

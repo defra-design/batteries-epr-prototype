@@ -1,0 +1,56 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorSummary and errorSummary.length %}
+        {{ govukErrorSummary({
+          titleText: errorTitle,
+          errorList: errorSummary,
+          attributes: { "data-testid": "bulk-upload-error-summary" }
+        }) }}
+      {% endif %}
+
+      <span class="govuk-caption-l" data-testid="bulk-upload-caption">{{ caption }}</span>
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+      <p class="govuk-body">
+        {{ labels.templateIntro }}
+        <a class="govuk-link" href="#" data-testid="bulk-upload-template-link">{{ labels.templateLink }}</a>.
+      </p>
+
+      <p class="govuk-body govuk-!-font-weight-bold">{{ labels.tonnesWarning }}</p>
+      <p class="govuk-body-s">{{ labels.wasteCollectionNote }}</p>
+      <p class="govuk-body-s">{{ labels.apiNote }}</p>
+
+      <form method="post" action="{{ action }}" enctype="multipart/form-data" novalidate data-testid="bulk-upload-form">
+        {{ govukFileUpload({
+          id: "batteryDataFile",
+          name: "batteryDataFile",
+          label: { text: labels.fileLabel },
+          errorMessage: { text: errors.batteryDataFile } if errors.batteryDataFile,
+          attributes: { "data-testid": "bulk-upload-file" }
+        }) }}
+
+        {{ govukButton({
+          text: labels.uploadAction,
+          attributes: { "data-testid": "bulk-upload-submit" }
+        }) }}
+
+        <h2 class="govuk-heading-m">{{ labels.supportingHeading }}</h2>
+
+        {{ govukFileUpload({
+          id: "supportingFile",
+          name: "supportingFile",
+          label: { text: labels.supportingFileLabel },
+          hint: { text: labels.supportingBody },
+          attributes: { "data-testid": "bulk-upload-supporting-file" }
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "prototypeComplianceScheme/_tabs.njk" import complianceSchemeTabs %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+      {{ complianceSchemeTabs(tabs, tabsLabel) }}
+
+      <p class="govuk-body">{{ labels.intro }}</p>
+
+      {% set memberRows = [] %}
+      {% for member in members %}
+        {% set memberRows = (memberRows.push([
+          { text: member.companyName },
+          { text: member.companyRegistrationNo },
+          { text: member.joinedOn | formatDate('d MMM yyyy') },
+          { html: govukTag({ text: member.statusLabel, classes: "govuk-tag--" + member.statusColour }) | safe }
+        ]), memberRows) %}
+      {% endfor %}
+
+      {{ govukTable({
+        head: [
+          { text: labels.columns.memberName },
+          { text: labels.columns.companyRegistrationNo },
+          { text: labels.columns.memberSince },
+          { text: labels.columns.status }
+        ],
+        rows: memberRows,
+        attributes: { "data-testid": "compliance-scheme-members-table" }
+      }) }}
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: labels.addAction,
+          href: "#",
+          attributes: { "data-testid": "compliance-scheme-members-add" }
+        }) }}
+        <a class="govuk-link" href="#" data-testid="compliance-scheme-members-download">{{ labels.downloadLink }}</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -812,6 +812,14 @@ describe('compliance scheme factories and storage', () => {
     expect(m.replacedById).toBe('reg-99')
   })
 
+  test('createSchemeMember defaults companyRegistrationNo to null and accepts an override', () => {
+    expect(createSchemeMember().companyRegistrationNo).toBeNull()
+    expect(
+      createSchemeMember({ companyRegistrationNo: '07456123' })
+        .companyRegistrationNo
+    ).toBe('07456123')
+  })
+
   test('createQuarterlySubmission and createIaSubmission defaults', () => {
     const q = createQuarterlySubmission()
     expect(q.status).toBe('not-started')
@@ -971,6 +979,122 @@ describe('compliance scheme factories and storage', () => {
     expect(operators.length).toBeGreaterThanOrEqual(3)
     expect(operators.some((o) => o.approvalType === 'abto')).toBe(true)
     expect(operators.some((o) => o.approvalType === 'abe')).toBe(true)
+  })
+
+  test('seedDemoData seeds prototype compliance scheme members', () => {
+    storage.seedDemoData()
+    const members = storage.listPrototypeComplianceSchemeMembers()
+    expect(members).toHaveLength(
+      seedData.prototypeComplianceSchemeMembers.length
+    )
+    expect(
+      members.some((m) => m.companyName === 'Halton Battery Processing Ltd')
+    ).toBe(true)
+  })
+
+  test('seedDemoData skips prototype compliance scheme members that already exist in storage', () => {
+    const existing = seedData.prototypeComplianceSchemeMembers[0]
+    globalThis.localStorage.setItem(
+      STORAGE_KEYS.prototypeComplianceSchemeMembers,
+      JSON.stringify({
+        [existing.id]: { ...existing, companyName: 'Local edits' }
+      })
+    )
+    expect(storage.seedDemoData()).toBe(true)
+    const members = storage.listPrototypeComplianceSchemeMembers()
+    expect(members.find((m) => m.id === existing.id).companyName).toBe(
+      'Local edits'
+    )
+  })
+
+  test('listPrototypeComplianceSchemeMembers returns an empty array before seeding', () => {
+    expect(storage.listPrototypeComplianceSchemeMembers()).toEqual([])
+  })
+
+  test('seedDemoData seeds prototype compliance scheme quarters', () => {
+    storage.seedDemoData()
+    const quarters = storage.listPrototypeComplianceSchemeQuarters()
+    expect(quarters).toHaveLength(
+      seedData.prototypeComplianceSchemeQuarters.length
+    )
+    expect(quarters.some((q) => q.status === 'submitted')).toBe(true)
+    expect(quarters.some((q) => q.status === 'open')).toBe(true)
+    expect(quarters.filter((q) => q.status === 'notYetOpen')).toHaveLength(2)
+  })
+
+  test('seedDemoData skips prototype compliance scheme quarters that already exist in storage', () => {
+    const existing = seedData.prototypeComplianceSchemeQuarters[0]
+    globalThis.localStorage.setItem(
+      STORAGE_KEYS.prototypeComplianceSchemeQuarters,
+      JSON.stringify({
+        [existing.id]: { ...existing, status: 'locally-edited' }
+      })
+    )
+    expect(storage.seedDemoData()).toBe(true)
+    const quarters = storage.listPrototypeComplianceSchemeQuarters()
+    expect(quarters.find((q) => q.id === existing.id).status).toBe(
+      'locally-edited'
+    )
+  })
+
+  test('listPrototypeComplianceSchemeQuarters returns an empty array before seeding', () => {
+    expect(storage.listPrototypeComplianceSchemeQuarters()).toEqual([])
+  })
+
+  test('seedDemoData seeds prototype compliance scheme upload errors', () => {
+    storage.seedDemoData()
+    const errors = storage.listPrototypeComplianceSchemeUploadErrors()
+    expect(errors).toHaveLength(
+      seedData.prototypeComplianceSchemeUploadErrors.length
+    )
+    expect(errors.some((e) => e.error === 'Chemistry code is required')).toBe(
+      true
+    )
+  })
+
+  test('seedDemoData skips prototype compliance scheme upload errors that already exist in storage', () => {
+    const existing = seedData.prototypeComplianceSchemeUploadErrors[0]
+    globalThis.localStorage.setItem(
+      STORAGE_KEYS.prototypeComplianceSchemeUploadErrors,
+      JSON.stringify({
+        [existing.id]: { ...existing, error: 'Locally edited' }
+      })
+    )
+    expect(storage.seedDemoData()).toBe(true)
+    const errors = storage.listPrototypeComplianceSchemeUploadErrors()
+    expect(errors.find((e) => e.id === existing.id).error).toBe(
+      'Locally edited'
+    )
+  })
+
+  test('listPrototypeComplianceSchemeUploadErrors returns an empty array before seeding', () => {
+    expect(storage.listPrototypeComplianceSchemeUploadErrors()).toEqual([])
+  })
+
+  test('getPrototypeComplianceSchemeSubmissionDraft returns an empty object when nothing saved', () => {
+    expect(
+      storage.getPrototypeComplianceSchemeSubmissionDraft(2026, 2)
+    ).toEqual({})
+  })
+
+  test('savePrototypeComplianceSchemeSubmissionDraft saves and merges fields per year/quarter', () => {
+    storage.savePrototypeComplianceSchemeSubmissionDraft(2026, 2, {
+      reportingMethod: 'single'
+    })
+    expect(
+      storage.getPrototypeComplianceSchemeSubmissionDraft(2026, 2)
+    ).toEqual({ reportingMethod: 'single' })
+
+    storage.savePrototypeComplianceSchemeSubmissionDraft(2026, 2, {
+      extra: 'value'
+    })
+    expect(
+      storage.getPrototypeComplianceSchemeSubmissionDraft(2026, 2)
+    ).toEqual({ reportingMethod: 'single', extra: 'value' })
+
+    expect(
+      storage.getPrototypeComplianceSchemeSubmissionDraft(2026, 3)
+    ).toEqual({})
   })
 
   test('approveOperatorForScheme / rejectOperatorForScheme set the scheme approval', () => {

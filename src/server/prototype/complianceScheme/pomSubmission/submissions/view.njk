@@ -1,0 +1,94 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "prototypeComplianceScheme/_tabs.njk" import complianceSchemeTabs %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+      {{ complianceSchemeTabs(tabs, tabsLabel) }}
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <h2 class="govuk-heading-m">{{ labels.dataSubmissionHeading }}</h2>
+        </div>
+        <div class="govuk-grid-column-one-third">
+          {{ govukSelect({
+            id: "complianceSchemeSubmissionsYear",
+            name: "year",
+            label: { text: labels.yearLabel },
+            items: [
+              { value: labels.yearValue, text: labels.yearValue, selected: true }
+            ],
+            attributes: { "data-testid": "compliance-scheme-submissions-year" }
+          }) }}
+        </div>
+      </div>
+
+      <p class="govuk-body">{{ labels.dataSubmissionIntro }}</p>
+
+      <div class="govuk-grid-row app-task-cards" data-testid="compliance-scheme-submissions-quarters">
+        {% for quarter in quarters %}
+          <div class="govuk-grid-column-one-half">
+            <div class="govuk-summary-card" data-testid="compliance-scheme-submissions-quarter-{{ loop.index }}">
+              <div class="govuk-summary-card__title-wrapper">
+                <h3 class="govuk-summary-card__title">{{ quarter.label }}</h3>
+              </div>
+              <div class="govuk-summary-card__content">
+                <p class="govuk-body">{{ labels.availableLabel }}: {{ quarter.availableOn | formatDate('d MMM yyyy') }}</p>
+                <p class="govuk-body">{{ labels.dueLabel }}: {{ quarter.dueOn | formatDate('d MMM yyyy') }}</p>
+                <p class="govuk-body app-task-cards__status">
+                  {{ labels.statusLabel }}:
+                  {{ govukTag({ text: quarter.statusLabel, classes: "govuk-tag--" + quarter.statusColour }) }}
+                </p>
+                {{ govukButton({
+                  text: quarter.actionText,
+                  href: quarter.actionHref,
+                  classes: quarter.actionClasses,
+                  disabled: quarter.actionDisabled,
+                  attributes: { "data-testid": "compliance-scheme-submissions-quarter-" + loop.index + "-action" }
+                }) }}
+                <p class="govuk-body govuk-!-margin-bottom-0" data-testid="compliance-scheme-submissions-quarter-{{ loop.index }}-note">{{ quarter.note }}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <p class="govuk-body">{{ labels.intro }}</p>
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="#" data-testid="compliance-scheme-submissions-member-detail">{{ labels.memberDetailLink }}</a>
+      </p>
+      <p class="govuk-body">
+        <a class="govuk-link" href="#" data-testid="compliance-scheme-submissions-members-report">{{ labels.membersReportLink }}</a>
+      </p>
+
+      <div class="govuk-summary-card" data-testid="compliance-scheme-submissions-evidence">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">{{ labels.evidenceHeading }}</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          {{ govukSummaryList({
+            rows: [
+              { key: { text: labels.evidenceStatusLabel }, value: { text: labels.evidenceStatusValue } }
+            ],
+            attributes: { "data-testid": "compliance-scheme-submissions-evidence-status" }
+          }) }}
+
+          <p class="govuk-body">
+            <a class="govuk-link" href="#" data-testid="compliance-scheme-submissions-edit-status">{{ labels.editStatusLink }}</a>
+          </p>
+          <p class="govuk-body govuk-!-margin-bottom-0">
+            <a class="govuk-link" href="#" data-testid="compliance-scheme-submissions-general-availability">{{ labels.viewGeneralAvailabilityLink }}</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
