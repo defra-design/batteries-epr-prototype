@@ -2,6 +2,7 @@
 
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -13,48 +14,57 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full" data-testid="prototype-journeys">
-      {% for group in personaGroups %}
-        <h2 class="govuk-heading-l" data-testid="prototype-persona-heading-{{ group.persona }}">{{ group.heading }}</h2>
+      {%- set tabItems = [] -%}
+      {%- for group in personaGroups -%}
+        {%- set panelHtml -%}
+          {% for journey in group.journeys %}
+            <div class="govuk-summary-card" data-testid="prototype-journey-{{ journey.id }}">
+              <div class="govuk-summary-card__title-wrapper">
+                <h3 class="govuk-summary-card__title">{{ journey.title }}</h3>
+              </div>
+              <div class="govuk-summary-card__content">
+                <p class="govuk-body">{{ journey.description }}</p>
+                {% if journey.codedHref or journey.figmaHref %}
+                  {% if journey.codedHref %}
+                    {{ govukButton({
+                      text: links.coded,
+                      href: journey.codedHref,
+                      isStartButton: true,
+                      attributes: { "data-testid": "prototype-journey-" + journey.id + "-coded-cta" }
+                    }) }}
+                  {% endif %}
+                  {% if journey.figmaHref %}
+                    {{ govukButton({
+                      text: links.figma + " (opens in new tab)",
+                      href: journey.figmaHref,
+                      isStartButton: true,
+                      attributes: {
+                        "data-testid": "prototype-journey-" + journey.id + "-figma-cta",
+                        "target": "_blank",
+                        "rel": "noopener noreferrer"
+                      }
+                    }) }}
+                  {% endif %}
+                {% else %}
+                  <p data-testid="prototype-journey-{{ journey.id }}-coming-soon">
+                    {{ govukTag({ text: "Coming soon", classes: "govuk-tag--blue" }) }}
+                  </p>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        {%- endset -%}
+        {%- set tabItems = (tabItems.push({
+          label: group.heading,
+          id: "persona-" + group.persona,
+          panel: { html: panelHtml },
+          attributes: { "data-testid": "prototype-tab-" + group.persona }
+        }), tabItems) -%}
+      {%- endfor -%}
 
-        {% for journey in group.journeys %}
-          <div class="govuk-summary-card" data-testid="prototype-journey-{{ journey.id }}">
-            <div class="govuk-summary-card__title-wrapper">
-              <h3 class="govuk-summary-card__title">{{ journey.title }}</h3>
-            </div>
-            <div class="govuk-summary-card__content">
-              <p class="govuk-body">{{ journey.description }}</p>
-              {% if journey.codedHref or journey.figmaHref %}
-                {% if journey.codedHref %}
-                  {{ govukButton({
-                    text: links.coded,
-                    href: journey.codedHref,
-                    isStartButton: true,
-                    attributes: { "data-testid": "prototype-journey-" + journey.id + "-coded-cta" }
-                  }) }}
-                {% endif %}
-                {% if journey.figmaHref %}
-                  {{ govukButton({
-                    text: links.figma + " (opens in new tab)",
-                    href: journey.figmaHref,
-                    isStartButton: true,
-                    attributes: {
-                      "data-testid": "prototype-journey-" + journey.id + "-figma-cta",
-                      "target": "_blank",
-                      "rel": "noopener noreferrer"
-                    }
-                  }) }}
-                {% endif %}
-              {% else %}
-                <p data-testid="prototype-journey-{{ journey.id }}-coming-soon">
-                  {{ govukTag({ text: "Coming soon", classes: "govuk-tag--blue" }) }}
-                </p>
-              {% endif %}
-            </div>
-          </div>
-        {% else %}
-          <p class="govuk-body" data-testid="prototype-persona-group-{{ group.persona }}-empty">No prototypes yet for this group.</p>
-        {% endfor %}
-      {% endfor %}
+      {{ govukTabs({
+        items: tabItems
+      }) }}
     </div>
   </div>
 

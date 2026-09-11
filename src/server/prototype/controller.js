@@ -8,12 +8,35 @@ const journeyHrefs = {
     paths.prototypeComplianceSchemeSubmissionSignIn
 }
 
-const buildPersonaGroups = (journeys, personas) =>
-  Object.entries(personas).map(([personaId, heading]) => ({
-    persona: personaId,
-    heading,
-    journeys: journeys.filter((journey) => journey.persona === personaId)
-  }))
+export const buildPersonaGroups = (journeys, personas) =>
+  Object.entries(personas)
+    .map(([personaId, heading]) => ({
+      persona: personaId,
+      heading,
+      journeys: journeys.filter((journey) => journey.persona === personaId)
+    }))
+    .filter((group) => group.journeys.length > 0)
+
+const countLinkedJourneys = (group) =>
+  group.journeys.filter((journey) => journey.codedHref || journey.figmaHref)
+    .length
+
+export const withDefaultTabFirst = (personaGroups) => {
+  if (personaGroups.length === 0) {
+    return personaGroups
+  }
+
+  const defaultGroup = personaGroups.reduce((mostLinked, group) =>
+    countLinkedJourneys(group) > countLinkedJourneys(mostLinked)
+      ? group
+      : mostLinked
+  )
+
+  return [
+    defaultGroup,
+    ...personaGroups.filter((group) => group !== defaultGroup)
+  ]
+}
 
 export const prototypeController = {
   handler(request, h) {
@@ -27,7 +50,9 @@ export const prototypeController = {
       })
     )
 
-    const personaGroups = buildPersonaGroups(journeys, pageContent.personas)
+    const personaGroups = withDefaultTabFirst(
+      buildPersonaGroups(journeys, pageContent.personas)
+    )
 
     return h.view('prototype/index', {
       pageTitle: pageContent.title,

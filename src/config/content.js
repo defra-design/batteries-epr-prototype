@@ -81,7 +81,7 @@ export const content = {
         personas: {
           producer: 'Producer',
           complianceScheme: 'Compliance scheme',
-          operator: 'Treatment operator',
+          operator: 'ABTO',
           regulator: 'Regulator'
         },
         links: {
