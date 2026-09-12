@@ -174,7 +174,8 @@ export const content = {
             persona: 'operator',
             title: 'ABTO generates evidence note',
             description:
-              'An approved treatment operator issues an evidence note for batteries it has treated.'
+              'An approved treatment operator issues an evidence note for batteries it has treated.',
+            figmaHref: 'https://hidden-scarf-91339469.figma.site'
           },
           abtoReceivesNotesDecision: {
             persona: 'operator',
@@ -307,7 +308,8 @@ export const content = {
           abtoGeneratesEvidenceNote: {
             persona: 'operator',
             title: 'TODO welsh',
-            description: 'TODO welsh'
+            description: 'TODO welsh',
+            figmaHref: 'https://hidden-scarf-91339469.figma.site'
           },
           abtoReceivesNotesDecision: {
             persona: 'operator',

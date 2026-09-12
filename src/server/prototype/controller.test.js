@@ -223,13 +223,13 @@ describe('#prototypeController', () => {
     })
 
     const pageContent = content.prototype({})
-    const journey = pageContent.journeys.abtoGeneratesEvidenceNote
+    const journey = pageContent.journeys.abtoReceivesNotesDecision
     expect(result).toEqual(expect.stringContaining(journey.title))
     expect(journey.description).not.toEqual('')
     expect(result).toEqual(expect.stringContaining(journey.description))
     expect(result).toEqual(
       expect.stringContaining(
-        'data-testid="prototype-journey-abtoGeneratesEvidenceNote-coming-soon"'
+        'data-testid="prototype-journey-abtoReceivesNotesDecision-coming-soon"'
       )
     )
 
@@ -237,10 +237,39 @@ describe('#prototypeController', () => {
       'data-testid="prototype-tab-operator"'
     )
     const journeyIndex = result.indexOf(
-      'data-testid="prototype-journey-abtoGeneratesEvidenceNote"'
+      'data-testid="prototype-journey-abtoReceivesNotesDecision"'
     )
     expect(operatorTabIndex).toBeGreaterThan(-1)
     expect(journeyIndex).toBeGreaterThan(operatorTabIndex)
+  })
+
+  test('renders the ABTO generates evidence note journey with a Figma link, opening in a new tab', async () => {
+    const { result } = await server.inject({
+      method: 'GET',
+      url: paths.prototype
+    })
+
+    const pageContent = content.prototype({})
+    const journey = pageContent.journeys.abtoGeneratesEvidenceNote
+    expect(result).toEqual(expect.stringContaining(journey.title))
+    expect(result).toEqual(expect.stringContaining(journey.description))
+
+    const cta = result.match(
+      /<a[^>]*data-testid="prototype-journey-abtoGeneratesEvidenceNote-figma-cta"[^>]*>/
+    )[0]
+    expect(cta).toEqual(expect.stringContaining(`href="${journey.figmaHref}"`))
+    expect(cta).toEqual(expect.stringContaining('target="_blank"'))
+    expect(cta).toEqual(expect.stringContaining('rel="noopener noreferrer"'))
+    expect(result).not.toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-abtoGeneratesEvidenceNote-coded-cta"'
+      )
+    )
+    expect(result).not.toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-abtoGeneratesEvidenceNote-coming-soon"'
+      )
+    )
   })
 
   test('renders coming soon journeys for the regulator group', async () => {
