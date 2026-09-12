@@ -177,6 +177,12 @@ export const content = {
               'An approved treatment operator issues an evidence note for batteries it has treated.',
             figmaHref: 'https://hidden-scarf-91339469.figma.site'
           },
+          abtoEvidenceNoteSentForAuthorisation: {
+            persona: 'operator',
+            title: 'Evidence note sent to approved person for authorisation',
+            description: '',
+            figmaHref: 'https://snowy-golf-42461213.figma.site'
+          },
           abtoReceivesNotesDecision: {
             persona: 'operator',
             title: 'ABTO receives notes decision',
@@ -310,6 +316,12 @@ export const content = {
             title: 'TODO welsh',
             description: 'TODO welsh',
             figmaHref: 'https://hidden-scarf-91339469.figma.site'
+          },
+          abtoEvidenceNoteSentForAuthorisation: {
+            persona: 'operator',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            figmaHref: 'https://snowy-golf-42461213.figma.site'
           },
           abtoReceivesNotesDecision: {
             persona: 'operator',

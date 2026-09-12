@@ -272,6 +272,34 @@ describe('#prototypeController', () => {
     )
   })
 
+  test('renders the evidence note sent for authorisation journey with a Figma link, opening in a new tab', async () => {
+    const { result } = await server.inject({
+      method: 'GET',
+      url: paths.prototype
+    })
+
+    const pageContent = content.prototype({})
+    const journey = pageContent.journeys.abtoEvidenceNoteSentForAuthorisation
+    expect(result).toEqual(expect.stringContaining(journey.title))
+
+    const cta = result.match(
+      /<a[^>]*data-testid="prototype-journey-abtoEvidenceNoteSentForAuthorisation-figma-cta"[^>]*>/
+    )[0]
+    expect(cta).toEqual(expect.stringContaining(`href="${journey.figmaHref}"`))
+    expect(cta).toEqual(expect.stringContaining('target="_blank"'))
+    expect(cta).toEqual(expect.stringContaining('rel="noopener noreferrer"'))
+    expect(result).not.toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-abtoEvidenceNoteSentForAuthorisation-coded-cta"'
+      )
+    )
+    expect(result).not.toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-abtoEvidenceNoteSentForAuthorisation-coming-soon"'
+      )
+    )
+  })
+
   test('renders coming soon journeys for the regulator group', async () => {
     const { result } = await server.inject({
       method: 'GET',
