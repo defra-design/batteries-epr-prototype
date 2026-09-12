@@ -1,0 +1,57 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+      <p class="govuk-body">{{ labels.intro }}</p>
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="{{ addOneMemberUrl }}" data-testid="review-upload-add-one">{{ labels.addOneMemberLink }}</a>
+      </p>
+
+      {% set tableRows = [] %}
+      {% for row in rows %}
+        {% set statusHtml %}<span data-testid="review-upload-status-{{ row.id }}">{{ row.statusText }}</span>{% endset %}
+        {% set actionHtml %}<span data-testid="review-upload-action-{{ row.id }}">{% if row.needsAttention %}<a class="govuk-link" href="{{ row.fixUrl }}">{{ labels.fixLink }}</a>{% else %}{{ labels.fixedAction }}{% endif %}</span>{% endset %}
+        {% set tableRows = (tableRows.push([
+          { text: row.companyName },
+          { html: statusHtml },
+          { html: actionHtml }
+        ]), tableRows) %}
+      {% endfor %}
+
+      {{ govukTable({
+        head: [
+          { text: labels.columns.member },
+          { text: labels.columns.status },
+          { text: labels.columns.action }
+        ],
+        rows: tableRows,
+        attributes: { "data-testid": "review-upload-table" }
+      }) }}
+
+      <form method="post" action="{{ submitAction }}" novalidate data-testid="review-upload-form">
+        {{ govukButton({
+          text: labels.submitAction,
+          attributes: { "data-testid": "review-upload-submit" }
+        }) }}
+      </form>
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="{{ bulkUploadUrl }}" data-testid="review-upload-reupload">{{ labels.bulkUploadAction }}</a>
+      </p>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('prototypeMembersList.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukPanel({
+        titleText: heading,
+        html: labels.panelBody,
+        attributes: { "data-testid": "submitted-panel" }
+      }) }}
+
+      <p class="govuk-body">
+        {{ labels.filenameLabel }} <span data-testid="submitted-filename">—</span>
+      </p>
+
+      <h2 class="govuk-heading-m">{{ labels.nextHeading }}</h2>
+      <p class="govuk-body">{{ labels.nextBody }}</p>
+
+      {{ govukButton({
+        text: labels.backToPrototypeLink,
+        href: prototypeUrl,
+        attributes: { "data-testid": "submitted-back-to-prototype" }
+      }) }}
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('prototypeMembersList.js') }}"></script>
+{% endblock %}

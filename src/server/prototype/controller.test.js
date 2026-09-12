@@ -7,7 +7,8 @@ import { buildPersonaGroups, withDefaultTabFirst } from './controller.js'
 const CODED_JOURNEY_IDS = new Set([
   'smallProducerRegistration',
   'smallProducerSubmission',
-  'complianceSchemeQuarterlySubmission'
+  'complianceSchemeQuarterlySubmission',
+  'bcsSendsMembersList'
 ])
 
 describe('#prototypeController', () => {
@@ -402,6 +403,31 @@ describe('#prototypeController', () => {
     )
     expect(result).not.toEqual(
       expect.stringContaining('/compliance-scheme/quarterly')
+    )
+  })
+
+  test('renders the journey card linking to the BCS sends regulator members list start page', async () => {
+    const { result } = await server.inject({
+      method: 'GET',
+      url: paths.prototype
+    })
+
+    const pageContent = content.prototype({})
+    const journey = pageContent.journeys.bcsSendsMembersList
+    expect(result).toEqual(expect.stringContaining(journey.title))
+    expect(result).toEqual(expect.stringContaining(journey.description))
+    expect(result).toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-bcsSendsMembersList-coded-cta"'
+      )
+    )
+    expect(result).toEqual(
+      expect.stringContaining(`href="${paths.prototypeMembersListStart}"`)
+    )
+    expect(result).not.toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-bcsSendsMembersList-coming-soon"'
+      )
     )
   })
 

@@ -33,6 +33,8 @@ export default {
     prototypeSubmission: './javascripts/prototype/submission/entry.js',
     prototypeComplianceScheme:
       './javascripts/prototype/complianceScheme/entry.js',
+    prototypeMembersList:
+      './javascripts/prototype/complianceScheme/membersList/entry.js',
     onboardingConfirmation: './javascripts/onboardingConfirmation/entry.js',
     annualReturnSmallTonnages:
       './javascripts/annualReturn/smallProducer/tonnages/entry.js',

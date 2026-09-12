@@ -1,0 +1,45 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorSummary and errorSummary.length %}
+        {{ govukErrorSummary({
+          titleText: errorTitle,
+          errorList: errorSummary,
+          attributes: { "data-testid": "fix-error-summary" }
+        }) }}
+      {% endif %}
+
+      <span class="govuk-caption-l" data-testid="fix-caption">{{ caption }}</span>
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+      <form method="post" action="{{ action }}" novalidate data-testid="fix-form">
+        {{ govukInput({
+          id: "companyRegistrationNo",
+          name: "companyRegistrationNo",
+          label: { text: labels.companyRegistrationNoLabel },
+          hint: { text: labels.companyRegistrationNoHint },
+          errorMessage: { text: errors.companyRegistrationNo } if errors.companyRegistrationNo,
+          attributes: { "data-testid": "fix-company-registration-no" }
+        }) }}
+
+        {{ govukButton({
+          text: labels.saveAction,
+          attributes: { "data-testid": "fix-save" }
+        }) }}
+      </form>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('prototypeMembersList.js') }}"></script>
+{% endblock %}

@@ -41,7 +41,8 @@ export const STORAGE_KEYS = {
   prototypeComplianceSchemeMembers: `${KEY_PREFIX}prototype:complianceSchemeMembers`,
   prototypeComplianceSchemeQuarters: `${KEY_PREFIX}prototype:complianceSchemeQuarters`,
   prototypeComplianceSchemeSubmissionDraft: `${KEY_PREFIX}prototype:complianceSchemeSubmissionDraft`,
-  prototypeComplianceSchemeUploadErrors: `${KEY_PREFIX}prototype:complianceSchemeUploadErrors`
+  prototypeComplianceSchemeUploadErrors: `${KEY_PREFIX}prototype:complianceSchemeUploadErrors`,
+  prototypeMembersListDraft: `${KEY_PREFIX}prototype:membersListDraft`
 }
 
 const bprnSequenceKey = (agencyCode, compliancePeriod) =>
@@ -1900,6 +1901,32 @@ const clearPrototypeSubmission = () => {
   removeKey(STORAGE_KEYS.prototypeSubmissionDraft)
 }
 
+const getPrototypeMembersList = () =>
+  readJson(STORAGE_KEYS.prototypeMembersListDraft) ?? {}
+
+const savePrototypeMembersList = (fields) => {
+  const next = { ...getPrototypeMembersList(), ...fields }
+  writeJson(STORAGE_KEYS.prototypeMembersListDraft, next)
+  return next
+}
+
+const submitPrototypeMembersList = () =>
+  savePrototypeMembersList({ status: 'submitted', submittedAt: now() })
+
+const clearPrototypeMembersList = () => {
+  removeKey(STORAGE_KEYS.prototypeMembersListDraft)
+}
+
+const updatePrototypeComplianceSchemeMember = (id, patch) => {
+  const members = readMap(STORAGE_KEYS.prototypeComplianceSchemeMembers)
+  const existing = members[id]
+  if (!existing) return null
+  const merged = { ...existing, ...patch, updatedAt: now() }
+  members[id] = merged
+  writeJson(STORAGE_KEYS.prototypeComplianceSchemeMembers, members)
+  return merged
+}
+
 export const storage = {
   getCurrentUser,
   setCurrentUser,
@@ -2028,5 +2055,10 @@ export const storage = {
   submitPrototypeSubmission,
   ensurePrototypePaymentReference,
   completePrototypeSubmissionPayment,
-  clearPrototypeSubmission
+  clearPrototypeSubmission,
+  getPrototypeMembersList,
+  savePrototypeMembersList,
+  submitPrototypeMembersList,
+  clearPrototypeMembersList,
+  updatePrototypeComplianceSchemeMember
 }

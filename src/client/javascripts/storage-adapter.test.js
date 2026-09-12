@@ -3390,3 +3390,71 @@ describe('prototype submission draft', () => {
     )
   })
 })
+
+describe('prototype members-list draft', () => {
+  test('getPrototypeMembersList returns an empty object when nothing is stored', () => {
+    expect(storage.getPrototypeMembersList()).toEqual({})
+  })
+
+  test('savePrototypeMembersList merges fields into the draft', () => {
+    storage.savePrototypeMembersList({ sendMethod: 'csv' })
+    const draft = storage.savePrototypeMembersList({
+      uploadedFileName: 'members.csv'
+    })
+
+    expect(draft).toEqual({
+      sendMethod: 'csv',
+      uploadedFileName: 'members.csv'
+    })
+    expect(storage.getPrototypeMembersList()).toEqual(draft)
+  })
+
+  test('submitPrototypeMembersList marks the draft as submitted with a timestamp', () => {
+    storage.savePrototypeMembersList({ sendMethod: 'csv' })
+    const submitted = storage.submitPrototypeMembersList()
+
+    expect(submitted.status).toBe('submitted')
+    expect(submitted.submittedAt).toEqual(expect.any(String))
+  })
+
+  test('clearPrototypeMembersList removes the draft', () => {
+    storage.savePrototypeMembersList({ sendMethod: 'csv' })
+    storage.clearPrototypeMembersList()
+    expect(storage.getPrototypeMembersList()).toEqual({})
+  })
+
+  test('the members-list draft key is namespaced under the prototype prefix', () => {
+    expect(STORAGE_KEYS.prototypeMembersListDraft).toBe(
+      'npwd-batteries:prototype:membersListDraft'
+    )
+  })
+})
+
+describe('updatePrototypeComplianceSchemeMember', () => {
+  test('merges a patch into an existing seeded member', () => {
+    storage.seedDemoData()
+    const [member] = storage.listPrototypeComplianceSchemeMembers()
+
+    const updated = storage.updatePrototypeComplianceSchemeMember(member.id, {
+      status: 'active',
+      companyRegistrationNo: '99999999'
+    })
+
+    expect(updated.status).toBe('active')
+    expect(updated.companyRegistrationNo).toBe('99999999')
+    expect(updated.companyName).toBe(member.companyName)
+
+    const reread = storage
+      .listPrototypeComplianceSchemeMembers()
+      .find((m) => m.id === member.id)
+    expect(reread.status).toBe('active')
+  })
+
+  test('returns null when the member does not exist', () => {
+    expect(
+      storage.updatePrototypeComplianceSchemeMember('missing-id', {
+        status: 'active'
+      })
+    ).toBeNull()
+  })
+})

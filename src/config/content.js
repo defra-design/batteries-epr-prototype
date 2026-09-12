@@ -107,6 +107,12 @@ export const content = {
             description:
               'Quarterly submission of placed-on-market battery data by an approved compliance scheme on behalf of its members.'
           },
+          bcsSendsMembersList: {
+            persona: 'complianceScheme',
+            title: 'BCS sends regulator members list',
+            description:
+              'The scheme submits the list of producers registered as its members.'
+          },
           bcsEnquiresHowToApply: {
             persona: 'complianceScheme',
             title:
@@ -145,12 +151,6 @@ export const content = {
             title: 'BCS registration',
             description:
               'The scheme completes its registration details with the regulator.'
-          },
-          bcsSendsMembersList: {
-            persona: 'complianceScheme',
-            title: 'BCS sends regulator members list',
-            description:
-              'The scheme submits the list of producers registered as its members.'
           },
           bcsReceivesAcceptanceAndPaysFee: {
             persona: 'complianceScheme',

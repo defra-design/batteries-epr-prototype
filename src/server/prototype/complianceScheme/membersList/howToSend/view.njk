@@ -1,0 +1,57 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorSummary and errorSummary.length %}
+        {{ govukErrorSummary({
+          titleText: errorTitle,
+          errorList: errorSummary,
+          attributes: { "data-testid": "how-to-send-error-summary" }
+        }) }}
+      {% endif %}
+
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+      <form method="post" action="{{ action }}" novalidate data-testid="how-to-send-form">
+        {{ govukRadios({
+          idPrefix: "sendMethod",
+          name: "sendMethod",
+          errorMessage: { text: errors.sendMethod } if errors.sendMethod,
+          items: [
+            {
+              value: "onlineForm",
+              text: labels.onlineFormLabel,
+              hint: { text: labels.onlineFormHint },
+              checked: formValues.sendMethod == "onlineForm",
+              attributes: { "data-testid": "how-to-send-online-form" }
+            },
+            {
+              value: "csv",
+              text: labels.csvLabel,
+              hint: { text: labels.csvHint },
+              checked: formValues.sendMethod == "csv",
+              attributes: { "data-testid": "how-to-send-csv" }
+            }
+          ]
+        }) }}
+
+        {{ govukButton({
+          text: labels.continueAction,
+          attributes: { "data-testid": "how-to-send-continue" }
+        }) }}
+      </form>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('prototypeMembersList.js') }}"></script>
+{% endblock %}

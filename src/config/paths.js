@@ -97,6 +97,23 @@ export const paths = {
   prototypeComplianceSchemeSubmissionUploadSuccess:
     '/prototype/compliance-scheme/pom-submission/{year}/{quarter}/upload-success',
 
+  prototypeMembersListStart: '/prototype/compliance-scheme/members-list',
+  prototypeMembersListHowToSend:
+    '/prototype/compliance-scheme/members-list/how-to-send',
+  prototypeMembersListUploadCsv:
+    '/prototype/compliance-scheme/members-list/upload-csv',
+  prototypeMembersListReviewUpload:
+    '/prototype/compliance-scheme/members-list/review-upload',
+  prototypeMembersListReviewUploadFix:
+    '/prototype/compliance-scheme/members-list/review-upload/{memberId}/fix',
+  prototypeMembersListSubmitted:
+    '/prototype/compliance-scheme/members-list/submitted',
+  // Online-form branch (add members one at a time) is a separate PR — this
+  // placeholder is the "how do you want to send your list?" destination
+  // for that choice until it is built.
+  prototypeMembersListAddMember:
+    '/prototype/compliance-scheme/members-list/add-member',
+
   health: '/health',
 
   password: '/password',

@@ -199,5 +199,121 @@ export const prototypeComplianceSchemeContent = {
     evidenceNote:
       "Based on the data you've uploaded, you should provide additional evidence or notes for 2 chemistry categories.",
     continueAction: 'Continue'
+  },
+
+  membersList: {
+    start: {
+      title: 'Send your regulator your members list',
+      heading: 'Send your regulator your members list',
+      intro:
+        'Use this service to tell your regulator which battery producers are registered as members of your compliance scheme.',
+      insetText:
+        "You must send an up-to-date members list within 28 days of any change to your scheme's membership.",
+      beforeYouStartHeading: 'Before you start',
+      checkIntro: 'You can send your list in 2 ways:',
+      checkBullets: [
+        'upload a CSV file containing all of your members',
+        'add members one at a time using an online form'
+      ],
+      needIntro: "You'll need:",
+      needBullets: [
+        "your member producers' organisation names and Companies House numbers, if they're registered",
+        'the compliance period this list applies to',
+        'a CSV file of your members, if you plan to upload one'
+      ],
+      applyHeading: 'Send your list',
+      startAction: 'Start now',
+      helpHeading: 'Help sending your list',
+      helpBody:
+        'You can get help by contacting the Environment Agency (England)',
+      helpPhone: 'Telephone: 03708 506 506',
+      helpEmailLabel: 'Email:',
+      helpEmail: 'batteries@environment-agency.gov.uk',
+      relatedHeading: 'Related content',
+      relatedLinks: [
+        'Manage your compliance scheme account',
+        'Add or remove a scheme member',
+        'Delegate authority of the Appropriate Person'
+      ],
+      guidanceHeading: 'Help and guidance',
+      guidanceLinks: [
+        'Waste batteries: producer responsibility',
+        'Regulations: batteries and accumulators',
+        'Classifying portable and industrial batteries'
+      ]
+    },
+
+    howToSend: {
+      title: 'How do you want to send your members list?',
+      heading: 'How do you want to send your members list?',
+      onlineFormLabel: 'Add members using an online form',
+      onlineFormHint:
+        'Add one producer member at a time by completing an online form.',
+      csvLabel: 'Upload a CSV file',
+      csvHint:
+        'Upload a CSV file containing your member details. The file can include one member or multiple members.',
+      continueAction: 'Continue',
+      error: {
+        title: 'There is a problem',
+        message: 'Select how you want to send your members list'
+      }
+    },
+
+    uploadCsv: {
+      title: 'Upload a CSV file',
+      heading: 'Upload a CSV file',
+      intro:
+        'Upload a CSV file containing your battery producer scheme member details. The file can include one member or multiple members.',
+      fileLabel: 'Upload a file',
+      uploadAction: 'Continue',
+      error: {
+        title: 'There is a problem',
+        message: 'Select a CSV file to upload'
+      }
+    },
+
+    reviewUpload: {
+      title: 'Review your member upload',
+      heading: 'Review your member upload',
+      intro:
+        'We checked each row as your file uploaded. Fix any rows marked "Needs attention" below, then submit. You do not need to re-upload the whole file.',
+      addOneMemberLink: 'Add one member',
+      bulkUploadAction: 'Bulk upload',
+      columns: {
+        member: 'Member',
+        status: 'Status',
+        action: 'Action'
+      },
+      validStatus: 'Valid',
+      needsAttentionStatus: 'Needs attention',
+      fixLink: 'Fix',
+      fixedAction: '–',
+      submitAction: 'Submit'
+    },
+
+    fix: {
+      title: 'Fix this member',
+      heading: 'Fix this member',
+      captionTemplate: 'Fixing: {companyName}',
+      companyRegistrationNoLabel: 'Companies House number',
+      companyRegistrationNoHint: 'For example, 01234567',
+      saveAction: 'Save and continue',
+      error: {
+        title: 'There is a problem',
+        message: "Enter this member's Companies House number"
+      }
+    },
+
+    submitted: {
+      title: 'Members list submitted',
+      heading: 'Members list submitted',
+      panelBody:
+        'Your compliance scheme members list has been sent to the regulator.',
+      filenameLabel: 'File sent:',
+      nextHeading: 'What happens next',
+      nextBody:
+        'The regulator will review your members list. You do not need to do anything else unless they contact you.',
+      backToPrototypeLink: 'Back to prototype journeys'
+    }
   }
 }

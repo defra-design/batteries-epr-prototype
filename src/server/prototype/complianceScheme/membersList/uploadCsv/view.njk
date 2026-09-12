@@ -1,0 +1,45 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorSummary and errorSummary.length %}
+        {{ govukErrorSummary({
+          titleText: errorTitle,
+          errorList: errorSummary,
+          attributes: { "data-testid": "upload-csv-error-summary" }
+        }) }}
+      {% endif %}
+
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+      <p class="govuk-body">{{ labels.intro }}</p>
+
+      <form method="post" action="{{ action }}" enctype="multipart/form-data" novalidate data-testid="upload-csv-form">
+        {{ govukFileUpload({
+          id: "membersFile",
+          name: "membersFile",
+          label: { text: labels.fileLabel },
+          errorMessage: { text: errors.membersFile } if errors.membersFile,
+          attributes: { "data-testid": "upload-csv-file" }
+        }) }}
+
+        {{ govukButton({
+          text: labels.uploadAction,
+          attributes: { "data-testid": "upload-csv-continue" }
+        }) }}
+      </form>
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('prototypeMembersList.js') }}"></script>
+{% endblock %}
