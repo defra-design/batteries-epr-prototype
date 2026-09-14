@@ -10,7 +10,6 @@ export const paths = {
   accessibility: '/accessibility-statement',
   npwdPackagingComparison: '/npwd-vs-packaging',
   bcsRegistrationWalkthrough: '/bcs-registration-walkthrough',
-  alphaAssessment: '/alpha-assessment',
 
   prototypeRegistrationStart: '/prototype/small-producer/registration',
   prototypeRegistrationOneLogin:
