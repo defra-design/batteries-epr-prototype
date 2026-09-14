@@ -1665,6 +1665,22 @@
       "updatedAt": "2025-09-09T00:00:00Z"
     }
   ],
+  "prototypeAbtoDeliveries": [
+    {
+      "id": "BT2026-0071",
+      "schemeName": "Voltguard Batteries",
+      "reportedTonnes": 50.0,
+      "measuredTonnes": 40.0,
+      "reportedOn": "2026-10-09T00:00:00Z"
+    },
+    {
+      "id": "BT2026-0092",
+      "schemeName": "Mersey Producers Compliance",
+      "reportedTonnes": 18.75,
+      "measuredTonnes": 18.9,
+      "reportedOn": "2026-10-08T00:00:00Z"
+    }
+  ],
   "prototypeComplianceSchemeQuarters": [
     {
       "id": "66666666-0001-4000-a000-000000000001",

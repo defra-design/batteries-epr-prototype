@@ -97,6 +97,18 @@ export const paths = {
   prototypeComplianceSchemeSubmissionUploadSuccess:
     '/prototype/compliance-scheme/pom-submission/{year}/{quarter}/upload-success',
 
+  prototypeAbtoIncomingWasteDashboard: '/prototype/abto/incoming-waste',
+  prototypeAbtoIncomingWasteCompare:
+    '/prototype/abto/incoming-waste/{deliveryId}',
+  prototypeAbtoIncomingWasteAccept:
+    '/prototype/abto/incoming-waste/{deliveryId}/accept',
+  prototypeAbtoIncomingWasteAccepted:
+    '/prototype/abto/incoming-waste/{deliveryId}/accepted',
+  prototypeAbtoIncomingWasteQuery:
+    '/prototype/abto/incoming-waste/{deliveryId}/query',
+  prototypeAbtoIncomingWasteQuerySent:
+    '/prototype/abto/incoming-waste/{deliveryId}/query-sent',
+
   prototypeMembersListStart: '/prototype/compliance-scheme/members-list',
   prototypeMembersListHowToSend:
     '/prototype/compliance-scheme/members-list/how-to-send',

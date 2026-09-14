@@ -1,0 +1,35 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <span class="govuk-caption-l" data-testid="abto-dashboard-caption">{{ labels.caption }}</span>
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+      <h2 class="govuk-heading-m">{{ labels.subHeading }}</h2>
+      <p class="govuk-body">{{ labels.intro }}</p>
+
+      {% set deliveryRows = [] %}
+      {% for delivery in deliveries %}
+        {% set deliveryRows = (deliveryRows.push([
+          {
+            text: delivery.schemeName + " — reported " + (delivery.reportedOn | formatDate('d MMM yyyy')) + ", " + delivery.reportedTonnesFormatted + "t, batch " + delivery.id
+          },
+          {
+            html: '<a class="govuk-link" href="' + delivery.compareUrl + '" data-testid="abto-dashboard-verify-' + delivery.id + '">' + verifyAction + '</a>'
+          }
+        ]), deliveryRows) %}
+      {% endfor %}
+
+      {{ govukTable({
+        head: [
+          { text: labels.columns.scheme },
+          { text: "" }
+        ],
+        rows: deliveryRows,
+        attributes: { "data-testid": "abto-dashboard-table" }
+      }) }}
+    </div>
+  </div>
+{% endblock %}

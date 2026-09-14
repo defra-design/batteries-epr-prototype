@@ -7,6 +7,7 @@ import { prototypeRegistration } from './prototype/registration/index.js'
 import { prototypeSubmission } from './prototype/submission/index.js'
 import { prototypeComplianceSchemePomSubmission } from './prototype/complianceScheme/pomSubmission/index.js'
 import { prototypeComplianceSchemeMembersList } from './prototype/complianceScheme/membersList/index.js'
+import { prototypeAbtoIncomingWaste } from './prototype/abto/incomingWaste/index.js'
 import { blueprint } from './blueprint/index.js'
 import { bcsRegistrationWalkthrough } from './bcsRegistrationWalkthrough/index.js'
 import { alphaAssessment } from './alphaAssessment/index.js'
@@ -103,6 +104,7 @@ export const router = {
           prototypeComplianceSchemePomSubmission.openRoutes,
         prototypeComplianceSchemeMembersList:
           prototypeComplianceSchemeMembersList.openRoutes,
+        prototypeAbtoIncomingWaste: prototypeAbtoIncomingWaste.openRoutes,
         blueprint: blueprint.openRoutes,
         bcsRegistrationWalkthrough: bcsRegistrationWalkthrough.openRoutes,
         alphaAssessment: alphaAssessment.openRoutes,
