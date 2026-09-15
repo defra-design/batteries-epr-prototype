@@ -119,11 +119,34 @@ export const paths = {
     '/prototype/compliance-scheme/members-list/review-upload/{memberId}/fix',
   prototypeMembersListSubmitted:
     '/prototype/compliance-scheme/members-list/submitted',
-  // Online-form branch (add members one at a time) is a separate PR — this
-  // placeholder is the "how do you want to send your list?" destination
-  // for that choice until it is built.
-  prototypeMembersListAddMember:
-    '/prototype/compliance-scheme/members-list/add-member',
+
+  // Online-form branch: add one producer member at a time.
+  prototypeMembersListAddMemberOrganisationType:
+    '/prototype/compliance-scheme/members-list/add-member/organisation-type',
+  prototypeMembersListAddMemberCompaniesHouse:
+    '/prototype/compliance-scheme/members-list/add-member/companies-house',
+  prototypeMembersListAddMemberPartnershipDetails:
+    '/prototype/compliance-scheme/members-list/add-member/partnership-details',
+  prototypeMembersListAddMemberSoleTraderDetails:
+    '/prototype/compliance-scheme/members-list/add-member/sole-trader-details',
+  prototypeMembersListAddMemberUkBusinessPresence:
+    '/prototype/compliance-scheme/members-list/add-member/uk-business-presence',
+  prototypeMembersListAddMemberOverseasDetails:
+    '/prototype/compliance-scheme/members-list/add-member/overseas-details',
+  prototypeMembersListAddMemberOverseasCannotRegister:
+    '/prototype/compliance-scheme/members-list/add-member/overseas-cannot-register',
+  prototypeMembersListAddMemberLegalNoticesAddress:
+    '/prototype/compliance-scheme/members-list/add-member/legal-notices-address',
+  prototypeMembersListAddMemberAppropriatePerson:
+    '/prototype/compliance-scheme/members-list/add-member/appropriate-person',
+  prototypeMembersListAddMemberBatteryCategory:
+    '/prototype/compliance-scheme/members-list/add-member/battery-category',
+  prototypeMembersListAddMemberTonnage:
+    '/prototype/compliance-scheme/members-list/add-member/tonnage',
+  prototypeMembersListAddMemberDateJoined:
+    '/prototype/compliance-scheme/members-list/add-member/date-joined',
+  prototypeMembersListAddMemberCheckAnswers:
+    '/prototype/compliance-scheme/members-list/add-member/check-answers',
 
   health: '/health',
 

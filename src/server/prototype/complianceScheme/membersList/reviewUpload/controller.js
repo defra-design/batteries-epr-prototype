@@ -38,7 +38,7 @@ export const reviewUploadController = {
         {
           ...taskFlowPageModel(pageContent),
           backLink: paths.prototypeMembersListUploadCsv,
-          addOneMemberUrl: paths.prototypeMembersListAddMember,
+          addOneMemberUrl: paths.prototypeMembersListAddMemberOrganisationType,
           bulkUploadUrl: paths.prototypeMembersListUploadCsv,
           submitAction: paths.prototypeMembersListReviewUpload,
           rows: buildRows(pageContent),
@@ -58,7 +58,7 @@ export const reviewUploadController = {
         {
           ...taskFlowPageModel(pageContent),
           backLink: paths.prototypeMembersListUploadCsv,
-          addOneMemberUrl: paths.prototypeMembersListAddMember,
+          addOneMemberUrl: paths.prototypeMembersListAddMemberOrganisationType,
           bulkUploadUrl: paths.prototypeMembersListUploadCsv,
           submitAction: paths.prototypeMembersListReviewUpload,
           rows: buildRows(pageContent),

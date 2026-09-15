@@ -1,0 +1,64 @@
+{% extends 'prototypeMembersListAddMember/_layout.njk' %}
+
+{% block stepBody %}
+  <p class="govuk-body">{{ labels.intro }}</p>
+
+  {% set tableRows = [] %}
+  {% for row in labels.whoRows %}
+    {% set tableRows = (tableRows.push([{ text: row.organisation }, { text: row.role }]), tableRows) %}
+  {% endfor %}
+
+  {% set detailsHtml %}
+    <p class="govuk-body">{{ labels.detailsIntro }}</p>
+    <h2 class="govuk-heading-s">{{ labels.responsibilitiesHeading }}</h2>
+    <p class="govuk-body">{{ labels.responsibilitiesIntro }}</p>
+    <ul class="govuk-list govuk-list--bullet">
+      {% for bullet in labels.responsibilitiesBullets %}
+        <li>{{ bullet }}</li>
+      {% endfor %}
+    </ul>
+    <h2 class="govuk-heading-s">{{ labels.whoHeading }}</h2>
+    {{ govukTable({
+      head: [
+        { text: labels.whoColumnOrganisation },
+        { text: labels.whoColumnRole }
+      ],
+      rows: tableRows,
+      attributes: { "data-testid": "appropriate-person-roles-table" }
+    }) }}
+  {% endset %}
+
+  {{ govukDetails({
+    summaryText: labels.detailsSummary,
+    html: detailsHtml,
+    attributes: { "data-testid": "appropriate-person-details" }
+  }) }}
+
+  <form method="post" action="{{ action }}" novalidate data-testid="appropriate-person-form">
+    {{ govukInput({
+      id: "appropriatePersonName",
+      name: "appropriatePersonName",
+      value: formValues.appropriatePersonName,
+      label: { text: labels.fullNameLabel, classes: "govuk-label--m" },
+      errorMessage: { text: errors.appropriatePersonName } if errors.appropriatePersonName,
+      classes: "govuk-!-width-two-thirds",
+      attributes: { "data-testid": "appropriate-person-name" }
+    }) }}
+
+    {{ govukInput({
+      id: "appropriatePersonEmail",
+      name: "appropriatePersonEmail",
+      type: "email",
+      value: formValues.appropriatePersonEmail,
+      label: { text: labels.emailLabel, classes: "govuk-label--m" },
+      errorMessage: { text: errors.appropriatePersonEmail } if errors.appropriatePersonEmail,
+      classes: "govuk-!-width-two-thirds",
+      attributes: { "data-testid": "appropriate-person-email" }
+    }) }}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "appropriate-person-continue" }
+    }) }}
+  </form>
+{% endblock %}

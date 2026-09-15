@@ -42,7 +42,8 @@ export const STORAGE_KEYS = {
   prototypeComplianceSchemeQuarters: `${KEY_PREFIX}prototype:complianceSchemeQuarters`,
   prototypeComplianceSchemeSubmissionDraft: `${KEY_PREFIX}prototype:complianceSchemeSubmissionDraft`,
   prototypeComplianceSchemeUploadErrors: `${KEY_PREFIX}prototype:complianceSchemeUploadErrors`,
-  prototypeMembersListDraft: `${KEY_PREFIX}prototype:membersListDraft`
+  prototypeMembersListDraft: `${KEY_PREFIX}prototype:membersListDraft`,
+  prototypeMembersListAddMemberDraft: `${KEY_PREFIX}prototype:membersListAddMemberDraft`
 }
 
 const bprnSequenceKey = (agencyCode, compliancePeriod) =>
@@ -1917,6 +1918,19 @@ const clearPrototypeMembersList = () => {
   removeKey(STORAGE_KEYS.prototypeMembersListDraft)
 }
 
+const getPrototypeMembersListAddMember = () =>
+  readJson(STORAGE_KEYS.prototypeMembersListAddMemberDraft) ?? {}
+
+const savePrototypeMembersListAddMember = (fields) => {
+  const next = { ...getPrototypeMembersListAddMember(), ...fields }
+  writeJson(STORAGE_KEYS.prototypeMembersListAddMemberDraft, next)
+  return next
+}
+
+const clearPrototypeMembersListAddMember = () => {
+  removeKey(STORAGE_KEYS.prototypeMembersListAddMemberDraft)
+}
+
 const updatePrototypeComplianceSchemeMember = (id, patch) => {
   const members = readMap(STORAGE_KEYS.prototypeComplianceSchemeMembers)
   const existing = members[id]
@@ -2060,5 +2074,8 @@ export const storage = {
   savePrototypeMembersList,
   submitPrototypeMembersList,
   clearPrototypeMembersList,
-  updatePrototypeComplianceSchemeMember
+  updatePrototypeComplianceSchemeMember,
+  getPrototypeMembersListAddMember,
+  savePrototypeMembersListAddMember,
+  clearPrototypeMembersListAddMember
 }

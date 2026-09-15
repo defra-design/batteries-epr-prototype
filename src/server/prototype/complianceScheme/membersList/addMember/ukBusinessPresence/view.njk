@@ -1,0 +1,27 @@
+{% extends 'prototypeMembersListAddMember/_layout.njk' %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="uk-business-presence-form">
+    {{ govukRadios({
+      idPrefix: "ukBusinessPresence",
+      name: "ukBusinessPresence",
+      errorMessage: { text: errors.ukBusinessPresence } if errors.ukBusinessPresence,
+      items: [
+        { value: "yes", text: labels.yesLabel, checked: formValues.ukBusinessPresence == "yes", id: "ukBusinessPresence", attributes: { "data-testid": "uk-business-presence-yes" } },
+        { value: "no", text: labels.noLabel, checked: formValues.ukBusinessPresence == "no", attributes: { "data-testid": "uk-business-presence-no" } }
+      ]
+    }) }}
+
+    {{ govukDetails({
+      summaryText: labels.detailsSummary,
+      text: labels.detailsBody,
+      attributes: { "data-testid": "uk-business-presence-details" }
+    }) }}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "uk-business-presence-continue" }
+    }) }}
+  </form>
+{% endblock %}

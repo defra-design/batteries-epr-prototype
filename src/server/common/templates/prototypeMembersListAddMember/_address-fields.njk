@@ -1,0 +1,59 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+{% macro addressFields(labels, errors, formValues) %}
+  <h2 class="govuk-heading-m">{{ labels.addressHeading }}</h2>
+
+  {{ govukInput({
+    id: "addressPostcode",
+    name: "addressPostcode",
+    value: formValues.addressPostcode,
+    label: { text: labels.postcodeLabel, classes: "govuk-label--s" },
+    hint: { text: labels.postcodeHint },
+    errorMessage: { text: errors.addressPostcode } if errors.addressPostcode,
+    classes: "govuk-input--width-10",
+    attributes: { "data-testid": "details-postcode" }
+  }) }}
+
+  {{ govukButton({
+    text: labels.findAddressAction,
+    type: "button",
+    classes: "govuk-button--secondary govuk-!-margin-bottom-6",
+    attributes: { "data-testid": "details-find-address" }
+  }) }}
+
+  <div data-testid="details-address-select-wrapper" hidden>
+    {{ govukSelect({
+      id: "addressChoice",
+      name: "addressChoice",
+      label: { text: labels.selectAddressLabel, classes: "govuk-label--s" },
+      items: [],
+      attributes: { "data-testid": "details-address-select" }
+    }) }}
+  </div>
+
+  <p class="govuk-body">
+    <a class="govuk-link" href="#" data-testid="details-manual-link">{{ labels.manualLink }}</a>
+  </p>
+
+  <div data-testid="details-manual-address" hidden>
+    {{ govukInput({
+      id: "addressLine1",
+      name: "addressLine1",
+      value: formValues.addressLine1,
+      label: { text: labels.addressLine1Label, classes: "govuk-label--s" },
+      classes: "govuk-!-width-two-thirds",
+      attributes: { "data-testid": "details-address-line1" }
+    }) }}
+
+    {{ govukInput({
+      id: "addressTown",
+      name: "addressTown",
+      value: formValues.addressTown,
+      label: { text: labels.addressTownLabel, classes: "govuk-label--s" },
+      classes: "govuk-!-width-two-thirds",
+      attributes: { "data-testid": "details-address-town" }
+    }) }}
+  </div>
+{% endmacro %}

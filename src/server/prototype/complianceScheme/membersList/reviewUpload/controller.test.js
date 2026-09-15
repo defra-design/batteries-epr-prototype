@@ -121,7 +121,7 @@ describe('#prototypeMembersListReviewUpload', () => {
 
     expect(result).toEqual(
       expect.stringContaining(
-        `href="${paths.prototypeMembersListAddMember}" data-testid="review-upload-add-one"`
+        `href="${paths.prototypeMembersListAddMemberOrganisationType}" data-testid="review-upload-add-one"`
       )
     )
     expect(result).toEqual(

@@ -1,0 +1,70 @@
+{% extends 'prototypeMembersListAddMember/_layout.njk' %}
+
+{% block stepBody %}
+  {% set rows = [] %}
+
+  {% set rows = (rows.push({
+    key: { text: labels.rows.organisationType },
+    value: { html: '<span data-testid="check-answers-value-organisationType"></span>' },
+    actions: { items: [{ href: changeUrls.organisationType, text: labels.changeAction, visuallyHiddenText: labels.rows.organisationType, attributes: { "data-testid": "check-answers-change-organisationType" } }] }
+  }), rows) %}
+
+  {% set rows = (rows.push({
+    key: { text: labels.rows.organisationName },
+    value: { html: '<span data-testid="check-answers-value-organisationName"></span>' },
+    actions: { items: [{ href: "#", text: labels.changeAction, visuallyHiddenText: labels.rows.organisationName, attributes: { "data-testid": "check-answers-change-organisationName" } }] }
+  }), rows) %}
+
+  {% set rows = (rows.push({
+    key: { text: labels.rows.organisationAddress },
+    value: { html: '<span data-testid="check-answers-value-organisationAddress"></span>' },
+    actions: { items: [{ href: "#", text: labels.changeAction, visuallyHiddenText: labels.rows.organisationAddress, attributes: { "data-testid": "check-answers-change-organisationAddress" } }] }
+  }), rows) %}
+
+  {% set rows = (rows.push({
+    key: { text: labels.rows.legalNoticesAddress },
+    value: { html: '<span data-testid="check-answers-value-legalNoticesAddress"></span>' },
+    actions: { items: [{ href: changeUrls.legalNoticesAddress, text: labels.changeAction, visuallyHiddenText: labels.rows.legalNoticesAddress, attributes: { "data-testid": "check-answers-change-legalNoticesAddress" } }] }
+  }), rows) %}
+
+  {% set rows = (rows.push({
+    key: { text: labels.rows.appropriatePersonName },
+    value: { html: '<span data-testid="check-answers-value-appropriatePersonName"></span>' },
+    actions: { items: [{ href: changeUrls.appropriatePerson, text: labels.changeAction, visuallyHiddenText: labels.rows.appropriatePersonName, attributes: { "data-testid": "check-answers-change-appropriatePersonName" } }] }
+  }), rows) %}
+
+  {% set rows = (rows.push({
+    key: { text: labels.rows.appropriatePersonEmail },
+    value: { html: '<span data-testid="check-answers-value-appropriatePersonEmail"></span>' },
+    actions: { items: [{ href: changeUrls.appropriatePerson, text: labels.changeAction, visuallyHiddenText: labels.rows.appropriatePersonEmail, attributes: { "data-testid": "check-answers-change-appropriatePersonEmail" } }] }
+  }), rows) %}
+
+  {% set rows = (rows.push({
+    key: { text: labels.rows.batteryTypes },
+    value: { html: '<span data-testid="check-answers-value-batteryTypes"></span>' },
+    actions: { items: [{ href: changeUrls.batteryCategory, text: labels.changeAction, visuallyHiddenText: labels.rows.batteryTypes, attributes: { "data-testid": "check-answers-change-batteryTypes" } }] }
+  }), rows) %}
+
+  {% set rows = (rows.push({
+    key: { text: labels.rows.tonnage },
+    value: { html: '<span data-testid="check-answers-value-tonnage"></span>' },
+    actions: { items: [{ href: changeUrls.tonnage, text: labels.changeAction, visuallyHiddenText: labels.rows.tonnage, attributes: { "data-testid": "check-answers-change-tonnage" } }] }
+  }), rows) %}
+
+  {% set rows = (rows.push({
+    key: { text: labels.rows.dateJoined },
+    value: { html: '<span data-testid="check-answers-value-dateJoined"></span>' },
+    actions: { items: [{ href: changeUrls.dateJoined, text: labels.changeAction, visuallyHiddenText: labels.rows.dateJoined, attributes: { "data-testid": "check-answers-change-dateJoined" } }] }
+  }), rows) %}
+
+  {{ govukSummaryList({
+    rows: rows,
+    attributes: { "data-testid": "check-answers-list" }
+  }) }}
+
+  {{ govukButton({
+    text: labels.continueAction,
+    href: continueUrl,
+    attributes: { "data-testid": "check-answers-continue" }
+  }) }}
+{% endblock %}

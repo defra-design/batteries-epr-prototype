@@ -3458,3 +3458,38 @@ describe('updatePrototypeComplianceSchemeMember', () => {
     ).toBeNull()
   })
 })
+
+describe('prototype members-list add-member draft', () => {
+  test('getPrototypeMembersListAddMember returns an empty object when nothing is stored', () => {
+    expect(storage.getPrototypeMembersListAddMember()).toEqual({})
+  })
+
+  test('savePrototypeMembersListAddMember merges fields into the draft', () => {
+    storage.savePrototypeMembersListAddMember({
+      organisationType: 'soleTrader'
+    })
+    const draft = storage.savePrototypeMembersListAddMember({
+      contactFullName: 'Scarlet Elfcup'
+    })
+
+    expect(draft).toEqual({
+      organisationType: 'soleTrader',
+      contactFullName: 'Scarlet Elfcup'
+    })
+    expect(storage.getPrototypeMembersListAddMember()).toEqual(draft)
+  })
+
+  test('clearPrototypeMembersListAddMember removes the draft', () => {
+    storage.savePrototypeMembersListAddMember({
+      organisationType: 'soleTrader'
+    })
+    storage.clearPrototypeMembersListAddMember()
+    expect(storage.getPrototypeMembersListAddMember()).toEqual({})
+  })
+
+  test('the add-member draft key is namespaced under the prototype prefix', () => {
+    expect(STORAGE_KEYS.prototypeMembersListAddMemberDraft).toBe(
+      'npwd-batteries:prototype:membersListAddMemberDraft'
+    )
+  })
+})

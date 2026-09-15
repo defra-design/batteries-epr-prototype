@@ -84,7 +84,7 @@ describe('#prototypeMembersListHowToSend', () => {
     })
   })
 
-  test('POST with "onlineForm" gives a nextStep to the add-member placeholder', async () => {
+  test('POST with "onlineForm" gives a nextStep to the add-member organisation-type screen', async () => {
     const { result, statusCode } = await server.inject({
       method: 'POST',
       url: paths.prototypeMembersListHowToSend,
@@ -99,7 +99,7 @@ describe('#prototypeMembersListHowToSend', () => {
     expect(pagePayload).toEqual({
       target: 'save',
       savedFields: { sendMethod: 'onlineForm' },
-      nextStep: paths.prototypeMembersListAddMember
+      nextStep: paths.prototypeMembersListAddMemberOrganisationType
     })
   })
 

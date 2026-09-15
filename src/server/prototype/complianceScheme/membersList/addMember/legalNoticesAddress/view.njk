@@ -1,0 +1,32 @@
+{% extends 'prototypeMembersListAddMember/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="legal-notices-address-form">
+    {{ govukInput({
+      id: "legalNoticesPostcode",
+      name: "legalNoticesPostcode",
+      value: formValues.legalNoticesPostcode,
+      label: { text: labels.postcodeLabel, classes: "govuk-label--m" },
+      hint: { text: labels.postcodeHint },
+      errorMessage: { text: errors.legalNoticesPostcode } if errors.legalNoticesPostcode,
+      classes: "govuk-input--width-10",
+      attributes: { "data-testid": "legal-notices-postcode" }
+    }) }}
+
+    {{ govukInput({
+      id: "legalNoticesBuilding",
+      name: "legalNoticesBuilding",
+      value: formValues.legalNoticesBuilding,
+      label: { text: labels.buildingLabel, classes: "govuk-label--m" },
+      hint: { text: labels.buildingHint },
+      errorMessage: { text: errors.legalNoticesBuilding } if errors.legalNoticesBuilding,
+      classes: "govuk-!-width-two-thirds",
+      attributes: { "data-testid": "legal-notices-building" }
+    }) }}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "legal-notices-continue" }
+    }) }}
+  </form>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'prototypeMembersListAddMember/_layout.njk' %}
+
+{% block stepBody %}
+  <form method="post" action="{{ action }}" novalidate data-testid="date-joined-form">
+    {{ govukDateInput({
+      id: "dateJoined",
+      namePrefix: "dateJoined",
+      hint: { text: labels.hint },
+      errorMessage: { text: errors["dateJoined-day"] } if errors["dateJoined-day"],
+      items: [
+        {
+          name: "day",
+          label: "Day",
+          classes: "govuk-input--width-2" + (" govuk-input--error" if errors["dateJoined-day"] else ""),
+          value: formValues["dateJoined-day"],
+          attributes: { "data-testid": "date-joined-day" }
+        },
+        {
+          name: "month",
+          label: "Month",
+          classes: "govuk-input--width-2" + (" govuk-input--error" if errors["dateJoined-day"] else ""),
+          value: formValues["dateJoined-month"],
+          attributes: { "data-testid": "date-joined-month" }
+        },
+        {
+          name: "year",
+          label: "Year",
+          classes: "govuk-input--width-4" + (" govuk-input--error" if errors["dateJoined-day"] else ""),
+          value: formValues["dateJoined-year"],
+          attributes: { "data-testid": "date-joined-year" }
+        }
+      ]
+    }) }}
+
+    {{ govukButton({
+      text: labels.continueAction,
+      attributes: { "data-testid": "date-joined-continue" }
+    }) }}
+  </form>
+{% endblock %}

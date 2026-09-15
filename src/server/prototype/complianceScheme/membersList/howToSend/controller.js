@@ -10,7 +10,7 @@ const schema = joi
 
 const NEXT_STEP = {
   csv: paths.prototypeMembersListUploadCsv,
-  onlineForm: paths.prototypeMembersListAddMember
+  onlineForm: paths.prototypeMembersListAddMemberOrganisationType
 }
 
 const buildViewModel = (

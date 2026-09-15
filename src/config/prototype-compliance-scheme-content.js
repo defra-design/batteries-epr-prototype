@@ -314,6 +314,277 @@ export const prototypeComplianceSchemeContent = {
       nextBody:
         'The regulator will review your members list. You do not need to do anything else unless they contact you.',
       backToPrototypeLink: 'Back to prototype journeys'
+    },
+
+    addMember: {
+      organisationType: {
+        title: 'Select your organisation type',
+        heading: 'Select your organisation type',
+        limitedCompanyLabel: 'Limited company',
+        llpLabel: 'Limited liability partnership',
+        partnershipLabel: 'Partnership',
+        soleTraderLabel: 'Sole trader or individual',
+        overseasLabel: 'Overseas company',
+        continueAction: 'Continue',
+        error: {
+          title: 'There is a problem',
+          choice: 'Select your organisation type'
+        }
+      },
+
+      organisationTypeLabels: {
+        limitedCompany: 'Limited company',
+        llp: 'Limited liability partnership',
+        partnership: 'Partnership',
+        soleTrader: 'Sole trader or individual',
+        overseas: 'Overseas company'
+      },
+
+      companiesHouse: {
+        title: 'Search for your organisation on Companies House',
+        heading: 'Search for your organisation on Companies House',
+        nameLabel: 'Registered name',
+        nameHint: 'This is the name registered at Companies House.',
+        numberLabel: 'Company number',
+        numberHint: 'Your 8 character company number, for example 01234567.',
+        searchAction: 'Search Companies House',
+        resultHeading: 'Company found',
+        notFound:
+          'No matching company was found. Check the number and try again.',
+        continueAction: 'Continue',
+        error: {
+          title: 'There is a problem',
+          name: "Enter the member's registered name",
+          number: "Enter the member's 8 character company number"
+        }
+      },
+
+      partnershipDetails: {
+        title: 'Enter your details',
+        heading: 'Enter your details',
+        fullNameLabel: 'Full name',
+        partnershipNameLabel: 'Partnership name',
+        tradingNameLabel: 'Trading name (optional)',
+        addressHeading: 'Address',
+        postcodeLabel: 'Postcode',
+        postcodeHint: 'For example, AA3 1AB',
+        findAddressAction: 'Find address',
+        selectAddressLabel: 'Select an address',
+        manualLink: 'Enter address manually',
+        addressLine1Label: 'Address line 1',
+        addressTownLabel: 'Town or city',
+        continueAction: 'Continue',
+        error: {
+          title: 'There is a problem',
+          fullName: "Enter the member's full name",
+          partnershipName: 'Enter the partnership name',
+          postcode: 'Enter a postcode'
+        }
+      },
+
+      soleTraderDetails: {
+        title: 'Enter your details',
+        heading: 'Enter your details',
+        fullNameLabel: 'Full name',
+        tradingNameLabel: 'Trading name (optional)',
+        addressHeading: 'Address',
+        postcodeLabel: 'Postcode',
+        postcodeHint: 'For example, AA3 1AB',
+        findAddressAction: 'Find address',
+        selectAddressLabel: 'Select an address',
+        manualLink: 'Enter address manually',
+        addressLine1Label: 'Address line 1',
+        addressTownLabel: 'Town or city',
+        continueAction: 'Continue',
+        error: {
+          title: 'There is a problem',
+          fullName: "Enter the member's full name",
+          postcode: 'Enter a postcode'
+        }
+      },
+
+      ukBusinessPresence: {
+        title: 'Do you have a UK business presence?',
+        heading: 'Do you have a UK business presence?',
+        yesLabel: 'Yes',
+        noLabel: 'No',
+        detailsSummary: 'What is a UK business presence?',
+        detailsBody:
+          'A UK business presence is a registered office, branch, warehouse or appointed UK representative located in the UK.',
+        continueAction: 'Continue',
+        error: {
+          title: 'There is a problem',
+          choice: 'Select yes if the member has a UK business presence'
+        }
+      },
+
+      overseasDetails: {
+        title: 'Enter your details',
+        heading: 'Enter your details',
+        overseasNameLabel: 'Overseas company name',
+        overseasAddressLabel: 'Overseas company registered address',
+        ukPresenceHeading: 'Address of UK presence',
+        postcodeLabel: 'Postcode',
+        postcodeHint: 'For example, AA3 1AB',
+        findAddressAction: 'Find address',
+        selectAddressLabel: 'Select an address',
+        manualLink: 'Enter address manually',
+        addressLine1Label: 'Address line 1',
+        addressTownLabel: 'Town or city',
+        continueAction: 'Continue',
+        error: {
+          title: 'There is a problem',
+          overseasName: 'Enter the overseas company name',
+          overseasAddress: 'Enter the overseas company registered address',
+          postcode: 'Enter the postcode of the UK presence'
+        }
+      },
+
+      overseasExit: {
+        title: 'You cannot register as an overseas company',
+        heading: 'You cannot register as an overseas company',
+        body: "This service is only for producers that have a registered office or principal place of business in the UK. Based on what you've told us, your company is registered overseas and does not have a UK presence, so you cannot register directly through this service.",
+        warning:
+          'You must have a UK registered office, UK branch, or other UK presence to register as a battery producer. A registered address outside the UK is not accepted on its own.',
+        whyHeading: 'Why this is required',
+        whyBody:
+          'The regulator needs a UK address to send legal notices to, and to establish which UK regulator (Environment Agency, SEPA, NIEA or Natural Resources Wales) has jurisdiction over your registration. Without a UK address, there is no way to allocate your registration to the correct regulator or serve you with formal notices.',
+        insteadHeading: 'What you can do instead',
+        insteadBullets: [
+          'If your company has any UK presence — a UK subsidiary, branch office, warehouse, or appointed UK representative — you can register using that UK address instead.',
+          "If you have no UK presence at all, you'll need to appoint a UK-based authorised representative to register and report on your behalf. Your authorised representative takes on the legal responsibility for registration and annual reporting."
+        ],
+        contactBody:
+          'Contact your regulator for guidance on appointing a UK authorised representative, or to confirm whether an existing UK presence is sufficient for registration.',
+        contactLink: 'Contact NPWD support',
+        changeAnswerLink:
+          'Chosen the wrong option? Go back and change your answer'
+      },
+
+      legalNoticesAddress: {
+        title: 'Where should we send legal notices?',
+        heading: 'Where should we send legal notices?',
+        postcodeLabel: 'Postcode',
+        postcodeHint: 'For example, AA3 1AB',
+        buildingLabel: 'Building number or name',
+        buildingHint: 'For example, 15 or Prospect Cottage',
+        continueAction: 'Continue',
+        error: {
+          title: 'There is a problem',
+          postcode: 'Enter a postcode',
+          building: 'Enter a building number or name'
+        }
+      },
+
+      appropriatePerson: {
+        title: 'Who is the appropriate person for the producer?',
+        heading: 'Who is the appropriate person for the producer?',
+        intro:
+          'Enter the details of the person with legal responsibility for this producer.',
+        detailsSummary: 'Who can act as an appropriate person',
+        detailsIntro:
+          'The appropriate person is legally responsible for information and declarations submitted under the Waste Batteries and Accumulators Regulations 2009.',
+        responsibilitiesHeading: 'Responsibilities of appropriate person',
+        responsibilitiesIntro: 'The appropriate person must:',
+        responsibilitiesBullets: [
+          'make declarations of compliance',
+          'make applications for registrations and approvals',
+          'confirm battery data submissions are true',
+          'report changes to registration details'
+        ],
+        whoHeading: 'Who can act as an appropriate person',
+        whoColumnOrganisation: 'Organisation type',
+        whoColumnRole: 'Role of appropriate person',
+        whoRows: [
+          {
+            organisation: 'UK-registered limited company',
+            role: 'director or the company secretary'
+          },
+          { organisation: 'Partnership', role: 'partner' },
+          { organisation: 'Sole trader', role: 'the sole trader' }
+        ],
+        fullNameLabel: 'Full name',
+        emailLabel: 'Email address',
+        continueAction: 'Continue',
+        error: {
+          title: 'There is a problem',
+          fullName: "Enter the appropriate person's full name",
+          email: "Enter the appropriate person's email address"
+        }
+      },
+
+      batteryCategory: {
+        title: 'What type of batteries does the producer place on the market?',
+        heading:
+          'What type of batteries does the producer place on the market?',
+        hint: 'Select all that apply',
+        portableLabel: 'Portable batteries',
+        industrialLabel: 'Industrial batteries',
+        automotiveLabel: 'Automotive batteries',
+        sidebarHeading: 'Battery types',
+        sidebarLinks: [
+          'Portable batteries',
+          'Industrial batteries',
+          'Automotive batteries'
+        ],
+        continueAction: 'Continue',
+        error: {
+          title: 'There is a problem',
+          atLeastOne:
+            'Select the types of batteries the producer places on the market'
+        }
+      },
+
+      tonnage: {
+        title:
+          'How many portable batteries will the producer place on the UK market each year?',
+        heading:
+          'How many portable batteries will the producer place on the UK market each year?',
+        hint: '"Placed on the market" means making a battery available for distribution or use in the UK for the first time.',
+        upTo1TonneLabel: '1 tonne or less',
+        over1TonneLabel: 'More than 1 tonne',
+        continueAction: 'Continue',
+        error: {
+          title: 'There is a problem',
+          choice:
+            'Select how many portable batteries the producer will place on the UK market each year'
+        }
+      },
+
+      dateJoined: {
+        title: 'When did the producer join your compliance scheme?',
+        heading: 'When did the producer join your compliance scheme?',
+        hint: 'You must tell us about membership within 28 days of a producer joining your scheme.',
+        continueAction: 'Continue',
+        error: {
+          title: 'There is a problem',
+          required: 'Enter the date the producer joined your scheme',
+          invalid: 'Enter a real date',
+          future: 'The date the producer joined must be today or in the past'
+        }
+      },
+
+      checkAnswers: {
+        title: 'Check your answers',
+        heading: 'Check your answers',
+        rows: {
+          organisationType: 'Organisation type',
+          organisationName: 'Organisation name',
+          organisationAddress: 'Organisation address',
+          legalNoticesAddress: 'Address for legal notices',
+          appropriatePersonName: "Appropriate person's name",
+          appropriatePersonEmail: "Appropriate person's email address",
+          batteryTypes: 'Type of batteries placed on market',
+          tonnage: 'Amount of batteries placed on the market each year',
+          dateJoined: 'Date joined scheme'
+        },
+        changeAction: 'Change',
+        continueAction: 'Continue',
+        tonnageLabels: {
+          upTo1Tonne: 'Less than 1 tonne (1000kg)',
+          over1Tonne: 'More than 1 tonne'
+        }
+      }
     }
   }
 }
