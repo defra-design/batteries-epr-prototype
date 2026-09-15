@@ -172,6 +172,13 @@ export const content = {
             description: '',
             figmaHref: 'https://snowy-golf-42461213.figma.site'
           },
+          abtoMakesWasteSubmission: {
+            persona: 'operator',
+            title: 'ABTO makes waste submission',
+            description:
+              'The operator reports the tonnage it has treated for the quarter.',
+            figmaHref: 'https://volt-clone-19908846.figma.site/'
+          },
           abtoReceivesNotesDecision: {
             persona: 'operator',
             title: 'ABTO receives notes decision',
@@ -184,13 +191,6 @@ export const content = {
               'ABTO takes in the batteries the BCS handed over and treats or recycles them across the quarter',
             description:
               'The operator receives batteries handed over by a compliance scheme and treats or recycles them across the quarter.'
-          },
-          abtoMakesWasteSubmission: {
-            persona: 'operator',
-            title: 'ABTO makes waste submission',
-            description:
-              'The operator reports the tonnage it has treated for the quarter.',
-            figmaHref: 'https://volt-clone-19908846.figma.site/'
           },
           abtoReceivesQueryAndResponds: {
             persona: 'operator',
@@ -313,6 +313,12 @@ export const content = {
             description: 'TODO welsh',
             figmaHref: 'https://snowy-golf-42461213.figma.site'
           },
+          abtoMakesWasteSubmission: {
+            persona: 'operator',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            figmaHref: 'https://volt-clone-19908846.figma.site/'
+          },
           abtoReceivesNotesDecision: {
             persona: 'operator',
             title: 'TODO welsh',
@@ -322,12 +328,6 @@ export const content = {
             persona: 'operator',
             title: 'TODO welsh',
             description: 'TODO welsh'
-          },
-          abtoMakesWasteSubmission: {
-            persona: 'operator',
-            title: 'TODO welsh',
-            description: 'TODO welsh',
-            figmaHref: 'https://volt-clone-19908846.figma.site/'
           },
           abtoReceivesQueryAndResponds: {
             persona: 'operator',
