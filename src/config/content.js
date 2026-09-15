@@ -189,7 +189,8 @@ export const content = {
             persona: 'operator',
             title: 'ABTO makes waste submission',
             description:
-              'The operator reports the tonnage it has treated for the quarter.'
+              'The operator reports the tonnage it has treated for the quarter.',
+            figmaHref: 'https://volt-clone-19908846.figma.site/'
           },
           abtoReceivesQueryAndResponds: {
             persona: 'operator',
@@ -325,7 +326,8 @@ export const content = {
           abtoMakesWasteSubmission: {
             persona: 'operator',
             title: 'TODO welsh',
-            description: 'TODO welsh'
+            description: 'TODO welsh',
+            figmaHref: 'https://volt-clone-19908846.figma.site/'
           },
           abtoReceivesQueryAndResponds: {
             persona: 'operator',

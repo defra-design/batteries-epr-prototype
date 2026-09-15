@@ -108,23 +108,23 @@ describe('#prototypeController', () => {
     expect(result).not.toEqual(expect.stringContaining('Treatment operator'))
   })
 
-  test('selects the producer tab by default, as it has the most journeys with links', async () => {
+  test('selects the operator tab by default, as it has the most journeys with links', async () => {
     const { result } = await server.inject({
       method: 'GET',
       url: paths.prototype
     })
 
-    const producerTabItem = result.match(
-      /<li class="govuk-tabs__list-item[^"]*"[^>]*>\s*<a[^>]*data-testid="prototype-tab-producer"/
+    const operatorTabItem = result.match(
+      /<li class="govuk-tabs__list-item[^"]*"[^>]*>\s*<a[^>]*data-testid="prototype-tab-operator"/
     )[0]
-    expect(producerTabItem).toEqual(
+    expect(operatorTabItem).toEqual(
       expect.stringContaining('govuk-tabs__list-item--selected')
     )
 
-    const producerPanel = result.match(
-      /<div class="govuk-tabs__panel[^"]*" id="persona-producer"/
+    const operatorPanel = result.match(
+      /<div class="govuk-tabs__panel[^"]*" id="persona-operator"/
     )[0]
-    expect(producerPanel).not.toEqual(
+    expect(operatorPanel).not.toEqual(
       expect.stringContaining('govuk-tabs__panel--hidden')
     )
 
@@ -297,6 +297,35 @@ describe('#prototypeController', () => {
     expect(result).not.toEqual(
       expect.stringContaining(
         'data-testid="prototype-journey-abtoEvidenceNoteSentForAuthorisation-coming-soon"'
+      )
+    )
+  })
+
+  test('renders the ABTO makes waste submission journey with a Figma link, opening in a new tab', async () => {
+    const { result } = await server.inject({
+      method: 'GET',
+      url: paths.prototype
+    })
+
+    const pageContent = content.prototype({})
+    const journey = pageContent.journeys.abtoMakesWasteSubmission
+    expect(result).toEqual(expect.stringContaining(journey.title))
+    expect(result).toEqual(expect.stringContaining(journey.description))
+
+    const cta = result.match(
+      /<a[^>]*data-testid="prototype-journey-abtoMakesWasteSubmission-figma-cta"[^>]*>/
+    )[0]
+    expect(cta).toEqual(expect.stringContaining(`href="${journey.figmaHref}"`))
+    expect(cta).toEqual(expect.stringContaining('target="_blank"'))
+    expect(cta).toEqual(expect.stringContaining('rel="noopener noreferrer"'))
+    expect(result).not.toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-abtoMakesWasteSubmission-coded-cta"'
+      )
+    )
+    expect(result).not.toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-abtoMakesWasteSubmission-coming-soon"'
       )
     )
   })
