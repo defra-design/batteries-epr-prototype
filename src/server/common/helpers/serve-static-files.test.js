@@ -33,6 +33,18 @@ describe('serveStaticFiles', () => {
     expect(payload).toBe('User-agent: *\nDisallow: /\n')
   })
 
+  test('serves the Google Search Console verification file at the root', async () => {
+    const { statusCode, payload } = await server.inject({
+      method: 'GET',
+      url: '/google0297e4bffe761ccd.html'
+    })
+
+    expect(statusCode).toBe(statusCodes.ok)
+    expect(payload).toBe(
+      'google-site-verification: google0297e4bffe761ccd.html'
+    )
+  })
+
   test('serves built assets from /public', async () => {
     const { statusCode } = await server.inject({
       method: 'GET',

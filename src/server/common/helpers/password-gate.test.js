@@ -59,6 +59,9 @@ describe('passwordGate', () => {
     expect(passwordGate(buildRequest(paths.password), h)).toBe(h.continue)
     expect(passwordGate(buildRequest(paths.health), h)).toBe(h.continue)
     expect(passwordGate(buildRequest(paths.robots), h)).toBe(h.continue)
+    expect(passwordGate(buildRequest(paths.googleSiteVerification), h)).toBe(
+      h.continue
+    )
   })
 
   test('allows an authenticated visitor through', () => {

@@ -152,6 +152,7 @@ export const paths = {
 
   password: '/password',
   robots: '/robots.txt',
+  googleSiteVerification: '/google0297e4bffe761ccd.html',
 
   signIn: '/sign-in',
   signinOidc: '/signin-oidc',
