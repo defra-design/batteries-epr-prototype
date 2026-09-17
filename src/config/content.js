@@ -569,7 +569,7 @@ export const content = {
   password: (request) =>
     getContentForLanguage(request, {
       en: {
-        title: 'Sign in',
+        title: 'Prototype password',
         heading: 'This is a prototype used for research',
         intro:
           'It is not a real service. You should only continue if you have been invited to test this prototype.',
@@ -581,7 +581,7 @@ export const content = {
         }
       },
       cy: {
-        title: 'Sign in',
+        title: 'Prototype password',
         heading: 'TODO welsh',
         intro: 'TODO welsh',
         passwordLabel: 'TODO welsh',

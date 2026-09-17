@@ -22,6 +22,17 @@ describe('serveStaticFiles', () => {
     expect(headers['content-type']).toBe('image/x-icon')
   })
 
+  test('serves a robots.txt that disallows all crawling', async () => {
+    const { statusCode, headers, payload } = await server.inject({
+      method: 'GET',
+      url: '/robots.txt'
+    })
+
+    expect(statusCode).toBe(statusCodes.ok)
+    expect(headers['content-type']).toContain('text/plain')
+    expect(payload).toBe('User-agent: *\nDisallow: /\n')
+  })
+
   test('serves built assets from /public', async () => {
     const { statusCode } = await server.inject({
       method: 'GET',

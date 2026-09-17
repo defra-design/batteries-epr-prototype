@@ -1,7 +1,7 @@
 import { config } from '../../../config/config.js'
 import { paths } from '../../../config/paths.js'
 
-const openPaths = [paths.password, paths.health]
+const openPaths = [paths.password, paths.health, paths.robots]
 
 export function passwordGate(request, h) {
   if (config.get('isTest')) {

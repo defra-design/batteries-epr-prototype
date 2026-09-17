@@ -151,6 +151,7 @@ export const paths = {
   health: '/health',
 
   password: '/password',
+  robots: '/robots.txt',
 
   signIn: '/sign-in',
   signinOidc: '/signin-oidc',

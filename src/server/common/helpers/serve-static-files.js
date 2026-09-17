@@ -1,5 +1,8 @@
 import { config } from '../../../config/config.js'
+import { paths } from '../../../config/paths.js'
 import { statusCodes } from '../constants/status-codes.js'
+
+const robotsDisallowAll = 'User-agent: *\nDisallow: /\n'
 
 export const serveStaticFiles = {
   plugin: {
@@ -18,6 +21,14 @@ export const serveStaticFiles = {
           path: '/favicon.ico',
           handler(_request, h) {
             return h.response().code(statusCodes.noContent).type('image/x-icon')
+          }
+        },
+        {
+          options: { auth: false },
+          method: 'GET',
+          path: paths.robots,
+          handler(_request, h) {
+            return h.response(robotsDisallowAll).type('text/plain')
           }
         },
         {
