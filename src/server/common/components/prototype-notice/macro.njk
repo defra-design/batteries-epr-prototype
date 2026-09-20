@@ -1,0 +1,10 @@
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+
+{% macro prototypeNotice() %}
+  {{
+    govukInsetText({
+      text: "This is a research prototype, not a real sign-in. Do not enter a real password. Anything you type here is discarded.",
+      attributes: { "data-testid": "prototype-notice" }
+    })
+  }}
+{% endmacro %}

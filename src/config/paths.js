@@ -202,6 +202,8 @@ export const paths = {
   health: '/health',
 
   password: '/password',
+  robots: '/robots.txt',
+  googleSiteVerification: '/google0297e4bffe761ccd.html',
 
   signIn: '/sign-in',
   signinOidc: '/signin-oidc',

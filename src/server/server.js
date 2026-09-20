@@ -8,6 +8,7 @@ import { config } from '../config/config.js'
 import { pulse } from './common/helpers/pulse.js'
 import { catchAll } from './common/helpers/errors.js'
 import { passwordGate } from './common/helpers/password-gate.js'
+import { noIndexHeaders } from './common/helpers/no-index-headers.js'
 import { nunjucksConfig } from '../config/nunjucks/nunjucks.js'
 import { requestTracing } from './common/helpers/request-tracing.js'
 import { requestLogger } from './common/helpers/logging/request-logger.js'
@@ -88,6 +89,7 @@ export async function createServer(plugins) {
   server.ext('onPostAuth', passwordGate)
 
   server.ext('onPreResponse', catchAll)
+  server.ext('onPreResponse', noIndexHeaders)
 
   return server
 }
