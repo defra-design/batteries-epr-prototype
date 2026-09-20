@@ -1,6 +1,5 @@
 {% extends 'layouts/page.njk' %}
 
-{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/tag/macro.njk" import govukTag %}
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
 
@@ -26,24 +25,14 @@
                 <p class="govuk-body">{{ journey.description }}</p>
                 {% if journey.codedHref or journey.figmaHref %}
                   {% if journey.codedHref %}
-                    {{ govukButton({
-                      text: links.coded,
-                      href: journey.codedHref,
-                      isStartButton: true,
-                      attributes: { "data-testid": "prototype-journey-" + journey.id + "-coded-cta" }
-                    }) }}
+                    <p class="govuk-body">
+                      <a class="govuk-link" href="{{ journey.codedHref }}" data-testid="prototype-journey-{{ journey.id }}-coded-cta">{{ links.coded }}<span class="govuk-visually-hidden"> – {{ journey.title }}</span></a>
+                    </p>
                   {% endif %}
                   {% if journey.figmaHref %}
-                    {{ govukButton({
-                      text: links.figma + " (opens in new tab)",
-                      href: journey.figmaHref,
-                      isStartButton: true,
-                      attributes: {
-                        "data-testid": "prototype-journey-" + journey.id + "-figma-cta",
-                        "target": "_blank",
-                        "rel": "noopener noreferrer"
-                      }
-                    }) }}
+                    <p class="govuk-body">
+                      <a class="govuk-link" href="{{ journey.figmaHref }}" target="_blank" rel="noopener noreferrer" data-testid="prototype-journey-{{ journey.id }}-figma-cta">{{ links.figma }}<span class="govuk-visually-hidden"> – {{ journey.title }} (opens in new tab)</span></a>
+                    </p>
                   {% endif %}
                 {% else %}
                   <p data-testid="prototype-journey-{{ journey.id }}-coming-soon">

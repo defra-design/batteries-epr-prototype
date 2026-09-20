@@ -8,7 +8,10 @@ const CODED_JOURNEY_IDS = new Set([
   'smallProducerRegistration',
   'smallProducerSubmission',
   'complianceSchemeQuarterlySubmission',
-  'bcsSendsMembersList'
+  'complianceSchemeRespondsToQuery',
+  'bcsSendsMembersList',
+  'bcsSubmissionOfWasteData',
+  'regulatorReceivesPomSubmission'
 ])
 
 describe('#prototypeController', () => {
@@ -273,6 +276,60 @@ describe('#prototypeController', () => {
     )
   })
 
+  test('renders the small operator threshold crossed journey with a Figma link, opening in a new tab', async () => {
+    const { result } = await server.inject({
+      method: 'GET',
+      url: paths.prototype
+    })
+
+    const pageContent = content.prototype({})
+    const journey = pageContent.journeys.abtoSmallOperatorThresholdCrossed
+    expect(result).toEqual(expect.stringContaining(journey.title))
+    expect(result).toEqual(expect.stringContaining(journey.description))
+
+    const cta = result.match(
+      /<a[^>]*data-testid="prototype-journey-abtoSmallOperatorThresholdCrossed-figma-cta"[^>]*>/
+    )[0]
+    expect(cta).toEqual(expect.stringContaining(`href="${journey.figmaHref}"`))
+    expect(cta).toEqual(expect.stringContaining('target="_blank"'))
+    expect(cta).toEqual(expect.stringContaining('rel="noopener noreferrer"'))
+    expect(result).not.toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-abtoSmallOperatorThresholdCrossed-coded-cta"'
+      )
+    )
+    expect(result).not.toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-abtoSmallOperatorThresholdCrossed-coming-soon"'
+      )
+    )
+  })
+
+  test('positions the small operator threshold crossed journey second in the ABTO group', async () => {
+    const { result } = await server.inject({
+      method: 'GET',
+      url: paths.prototype
+    })
+
+    const operatorTabIndex = result.indexOf(
+      'data-testid="prototype-tab-operator"'
+    )
+    const firstJourneyIndex = result.indexOf(
+      'data-testid="prototype-journey-abtoGeneratesEvidenceNote"'
+    )
+    const secondJourneyIndex = result.indexOf(
+      'data-testid="prototype-journey-abtoSmallOperatorThresholdCrossed"'
+    )
+    const thirdJourneyIndex = result.indexOf(
+      'data-testid="prototype-journey-abtoEvidenceNoteSentForAuthorisation"'
+    )
+
+    expect(operatorTabIndex).toBeGreaterThan(-1)
+    expect(firstJourneyIndex).toBeGreaterThan(operatorTabIndex)
+    expect(secondJourneyIndex).toBeGreaterThan(firstJourneyIndex)
+    expect(thirdJourneyIndex).toBeGreaterThan(secondJourneyIndex)
+  })
+
   test('renders the evidence note sent for authorisation journey with a Figma link, opening in a new tab', async () => {
     const { result } = await server.inject({
       method: 'GET',
@@ -352,7 +409,7 @@ describe('#prototypeController', () => {
     )
   })
 
-  test('renders the PoM submission received by regulator journey with a Figma link, opening in a new tab', async () => {
+  test('renders the journey card linking to the PoM submission received by regulator sign in page', async () => {
     const { result } = await server.inject({
       method: 'GET',
       url: paths.prototype
@@ -364,17 +421,23 @@ describe('#prototypeController', () => {
     expect(result).toEqual(
       expect.stringContaining(journey.description.replace(/'/g, '&#39;'))
     )
-
-    const cta = result.match(
-      /<a[^>]*data-testid="prototype-journey-regulatorReceivesPomSubmission-figma-cta"[^>]*>/
-    )[0]
-    expect(cta).toEqual(expect.stringContaining(`href="${journey.figmaHref}"`))
-    expect(cta).toEqual(expect.stringContaining('target="_blank"'))
-    expect(cta).toEqual(expect.stringContaining('rel="noopener noreferrer"'))
-    expect(result).not.toEqual(
+    expect(result).toEqual(
       expect.stringContaining(
         'data-testid="prototype-journey-regulatorReceivesPomSubmission-coded-cta"'
       )
+    )
+    expect(result).toEqual(
+      expect.stringContaining(
+        `href="${paths.prototypeRegulatorPomSubmissionSignIn}"`
+      )
+    )
+    expect(result).toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-regulatorReceivesPomSubmission-figma-cta"'
+      )
+    )
+    expect(result).toEqual(
+      expect.stringContaining(`href="${journey.figmaHref}"`)
     )
     expect(result).not.toEqual(
       expect.stringContaining(
@@ -425,6 +488,17 @@ describe('#prototypeController', () => {
       )
     )
     expect(result).toEqual(expect.stringContaining(pageContent.links.coded))
+    expect(result).toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-complianceSchemeQuarterlySubmission-figma-cta"'
+      )
+    )
+    expect(result).toEqual(
+      expect.stringContaining(
+        `href="${pageContent.journeys.complianceSchemeQuarterlySubmission.figmaHref}"`
+      )
+    )
+    expect(result).toEqual(expect.stringContaining(pageContent.links.figma))
     expect(result).not.toEqual(
       expect.stringContaining(
         'data-testid="prototype-journey-complianceSchemeQuarterlySubmission-coming-soon"'
@@ -432,6 +506,34 @@ describe('#prototypeController', () => {
     )
     expect(result).not.toEqual(
       expect.stringContaining('/compliance-scheme/quarterly')
+    )
+  })
+
+  test('renders the compliance scheme responds to a query card as a link to its sign in screen, in the Compliance scheme group', async () => {
+    const { result } = await server.inject({
+      method: 'GET',
+      url: paths.prototype
+    })
+
+    const pageContent = content.prototype({})
+    const journey = pageContent.journeys.complianceSchemeRespondsToQuery
+    expect(journey.persona).toBe('complianceScheme')
+    expect(result).toEqual(expect.stringContaining(journey.title))
+    expect(result).toEqual(expect.stringContaining(journey.description))
+    expect(result).toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-complianceSchemeRespondsToQuery-coded-cta"'
+      )
+    )
+    expect(result).toEqual(
+      expect.stringContaining(
+        `href="${paths.prototypeComplianceSchemeQueryResponseSignIn}"`
+      )
+    )
+    expect(result).not.toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-complianceSchemeRespondsToQuery-coming-soon"'
+      )
     )
   })
 
@@ -460,6 +562,30 @@ describe('#prototypeController', () => {
     )
   })
 
+  test('renders the BCS submission of waste data card linking to the account home, with no coming-soon state', async () => {
+    const { result } = await server.inject({
+      method: 'GET',
+      url: paths.prototype
+    })
+
+    const pageContent = content.prototype({})
+    const journey = pageContent.journeys.bcsSubmissionOfWasteData
+    expect(result).toEqual(expect.stringContaining(journey.title))
+    expect(result).toEqual(expect.stringContaining(journey.description))
+
+    const cta = result.match(
+      /<a[^>]*data-testid="prototype-journey-bcsSubmissionOfWasteData-coded-cta"[^>]*>/
+    )[0]
+    expect(cta).toEqual(
+      expect.stringContaining(`href="${paths.prototypeWasteDataAccountHome}"`)
+    )
+    expect(result).not.toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-bcsSubmissionOfWasteData-coming-soon"'
+      )
+    )
+  })
+
   test('renders the Figma journey card with an external link, opening in a new tab', async () => {
     const { result } = await server.inject({
       method: 'GET',
@@ -479,14 +605,52 @@ describe('#prototypeController', () => {
     )
     expect(cta).toEqual(expect.stringContaining('target="_blank"'))
     expect(cta).toEqual(expect.stringContaining('rel="noopener noreferrer"'))
-    expect(result).toEqual(
-      expect.stringContaining(`${pageContent.links.figma} (opens in new tab)`)
-    )
+    expect(result).toEqual(expect.stringContaining(pageContent.links.figma))
     expect(result).not.toEqual(
       expect.stringContaining(
         'data-testid="prototype-journey-bcsRegulatorReview-coded-cta"'
       )
     )
+  })
+
+  test('renders the evidence note sent to approved person journey with a Figma link, opening in a new tab', async () => {
+    const { result } = await server.inject({
+      method: 'GET',
+      url: paths.prototype
+    })
+
+    const pageContent = content.prototype({})
+    const journey = pageContent.journeys.abtoEvidenceNoteSentToApprovedPerson
+    expect(journey.figmaHref).toBe('https://growl-haven-22844399.figma.site/')
+    expect(result).toEqual(expect.stringContaining(journey.title))
+    expect(result).toEqual(
+      expect.stringContaining(journey.description.replace("'", '&#39;'))
+    )
+
+    const cta = result.match(
+      /<a[^>]*data-testid="prototype-journey-abtoEvidenceNoteSentToApprovedPerson-figma-cta"[^>]*>/
+    )[0]
+    expect(cta).toEqual(expect.stringContaining(`href="${journey.figmaHref}"`))
+    expect(cta).toEqual(expect.stringContaining('target="_blank"'))
+    expect(cta).toEqual(expect.stringContaining('rel="noopener noreferrer"'))
+    expect(result).not.toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-abtoEvidenceNoteSentToApprovedPerson-coded-cta"'
+      )
+    )
+  })
+
+  test('renders journey actions as plain links, not buttons', async () => {
+    const { result } = await server.inject({
+      method: 'GET',
+      url: paths.prototype
+    })
+
+    expect(result).not.toEqual(expect.stringContaining('govuk-button'))
+    const cta = result.match(
+      /<a[^>]*data-testid="prototype-journey-smallProducerRegistration-coded-cta"[^>]*>/
+    )[0]
+    expect(cta).toEqual(expect.stringContaining('class="govuk-link"'))
   })
 
   test('coded journey links do not open in a new tab', async () => {

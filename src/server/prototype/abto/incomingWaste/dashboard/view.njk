@@ -32,4 +32,11 @@
       }) }}
     </div>
   </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('prototypeAbtoIncomingWaste.js') }}"></script>
 {% endblock %}

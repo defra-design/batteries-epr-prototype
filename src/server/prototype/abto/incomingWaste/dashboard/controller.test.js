@@ -1,7 +1,10 @@
 import { initialiseServer } from '../../../../../test-utils/initialise-server.js'
 import { paths } from '../../../../../config/paths.js'
 import { statusCodes } from '../../../../common/constants/status-codes.js'
-import { prototypeAbtoContent } from '../../../../../config/prototype-abto-content.js'
+import {
+  PROTOTYPE_ABTO_OPERATOR_NAME,
+  prototypeAbtoContent
+} from '../../../../../config/prototype-abto-content.js'
 import { formatTonnes, getDeliveries } from '../deliveries.js'
 
 describe('#prototypeAbtoIncomingWasteDashboard', () => {
@@ -85,5 +88,26 @@ describe('#prototypeAbtoIncomingWasteDashboard', () => {
     expect(result).not.toEqual(expect.stringContaining('>Sign out<'))
     expect(result).not.toEqual(expect.stringContaining('govuk-tabs__list-item'))
     expect(result).not.toEqual(expect.stringContaining('govuk-breadcrumbs'))
+  })
+
+  test('emits the payload the client uses to merge in deliveries reported by a scheme', async () => {
+    const { result } = await server.inject({
+      method: 'GET',
+      url: paths.prototypeAbtoIncomingWasteDashboard
+    })
+
+    const payload = JSON.parse(
+      result.match(/id="page-payload"[^>]*>([^<]+)<\/script>/)[1]
+    )
+    expect(payload).toEqual({
+      step: 'dashboard',
+      target: 'hydrate',
+      operatorName: PROTOTYPE_ABTO_OPERATOR_NAME,
+      verifyAction: prototypeAbtoContent.dashboard.verifyAction,
+      compareUrlTemplate: paths.prototypeAbtoIncomingWasteCompare
+    })
+    expect(result).toEqual(
+      expect.stringContaining('prototypeAbtoIncomingWaste')
+    )
   })
 })

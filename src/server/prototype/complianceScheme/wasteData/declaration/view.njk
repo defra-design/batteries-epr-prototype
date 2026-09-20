@@ -1,0 +1,42 @@
+{% extends 'prototypeWasteData/_layout.njk' %}
+
+{% block stepBody %}
+  <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+  <p class="govuk-body">{{ labels.intro }}</p>
+  <ul
+    class="govuk-list govuk-list--bullet"
+    data-testid="waste-data-declaration-list"
+  >
+    {% for bullet in labels.bullets %}
+      <li>{{ bullet }}</li>
+    {% endfor %}
+  </ul>
+
+  <p class="govuk-body" data-testid="waste-data-declaration-submitted-by">
+    {{ submittedBy }}
+  </p>
+
+  {{
+    govukWarningText({
+      text: labels.warning,
+      iconFallbackText: labels.warningPrefix,
+      attributes: { "data-testid": "waste-data-declaration-warning" }
+    })
+  }}
+
+  <form
+    method="post"
+    action="{{ action }}"
+    novalidate
+    data-testid="waste-data-declaration-form"
+  >
+    {{
+      govukButton({
+        text: labels.submitAction,
+        preventDoubleClick: true,
+        attributes: { "data-testid": "waste-data-declaration-submit" }
+      })
+    }}
+  </form>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      {%- set bannerHtml -%}
+        <h3 class="govuk-notification-banner__heading">{{ labels.bannerHeading }}</h3>
+        <p class="govuk-body">{{ bannerBody }}</p>
+      {%- endset -%}
+      {{ govukNotificationBanner({
+        html: bannerHtml,
+        attributes: { "data-testid": "review-pom-return-rejected-banner" }
+      }) }}
+
+      <div class="govuk-!-margin-bottom-4">
+        <span class="govuk-heading-xl govuk-!-margin-bottom-0 govuk-!-display-inline-block govuk-!-margin-right-3" data-testid="review-pom-return-rejected-heading">{{ heading }}</span>
+        {{ govukTag({ text: statusLabel, classes: "govuk-tag--" + statusColour, attributes: { "data-testid": "review-pom-return-rejected-status" } }) }}
+      </div>
+      <p class="govuk-body" data-testid="review-pom-return-rejected-intro">{{ intro }}</p>
+
+      {{ govukSummaryList({
+        rows: [
+          { key: { text: labels.summaryLabels.decision }, value: { text: labels.decisionValue } },
+          { key: { text: labels.summaryLabels.reason }, value: { text: reasonLine } },
+          { key: { text: labels.summaryLabels.resubmitBy }, value: { text: resubmitByLine } },
+          { key: { text: labels.summaryLabels.decidedBy }, value: { text: decidedByLine } },
+          { key: { text: labels.summaryLabels.decidedOn }, value: { text: decidedOnLine } }
+        ],
+        attributes: { "data-testid": "review-pom-return-rejected-summary" }
+      }) }}
+
+      <p class="govuk-body-s govuk-hint">{{ labels.filesKeptNote }}</p>
+
+      <ul class="govuk-list">
+        <li><a class="govuk-link" href="#" data-testid="review-pom-return-rejected-files-link">{{ filesLinkText }}</a></li>
+        <li><a class="govuk-link" href="#" data-testid="review-pom-return-rejected-timeline-link">{{ labels.links.timeline }}</a></li>
+        <li><a class="govuk-link" href="{{ dashboardHref }}" data-testid="review-pom-return-rejected-dashboard-link">{{ labels.links.dashboard }}</a></li>
+      </ul>
+    </div>
+  </div>
+{% endblock %}

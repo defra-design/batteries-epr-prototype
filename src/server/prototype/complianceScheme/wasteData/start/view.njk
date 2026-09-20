@@ -1,0 +1,53 @@
+{% extends 'prototypeWasteData/_layout.njk' %}
+
+{% block stepBody %}
+  <span class="govuk-caption-l" data-testid="waste-data-start-caption"
+    >{{ labels.caption }}</span
+  >
+  <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+  <h2 class="govuk-heading-m">{{ labels.subHeading }}</h2>
+  <p class="govuk-body">{{ labels.intro }}</p>
+
+  <form
+    method="post"
+    action="{{ action }}"
+    novalidate
+    data-testid="waste-data-start-form"
+  >
+    {{
+      govukRadios({
+        idPrefix: "submitMethod",
+        name: "submitMethod",
+        fieldset: {
+          legend: { text: labels.legend, classes: "govuk-fieldset__legend--m" }
+        },
+        errorMessage: { text: errors.submitMethod } if errors.submitMethod,
+        items: [
+          {
+            value: "onScreen",
+            text: labels.options.onScreen.label,
+            hint: { text: labels.options.onScreen.hint },
+            checked: formValues.submitMethod == "onScreen",
+            id: "submitMethod",
+            attributes: { "data-testid": "waste-data-start-on-screen" }
+          },
+          {
+            value: "csv",
+            text: labels.options.csv.label,
+            hint: { text: labels.options.csv.hint },
+            checked: formValues.submitMethod == "csv",
+            attributes: { "data-testid": "waste-data-start-csv" }
+          }
+        ]
+      })
+    }}
+
+    {{
+      govukButton({
+        text: labels.continueAction,
+        attributes: { "data-testid": "waste-data-start-continue" }
+      })
+    }}
+  </form>
+{% endblock %}

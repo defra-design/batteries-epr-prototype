@@ -1,0 +1,89 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if isQueried %}
+        {{ govukNotificationBanner({
+          titleText: bannerTitle,
+          type: "success" if allCorrected,
+          text: bannerBody,
+          attributes: { "data-testid": "return-queried-banner" }
+        }) }}
+      {% endif %}
+
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-4">
+        <span data-testid="return-queried-heading">{{ heading }}</span>
+        {{ govukTag({
+          text: statusLabel,
+          classes: "govuk-tag--" + statusColour,
+          attributes: { "data-testid": "return-queried-status" }
+        }) }}
+      </h1>
+
+      {% if isQueried %}
+        {{ govukSummaryList({
+          attributes: { "data-testid": "return-queried-summary" },
+          rows: [
+            {
+              key: { text: labels.summary.submitted },
+              value: { text: submittedOn }
+            },
+            {
+              key: { text: labels.summary.reviewed },
+              value: { text: reviewedOn }
+            }
+          ]
+        }) }}
+      {% else %}
+        <p class="govuk-body" data-testid="return-queried-not-queried">{{ notQueriedBody }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if isQueried %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        {%- set rows = [] -%}
+        {%- for record in records -%}
+          {%- set actionHtml -%}
+            {%- if record.isQueried -%}
+              <a class="govuk-link" href="{{ record.reviewHref }}" data-testid="return-queried-review-{{ loop.index }}">{{ labels.reviewAction }}<span class="govuk-visually-hidden"> {{ record.reviewHidden }}</span></a>
+            {%- else -%}
+              {{ govukTag({ text: record.statusLabel, classes: "govuk-tag--" + record.statusColour, attributes: { "data-testid": "return-queried-record-status-" + loop.index } }) }}
+            {%- endif -%}
+          {%- endset -%}
+          {%- set rows = (rows.push([
+            { text: record.member },
+            { text: record.chemistry },
+            { text: record.reason },
+            { html: actionHtml }
+          ]), rows) -%}
+        {%- endfor -%}
+
+        {{ govukTable({
+          caption: labels.recordsHeading,
+          captionClasses: "govuk-table__caption--m",
+          firstCellIsHeader: true,
+          attributes: { "data-testid": "return-queried-records" },
+          head: [
+            { text: labels.columns.member },
+            { text: labels.columns.chemistry },
+            { text: labels.columns.reason },
+            { text: labels.columns.action }
+          ],
+          rows: rows
+        }) }}
+      </div>
+    </div>
+  {% endif %}
+
+  <p class="govuk-body">
+    <a class="govuk-link" href="{{ submissionsUrl }}" data-testid="return-queried-submissions-link">{{ labels.submissionsLink }}</a>
+  </p>
+{% endblock %}

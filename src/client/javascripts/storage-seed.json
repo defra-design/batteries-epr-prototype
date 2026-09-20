@@ -1681,6 +1681,49 @@
       "reportedOn": "2026-10-08T00:00:00Z"
     }
   ],
+  "prototypeComplianceSchemeWasteQuarters": [
+    {
+      "id": "77777777-0001-4000-a000-000000000001",
+      "year": 2026,
+      "quarter": 1,
+      "availableOn": "2026-04-01",
+      "dueOn": "2026-04-30",
+      "status": "accepted"
+    },
+    {
+      "id": "77777777-0001-4000-a000-000000000002",
+      "year": 2026,
+      "quarter": 2,
+      "availableOn": "2026-07-01",
+      "dueOn": "2026-07-31",
+      "status": "queryRaised"
+    },
+    {
+      "id": "77777777-0001-4000-a000-000000000003",
+      "year": 2026,
+      "quarter": 3,
+      "availableOn": "2026-10-01",
+      "dueOn": "2026-10-31",
+      "status": "notStarted"
+    },
+    {
+      "id": "77777777-0001-4000-a000-000000000004",
+      "year": 2026,
+      "quarter": 4,
+      "availableOn": "2027-01-01",
+      "dueOn": "2027-01-31",
+      "status": "notYetAvailable"
+    }
+  ],
+  "prototypeComplianceSchemeWasteObligation": {
+    "year": 2026,
+    "quarter": 3,
+    "periodStart": "2026-07-01",
+    "periodEnd": "2026-09-30",
+    "obligationTonnes": 210.5,
+    "percentOfAveragePom": 45,
+    "averagePomYears": 3
+  },
   "prototypeComplianceSchemeQuarters": [
     {
       "id": "66666666-0001-4000-a000-000000000001",
@@ -1752,6 +1795,468 @@
       "row": 7,
       "column": "category_code",
       "howToFix": "Add a category code. Use one of: GEN (General use), CBC (Coin & button cells), LMT (Light means of transport), OTH (Other)."
+    }
+  ],
+  "prototypeRegulatorSchemes": [
+    {
+      "id": "ironwave-compliance",
+      "name": "IronWave Compliance",
+      "npwdRef": "NPWD378112",
+      "approvalNumber": "NPWD-APR-2026-0142",
+      "approvedOn": "2026-01-15",
+      "approvalExpires": "2027-01-14",
+      "approvedBy": "R. Patel",
+      "companyName": "IronWave Compliance Ltd",
+      "companyRegistrationNo": "09112477",
+      "registeredOffice": "2 Foundry Road, Sheffield, S9 2LP",
+      "tradingAddress": "2 Foundry Road, Sheffield, S9 2LP",
+      "website": "https://ironwavecompliance.co.uk",
+      "authorisedSignatory": {
+        "name": "Priya Shah",
+        "email": "priya.shah@ironwave.co.uk"
+      },
+      "superUser": {
+        "name": "Michael Osei",
+        "email": "michael.osei@ironwave.co.uk"
+      },
+      "accountManager": "A. Nwosu"
+    },
+    {
+      "id": "repic",
+      "name": "REPIC",
+      "npwdRef": "NPWD378119",
+      "approvalNumber": "NPWD-APR-2026-0148",
+      "approvedOn": "2026-01-20",
+      "approvalExpires": "2027-01-19",
+      "approvedBy": "R. Patel",
+      "companyName": "REPIC Ltd",
+      "companyRegistrationNo": "03648731",
+      "registeredOffice": "14 Battersea Park Road, London, SW11 4NB",
+      "tradingAddress": "14 Battersea Park Road, London, SW11 4NB",
+      "website": "https://repic.co.uk",
+      "authorisedSignatory": {
+        "name": "Elaine Morrow",
+        "email": "elaine.morrow@repic.co.uk"
+      },
+      "superUser": {
+        "name": "David Chukwu",
+        "email": "david.chukwu@repic.co.uk"
+      },
+      "accountManager": "R. Patel"
+    },
+    {
+      "id": "voltguard-batteries",
+      "name": "Voltguard Batteries",
+      "npwdRef": "NPWD378125",
+      "approvalNumber": "NPWD-APR-2026-0155"
+    },
+    {
+      "id": "copper-and-co-compliance",
+      "name": "Copper & Co Compliance",
+      "npwdRef": "NPWD378131",
+      "approvalNumber": "NPWD-APR-2026-0161"
+    },
+    {
+      "id": "brightcell-compliance",
+      "name": "BrightCell Compliance",
+      "npwdRef": "NPWD378144",
+      "approvalNumber": "NPWD-APR-2026-0174"
+    }
+  ],
+  "prototypeRegulatorSchemeSubmissions": [
+    {
+      "id": "88888888-0001-4000-a000-000000000001",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "periodLabel": "Q2 2026",
+      "membersCount": 5,
+      "filesCount": 4,
+      "recordsCount": 2639,
+      "status": "received",
+      "issuesFound": 3,
+      "submittedBy": "Michael Osei",
+      "submittedOn": "2026-08-08T14:12:00Z",
+      "decidedOn": null,
+      "decidedBy": null,
+      "automatedChecksPassedOn": "2026-08-08T14:13:00Z",
+      "underReviewSince": "2026-08-09T00:00:00Z",
+      "deadlineOn": "2026-07-31",
+      "lockOn": "2026-09-30",
+      "totalPlacedOnMarketTonnes": 623073,
+      "swingCategories": ["General use", "Light means of transport"]
+    },
+    {
+      "id": "88888888-0001-4000-a000-000000000002",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q1",
+      "periodLabel": "Q1 2026",
+      "membersCount": 5,
+      "filesCount": 4,
+      "status": "accepted",
+      "issuesFound": 0,
+      "submittedBy": "Michael Osei",
+      "submittedOn": "2026-05-01T09:00:00Z",
+      "decidedOn": "2026-05-06",
+      "decidedBy": "A. Nwosu",
+      "totalPlacedOnMarketTonnes": 598410,
+      "swingCategories": []
+    },
+    {
+      "id": "88888888-0001-4000-a000-000000000003",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2025",
+      "quarter": "Q4",
+      "periodLabel": "Q4 2025",
+      "membersCount": 5,
+      "filesCount": 4,
+      "status": "accepted",
+      "issuesFound": 0,
+      "submittedBy": null,
+      "submittedOn": "2026-01-31T00:00:00Z",
+      "decidedOn": "2026-02-10",
+      "decidedBy": "R. Patel",
+      "totalPlacedOnMarketTonnes": 587220,
+      "swingCategories": []
+    },
+    {
+      "id": "88888888-0001-4000-a000-000000000004",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2025",
+      "quarter": "Q3",
+      "periodLabel": "Q3 2025",
+      "membersCount": 5,
+      "filesCount": 3,
+      "status": "rejected",
+      "issuesFound": null,
+      "submittedBy": null,
+      "submittedOn": "2025-10-31T00:00:00Z",
+      "decidedOn": "2025-11-12",
+      "decidedBy": "R. Patel",
+      "totalPlacedOnMarketTonnes": 571050,
+      "swingCategories": []
+    },
+    {
+      "id": "88888888-0001-4000-a000-000000000005",
+      "schemeId": "repic",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "periodLabel": "Q2 2026",
+      "membersCount": 8,
+      "filesCount": 3,
+      "status": "accepted",
+      "issuesFound": 0,
+      "submittedBy": null,
+      "submittedOn": "2026-08-05T10:00:00Z",
+      "decidedOn": "2026-08-12",
+      "decidedBy": "R. Patel"
+    },
+    {
+      "id": "88888888-0001-4000-a000-000000000006",
+      "schemeId": "voltguard-batteries",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "periodLabel": "Q2 2026",
+      "membersCount": 3,
+      "filesCount": 2,
+      "status": "queried",
+      "issuesFound": 2,
+      "submittedBy": null,
+      "submittedOn": "2026-08-06T09:00:00Z",
+      "decidedOn": null,
+      "decidedBy": null
+    },
+    {
+      "id": "88888888-0001-4000-a000-000000000007",
+      "schemeId": "copper-and-co-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "periodLabel": "Q2 2026",
+      "membersCount": null,
+      "filesCount": null,
+      "status": "notYetSubmitted",
+      "issuesFound": null,
+      "submittedBy": null,
+      "submittedOn": null,
+      "decidedOn": null,
+      "decidedBy": null
+    },
+    {
+      "id": "88888888-0001-4000-a000-000000000008",
+      "schemeId": "brightcell-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "periodLabel": "Q2 2026",
+      "membersCount": 4,
+      "filesCount": 3,
+      "status": "received",
+      "issuesFound": 1,
+      "submittedBy": null,
+      "submittedOn": "2026-08-07T11:00:00Z",
+      "decidedOn": null,
+      "decidedBy": null
+    },
+    {
+      "id": "88888888-0001-4000-a000-000000000009",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2025",
+      "quarter": "Q2",
+      "periodLabel": "Q2 2025",
+      "membersCount": 5,
+      "filesCount": 3,
+      "status": "rejected",
+      "issuesFound": null,
+      "submittedBy": null,
+      "submittedOn": "2025-07-31T00:00:00Z",
+      "decidedOn": "2025-08-11T00:00:00Z",
+      "decidedBy": "R. Patel",
+      "totalPlacedOnMarketTonnes": 560300,
+      "swingCategories": []
+    },
+    {
+      "id": "88888888-0001-4000-a000-000000000010",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2025",
+      "quarter": "Q2",
+      "periodLabel": "Q2 2025 (resubmitted)",
+      "membersCount": 5,
+      "filesCount": 3,
+      "status": "accepted",
+      "issuesFound": 0,
+      "submittedBy": null,
+      "submittedOn": "2025-09-02T00:00:00Z",
+      "decidedOn": "2025-09-09T00:00:00Z",
+      "decidedBy": "R. Patel",
+      "totalPlacedOnMarketTonnes": 560300,
+      "swingCategories": []
+    }
+  ],
+  "prototypeRegulatorSchemeMembers": [
+    {
+      "id": "bbbbbbbb-0001-4000-a000-000000000001",
+      "schemeId": "ironwave-compliance",
+      "companyName": "GreenLeaf Ltd",
+      "bprn": "BPRN-004817",
+      "producerSize": "Large producer",
+      "joinedOn": "2023-03-14",
+      "q2Status": "queried"
+    },
+    {
+      "id": "bbbbbbbb-0001-4000-a000-000000000002",
+      "schemeId": "ironwave-compliance",
+      "companyName": "Voltguard Ltd",
+      "bprn": "BPRN-004818",
+      "producerSize": "Large producer",
+      "joinedOn": "2022-11-02",
+      "q2Status": "queried"
+    },
+    {
+      "id": "bbbbbbbb-0001-4000-a000-000000000003",
+      "schemeId": "ironwave-compliance",
+      "companyName": "Copper & Co Ltd",
+      "bprn": "BPRN-004819",
+      "producerSize": "Small producer",
+      "joinedOn": "2024-06-19",
+      "q2Status": "submitted"
+    },
+    {
+      "id": "bbbbbbbb-0001-4000-a000-000000000004",
+      "schemeId": "ironwave-compliance",
+      "companyName": "BrightCell Ltd",
+      "bprn": "BPRN-004820",
+      "producerSize": "Large producer",
+      "joinedOn": "2021-09-30",
+      "q2Status": "submitted"
+    },
+    {
+      "id": "bbbbbbbb-0001-4000-a000-000000000005",
+      "schemeId": "ironwave-compliance",
+      "companyName": "Solaris Power Ltd",
+      "bprn": "BPRN-004821",
+      "producerSize": "Small producer",
+      "joinedOn": "2023-07-08",
+      "q2Status": "submitted"
+    }
+  ],
+  "prototypeRegulatorRegistrationCases": [
+    {
+      "id": "aaaaaaaa-0001-4000-a000-000000000001",
+      "producerName": "Acme Battery Co",
+      "scheme": "IronWave Compliance",
+      "type": "New registration",
+      "status": "submitted",
+      "dueOn": "2026-10-15",
+      "previousYears": ["2025: Submitted", "2024: Submitted"]
+    },
+    {
+      "id": "aaaaaaaa-0001-4000-a000-000000000002",
+      "producerName": "Northline Power Ltd",
+      "scheme": "REPIC",
+      "type": "Renewal",
+      "status": "paymentIssue",
+      "dueOn": "2026-09-30",
+      "previousYears": ["2025: Submitted"]
+    },
+    {
+      "id": "aaaaaaaa-0001-4000-a000-000000000003",
+      "producerName": "Cobalt Traction Systems",
+      "scheme": "Voltguard Batteries",
+      "type": "New registration",
+      "status": "notSubmitted",
+      "dueOn": "2026-09-20",
+      "previousYears": []
+    },
+    {
+      "id": "aaaaaaaa-0001-4000-a000-000000000004",
+      "producerName": "Voltix Manufacturing",
+      "scheme": "IronWave Compliance",
+      "type": "Renewal",
+      "status": "notSubmitted",
+      "dueOn": "2026-11-01",
+      "previousYears": ["2025: Submitted", "2024: Submitted", "2023: Submitted"]
+    }
+  ],
+  "prototypeRegulatorDataCheckFindings": [
+    {
+      "id": "ffffffff-0001-4000-a000-000000000001",
+      "schemeId": "ironwave-compliance",
+      "member": "GreenLeaf Ltd",
+      "issue": "Lithium-ion figure is 10x higher than same quarter last year",
+      "type": "swing"
+    },
+    {
+      "id": "ffffffff-0001-4000-a000-000000000002",
+      "schemeId": "ironwave-compliance",
+      "member": "Voltguard Ltd",
+      "issue": "Lead-acid figure has no supporting evidence attached",
+      "type": "swing"
+    },
+    {
+      "id": "ffffffff-0001-4000-a000-000000000003",
+      "schemeId": "ironwave-compliance",
+      "member": "Copper & Co Ltd",
+      "issue": "Category code missing on row 14",
+      "type": "validation"
+    }
+  ],
+  "prototypeRegulatorMemberFigures": [
+    {
+      "id": "cccccccc-0001-4000-a000-000000000001",
+      "schemeId": "ironwave-compliance",
+      "submissionId": "88888888-0001-4000-a000-000000000001",
+      "member": "GreenLeaf Ltd",
+      "chemistry": "Lithium-ion",
+      "figureTonnes": 12.4,
+      "status": "queried",
+      "reason": "Figure looks around 10x higher"
+    },
+    {
+      "id": "cccccccc-0001-4000-a000-000000000002",
+      "schemeId": "ironwave-compliance",
+      "submissionId": "88888888-0001-4000-a000-000000000001",
+      "member": "Voltguard Ltd",
+      "chemistry": "Lead-acid",
+      "figureTonnes": 3.1,
+      "status": "queried",
+      "reason": "No supporting evidence was provided"
+    },
+    {
+      "id": "cccccccc-0001-4000-a000-000000000003",
+      "schemeId": "ironwave-compliance",
+      "submissionId": "88888888-0001-4000-a000-000000000001",
+      "member": "Copper & Co",
+      "chemistry": "Ni-Cd",
+      "figureTonnes": 2.0,
+      "status": "ok",
+      "reason": null
+    },
+    {
+      "id": "cccccccc-0001-4000-a000-000000000004",
+      "schemeId": "ironwave-compliance",
+      "submissionId": "88888888-0001-4000-a000-000000000001",
+      "member": "BrightCell Ltd",
+      "chemistry": "Lithium-ion",
+      "figureTonnes": 8.7,
+      "status": "ok",
+      "reason": null
+    },
+    {
+      "id": "cccccccc-0001-4000-a000-000000000005",
+      "schemeId": "ironwave-compliance",
+      "submissionId": "88888888-0001-4000-a000-000000000001",
+      "member": "Solaris Power",
+      "chemistry": "Other",
+      "figureTonnes": 1.4,
+      "status": "ok",
+      "reason": null
+    }
+  ],
+  "prototypeRegulatorCompareReturns": [
+    {
+      "id": "dddddddd-0001-4000-a000-000000000001",
+      "schemeId": "ironwave-compliance",
+      "alertLevelPercent": 20,
+      "categories": [
+        {
+          "category": "General use",
+          "thisQuarterTonnes": 125000,
+          "lastQuarterTonnes": 204070,
+          "swingPercent": 39,
+          "aboveAlert": true,
+          "sameQuarterLastYearTonnes": 179000,
+          "hasReason": true
+        },
+        {
+          "category": "Coin & button cells",
+          "thisQuarterTonnes": 132532,
+          "lastQuarterTonnes": 132532,
+          "swingPercent": 16,
+          "aboveAlert": false,
+          "sameQuarterLastYearTonnes": 114002,
+          "hasReason": false
+        },
+        {
+          "category": "Light means of transport",
+          "thisQuarterTonnes": 240241,
+          "lastQuarterTonnes": 156600,
+          "swingPercent": 54,
+          "aboveAlert": true,
+          "sameQuarterLastYearTonnes": 129303,
+          "hasReason": true
+        },
+        {
+          "category": "Other",
+          "thisQuarterTonnes": 125300,
+          "lastQuarterTonnes": 109100,
+          "swingPercent": 15,
+          "aboveAlert": false,
+          "sameQuarterLastYearTonnes": 83700,
+          "hasReason": false
+        }
+      ],
+      "totals": {
+        "thisQuarterTonnes": 623073,
+        "lastQuarterTonnes": 602302,
+        "swingPercent": 3,
+        "aboveAlert": false,
+        "sameQuarterLastYearTonnes": 506005
+      }
+    }
+  ],
+  "prototypeRegulatorIndicativeObligation": [
+    {
+      "id": "eeeeeeee-0001-4000-a000-000000000001",
+      "schemeId": "ironwave-compliance",
+      "placedOnMarket2024Tonnes": 9800,
+      "placedOnMarket2025Tonnes": 9500,
+      "placedOnMarket2026SoFarTonnes": 9100,
+      "placedOnMarket2026AnnualisedTonnes": 9300,
+      "rollingAverageTonnes": 9533,
+      "obligationRatePercent": 45,
+      "indicativeObligationYear": 2027,
+      "indicativeObligationTonnes": 4290,
+      "verified": true
     }
   ]
 }

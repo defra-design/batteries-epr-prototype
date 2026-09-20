@@ -1,0 +1,65 @@
+{% extends 'prototypeWasteData/_layout.njk' %}
+
+{% block stepBody %}
+  {% set bannerHtml %}
+    <h3 class="govuk-notification-banner__heading">
+      {{ labels.banner.heading }}
+    </h3>
+    <p class="govuk-body" data-testid="waste-data-submitted-reference">
+      {{ bannerBody }}
+    </p>
+  {% endset %}
+
+  {{
+    govukNotificationBanner({
+      type: "success",
+      titleText: labels.banner.title,
+      html: bannerHtml,
+      attributes: { "data-testid": "waste-data-submitted-banner" }
+    })
+  }}
+
+  <h1 class="govuk-heading-xl">
+    {{ heading }}
+    {{
+      govukTag({
+        text: labels.statusTag.label,
+        classes: "govuk-tag--" + labels.statusTag.colour,
+        attributes: { "data-testid": "waste-data-submitted-tag" }
+      })
+    }}
+  </h1>
+
+  {{
+    govukSummaryList({
+      rows: [
+        {
+          key: { text: labels.rows.collected },
+          value: { html: '<span data-testid="waste-data-submitted-collected">' + collectedValue + '</span>' }
+        },
+        {
+          key: { text: labels.rows.delivered },
+          value: { html: '<span data-testid="waste-data-submitted-delivered">' + deliveredValue + '</span>' }
+        },
+        {
+          key: { text: labels.rows.submittedBy },
+          value: { html: '<span data-testid="waste-data-submitted-by">' + submittedByValue + '</span>' }
+        },
+        {
+          key: { text: labels.rows.status },
+          value: { html: '<span data-testid="waste-data-submitted-status">' + statusValue + '</span>' }
+        }
+      ],
+      attributes: { "data-testid": "waste-data-submitted-summary" }
+    })
+  }}
+
+  <p class="govuk-body">
+    <a
+      class="govuk-link"
+      href="{{ accountHomeUrl }}"
+      data-testid="waste-data-submitted-account-home"
+      >{{ labels.accountHomeLink }}</a
+    >
+  </p>
+{% endblock %}

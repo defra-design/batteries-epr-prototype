@@ -1,0 +1,49 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+      <p class="govuk-body" data-testid="scheme-members-scheme-name">{{ scheme.name }} · {{ scheme.npwdRef }}</p>
+      <p class="govuk-body">{{ members.length }} members registered. Membership is set at registration and confirmed each quarter — the members shown here are the ones the {{ periodLabel }} return must cover.</p>
+
+      {% set memberRows = [] %}
+      {% for member in members %}
+        {% set viewCellHtml %}
+          <a class="govuk-link" href="#" data-testid="scheme-members-view-{{ member.bprn }}">{{ labels.viewAction }}</a>
+        {% endset %}
+        {% set memberRows = (memberRows.push([
+          { text: member.companyName },
+          { text: member.bprn },
+          { text: member.producerSize },
+          { text: member.joinedOn | formatDate('d MMMM yyyy') },
+          { html: govukTag({ text: member.statusLabel, classes: "govuk-tag--" + member.statusColour }) | safe },
+          { html: viewCellHtml }
+        ]), memberRows) %}
+      {% endfor %}
+
+      {{ govukTable({
+        head: [
+          { text: labels.columns.member },
+          { text: labels.columns.bprn },
+          { text: labels.columns.producerSize },
+          { text: labels.columns.joinedScheme },
+          { text: periodLabel },
+          { text: "" }
+        ],
+        rows: memberRows,
+        attributes: { "data-testid": "scheme-members-table" }
+      }) }}
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="#" data-testid="scheme-members-download">{{ labels.downloadLink }}</a>
+      </p>
+      <p class="govuk-body">
+        <a class="govuk-link" href="{{ recordHref }}" data-testid="scheme-members-record-link">{{ labels.recordLink }}</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}

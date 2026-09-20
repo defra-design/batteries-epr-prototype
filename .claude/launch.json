@@ -5,7 +5,8 @@
       "name": "batteries-epr-prototype",
       "runtimeExecutable": "corepack",
       "runtimeArgs": ["pnpm", "dev"],
-      "port": 3010
+      "port": 3010,
+      "autoPort": false
     }
   ]
 }

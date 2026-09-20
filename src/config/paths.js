@@ -96,6 +96,17 @@ export const paths = {
   prototypeComplianceSchemeSubmissionUploadSuccess:
     '/prototype/compliance-scheme/pom-submission/{year}/{quarter}/upload-success',
 
+  prototypeComplianceSchemeQueryResponseSignIn:
+    '/prototype/compliance-scheme/query-response/sign-in',
+  prototypeComplianceSchemeQueryResponseReturnQueried:
+    '/prototype/compliance-scheme/query-response/{year}/{quarter}',
+  prototypeComplianceSchemeQueryResponseReviewFigure:
+    '/prototype/compliance-scheme/query-response/{year}/{quarter}/records/{recordId}',
+  prototypeComplianceSchemeQueryResponseCorrectFigure:
+    '/prototype/compliance-scheme/query-response/{year}/{quarter}/records/{recordId}/correct',
+  prototypeComplianceSchemeQueryResponseFigureResent:
+    '/prototype/compliance-scheme/query-response/{year}/{quarter}/records/{recordId}/resent',
+
   prototypeAbtoIncomingWasteDashboard: '/prototype/abto/incoming-waste',
   prototypeAbtoIncomingWasteCompare:
     '/prototype/abto/incoming-waste/{deliveryId}',
@@ -107,6 +118,35 @@ export const paths = {
     '/prototype/abto/incoming-waste/{deliveryId}/query',
   prototypeAbtoIncomingWasteQuerySent:
     '/prototype/abto/incoming-waste/{deliveryId}/query-sent',
+
+  prototypeRegulatorPomSubmissionSignIn:
+    '/prototype/regulator/pom-submission/sign-in',
+  prototypeRegulatorPomSubmissionDashboard:
+    '/prototype/regulator/pom-submission/dashboard',
+  prototypeRegulatorPomSubmissionSchemeHome:
+    '/prototype/regulator/pom-submission/schemes/{schemeId}',
+  prototypeRegulatorPomSubmissionSchemeRecord:
+    '/prototype/regulator/pom-submission/schemes/{schemeId}/record',
+  prototypeRegulatorPomSubmissionSchemeMembers:
+    '/prototype/regulator/pom-submission/schemes/{schemeId}/members',
+  prototypeRegulatorPomSubmissionSchemeSubmissions:
+    '/prototype/regulator/pom-submission/schemes/{schemeId}/submissions',
+  prototypeRegulatorPomSubmissionRunningDataChecks:
+    '/prototype/regulator/pom-submission/schemes/{schemeId}/running-data-checks',
+  prototypeRegulatorPomSubmissionDataCheckReport:
+    '/prototype/regulator/pom-submission/schemes/{schemeId}/data-check-report',
+  prototypeRegulatorPomSubmissionBatterySalesDataSubmission:
+    '/prototype/regulator/pom-submission/schemes/{schemeId}/battery-sales-data-submission',
+  prototypeRegulatorPomSubmissionReviewPomReturn:
+    '/prototype/regulator/pom-submission/schemes/{schemeId}/submissions/{year}/{quarter}/review',
+  prototypeRegulatorPomSubmissionReviewPomReturnAccepted:
+    '/prototype/regulator/pom-submission/schemes/{schemeId}/submissions/{year}/{quarter}/accepted',
+  prototypeRegulatorPomSubmissionReviewPomReturnQueried:
+    '/prototype/regulator/pom-submission/schemes/{schemeId}/submissions/{year}/{quarter}/queried',
+  prototypeRegulatorPomSubmissionReviewPomReturnRejectConfirm:
+    '/prototype/regulator/pom-submission/schemes/{schemeId}/submissions/{year}/{quarter}/reject-confirm',
+  prototypeRegulatorPomSubmissionReviewPomReturnRejected:
+    '/prototype/regulator/pom-submission/schemes/{schemeId}/submissions/{year}/{quarter}/rejected',
 
   prototypeMembersListStart: '/prototype/compliance-scheme/members-list',
   prototypeMembersListHowToSend:
@@ -147,6 +187,17 @@ export const paths = {
     '/prototype/compliance-scheme/members-list/add-member/date-joined',
   prototypeMembersListAddMemberCheckAnswers:
     '/prototype/compliance-scheme/members-list/add-member/check-answers',
+
+  prototypeWasteDataAccountHome: '/prototype/compliance-scheme/waste-data',
+  prototypeWasteDataStart: '/prototype/compliance-scheme/waste-data/start',
+  prototypeWasteDataUploadUnavailable:
+    '/prototype/compliance-scheme/waste-data/upload-unavailable',
+  prototypeWasteDataEnter: '/prototype/compliance-scheme/waste-data/enter',
+  prototypeWasteDataCheck: '/prototype/compliance-scheme/waste-data/check',
+  prototypeWasteDataDeclaration:
+    '/prototype/compliance-scheme/waste-data/declaration',
+  prototypeWasteDataSubmitted:
+    '/prototype/compliance-scheme/waste-data/submitted',
 
   health: '/health',
 

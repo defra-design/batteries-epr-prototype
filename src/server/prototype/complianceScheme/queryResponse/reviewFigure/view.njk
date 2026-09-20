@@ -1,0 +1,36 @@
+{% extends 'layouts/page.njk' %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <span class="govuk-caption-l" data-testid="review-figure-caption"
+        >{{ caption }}</span
+      >
+      <h1 class="govuk-heading-xl" data-testid="review-figure-heading">
+        {{ heading }}
+      </h1>
+
+      {{
+        govukSummaryList({
+          attributes: { "data-testid": "review-figure-summary" },
+          rows: [
+            { key: { text: labels.summary.member }, value: { text: figure.member } },
+            { key: { text: labels.summary.chemistry }, value: { text: figure.chemistry } },
+            { key: { text: labels.summary.originalFigure }, value: { text: figure.originalFigure } },
+            { key: { text: labels.summary.reason }, value: { text: figure.reason } }
+          ]
+        })
+      }}
+
+      {{
+        govukButton({
+          text: labels.continueAction,
+          href: continueHref,
+          attributes: { "data-testid": "review-figure-continue" }
+        })
+      }}
+    </div>
+  </div>
+{% endblock %}

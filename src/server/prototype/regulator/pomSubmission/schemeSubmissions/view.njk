@@ -1,0 +1,53 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+      <p class="govuk-body" data-testid="scheme-submissions-scheme-name">{{ scheme.name }} · {{ scheme.npwdRef }}</p>
+      <p class="govuk-body">Every quarter is decided on its own. A queried or rejected quarter does not block the ones after it.</p>
+
+      {% for yearGroup in years %}
+        <h2 class="govuk-heading-l">{{ yearGroup.year }}</h2>
+
+        {% set submissionRows = [] %}
+        {% for submission in yearGroup.submissions %}
+          {% set viewCellHtml %}
+            <a class="govuk-link" href="#" data-testid="scheme-submissions-view-{{ submission.periodLabel | lower | replace(' ', '-') | replace('(', '') | replace(')', '') }}">{{ labels.viewAction }}</a>
+          {% endset %}
+          {% set submissionRows = (submissionRows.push([
+            { text: submission.periodLabel },
+            { text: (submission.submittedOn | formatDate('d MMMM yyyy')) if submission.submittedOn else "–" },
+            { text: submission.filesCount },
+            { html: govukTag({ text: submission.statusLabel, classes: "govuk-tag--" + submission.statusColour }) | safe },
+            { text: submission.decided },
+            { html: viewCellHtml }
+          ]), submissionRows) %}
+        {% endfor %}
+
+        {{ govukTable({
+          head: [
+            { text: labels.columns.quarter },
+            { text: labels.columns.submitted },
+            { text: labels.columns.files },
+            { text: labels.columns.decision },
+            { text: labels.columns.decided },
+            { text: "" }
+          ],
+          rows: submissionRows,
+          attributes: { "data-testid": "scheme-submissions-table-" + yearGroup.year }
+        }) }}
+      {% endfor %}
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="#" data-testid="scheme-submissions-download">{{ labels.downloadLink }}</a>
+      </p>
+      <p class="govuk-body">
+        <a class="govuk-link" href="#" data-testid="scheme-submissions-timeline">{{ labels.timelineLink }}</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}

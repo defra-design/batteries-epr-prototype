@@ -43,7 +43,9 @@ export const STORAGE_KEYS = {
   prototypeComplianceSchemeSubmissionDraft: `${KEY_PREFIX}prototype:complianceSchemeSubmissionDraft`,
   prototypeComplianceSchemeUploadErrors: `${KEY_PREFIX}prototype:complianceSchemeUploadErrors`,
   prototypeMembersListDraft: `${KEY_PREFIX}prototype:membersListDraft`,
-  prototypeMembersListAddMemberDraft: `${KEY_PREFIX}prototype:membersListAddMemberDraft`
+  prototypeMembersListAddMemberDraft: `${KEY_PREFIX}prototype:membersListAddMemberDraft`,
+  prototypeWasteDataDraft: `${KEY_PREFIX}prototype:wasteDataDraft`,
+  prototypeAbtoDeliveries: `${KEY_PREFIX}prototype:abtoDeliveries`
 }
 
 const bprnSequenceKey = (agencyCode, compliancePeriod) =>
@@ -1918,6 +1920,70 @@ const clearPrototypeMembersList = () => {
   removeKey(STORAGE_KEYS.prototypeMembersListDraft)
 }
 
+const getPrototypeWasteData = () =>
+  readJson(STORAGE_KEYS.prototypeWasteDataDraft) ?? {}
+
+const savePrototypeWasteData = (fields) => {
+  const next = { ...getPrototypeWasteData(), ...fields }
+  writeJson(STORAGE_KEYS.prototypeWasteDataDraft, next)
+  return next
+}
+
+const getPrototypeAbtoDeliveries = () =>
+  readJson(STORAGE_KEYS.prototypeAbtoDeliveries) ?? []
+
+const addPrototypeAbtoDelivery = (delivery) => {
+  const next = [...getPrototypeAbtoDeliveries(), delivery]
+  writeJson(STORAGE_KEYS.prototypeAbtoDeliveries, next)
+  return delivery
+}
+
+// The static ABTO seed deliveries end at BT2026-0092, so batches reported
+// through this journey continue the sequence from there.
+const LAST_SEEDED_WASTE_BATCH = 92
+
+const nextPrototypeWasteBatchId = () => {
+  const sequence =
+    LAST_SEEDED_WASTE_BATCH + getPrototypeAbtoDeliveries().length + 1
+  return `BT2026-${String(sequence).padStart(4, '0')}`
+}
+
+// Submitting the scheme's waste data also hands the delivered tonnage over
+// to the treatment operator as an incoming delivery, in the shape the ABTO
+// incoming-waste dashboard reads. measuredTonnes stays null until the
+// operator records their own weighbridge figure.
+const submitPrototypeWasteData = ({
+  schemeName,
+  submittedBy,
+  receivingOperator
+} = {}) => {
+  const draft = getPrototypeWasteData()
+  if (draft.status === 'submitted') return draft
+
+  const submittedAt = now()
+  const batchId = nextPrototypeWasteBatchId()
+  addPrototypeAbtoDelivery({
+    id: batchId,
+    schemeName,
+    reportedTonnes: Number(draft.deliveredTonnes),
+    measuredTonnes: null,
+    reportedOn: submittedAt,
+    receivingOperator
+  })
+
+  return savePrototypeWasteData({
+    status: 'submitted',
+    submittedAt,
+    submittedBy,
+    batchId,
+    reference: `WD-2026-Q3-${batchId.slice(-4).padStart(5, '0')}`
+  })
+}
+
+const clearPrototypeWasteData = () => {
+  removeKey(STORAGE_KEYS.prototypeWasteDataDraft)
+}
+
 const getPrototypeMembersListAddMember = () =>
   readJson(STORAGE_KEYS.prototypeMembersListAddMemberDraft) ?? {}
 
@@ -2074,6 +2140,11 @@ export const storage = {
   savePrototypeMembersList,
   submitPrototypeMembersList,
   clearPrototypeMembersList,
+  getPrototypeWasteData,
+  savePrototypeWasteData,
+  submitPrototypeWasteData,
+  clearPrototypeWasteData,
+  getPrototypeAbtoDeliveries,
   updatePrototypeComplianceSchemeMember,
   getPrototypeMembersListAddMember,
   savePrototypeMembersListAddMember,

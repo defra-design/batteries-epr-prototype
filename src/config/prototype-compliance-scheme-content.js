@@ -4,6 +4,100 @@ export const PROTOTYPE_COMPLIANCE_SCHEME_SERVICE_NAME =
 export const PROTOTYPE_COMPLIANCE_SCHEME_NAME = 'IronWave Compliance'
 
 export const prototypeComplianceSchemeContent = {
+  queryResponse: {
+    correctFigure: {
+      headingTemplate: 'Correct the figure: {member} — {chemistry}',
+      introTemplate:
+        'You previously submitted {figure}. The Environment Agency queried this figure. Their reason: {reason}. Enter the corrected figure below.',
+      label: 'Corrected tonnage (t)',
+      hint: 'Enter the figure in tonnes, not kilograms, with up to 3 decimal places. For example, 1.240.',
+      suffix: 't',
+      submitAction: 'Send correction',
+      error: {
+        title: 'There is a problem',
+        tonnage: {
+          required: 'Enter the corrected tonnage',
+          format: 'Corrected tonnage must be a number, like 1.240',
+          decimals: 'Corrected tonnage must have no more than 3 decimal places',
+          positive: 'Corrected tonnage must be more than 0'
+        }
+      }
+    },
+    figureResent: {
+      banner: {
+        title: 'Success',
+        heading: 'Correction sent',
+        bodyTemplate:
+          'The corrected figure for {member} — {chemistry} has been sent to the Environment Agency. Your submission status will update once it has been reviewed.'
+      },
+      awaitingReview: { label: 'Awaiting review', colour: 'blue' },
+      summary: {
+        submitted: 'Submitted',
+        reviewed: 'Reviewed',
+        correctionSent: 'Correction sent'
+      },
+      outstandingTemplate: 'You still have {figures} to correct.',
+      outstandingLink: 'Correct the remaining queried figures',
+      submissionsLink: 'View your quarterly submissions'
+    },
+    reviewFigure: {
+      captionTemplate: '{period} submission: queried record',
+      headingTemplate: '{member} — {chemistry}',
+      summary: {
+        member: 'Member',
+        chemistry: 'Chemistry',
+        originalFigure: 'Original figure',
+        reason: "Regulator's reason"
+      },
+      figureTemplate: '{tonnes} tonnes',
+      continueAction: 'Correct the figure'
+    },
+    returnQueried: {
+      banner: {
+        title: 'Important',
+        bodyTemplate:
+          'The Environment Agency has queried {figures} in your {period} battery data submission. Review each flagged record below and correct the figure.'
+      },
+      submissionTitleTemplate: '{period} submission',
+      summary: { submitted: 'Submitted', reviewed: 'Reviewed' },
+      recordsHeading: 'Queried records',
+      columns: {
+        member: 'Member',
+        chemistry: 'Chemistry',
+        reason: "Regulator's reason",
+        action: 'Action'
+      },
+      allCorrectedBanner: {
+        title: 'Success',
+        bodyTemplate:
+          'You have corrected all {figures} queried in your {period} battery data submission. The Environment Agency will review them.'
+      },
+      reviewAction: 'Review',
+      reviewHiddenTemplate: 'queried figure for {member}',
+      notQueriedBodyTemplate:
+        'The Environment Agency has not queried your {period} submission, so there is nothing to respond to.',
+      submissionsLink: 'View your quarterly submissions'
+    },
+    signIn: {
+      title: 'Sign in to your GOV.UK One Login',
+      heading: 'Sign in to your GOV.UK One Login',
+      emailLabel: 'Email address',
+      emailHint: 'For example, name@example.com',
+      passwordLabel: 'Password',
+      forgotEmailLink: 'Forgot your email address?',
+      forgotPasswordLink: 'Forgot your password?',
+      signInAction: 'Sign in',
+      createLink: 'Create a GOV.UK One Login',
+      error: {
+        title: 'There is a problem',
+        email: 'Enter your email address',
+        emailFormat:
+          'Enter an email address in the correct format, like name@example.com',
+        password: 'Enter your password'
+      }
+    }
+  },
+
   signIn: {
     title: 'Sign in to your GOV.UK One Login',
     heading: 'Sign in to your GOV.UK One Login',
@@ -199,6 +293,204 @@ export const prototypeComplianceSchemeContent = {
     evidenceNote:
       "Based on the data you've uploaded, you should provide additional evidence or notes for 2 chemistry categories.",
     continueAction: 'Continue'
+  },
+
+  wasteData: {
+    accountHome: {
+      title: 'Account home',
+      headingTemplate: 'Account home – {scheme}',
+      tabsTitle: 'Jurisdictions',
+      jurisdictions: {
+        ea: {
+          id: 'ea',
+          tabLabelTemplate: '{scheme} (EA)',
+          regulatorHeading: 'Data for the Environment Agency'
+        },
+        niea: {
+          id: 'niea',
+          tabLabelTemplate: '{scheme} (NIEA)',
+          regulatorHeading: 'Data for the Northern Ireland Environment Agency',
+          noPeriods:
+            'There are no waste data reporting periods for the Northern Ireland Environment Agency in this prototype.'
+        }
+      },
+      collectHeading: 'Collect from members',
+      collectIntro:
+        "Your scheme collects take-back across its members — enough to meet its obligation. This is not a full roll-up of what every member collected, and it will not match your members' total POM.",
+      periods: {
+        headingTemplate: 'Waste data reporting periods {year}',
+        intro:
+          'Each quarter has its own deadline — the last day of the month after the quarter ends. Waste data is submitted separately from POM.',
+        columns: {
+          quarter: 'Quarter',
+          available: 'Available',
+          due: 'Due',
+          status: 'Status',
+          action: 'Action'
+        },
+        statuses: {
+          accepted: {
+            label: 'Accepted',
+            colour: 'green',
+            actionText: 'View waste data'
+          },
+          queryRaised: {
+            label: 'Query raised',
+            colour: 'orange',
+            actionText: 'Respond to query'
+          },
+          notStarted: {
+            label: 'Not started',
+            colour: 'grey',
+            actionText: 'Record what you collected'
+          },
+          notYetAvailable: {
+            label: 'Not yet available',
+            colour: 'grey',
+            actionTextTemplate: 'Available {date}'
+          },
+          submitted: {
+            label: 'Submitted',
+            colour: 'blue',
+            actionText: 'View waste data'
+          }
+        }
+      },
+      obligation: {
+        headingTemplate: 'Your Q{quarter} {year} obligation',
+        periodLabel: 'Obligation period',
+        takeBackLabel: 'Take-back obligation (scheme level)',
+        takeBackValueTemplate:
+          "{tonnes} tonnes — approximately {percent}% of your scheme's {years}-year average POM",
+        collectedLabel: 'Collected so far this quarter',
+        collectedNotRecorded: 'Not yet recorded',
+        collectedValueTemplate: '{tonnes} tonnes',
+        recordAction: 'Record collection'
+      },
+      startAction: 'Start submission'
+    },
+
+    start: {
+      title: 'Start the submission',
+      heading: 'Start the submission',
+      caption: 'Q3 2026 waste data',
+      subHeading: 'Choose how to submit',
+      intro:
+        'Enter your data on screen, or upload a CSV file in the Quarterly Waste Batteries format — the same format used for POM today. Both routes are kept separate from your POM submission.',
+      legend: 'How do you want to submit?',
+      options: {
+        onScreen: {
+          label: 'Enter data on screen',
+          hint: 'For small corrections only'
+        },
+        csv: {
+          label: 'Upload a CSV file',
+          hint: 'Recommended for full quarterly returns'
+        }
+      },
+      continueAction: 'Continue',
+      error: {
+        title: 'There is a problem',
+        choice: 'Select how you want to submit'
+      }
+    },
+
+    uploadUnavailable: {
+      title: 'Uploading a CSV file is not part of this prototype',
+      heading: 'Uploading a CSV file is not part of this prototype',
+      body: 'This journey covers entering your data on screen. Go back and choose to enter your data on screen to continue.',
+      backAction: 'Back to choose how to submit'
+    },
+
+    enter: {
+      title: 'Enter tonnes collected and delivered',
+      heading: 'Enter tonnes collected and delivered',
+      intro:
+        'Enter the total tonnes your scheme collected from members this quarter, to 3 decimal places. This is a scheme-level total, not a per-member breakdown.',
+      suffix: 't',
+      collected: {
+        label: 'Collected (t)',
+        hint: 'The total tonnes of waste batteries your scheme collected from members this quarter. For example, 80.900.'
+      },
+      delivered: {
+        label: 'Delivered (t)',
+        hintTemplate:
+          'The tonnes you delivered to {operator}. This cannot be more than the tonnes collected. For example, 60.250.'
+      },
+      backAction: 'Back',
+      continueAction: 'Continue',
+      saveLink: 'Save and come back later',
+      error: {
+        title: 'There is a problem',
+        collectedTonnes: {
+          required: 'Enter the tonnes collected',
+          format: 'Tonnes collected must be a number, like 80.900',
+          decimals:
+            'Enter tonnes collected to exactly 3 decimal places, for example 80.900 not 80.9 or 80.9000',
+          positive: 'Tonnes collected must be more than 0'
+        },
+        deliveredTonnes: {
+          required: 'Enter the tonnes delivered',
+          format: 'Tonnes delivered must be a number, like 60.250',
+          decimals:
+            'Enter tonnes delivered to exactly 3 decimal places, for example 60.250 not 60.25 or 60.2500',
+          positive: 'Tonnes delivered must be more than 0',
+          exceeds: 'Tonnes delivered cannot be more than the tonnes collected'
+        }
+      }
+    },
+
+    check: {
+      title: 'Check and confirm',
+      heading: 'Check and confirm',
+      caption: 'Q3 2026 waste data · draft',
+      columns: {
+        figure: 'Figure',
+        operator: 'Treatment operator',
+        tonnes: 'Tonnes'
+      },
+      collectedLabel: 'Collected',
+      collectedOperator: 'All members (scheme level)',
+      deliveredLabel: 'Delivered',
+      note: 'This is a scheme-level total, not a breakdown per member. It will not match the total POM reported by your individual members — schemes only need to collect enough to meet their obligation.',
+      continueAction: 'Continue to declaration'
+    },
+
+    declaration: {
+      title: 'Declaration',
+      heading: 'Declaration',
+      intro: 'By submitting your Q3 2026 waste data, you confirm that:',
+      bullets: [
+        'the figures are correct to the best of your knowledge and belief'
+      ],
+      submittedByTemplate: 'Submitted by: {name} (authorised signatory)',
+      warning:
+        'Once submitted, this becomes your scheme\'s official Q3 2026 waste data. It moves from draft to "submitted" — this is different from the "final" locked state, which happens automatically at the quarter-end deadline.',
+      warningPrefix: 'Warning',
+      submitAction: 'Submit waste data'
+    },
+
+    submitted: {
+      title: 'Your Q3 2026 waste data has been submitted',
+      heading: 'Your Q3 2026 waste data',
+      banner: {
+        title: 'Submitted',
+        heading: 'Your Q3 2026 waste data has been submitted',
+        referenceTemplate: 'Your reference number is {reference}.'
+      },
+      statusTag: { label: 'Submitted', colour: 'blue' },
+      rows: {
+        collected: 'Total collected',
+        delivered: 'Total delivered',
+        submittedBy: 'Submitted by',
+        status: 'Status'
+      },
+      collectedTemplate: '{tonnes} tonnes',
+      deliveredTemplate: '{tonnes} tonnes, to {operator}',
+      submittedByTemplate: '{name}, {date}',
+      statusTemplate: 'Submitted — becomes final on {date}',
+      accountHomeLink: 'Back to account home'
+    }
   },
 
   membersList: {

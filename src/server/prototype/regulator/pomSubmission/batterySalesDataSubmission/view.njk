@@ -1,0 +1,159 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+      {%- set memberFiguresPanelHtml -%}
+        <h2 class="govuk-heading-l">{{ labels.panelHeading }}</h2>
+        <p class="govuk-body" data-testid="battery-sales-data-submission-intro">{{ intro }}</p>
+
+        {% set figureRows = [] %}
+        {% for figure in memberFigures %}
+          {% set actionCellHtml %}
+            {% if figure.queried %}
+              <a class="govuk-link" href="#" data-testid="battery-sales-data-submission-edit-query-{{ figure.member | lower | replace(' ', '-') | replace('&', 'and') }}">{{ labels.editQueryLink }}</a>
+            {% else %}
+              <a class="govuk-link" href="#" data-testid="battery-sales-data-submission-query-{{ figure.member | lower | replace(' ', '-') | replace('&', 'and') }}">{{ labels.queryAction }}</a>
+              ·
+              <a class="govuk-link" href="#" data-testid="battery-sales-data-submission-reject-{{ figure.member | lower | replace(' ', '-') | replace('&', 'and') }}">{{ labels.rejectAction }}</a>
+            {% endif %}
+          {% endset %}
+          {% set figureRows = (figureRows.push([
+            { text: figure.member },
+            { text: figure.chemistry },
+            { text: figure.figureTonnes },
+            { html: govukTag({ text: figure.statusLabel, classes: "govuk-tag--" + figure.statusColour }) | safe },
+            { text: figure.reason if figure.reason else "" },
+            { html: actionCellHtml }
+          ]), figureRows) %}
+        {% endfor %}
+
+        {{ govukTable({
+          head: [
+            { text: labels.columns.member },
+            { text: labels.columns.chemistry },
+            { text: labels.columns.figure },
+            { text: labels.columns.status },
+            { text: labels.columns.reason },
+            { text: labels.columns.action }
+          ],
+          rows: figureRows,
+          attributes: { "data-testid": "battery-sales-data-submission-table" }
+        }) }}
+      {%- endset -%}
+
+      {%- set compareReturnsPanelHtml -%}
+        <h2 class="govuk-heading-l">{{ labels.compareReturns.heading }} — {{ scheme.name }}</h2>
+        <p class="govuk-body" data-testid="battery-sales-data-submission-compare-returns-intro">{{ labels.compareReturns.intro }}</p>
+
+        {{ govukInput({
+          id: "swing-alert-level",
+          name: "swingAlertLevel",
+          label: { text: labels.compareReturns.alertLevelLabel, classes: "govuk-label--m" },
+          classes: "govuk-input--width-3",
+          value: compareReturns.alertLevelPercent,
+          attributes: { "data-testid": "battery-sales-data-submission-alert-level" }
+        }) }}
+
+        {% set compareRows = [] %}
+        {% for category in compareReturns.categories %}
+          {% set compareActionCellHtml %}
+            {% if category.hasReason %}
+              <a class="govuk-link" href="#" data-testid="battery-sales-data-submission-view-reason-{{ category.category | lower | replace(' ', '-') | replace('&', 'and') }}">{{ labels.compareReturns.viewReasonLink }}</a>
+            {% endif %}
+          {% endset %}
+          {% set compareRows = (compareRows.push([
+            { text: category.category },
+            { text: category.thisQuarterTonnes },
+            { text: category.lastQuarterTonnes },
+            { html: govukTag({ text: category.swingText, classes: "govuk-tag--" + category.swingColour }) | safe },
+            { text: category.sameQuarterLastYearTonnes },
+            { html: compareActionCellHtml }
+          ]), compareRows) %}
+        {% endfor %}
+        {% set compareRows = (compareRows.push([
+          { text: compareReturns.totals.label },
+          { text: compareReturns.totals.thisQuarterTonnes },
+          { text: compareReturns.totals.lastQuarterTonnes },
+          { html: govukTag({ text: compareReturns.totals.swingText, classes: "govuk-tag--" + compareReturns.totals.swingColour }) | safe },
+          { text: compareReturns.totals.sameQuarterLastYearTonnes },
+          { html: "" }
+        ]), compareRows) %}
+
+        {{ govukTable({
+          head: [
+            { text: labels.compareReturns.columns.category },
+            { text: labels.compareReturns.columns.thisQuarter },
+            { text: labels.compareReturns.columns.lastQuarter },
+            { text: labels.compareReturns.columns.swing },
+            { text: labels.compareReturns.columns.sameQuarterLastYear },
+            { text: labels.compareReturns.columns.action }
+          ],
+          rows: compareRows,
+          attributes: { "data-testid": "battery-sales-data-submission-compare-returns-table" }
+        }) }}
+      {%- endset -%}
+
+      {%- set indicativeObligationPanelHtml -%}
+        <h2 class="govuk-heading-l">{{ labels.indicativeObligation.heading }} — {{ scheme.name }}</h2>
+        <p class="govuk-body" data-testid="battery-sales-data-submission-indicative-obligation-intro">{{ labels.indicativeObligation.intro }}</p>
+
+        {{ govukSummaryList({
+          rows: [
+            { key: { text: labels.indicativeObligation.summaryLabels.placedOnMarket2024 }, value: { text: indicativeObligation.placedOnMarket2024 } },
+            { key: { text: labels.indicativeObligation.summaryLabels.placedOnMarket2025 }, value: { text: indicativeObligation.placedOnMarket2025 } },
+            { key: { text: labels.indicativeObligation.summaryLabels.placedOnMarket2026SoFar }, value: { text: indicativeObligation.placedOnMarket2026SoFar } },
+            { key: { text: labels.indicativeObligation.summaryLabels.rollingAverage }, value: { text: indicativeObligation.rollingAverage } },
+            { key: { text: labels.indicativeObligation.summaryLabels.obligationRate }, value: { text: indicativeObligation.obligationRate } },
+            { key: { text: labels.indicativeObligation.summaryLabels.indicativeObligation | replace("{year}", indicativeObligation.indicativeObligationYear | string) }, value: { text: indicativeObligation.indicativeObligation } }
+          ],
+          attributes: { "data-testid": "battery-sales-data-submission-indicative-obligation-summary" }
+        }) }}
+
+        {% if indicativeObligation.verified %}
+          {{ govukTag({ text: labels.indicativeObligation.verifiedTag, classes: "govuk-tag--green", attributes: { "data-testid": "battery-sales-data-submission-indicative-obligation-verified" } }) }}
+        {% endif %}
+      {%- endset -%}
+
+      {{ govukTabs({
+        idPrefix: "battery-sales-data-submission",
+        attributes: { "aria-label": labels.tabsLabel, "data-testid": "battery-sales-data-submission-tabs" },
+        items: [
+          {
+            label: tabs[0].text,
+            id: tabs[0].id,
+            panel: { html: memberFiguresPanelHtml },
+            attributes: { "data-testid": "battery-sales-data-submission-tab-" + tabs[0].id }
+          },
+          {
+            label: tabs[1].text,
+            id: tabs[1].id,
+            panel: { html: compareReturnsPanelHtml },
+            attributes: { "data-testid": "battery-sales-data-submission-tab-" + tabs[1].id }
+          },
+          {
+            label: tabs[2].text,
+            id: tabs[2].id,
+            panel: { html: indicativeObligationPanelHtml },
+            attributes: { "data-testid": "battery-sales-data-submission-tab-" + tabs[2].id }
+          }
+        ]
+      }) }}
+
+      {{ govukButton({
+        text: labels.continueAction,
+        href: continueHref,
+        attributes: { "data-testid": "battery-sales-data-submission-continue" }
+      }) }}
+    </div>
+  </div>
+{% endblock %}

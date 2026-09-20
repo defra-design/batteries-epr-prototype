@@ -1,0 +1,39 @@
+{% extends 'prototypeWasteData/_layout.njk' %}
+
+{% block stepBody %}
+  <span class="govuk-caption-l">{{ labels.caption }}</span>
+  <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+  {{
+    govukTable({
+      head: [
+        { text: labels.columns.figure },
+        { text: labels.columns.operator },
+        { text: labels.columns.tonnes }
+      ],
+      rows: [
+        [
+          { text: labels.collectedLabel },
+          { text: labels.collectedOperator },
+          { html: '<span data-testid="waste-data-check-collected">—</span>' }
+        ],
+        [
+          { text: labels.deliveredLabel },
+          { text: receivingOperator },
+          { html: '<span data-testid="waste-data-check-delivered">—</span>' }
+        ]
+      ],
+      attributes: { "data-testid": "waste-data-check-table" }
+    })
+  }}
+
+  <p class="govuk-body">{{ labels.note }}</p>
+
+  {{
+    govukButton({
+      text: labels.continueAction,
+      href: continueUrl,
+      attributes: { "data-testid": "waste-data-check-continue" }
+    })
+  }}
+{% endblock %}

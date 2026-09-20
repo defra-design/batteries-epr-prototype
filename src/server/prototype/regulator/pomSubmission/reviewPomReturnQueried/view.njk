@@ -1,0 +1,87 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      {%- set bannerHtml -%}
+        <h3 class="govuk-notification-banner__heading">{{ bannerHeading }}</h3>
+        <p class="govuk-body">{{ bannerBody }}</p>
+      {%- endset -%}
+      {{ govukNotificationBanner({
+        html: bannerHtml,
+        attributes: { "data-testid": "review-pom-return-queried-banner" }
+      }) }}
+
+      <div class="govuk-!-margin-bottom-4">
+        <span class="govuk-heading-xl govuk-!-margin-bottom-0 govuk-!-display-inline-block govuk-!-margin-right-3" data-testid="review-pom-return-queried-heading">{{ heading }}</span>
+        {{ govukTag({ text: labels.statusLabel, classes: "govuk-tag--" + labels.statusColour, attributes: { "data-testid": "review-pom-return-queried-status" } }) }}
+      </div>
+      <p class="govuk-body" data-testid="review-pom-return-queried-intro">{{ intro }}</p>
+
+      {% set summaryRows = [
+        { key: { text: labels.summaryLabels.decision }, value: { text: decisionLine } },
+        { key: { text: labels.summaryLabels.decidedBy }, value: { text: decidedByLine } },
+        { key: { text: labels.summaryLabels.decidedOn }, value: { text: decidedOnLine } },
+        { key: { text: labels.summaryLabels.schemeNotified }, value: { text: schemeNotifiedLine } },
+        { key: { text: labels.summaryLabels.respondBy }, value: { text: respondByLine } },
+        { key: { text: labels.summaryLabels.restOfReturn }, value: { text: restOfReturnValue } }
+      ] %}
+      {% if yourReasonLine %}
+        {% set summaryRows = (summaryRows.push(
+          { key: { text: labels.summaryLabels.yourReason }, value: { text: yourReasonLine } }
+        ), summaryRows) %}
+      {% endif %}
+
+      {{ govukSummaryList({
+        rows: summaryRows,
+        attributes: { "data-testid": "review-pom-return-queried-summary" }
+      }) }}
+
+      <h2 class="govuk-heading-l">{{ labels.recordsHeading }}</h2>
+
+      {% set queriedRows = [] %}
+      {% for figure in queriedFigures %}
+        {% set queriedRows = (queriedRows.push([
+          { text: figure.member },
+          { text: figure.chemistry },
+          { text: figure.figureTonnes },
+          { text: figure.reason },
+          { html: govukTag({ text: figure.statusLabel, classes: "govuk-tag--" + figure.statusColour }) | safe }
+        ]), queriedRows) %}
+      {% endfor %}
+
+      {{ govukTable({
+        head: [
+          { text: labels.columns.member },
+          { text: labels.columns.chemistry },
+          { text: labels.columns.figure },
+          { text: labels.columns.reason },
+          { text: labels.columns.status }
+        ],
+        rows: queriedRows,
+        attributes: { "data-testid": "review-pom-return-queried-records-table" }
+      }) }}
+
+      <h2 class="govuk-heading-l">{{ whatSchemeSeesHeading }}</h2>
+      <p class="govuk-body">{{ labels.whatSchemeSeesBody }}</p>
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="#" data-testid="review-pom-return-queried-download-records">Download queried records ({{ downloadQueriedFilename }}, 4KB)</a>
+      </p>
+      <p class="govuk-body">
+        <a class="govuk-link" href="#" data-testid="review-pom-return-queried-download-submission">Download the full submission as uploaded (.zip, 2.1MB)</a>
+      </p>
+
+      <ul class="govuk-list" data-testid="review-pom-return-queried-related-links">
+        {% for link in relatedLinks %}
+          <li><a class="govuk-link" href="{{ link.href }}" data-testid="review-pom-return-queried-related-link-{{ loop.index }}">{{ link.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endblock %}

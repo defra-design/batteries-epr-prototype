@@ -1,0 +1,57 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      {%- set bannerHtml -%}
+        <h3 class="govuk-notification-banner__heading">{{ labels.bannerHeading }}</h3>
+        <p class="govuk-body">{{ bannerBody }}</p>
+      {%- endset -%}
+      {{ govukNotificationBanner({
+        type: "success",
+        html: bannerHtml,
+        attributes: { "data-testid": "review-pom-return-accepted-banner" }
+      }) }}
+
+      <div class="govuk-!-margin-bottom-4">
+        <span class="govuk-heading-xl govuk-!-margin-bottom-0 govuk-!-display-inline-block govuk-!-margin-right-3" data-testid="review-pom-return-accepted-heading">{{ heading }}</span>
+        {{ govukTag({ text: statusLabel, classes: "govuk-tag--" + statusColour, attributes: { "data-testid": "review-pom-return-accepted-status" } }) }}
+      </div>
+      <p class="govuk-body" data-testid="review-pom-return-accepted-intro">{{ intro }}</p>
+
+      {% if lockWarning %}
+        <div class="govuk-!-margin-bottom-6">
+          {{ govukTag({ text: lockTagText, classes: "govuk-tag--" + labels.lockWarningColour, attributes: { "data-testid": "review-pom-return-accepted-lock-tag" } }) }}
+          <p class="govuk-body govuk-!-margin-top-2" data-testid="review-pom-return-accepted-lock-warning">{{ lockWarning }}</p>
+        </div>
+      {% endif %}
+
+      {% set summaryRows = [
+        { key: { text: labels.summaryLabels.totalPlaced }, value: { text: totalPlacedOnMarketLine } },
+        { key: { text: labels.summaryLabels.membersIncluded }, value: { text: membersIncludedLine } },
+        { key: { text: labels.summaryLabels.swingsFlagged }, value: { text: swingCategoriesText } },
+        { key: { text: labels.summaryLabels.submittedBy }, value: { text: submittedByLine } }
+      ] %}
+      {% if yourReasonLine %}
+        {% set summaryRows = (summaryRows.push(
+          { key: { text: labels.summaryLabels.yourReason }, value: { text: yourReasonLine } }
+        ), summaryRows) %}
+      {% endif %}
+
+      {{ govukSummaryList({
+        rows: summaryRows,
+        attributes: { "data-testid": "review-pom-return-accepted-summary" }
+      }) }}
+
+      <ul class="govuk-list" data-testid="review-pom-return-accepted-related-links">
+        {% for link in relatedLinks %}
+          <li><a class="govuk-link" href="{{ link.href }}" data-testid="review-pom-return-accepted-related-link-{{ loop.index }}">{{ link.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endblock %}

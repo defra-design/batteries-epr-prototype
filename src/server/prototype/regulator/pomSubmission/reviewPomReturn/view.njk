@@ -1,0 +1,120 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      {% if errorSummary and errorSummary.length %}
+        {{ govukErrorSummary({
+          titleText: errorTitle,
+          errorList: errorSummary,
+          attributes: { "data-testid": "review-pom-return-error-summary" }
+        }) }}
+      {% endif %}
+
+      <div class="govuk-!-margin-bottom-4">
+        <span class="govuk-heading-xl govuk-!-margin-bottom-0 govuk-!-display-inline-block govuk-!-margin-right-3" data-testid="review-pom-return-heading">{{ heading }}</span>
+        {{ govukTag({ text: statusLabel, classes: "govuk-tag--" + statusColour, attributes: { "data-testid": "review-pom-return-status" } }) }}
+      </div>
+      <p class="govuk-body" data-testid="review-pom-return-intro">{{ intro }}</p>
+
+      {% if lockWarning %}
+        <div class="govuk-!-margin-bottom-6">
+          {{ govukTag({ text: lockTagText, classes: "govuk-tag--" + labels.lockWarningColour, attributes: { "data-testid": "review-pom-return-lock-tag" } }) }}
+          <p class="govuk-body govuk-!-margin-top-2" data-testid="review-pom-return-lock-warning">{{ lockWarning }}</p>
+        </div>
+      {% endif %}
+
+      <h2 class="govuk-heading-m">{{ labels.statusPathHeading }}</h2>
+      {% set statusStepRows = [] %}
+      {% for step in statusSteps %}
+        {% set statusStepRows = (statusStepRows.push({
+          key: { text: step.label },
+          value: { text: step.date }
+        }), statusStepRows) %}
+      {% endfor %}
+      {{ govukSummaryList({
+        rows: statusStepRows,
+        attributes: { "data-testid": "review-pom-return-status-steps" }
+      }) }}
+
+      {% set summaryRows = [
+        { key: { text: labels.summaryLabels.totalPlaced }, value: { text: totalPlacedOnMarketLine } },
+        { key: { text: labels.summaryLabels.membersIncluded }, value: { text: membersIncludedLine } },
+        { key: { text: labels.summaryLabels.swingsFlagged }, value: { text: swingCategoriesText } },
+        { key: { text: labels.summaryLabels.submittedBy }, value: { text: submittedByLine } }
+      ] %}
+      {% if yourReasonLine %}
+        {% set summaryRows = (summaryRows.push(
+          { key: { text: labels.summaryLabels.yourReason }, value: { text: yourReasonLine } }
+        ), summaryRows) %}
+      {% endif %}
+
+      {{ govukSummaryList({
+        rows: summaryRows,
+        attributes: { "data-testid": "review-pom-return-summary" }
+      }) }}
+
+      <ul class="govuk-list" data-testid="review-pom-return-related-links">
+        {% for link in relatedLinks %}
+          <li><a class="govuk-link" href="{{ link.href }}" data-testid="review-pom-return-related-link-{{ loop.index }}">{{ link.text }}</a></li>
+        {% endfor %}
+      </ul>
+
+      <h2 class="govuk-heading-l">{{ labels.decisionHeading }}</h2>
+      <p class="govuk-body">{{ decisionIntro }}</p>
+
+      <form method="post" action="{{ action }}" novalidate data-testid="review-pom-return-form">
+        {{ govukRadios({
+          idPrefix: "decision",
+          name: "decision",
+          errorMessage: { text: errors.decision } if errors.decision,
+          items: [
+            {
+              value: decisionOptions[0].value,
+              text: decisionOptions[0].text,
+              hint: { text: decisionOptions[0].hint },
+              checked: formValues.decision == decisionOptions[0].value,
+              attributes: { "data-testid": "review-pom-return-decision-accept" }
+            },
+            {
+              value: decisionOptions[1].value,
+              text: decisionOptions[1].text,
+              hint: { text: decisionOptions[1].hint },
+              checked: formValues.decision == decisionOptions[1].value,
+              attributes: { "data-testid": "review-pom-return-decision-query" }
+            },
+            {
+              value: decisionOptions[2].value,
+              text: decisionOptions[2].text,
+              hint: { text: decisionOptions[2].hint },
+              checked: formValues.decision == decisionOptions[2].value,
+              attributes: { "data-testid": "review-pom-return-decision-reject" }
+            }
+          ]
+        }) }}
+
+        {{ govukTextarea({
+          id: "reason",
+          name: "reason",
+          label: { text: labels.reasonLabel, classes: "govuk-label--m" },
+          hint: { text: reasonHint },
+          value: formValues.reason,
+          errorMessage: { text: errors.reason } if errors.reason,
+          attributes: { "data-testid": "review-pom-return-reason" }
+        }) }}
+
+        {{ govukButton({
+          text: labels.continueAction,
+          attributes: { "data-testid": "review-pom-return-continue" }
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

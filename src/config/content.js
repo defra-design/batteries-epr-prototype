@@ -74,8 +74,8 @@ export const content = {
           regulator: 'Regulator'
         },
         links: {
-          coded: 'Coded prototype',
-          figma: 'Figma prototype'
+          coded: 'Version 2 (Gov.uk prototype)',
+          figma: 'Version 1 (Figma prototype)'
         },
         journeys: {
           smallProducerRegistration: {
@@ -94,7 +94,14 @@ export const content = {
             persona: 'complianceScheme',
             title: 'Compliance scheme quarterly PoM submission',
             description:
-              'Quarterly submission of placed-on-market battery data by an approved compliance scheme on behalf of its members.'
+              'Quarterly submission of placed-on-market battery data by an approved compliance scheme on behalf of its members.',
+            figmaHref: 'https://echo-sixth-31868075.figma.site'
+          },
+          complianceSchemeRespondsToQuery: {
+            persona: 'complianceScheme',
+            title: 'Compliance scheme responds to a query',
+            description:
+              'The scheme sees the figures the regulator queried on a quarterly return, reviews each one and sends a corrected figure.'
           },
           bcsSendsMembersList: {
             persona: 'complianceScheme',
@@ -166,6 +173,13 @@ export const content = {
               'An approved treatment operator issues an evidence note for batteries it has treated.',
             figmaHref: 'https://hidden-scarf-91339469.figma.site'
           },
+          abtoSmallOperatorThresholdCrossed: {
+            persona: 'operator',
+            title: 'Small operator threshold crossed',
+            description:
+              'Alert triggered when a battery treatment operator exceeds 15 tonnes, requiring reclassification and fee payment.',
+            figmaHref: 'https://coil-flop-97971224.figma.site'
+          },
           abtoEvidenceNoteSentForAuthorisation: {
             persona: 'operator',
             title: 'Evidence note sent to approved person for authorisation',
@@ -198,12 +212,19 @@ export const content = {
             description:
               'The operator answers a regulator query about figures it has submitted.'
           },
+          abtoEvidenceNoteSentToApprovedPerson: {
+            persona: 'operator',
+            title: 'Evidence note sent to approved person',
+            description:
+              "An evidence note goes to the approved person for authorisation before it's sent to the compliance scheme.",
+            figmaHref: 'https://growl-haven-22844399.figma.site/'
+          },
           regulatorReceivesPomSubmission: {
             persona: 'regulator',
             title: 'PoM submission received by regulator',
             description:
               "The regulator reviews a compliance scheme's placed-on-market return and accepts, queries or rejects it.",
-            figmaHref: 'https://cow-true-59622750.figma.site/'
+            figmaHref: 'https://chop-epic-15301554.figma.site/'
           },
           regulatorReviewsAbtoWasteFigures: {
             persona: 'regulator',
@@ -247,6 +268,11 @@ export const content = {
             description: 'TODO welsh'
           },
           complianceSchemeQuarterlySubmission: {
+            persona: 'complianceScheme',
+            title: 'TODO welsh',
+            description: 'TODO welsh'
+          },
+          complianceSchemeRespondsToQuery: {
             persona: 'complianceScheme',
             title: 'TODO welsh',
             description: 'TODO welsh'
@@ -307,6 +333,12 @@ export const content = {
             description: 'TODO welsh',
             figmaHref: 'https://hidden-scarf-91339469.figma.site'
           },
+          abtoSmallOperatorThresholdCrossed: {
+            persona: 'operator',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            figmaHref: 'https://coil-flop-97971224.figma.site'
+          },
           abtoEvidenceNoteSentForAuthorisation: {
             persona: 'operator',
             title: 'TODO welsh',
@@ -334,11 +366,17 @@ export const content = {
             title: 'TODO welsh',
             description: 'TODO welsh'
           },
+          abtoEvidenceNoteSentToApprovedPerson: {
+            persona: 'operator',
+            title: 'TODO welsh',
+            description: 'TODO welsh',
+            figmaHref: 'https://growl-haven-22844399.figma.site/'
+          },
           regulatorReceivesPomSubmission: {
             persona: 'regulator',
             title: 'TODO welsh',
             description: 'TODO welsh',
-            figmaHref: 'https://cow-true-59622750.figma.site/'
+            figmaHref: 'https://chop-epic-15301554.figma.site/'
           },
           regulatorReviewsAbtoWasteFigures: {
             persona: 'regulator',

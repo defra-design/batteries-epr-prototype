@@ -6,7 +6,11 @@ const journeyHrefs = {
   smallProducerSubmission: paths.prototypeSubmissionSignIn,
   complianceSchemeQuarterlySubmission:
     paths.prototypeComplianceSchemeSubmissionSignIn,
-  bcsSendsMembersList: paths.prototypeMembersListStart
+  complianceSchemeRespondsToQuery:
+    paths.prototypeComplianceSchemeQueryResponseSignIn,
+  bcsSendsMembersList: paths.prototypeMembersListStart,
+  bcsSubmissionOfWasteData: paths.prototypeWasteDataAccountHome,
+  regulatorReceivesPomSubmission: paths.prototypeRegulatorPomSubmissionSignIn
 }
 
 export const buildPersonaGroups = (journeys, personas) =>

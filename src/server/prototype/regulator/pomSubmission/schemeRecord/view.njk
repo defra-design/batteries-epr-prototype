@@ -1,0 +1,57 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <div class="govuk-!-margin-bottom-4">
+        <span class="govuk-heading-xl govuk-!-margin-bottom-0 govuk-!-display-inline-block govuk-!-margin-right-3">{{ heading }}</span>
+        {{ govukTag({ text: statusLabel, classes: "govuk-tag--" + statusColour, attributes: { "data-testid": "scheme-record-status" } }) }}
+      </div>
+      <p class="govuk-body" data-testid="scheme-record-name">{{ scheme.name }} · {{ scheme.npwdRef }}</p>
+
+      <h2 class="govuk-heading-l">{{ labels.organisationHeading }}</h2>
+      {{ govukSummaryList({
+        rows: [
+          { key: { text: labels.registeredNameLabel }, value: { text: scheme.companyName } },
+          { key: { text: labels.companyRegistrationNoLabel }, value: { text: scheme.companyRegistrationNo } },
+          { key: { text: labels.registeredOfficeLabel }, value: { text: scheme.registeredOffice } },
+          { key: { text: labels.tradingAddressLabel }, value: { text: scheme.tradingAddress } },
+          { key: { text: labels.websiteLabel }, value: { text: scheme.website } }
+        ],
+        attributes: { "data-testid": "scheme-record-organisation" }
+      }) }}
+
+      <h2 class="govuk-heading-l">{{ labels.approvalHeading }}</h2>
+      {{ govukSummaryList({
+        rows: [
+          { key: { text: labels.approvalNumberLabel }, value: { text: scheme.approvalNumber } },
+          { key: { text: labels.approvedLabel }, value: { text: scheme.approvedOn | formatDate('d MMMM yyyy') } },
+          { key: { text: labels.approvalExpiresLabel }, value: { text: scheme.approvalExpires | formatDate('d MMMM yyyy') } },
+          { key: { text: labels.approvedByLabel }, value: { text: scheme.approvedBy } }
+        ],
+        attributes: { "data-testid": "scheme-record-approval" }
+      }) }}
+
+      <h2 class="govuk-heading-l">{{ labels.peopleHeading }}</h2>
+      {{ govukSummaryList({
+        rows: [
+          { key: { text: labels.authorisedSignatoryLabel }, value: { text: authorisedSignatoryLine } },
+          { key: { text: labels.superUserLabel }, value: { text: superUserLine } },
+          { key: { text: labels.accountManagerLabel }, value: { text: scheme.accountManager } }
+        ],
+        attributes: { "data-testid": "scheme-record-people" }
+      }) }}
+
+      <ul class="govuk-list" data-testid="scheme-record-related-links">
+        <li><a class="govuk-link" href="{{ membersHref }}" data-testid="scheme-record-link-members">{{ labels.relatedLinks.members }} ({{ membersCount }})</a></li>
+        <li><a class="govuk-link" href="{{ submissionsHref }}" data-testid="scheme-record-link-submissions">{{ labels.relatedLinks.submissions }}</a></li>
+        <li><a class="govuk-link" href="#" data-testid="scheme-record-link-timeline">{{ labels.relatedLinks.timeline }}</a></li>
+        <li><a class="govuk-link" href="#" data-testid="scheme-record-link-notes">{{ labels.relatedLinks.notes }}</a></li>
+        <li><a class="govuk-link" href="#" data-testid="scheme-record-link-applications">{{ labels.relatedLinks.applications }}</a></li>
+      </ul>
+    </div>
+  </div>
+{% endblock %}

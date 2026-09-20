@@ -3493,3 +3493,89 @@ describe('prototype members-list add-member draft', () => {
     )
   })
 })
+
+describe('prototype waste data draft', () => {
+  test('getPrototypeWasteData returns an empty object when nothing is stored', () => {
+    expect(storage.getPrototypeWasteData()).toEqual({})
+  })
+
+  test('savePrototypeWasteData merges fields into the draft', () => {
+    storage.savePrototypeWasteData({ collectedTonnes: '80.900' })
+    const draft = storage.savePrototypeWasteData({ deliveredTonnes: '60.250' })
+
+    expect(draft).toEqual({
+      collectedTonnes: '80.900',
+      deliveredTonnes: '60.250'
+    })
+    expect(storage.getPrototypeWasteData()).toEqual(draft)
+  })
+
+  const submission = {
+    schemeName: 'IronWave Compliance',
+    submittedBy: 'Priya Shah',
+    receivingOperator: 'Halton Battery Processing Ltd'
+  }
+
+  test('submitPrototypeWasteData marks the draft submitted and keeps the figures', () => {
+    storage.savePrototypeWasteData({
+      collectedTonnes: '80.900',
+      deliveredTonnes: '60.250'
+    })
+    const submitted = storage.submitPrototypeWasteData(submission)
+
+    expect(submitted.status).toBe('submitted')
+    expect(typeof submitted.submittedAt).toBe('string')
+    expect(submitted.submittedBy).toBe('Priya Shah')
+    expect(submitted.collectedTonnes).toBe('80.900')
+    expect(submitted.deliveredTonnes).toBe('60.250')
+    expect(submitted.batchId).toBe('BT2026-0093')
+    expect(submitted.reference).toBe('WD-2026-Q3-00093')
+  })
+
+  test('submitPrototypeWasteData hands the delivered tonnage to the ABTO in its delivery shape', () => {
+    storage.savePrototypeWasteData({
+      collectedTonnes: '80.900',
+      deliveredTonnes: '60.250'
+    })
+    const submitted = storage.submitPrototypeWasteData(submission)
+
+    expect(storage.getPrototypeAbtoDeliveries()).toEqual([
+      {
+        id: submitted.batchId,
+        schemeName: 'IronWave Compliance',
+        reportedTonnes: 60.25,
+        measuredTonnes: null,
+        reportedOn: submitted.submittedAt,
+        receivingOperator: 'Halton Battery Processing Ltd'
+      }
+    ])
+  })
+
+  test('submitting twice does not create a second delivery', () => {
+    storage.savePrototypeWasteData({
+      collectedTonnes: '80.900',
+      deliveredTonnes: '60.250'
+    })
+    const first = storage.submitPrototypeWasteData(submission)
+    const second = storage.submitPrototypeWasteData(submission)
+
+    expect(second).toEqual(first)
+    expect(storage.getPrototypeAbtoDeliveries()).toHaveLength(1)
+  })
+
+  test('getPrototypeAbtoDeliveries is empty before anything is submitted', () => {
+    expect(storage.getPrototypeAbtoDeliveries()).toEqual([])
+  })
+
+  test('clearPrototypeWasteData removes the draft', () => {
+    storage.savePrototypeWasteData({ collectedTonnes: '80.900' })
+    storage.clearPrototypeWasteData()
+    expect(storage.getPrototypeWasteData()).toEqual({})
+  })
+
+  test('the waste data draft key is namespaced under the prototype prefix', () => {
+    expect(STORAGE_KEYS.prototypeWasteDataDraft).toBe(
+      'npwd-batteries:prototype:wasteDataDraft'
+    )
+  })
+})

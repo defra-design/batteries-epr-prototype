@@ -1,0 +1,116 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+      {%- set quarterTableRows = [] -%}
+      {%- for quarter in quarterRows -%}
+        {%- set statusHtml -%}
+          {{ govukTag({
+            text: quarter.statusLabel,
+            classes: "govuk-tag--" + quarter.statusColour,
+            attributes: { "data-testid": "waste-data-quarter-" + quarter.quarter + "-status" }
+          }) }}
+        {%- endset -%}
+        {%- set actionHtml -%}
+          {%- if quarter.actionIsLink -%}
+            <a class="govuk-link" href="{{ quarter.actionHref }}" data-testid="waste-data-quarter-{{ quarter.quarter }}-action">{{ quarter.actionText }}<span class="govuk-visually-hidden"> for {{ quarter.label }}</span></a>
+          {%- else -%}
+            <span data-testid="waste-data-quarter-{{ quarter.quarter }}-action">{{ quarter.actionText }}</span>
+          {%- endif -%}
+        {%- endset -%}
+        {%- set quarterTableRows = (quarterTableRows.push([
+          { text: quarter.label },
+          { text: quarter.availableOn },
+          { text: quarter.dueOn },
+          { html: statusHtml },
+          { html: actionHtml }
+        ]), quarterTableRows) -%}
+      {%- endfor -%}
+
+      {%- set eaPanelHtml -%}
+        <h2 class="govuk-heading-m" data-testid="waste-data-regulator-heading">{{ labels.jurisdictions.ea.regulatorHeading }}</h2>
+        <h3 class="govuk-heading-l">{{ labels.collectHeading }}</h3>
+        <p class="govuk-body">{{ labels.collectIntro }}</p>
+
+        <div class="govuk-summary-card" data-testid="waste-data-periods-card">
+          <div class="govuk-summary-card__title-wrapper">
+            <h4 class="govuk-summary-card__title">{{ periodsHeading }}</h4>
+          </div>
+          <div class="govuk-summary-card__content">
+            <p class="govuk-body">{{ labels.periods.intro }}</p>
+            {{ govukTable({
+              head: [
+                { text: labels.periods.columns.quarter },
+                { text: labels.periods.columns.available },
+                { text: labels.periods.columns.due },
+                { text: labels.periods.columns.status },
+                { text: labels.periods.columns.action }
+              ],
+              rows: quarterTableRows,
+              attributes: { "data-testid": "waste-data-quarters-table" }
+            }) }}
+          </div>
+        </div>
+
+        {{ govukSummaryList({
+          card: {
+            title: { text: obligationHeading }
+          },
+          rows: obligationRows,
+          attributes: { "data-testid": "waste-data-obligation" }
+        }) }}
+
+        {{ govukButton({
+          text: labels.startAction,
+          href: startUrl,
+          isStartButton: true,
+          attributes: { "data-testid": "waste-data-start-button" }
+        }) }}
+      {%- endset -%}
+
+      {%- set nieaPanelHtml -%}
+        <h2 class="govuk-heading-m" data-testid="waste-data-niea-heading">{{ labels.jurisdictions.niea.regulatorHeading }}</h2>
+        {{ govukInsetText({
+          text: labels.jurisdictions.niea.noPeriods,
+          attributes: { "data-testid": "waste-data-niea-no-periods" }
+        }) }}
+      {%- endset -%}
+
+      {{ govukTabs({
+        title: labels.tabsTitle,
+        attributes: { "data-testid": "waste-data-jurisdiction-tabs" },
+        items: [
+          {
+            label: jurisdictionTabs.ea,
+            id: "jurisdiction-ea",
+            panel: { html: eaPanelHtml },
+            attributes: { "data-testid": "waste-data-tab-ea" }
+          },
+          {
+            label: jurisdictionTabs.niea,
+            id: "jurisdiction-niea",
+            panel: { html: nieaPanelHtml },
+            attributes: { "data-testid": "waste-data-tab-niea" }
+          }
+        ]
+      }) }}
+    </div>
+  </div>
+
+  <script type="application/json" id="page-payload" data-testid="page-payload">{{ pagePayload | dump | safe }}</script>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('prototypeWasteData.js') }}"></script>
+{% endblock %}

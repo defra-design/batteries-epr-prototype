@@ -1,0 +1,61 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <div class="govuk-!-margin-bottom-4">
+        <span class="govuk-heading-xl govuk-!-margin-bottom-0 govuk-!-display-inline-block govuk-!-margin-right-3" data-testid="scheme-home-name">{{ scheme.name }}</span>
+        {{ govukTag({ text: submissionStatusLabel, classes: "govuk-tag--" + submissionStatusColour, attributes: { "data-testid": "scheme-home-status" } }) }}
+      </div>
+      <p class="govuk-body" data-testid="scheme-home-npwd-ref">{{ scheme.npwdRef }}</p>
+
+      <h2 class="govuk-heading-l">{{ labels.detailsHeading }}</h2>
+
+      {{ govukSummaryList({
+        rows: [
+          { key: { text: labels.approvalNumberLabel }, value: { text: scheme.approvalNumber } },
+          { key: { text: labels.approvedLabel }, value: { text: scheme.approvedOn | formatDate('d MMMM yyyy') } },
+          { key: { text: labels.approvalExpiresLabel }, value: { text: scheme.approvalExpires | formatDate('d MMMM yyyy') } },
+          {
+            key: { text: labels.membersLabel },
+            value: { text: membersCount },
+            actions: { items: [{ href: membersHref, text: labels.seeAllMembersLink, attributes: { "data-testid": "scheme-home-see-all-members" } }] }
+          },
+          { key: { text: labels.authorisedSignatoryLabel }, value: { text: scheme.authorisedSignatory.name } },
+          { key: { text: labels.superUserLabel }, value: { text: scheme.superUser.name } },
+          { key: { text: labels.accountManagerLabel }, value: { text: scheme.accountManager } }
+        ],
+        attributes: { "data-testid": "scheme-home-details" }
+      }) }}
+
+      <div class="govuk-button-group">
+        <a class="govuk-link" href="{{ quickLinks.record.href }}" data-testid="scheme-home-quick-link-record">{{ quickLinks.record.text }}</a>
+        <a class="govuk-link" href="{{ quickLinks.members.href }}" data-testid="scheme-home-quick-link-members">{{ quickLinks.members.text }}</a>
+        <a class="govuk-link" href="{{ quickLinks.submissions.href }}" data-testid="scheme-home-quick-link-submissions">{{ quickLinks.submissions.text }}</a>
+      </div>
+
+      <div class="govuk-!-margin-top-6 govuk-!-margin-bottom-4">
+        <span class="govuk-heading-l govuk-!-margin-bottom-0 govuk-!-display-inline-block govuk-!-margin-right-3" data-testid="scheme-home-submission-heading">{{ submissionHeading }}</span>
+      </div>
+      <p class="govuk-body" data-testid="scheme-home-submission-intro">{{ submissionIntro }}</p>
+
+      {% if showRunDataChecks %}
+        <p class="govuk-body">
+          <a class="govuk-link" href="#" data-testid="scheme-home-view-files">{{ labels.viewFilesLink }} ({{ submission.filesCount }})</a>
+        </p>
+        <p class="govuk-body">
+          <a class="govuk-link" href="#" data-testid="scheme-home-view-timeline">{{ labels.viewTimelineLink }}</a>
+        </p>
+        {{ govukButton({
+          text: labels.runDataChecksAction,
+          href: runDataChecksHref,
+          attributes: { "data-testid": "scheme-home-run-data-checks" }
+        }) }}
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

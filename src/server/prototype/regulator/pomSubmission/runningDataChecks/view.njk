@@ -1,0 +1,23 @@
+{% extends 'layouts/page.njk' %}
+
+{% block head %}
+  {{ super() }}
+  <meta http-equiv="refresh" content="3;url={{ nextStep }}">
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+      <p class="govuk-body" data-testid="running-data-checks-body">{{ body1 }}</p>
+      <p class="govuk-body">{{ labels.body2 }}</p>
+
+      <div class="app-spinner" aria-hidden="true" data-testid="running-data-checks-spinner"></div>
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="{{ nextStep }}" data-testid="running-data-checks-continue">{{ labels.continueLink }}</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}

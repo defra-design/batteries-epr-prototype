@@ -1,0 +1,44 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorSummary and errorSummary.length %}
+        {{ govukErrorSummary({
+          titleText: labels.error.title,
+          errorList: errorSummary,
+          attributes: { "data-testid": "correct-figure-error-summary" }
+        }) }}
+      {% endif %}
+
+      <span class="govuk-caption-l" data-testid="correct-figure-caption">{{ caption }}</span>
+      <h1 class="govuk-heading-xl" data-testid="correct-figure-heading">{{ heading }}</h1>
+      <p class="govuk-body" data-testid="correct-figure-intro">{{ intro }}</p>
+
+      <form method="post" action="{{ action }}" novalidate data-testid="correct-figure-form">
+        {{ govukInput({
+          id: "tonnage",
+          name: "tonnage",
+          inputmode: "decimal",
+          spellcheck: false,
+          value: values.tonnage,
+          label: { text: labels.label, classes: "govuk-label--m" },
+          hint: { text: labels.hint },
+          suffix: { text: labels.suffix },
+          errorMessage: { text: errors.tonnage } if errors.tonnage,
+          classes: "govuk-input--width-5",
+          attributes: { "data-testid": "correct-figure-tonnage" }
+        }) }}
+
+        {{ govukButton({
+          text: labels.submitAction,
+          attributes: { "data-testid": "correct-figure-submit" }
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

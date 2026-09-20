@@ -1,0 +1,50 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% set bannerHtml %}
+        <h3 class="govuk-notification-banner__heading">{{ labels.banner.heading }}</h3>
+        <p class="govuk-body">{{ bannerBody }}</p>
+      {% endset %}
+      {{ govukNotificationBanner({
+        type: "success",
+        titleText: labels.banner.title,
+        html: bannerHtml,
+        attributes: { "data-testid": "figure-resent-banner" }
+      }) }}
+
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-4">
+        <span data-testid="figure-resent-heading">{{ heading }}</span>
+        {{ govukTag({
+          text: statusLabel,
+          classes: "govuk-tag--" + statusColour,
+          attributes: { "data-testid": "figure-resent-status" }
+        }) }}
+      </h1>
+
+      {{ govukSummaryList({
+        attributes: { "data-testid": "figure-resent-summary" },
+        rows: [
+          { key: { text: labels.summary.submitted }, value: { text: submittedOn } },
+          { key: { text: labels.summary.reviewed }, value: { text: reviewedOn } },
+          { key: { text: labels.summary.correctionSent }, value: { text: correctionSentOn } }
+        ]
+      }) }}
+
+      {% if outstanding > 0 %}
+        <p class="govuk-body" data-testid="figure-resent-outstanding">{{ outstandingText }}
+          <a class="govuk-link" href="{{ returnUrl }}" data-testid="figure-resent-outstanding-link">{{ labels.outstandingLink }}</a>
+        </p>
+      {% endif %}
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="{{ submissionsUrl }}" data-testid="figure-resent-submissions-link">{{ labels.submissionsLink }}</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}

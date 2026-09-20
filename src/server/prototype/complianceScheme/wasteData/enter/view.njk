@@ -1,0 +1,71 @@
+{% extends 'prototypeWasteData/_layout.njk' %}
+
+{% block stepBody %}
+  <h1 class="govuk-heading-xl">{{ heading }}</h1>
+  <p class="govuk-body">{{ labels.intro }}</p>
+
+  <form
+    method="post"
+    action="{{ action }}"
+    novalidate
+    data-testid="waste-data-enter-form"
+  >
+    {{
+      govukInput({
+        id: "collectedTonnes",
+        name: "collectedTonnes",
+        value: formValues.collectedTonnes,
+        label: { text: labels.collected.label, classes: "govuk-label--m" },
+        hint: { text: labels.collected.hint },
+        suffix: { text: labels.suffix },
+        inputmode: "decimal",
+        spellcheck: false,
+        classes: "govuk-input--width-10",
+        errorMessage: { text: errors.collectedTonnes } if errors.collectedTonnes,
+        attributes: { "data-testid": "waste-data-collected" }
+      })
+    }}
+
+    {{
+      govukInput({
+        id: "deliveredTonnes",
+        name: "deliveredTonnes",
+        value: formValues.deliveredTonnes,
+        label: { text: labels.delivered.label, classes: "govuk-label--m" },
+        hint: { text: deliveredHint },
+        suffix: { text: labels.suffix },
+        inputmode: "decimal",
+        spellcheck: false,
+        classes: "govuk-input--width-10",
+        errorMessage: { text: errors.deliveredTonnes } if errors.deliveredTonnes,
+        attributes: { "data-testid": "waste-data-delivered" }
+      })
+    }}
+
+    <div class="govuk-button-group">
+      {{
+        govukButton({
+          text: labels.backAction,
+          href: startUrl,
+          classes: "govuk-button--secondary",
+          attributes: { "data-testid": "waste-data-enter-back" }
+        })
+      }}
+      {{
+        govukButton({
+          text: labels.continueAction,
+          attributes: { "data-testid": "waste-data-enter-continue" }
+        })
+      }}
+    </div>
+  </form>
+
+  <p class="govuk-body">
+    <a
+      class="govuk-link"
+      href="{{ accountHomeUrl }}"
+      data-testid="waste-data-enter-save-link"
+      >{{ labels.saveLink }}</a
+    >
+  </p>
+{% endblock %}

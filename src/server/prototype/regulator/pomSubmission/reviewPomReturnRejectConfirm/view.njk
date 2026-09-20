@@ -1,0 +1,80 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      {% if errorSummary and errorSummary.length %}
+        {{ govukErrorSummary({
+          titleText: errorTitle,
+          errorList: errorSummary,
+          attributes: { "data-testid": "review-pom-return-reject-confirm-error-summary" }
+        }) }}
+      {% endif %}
+
+      <div class="govuk-!-margin-bottom-4">
+        <span class="govuk-heading-xl govuk-!-margin-bottom-0 govuk-!-display-inline-block govuk-!-margin-right-3" data-testid="review-pom-return-reject-confirm-heading">{{ heading }}</span>
+        {{ govukTag({ text: labels.tagText, classes: "govuk-tag--red", attributes: { "data-testid": "review-pom-return-reject-confirm-tag" } }) }}
+      </div>
+      <p class="govuk-body" data-testid="review-pom-return-reject-confirm-intro">{{ intro }}</p>
+
+      {{ govukWarningText({
+        text: warningText,
+        iconFallbackText: "Warning",
+        attributes: { "data-testid": "review-pom-return-reject-confirm-warning" }
+      }) }}
+
+      <form method="post" action="{{ action }}" novalidate data-testid="review-pom-return-reject-confirm-form">
+        {{ govukRadios({
+          idPrefix: "errorType",
+          name: "errorType",
+          fieldset: { legend: { text: labels.errorTypeHeading, classes: "govuk-fieldset__legend--m" } },
+          errorMessage: { text: errors.errorType } if errors.errorType,
+          items: errorTypeItems,
+          attributes: { "data-testid": "review-pom-return-reject-confirm-error-type" }
+        }) }}
+
+        {{ govukTextarea({
+          id: "reason",
+          name: "reason",
+          label: { text: labels.reasonLabel, classes: "govuk-label--m" },
+          hint: { text: reasonHint },
+          value: formValues.reason,
+          errorMessage: { text: errors.reason } if errors.reason,
+          attributes: { "data-testid": "review-pom-return-reject-confirm-reason" }
+        }) }}
+
+        {{ govukCheckboxes({
+          idPrefix: "confirmed",
+          name: "confirmed",
+          errorMessage: { text: errors.confirmed } if errors.confirmed,
+          items: [
+            {
+              value: "true",
+              text: labels.confirmCheckboxLabel,
+              hint: { text: labels.confirmCheckboxHint },
+              checked: confirmedChecked,
+              attributes: { "data-testid": "review-pom-return-reject-confirm-checkbox" }
+            }
+          ]
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: labels.rejectAction,
+            classes: "govuk-button--warning",
+            attributes: { "data-testid": "review-pom-return-reject-confirm-submit" }
+          }) }}
+          <a class="govuk-link" href="{{ cancelHref }}" data-testid="review-pom-return-reject-confirm-cancel">{{ labels.cancelLink }}</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

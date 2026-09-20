@@ -1,0 +1,18 @@
+{% extends 'layouts/page.njk' %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      <p class="govuk-body">{{ labels.body }}</p>
+      <p class="govuk-body">
+        <a
+          class="govuk-link"
+          href="{{ startUrl }}"
+          data-testid="waste-data-upload-unavailable-back"
+          >{{ labels.backAction }}</a
+        >
+      </p>
+    </div>
+  </div>
+{% endblock %}

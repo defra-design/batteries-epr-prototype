@@ -37,6 +37,10 @@ export default {
       './javascripts/prototype/complianceScheme/membersList/entry.js',
     prototypeMembersListAddMember:
       './javascripts/prototype/complianceScheme/membersListAddMember/entry.js',
+    prototypeAbtoIncomingWaste:
+      './javascripts/prototype/abto/incomingWaste/entry.js',
+    prototypeWasteData:
+      './javascripts/prototype/complianceScheme/wasteData/entry.js',
     onboardingConfirmation: './javascripts/onboardingConfirmation/entry.js',
     annualReturnSmallTonnages:
       './javascripts/annualReturn/smallProducer/tonnages/entry.js',
