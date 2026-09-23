@@ -19,6 +19,12 @@ export const SCHEMES_WITH_DETAIL_SCREENS_BUILT = new Set([
 // This is an authenticated account area, not a task flow: every screen keeps
 // the header and service navigation, unlike the compliance scheme submission
 // journey's "before you start" onward task-flow screens.
+//
+// "Reset data" is a real, live link (not one of the standing-dead nav items
+// below) — the regulator's decisions persist in a shared server-side store
+// for the life of the process, and /prototype/* pages hide the usual phase
+// banner dev links, so this is the only obvious way back to a clean seed
+// while testing this journey.
 const buildNavigation = (currentPath) => [
   {
     text: 'Home',
@@ -27,6 +33,7 @@ const buildNavigation = (currentPath) => [
   },
   { text: 'Manage account', href: '#' },
   { text: 'My profile', href: '#' },
+  { text: 'Reset data', href: paths.devReset },
   { text: 'Sign out', href: '#' }
 ]
 

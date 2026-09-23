@@ -24,6 +24,11 @@ describe('#prototypeRegulatorPomSubmissionDashboard', () => {
     expect(result).toEqual(expect.stringContaining('Manage account'))
     expect(result).toEqual(expect.stringContaining('My profile'))
     expect(result).toEqual(expect.stringContaining('Sign out'))
+    const resetTag = result.match(
+      /<a[^>]*class="govuk-service-navigation__link"[^>]*>\s*Reset data\s*<\/a>/
+    )
+    expect(resetTag).not.toBeNull()
+    expect(result).toEqual(expect.stringContaining(`href="${paths.devReset}"`))
     expect(result).toEqual(
       expect.stringContaining('govuk-service-navigation__item--active')
     )
