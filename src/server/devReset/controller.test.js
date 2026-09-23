@@ -1,6 +1,6 @@
 import { statusCodes } from '../common/constants/status-codes.js'
 import { initialiseServer } from '../../test-utils/initialise-server.js'
-import { paths } from '../../config/paths.js'
+import { paths, pathTo } from '../../config/paths.js'
 import { config } from '../../config/config.js'
 
 describe('#devResetController', () => {
@@ -30,4 +30,38 @@ describe('#devResetController', () => {
       )
     }
   )
+
+  test('POST resets the regulator store and responds with no content', async () => {
+    const { statusCode, payload } = await server.inject({
+      method: 'POST',
+      url: paths.devReset
+    })
+
+    expect(statusCode).toBe(statusCodes.noContent)
+    expect(payload).toBe('')
+  })
+
+  test('POST clears a decision made against the regulator store', async () => {
+    const reviewUrl = pathTo(
+      paths.prototypeRegulatorPomSubmissionReviewPomReturn,
+      { schemeId: 'ironwave-compliance', year: '2026', quarter: 'Q2' }
+    )
+
+    await server.inject({
+      method: 'POST',
+      url: reviewUrl,
+      payload: { decision: 'accept', reason: 'Reset test.' }
+    })
+    const decided = await server.inject({ method: 'GET', url: reviewUrl })
+    expect(decided.result).toEqual(
+      expect.stringMatching(/govuk-tag--green"[^>]*>\s*Accepted\s*<\/strong>/)
+    )
+
+    await server.inject({ method: 'POST', url: paths.devReset })
+
+    const reset = await server.inject({ method: 'GET', url: reviewUrl })
+    expect(reset.result).toEqual(
+      expect.stringMatching(/govuk-tag--blue"[^>]*>\s*Received\s*<\/strong>/)
+    )
+  })
 })

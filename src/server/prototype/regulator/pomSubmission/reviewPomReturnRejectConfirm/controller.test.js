@@ -28,6 +28,25 @@ describe('#prototypeRegulatorPomSubmissionReviewPomReturnRejectConfirm', () => {
     await server.stop({ timeout: 0 })
   })
 
+  test('renders with an empty reason when visited directly, with no reason flashed from the review screen', async () => {
+    const { statusCode } = await server.inject({
+      method: 'GET',
+      url: REJECT_CONFIRM_URL
+    })
+
+    expect(statusCode).toBe(statusCodes.ok)
+  })
+
+  test('computes records with no issues for a historical quarter with no issuesFound recorded', async () => {
+    const url = pathTo(
+      paths.prototypeRegulatorPomSubmissionReviewPomReturnRejectConfirm,
+      { schemeId: 'ironwave-compliance', year: '2025', quarter: 'Q3' }
+    )
+    const { statusCode } = await server.inject({ method: 'GET', url })
+
+    expect(statusCode).toBe(statusCodes.ok)
+  })
+
   test('renders the confirmation screen with the reason carried forward from the review screen, and no radio pre-selected', async () => {
     const post = await server.inject({
       method: 'POST',
@@ -151,6 +170,42 @@ describe('#prototypeRegulatorPomSubmissionReviewPomReturnRejectConfirm', () => {
       { schemeId: 'ironwave-compliance', year: '2027', quarter: 'Q1' }
     )
     const { statusCode } = await server.inject({ method: 'GET', url })
+
+    expect(statusCode).toBe(statusCodes.notFound)
+  })
+
+  test('POST 404s for REPIC, which has no review screen in this batch', async () => {
+    const url = pathTo(
+      paths.prototypeRegulatorPomSubmissionReviewPomReturnRejectConfirm,
+      { schemeId: 'repic', year: '2026', quarter: 'Q2' }
+    )
+    const { statusCode } = await server.inject({
+      method: 'POST',
+      url,
+      payload: {
+        errorType: 'template-mismatch',
+        reason: 'n/a',
+        confirmed: 'true'
+      }
+    })
+
+    expect(statusCode).toBe(statusCodes.notFound)
+  })
+
+  test('POST 404s for a quarter with no matching submission', async () => {
+    const url = pathTo(
+      paths.prototypeRegulatorPomSubmissionReviewPomReturnRejectConfirm,
+      { schemeId: 'ironwave-compliance', year: '2027', quarter: 'Q1' }
+    )
+    const { statusCode } = await server.inject({
+      method: 'POST',
+      url,
+      payload: {
+        errorType: 'template-mismatch',
+        reason: 'n/a',
+        confirmed: 'true'
+      }
+    })
 
     expect(statusCode).toBe(statusCodes.notFound)
   })

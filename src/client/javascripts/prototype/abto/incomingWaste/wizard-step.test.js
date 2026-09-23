@@ -32,6 +32,11 @@ describe('runPrototypeAbtoIncomingWasteStep', () => {
     expect(runPrototypeAbtoIncomingWasteStep(document)).toBe('no-payload')
   })
 
+  test('does nothing on a step other than dashboard', () => {
+    setBody({ step: 'compare' })
+    expect(runPrototypeAbtoIncomingWasteStep(document)).toBe('hydrated')
+  })
+
   test('shows the delivery a scheme submission handed over, end to end', () => {
     storage.savePrototypeWasteData({
       collectedTonnes: '80.900',

@@ -1,10 +1,17 @@
 import { storage } from '../storage-adapter.js'
 import { storage as niStorage } from '../ni/storage.js'
 
-export const performReset = (loc = globalThis.location) => {
+export const performReset = async (
+  loc = globalThis.location,
+  fetchFn = globalThis.fetch
+) => {
   storage.resetAllData()
   niStorage.resetAllData()
   storage.seedDemoData()
+  // Server-side state (e.g. the regulator's in-memory decisions) has no
+  // browser storage to clear above, so ask the server to reset its own
+  // copy too. Best-effort — a failed request shouldn't block the redirect.
+  await fetchFn('/dev/reset', { method: 'POST' }).catch(() => {})
   loc.assign('/')
 }
 

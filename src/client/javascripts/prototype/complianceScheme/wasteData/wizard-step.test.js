@@ -124,6 +124,21 @@ describe('runPrototypeWasteDataStep', () => {
     ).toBe('60.250')
   })
 
+  test('shows the collected value on the account home screen', () => {
+    storage.savePrototypeWasteData(figures)
+    setBody(
+      {
+        step: 'accountHome',
+        target: 'hydrate',
+        quarter: 3,
+        collectedValueTemplate: '{tonnes} tonnes'
+      },
+      '<dd data-testid="waste-data-collected-value">Not yet recorded</dd>'
+    )
+
+    expect(runPrototypeWasteDataStep(document, fakeLocation())).toBe('hydrated')
+  })
+
   test('sends the user to the account home from submitted when nothing was submitted', () => {
     setBody({ step: 'submitted', target: 'hydrate', accountHomeUrl: '/home' })
     const loc = fakeLocation()

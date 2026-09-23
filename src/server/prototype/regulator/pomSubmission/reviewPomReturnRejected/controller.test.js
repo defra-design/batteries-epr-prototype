@@ -105,6 +105,38 @@ describe('#prototypeRegulatorPomSubmissionReviewPomReturnRejected', () => {
     )
   })
 
+  test('rolls Q4 over into Q1 of the following year in the "does not block" copy', async () => {
+    const q4Params = {
+      schemeId: 'ironwave-compliance',
+      year: '2025',
+      quarter: 'Q4'
+    }
+    await server.inject({
+      method: 'POST',
+      url: pathTo(
+        paths.prototypeRegulatorPomSubmissionReviewPomReturnRejectConfirm,
+        q4Params
+      ),
+      payload: {
+        errorType: 'corrupted-file',
+        reason: REASON,
+        confirmed: 'true'
+      }
+    })
+
+    const { result } = await server.inject({
+      method: 'GET',
+      url: pathTo(
+        paths.prototypeRegulatorPomSubmissionReviewPomReturnRejected,
+        q4Params
+      )
+    })
+
+    expect(result).toEqual(
+      expect.stringContaining('Q1 2026 can still be submitted on time')
+    )
+  })
+
   test('404s for REPIC and for a quarter with no submission', async () => {
     for (const bad of [
       { ...params, schemeId: 'repic' },

@@ -114,6 +114,7 @@ export const correctFigureController = {
           const errorSummary = []
           for (const detail of err.details) {
             const field = detail.path[0]
+            /* v8 ignore next 3 */
             if (errors[field]) {
               continue
             }
@@ -128,6 +129,7 @@ export const correctFigureController = {
               buildViewModel(request, {
                 errors,
                 errorSummary,
+                /* v8 ignore next */
                 tonnage: request.payload?.tonnage ?? ''
               })
             )

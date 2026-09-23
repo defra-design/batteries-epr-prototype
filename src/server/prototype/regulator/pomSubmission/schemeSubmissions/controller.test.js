@@ -19,6 +19,12 @@ describe('#prototypeRegulatorPomSubmissionSchemeSubmissions', () => {
 
     expect(statusCode).toBe(statusCodes.ok)
     expect(result).toEqual(expect.stringContaining('All submissions'))
+    const backLink = result.match(/<a[^>]*data-testid="back-link"[^>]*>/)[0]
+    expect(backLink).toEqual(
+      expect.stringContaining(
+        `href="${pathTo(paths.prototypeRegulatorPomSubmissionSchemeHome, { schemeId: 'ironwave-compliance' })}"`
+      )
+    )
     expect(result).toEqual(
       expect.stringContaining('data-testid="scheme-submissions-table-2026"')
     )

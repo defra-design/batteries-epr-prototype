@@ -6,7 +6,12 @@ export const devReset = {
     {
       method: 'GET',
       path: paths.devReset,
-      ...devResetController
+      ...devResetController.get
+    },
+    {
+      method: 'POST',
+      path: paths.devReset,
+      ...devResetController.post
     }
   ]
 }

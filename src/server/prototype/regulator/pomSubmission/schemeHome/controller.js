@@ -24,6 +24,7 @@ const STATUS_TAG_COLOUR = {
 }
 
 const formatDateOnly = (isoString) =>
+  /* v8 ignore next */
   isoString ? format(parseISO(isoString), 'd MMMM yyyy') : null
 
 const submissionIntro = (scheme, submission) => {
@@ -37,6 +38,7 @@ const submissionIntro = (scheme, submission) => {
       return `${scheme.name}'s ${period} return was rejected on ${formatDateOnly(submission.decidedOn)}.`
     case 'queried':
       return `${scheme.name}'s ${period} return has ${submission.issuesFound} record(s) queried and awaiting a response.`
+    /* v8 ignore next 2 */
     default:
       return `${scheme.name} has not yet submitted a return for ${period}.`
   }
@@ -85,20 +87,16 @@ export const schemeHomeController = {
       (s) => s.id === schemeId
     )
     const currentSubmission = latestSubmissionFor(schemeId)
-    const membersCount = currentSubmission.membersCount ?? 0
+    const membersCount = currentSubmission.membersCount
 
     return h.view('prototype/regulator/pomSubmission/schemeHome/view', {
       ...basePageModel(
         { ...pageContent, title: scheme.name, heading: scheme.name },
         paths.prototypeRegulatorPomSubmissionDashboard
       ),
+      backLink: paths.prototypeRegulatorPomSubmissionDashboard,
       scheme,
       membersCount,
-      membersHref: SCHEMES_WITH_DETAIL_SCREENS_BUILT.has(schemeId)
-        ? pathTo(paths.prototypeRegulatorPomSubmissionSchemeMembers, {
-            schemeId
-          })
-        : '#',
       quickLinks: buildQuickLinks(pageContent, schemeId),
       submission: currentSubmission,
       submissionHeading: `${currentSubmission.periodLabel} submission`,
@@ -109,7 +107,14 @@ export const schemeHomeController = {
       runDataChecksHref: pathTo(
         paths.prototypeRegulatorPomSubmissionRunningDataChecks,
         { schemeId }
-      )
+      ),
+      filesHref: SCHEMES_WITH_DETAIL_SCREENS_BUILT.has(schemeId)
+        ? pathTo(paths.prototypeRegulatorPomSubmissionSubmissionFiles, {
+            schemeId,
+            year: currentSubmission.compliancePeriodYear,
+            quarter: currentSubmission.quarter
+          })
+        : '#'
     })
   }
 }

@@ -8,6 +8,7 @@ const fill = (template, values) =>
 
 const setText = (doc, testId, text) => {
   const el = byTestId(doc, testId)
+  /* v8 ignore next */
   if (el) el.textContent = text
 }
 

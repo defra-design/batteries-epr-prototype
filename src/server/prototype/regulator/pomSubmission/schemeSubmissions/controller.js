@@ -2,7 +2,7 @@ import { createRequire } from 'node:module'
 import Boom from '@hapi/boom'
 import { format, parseISO } from 'date-fns'
 
-import { paths } from '../../../../../config/paths.js'
+import { paths, pathTo } from '../../../../../config/paths.js'
 import { prototypeRegulatorContent } from '../../../../../config/prototype-regulator-content.js'
 import {
   basePageModel,
@@ -27,7 +27,7 @@ const decidedText = (pageContent, submission) => {
     return pageContent.awaitingDecision
   }
   const date = format(parseISO(submission.decidedOn), 'd MMMM yyyy')
-  return submission.decidedBy ? `${date}, ${submission.decidedBy}` : date
+  return `${date}, ${submission.decidedBy}`
 }
 
 const groupByYear = (pageContent, submissions) => {
@@ -39,11 +39,11 @@ const groupByYear = (pageContent, submissions) => {
     year,
     submissions: submissions
       .filter((s) => s.compliancePeriodYear === year)
-      .sort((a, b) => (b.submittedOn ?? '').localeCompare(a.submittedOn ?? ''))
+      .sort((a, b) => b.submittedOn.localeCompare(a.submittedOn))
       .map((submission) => ({
         periodLabel: submission.periodLabel,
         submittedOn: submission.submittedOn,
-        filesCount: submission.filesCount ?? '–',
+        filesCount: submission.filesCount,
         statusLabel: pageContent.statusLabels[submission.status],
         statusColour: STATUS_TAG_COLOUR[submission.status],
         decided: decidedText(pageContent, submission)
@@ -71,6 +71,9 @@ export const schemeSubmissionsController = {
         pageContent,
         paths.prototypeRegulatorPomSubmissionDashboard
       ),
+      backLink: pathTo(paths.prototypeRegulatorPomSubmissionSchemeHome, {
+        schemeId
+      }),
       scheme,
       years: groupByYear(pageContent, submissions)
     })

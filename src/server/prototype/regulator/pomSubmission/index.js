@@ -12,6 +12,8 @@ import { reviewPomReturnAccepted } from './reviewPomReturnAccepted/index.js'
 import { reviewPomReturnQueried } from './reviewPomReturnQueried/index.js'
 import { reviewPomReturnRejected } from './reviewPomReturnRejected/index.js'
 import { reviewPomReturnRejectConfirm } from './reviewPomReturnRejectConfirm/index.js'
+import { submissionFiles } from './submissionFiles/index.js'
+import { submissionFile } from './submissionFile/index.js'
 
 export const prototypeRegulatorPomSubmission = {
   openRoutes: [
@@ -28,6 +30,8 @@ export const prototypeRegulatorPomSubmission = {
     ...reviewPomReturnAccepted.openRoutes,
     ...reviewPomReturnQueried.openRoutes,
     ...reviewPomReturnRejectConfirm.openRoutes,
-    ...reviewPomReturnRejected.openRoutes
+    ...reviewPomReturnRejected.openRoutes,
+    ...submissionFiles.openRoutes,
+    ...submissionFile.openRoutes
   ]
 }

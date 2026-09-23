@@ -1,0 +1,69 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <div class="govuk-!-margin-bottom-4">
+        <span class="govuk-heading-l govuk-!-margin-bottom-0 govuk-!-display-inline-block govuk-!-margin-right-3" data-testid="submission-file-heading">{{ heading }}</span>
+        {{ govukTag({ text: warningsTagText, classes: "govuk-tag--yellow", attributes: { "data-testid": "submission-file-status" } }) }}
+      </div>
+      <p class="govuk-body" data-testid="submission-file-intro">{{ intro }}</p>
+
+      {{ govukSummaryList({
+        rows: [
+          { key: { text: labels.summaryLabels.member }, value: { text: memberLine } },
+          { key: { text: labels.summaryLabels.rows }, value: { text: file.rows } },
+          { key: { text: labels.summaryLabels.uploaded }, value: { text: uploadedOnLine } },
+          { key: { text: labels.summaryLabels.checkedBy }, value: { text: checkedByLine } },
+          { key: { text: labels.summaryLabels.result }, value: { text: resultLine } }
+        ],
+        attributes: { "data-testid": "submission-file-summary" }
+      }) }}
+
+      <h2 class="govuk-heading-l">{{ labels.flaggedRowsHeading }}</h2>
+
+      {% set flaggedRows = [] %}
+      {% for row in file.flaggedRows %}
+        {% set flaggedRows = (flaggedRows.push([
+          { text: row.row },
+          { text: row.chemistry },
+          { text: row.category },
+          { text: row.figureTonnes },
+          { html: govukTag({ text: row.checkLabel, classes: "govuk-tag--yellow" }) | safe },
+          { text: labels.rowActionLabel }
+        ]), flaggedRows) %}
+      {% endfor %}
+
+      {{ govukTable({
+        head: [
+          { text: labels.columns.row },
+          { text: labels.columns.chemistry },
+          { text: labels.columns.category },
+          { text: labels.columns.figure },
+          { text: labels.columns.check },
+          { text: labels.columns.action }
+        ],
+        rows: flaggedRows,
+        attributes: { "data-testid": "submission-file-flagged-rows-table" }
+      }) }}
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="#" data-testid="submission-file-view-all-rows">{{ viewAllRowsText }}</a>
+      </p>
+      <p class="govuk-body">
+        <a class="govuk-link" href="#" data-testid="submission-file-download">{{ labels.downloadLink }}</a>
+      </p>
+
+      {{ govukButton({
+        text: labels.backAction,
+        href: backToFilesHref,
+        attributes: { "data-testid": "submission-file-back" }
+      }) }}
+    </div>
+  </div>
+{% endblock %}

@@ -45,6 +45,9 @@ export const schemeRecordController = {
         pageContent,
         paths.prototypeRegulatorPomSubmissionDashboard
       ),
+      backLink: pathTo(paths.prototypeRegulatorPomSubmissionSchemeHome, {
+        schemeId
+      }),
       scheme,
       statusLabel:
         prototypeRegulatorContent.dashboard.pomSubmissionsTab.statusLabels[

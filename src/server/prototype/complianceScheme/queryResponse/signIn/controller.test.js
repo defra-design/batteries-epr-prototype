@@ -38,6 +38,11 @@ describe('#prototypeComplianceSchemeQueryResponseSignIn', () => {
     expect(result).not.toContain('pEPR')
   })
 
+  test('POST with no payload at all shows the same error summary', async () => {
+    const { statusCode } = await server.inject({ method: 'POST', url })
+    expect(statusCode).toBe(statusCodes.ok)
+  })
+
   test('POST with empty fields shows an error summary and inline errors', async () => {
     const { result, statusCode } = await server.inject({
       method: 'POST',

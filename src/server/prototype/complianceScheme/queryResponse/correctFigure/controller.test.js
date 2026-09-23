@@ -197,5 +197,15 @@ describe('#prototypeComplianceSchemeQueryResponseCorrectFigure', () => {
         expect(invalid.statusCode).toBe(statusCodes.notFound)
       }
     })
+
+    test('404 for a quarter with no matching return', async () => {
+      const url = pathTo(
+        paths.prototypeComplianceSchemeQueryResponseCorrectFigure,
+        { year: '2027', quarter: 'Q1', recordId: GREENLEAF_ID }
+      )
+      const { statusCode } = await server.inject({ method: 'GET', url })
+
+      expect(statusCode).toBe(statusCodes.notFound)
+    })
   })
 })

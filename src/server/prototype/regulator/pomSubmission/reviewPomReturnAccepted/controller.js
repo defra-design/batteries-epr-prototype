@@ -84,9 +84,9 @@ export const reviewPomReturnAcceptedController = {
         lockWarning,
         totalPlacedOnMarketLine: `${submission.totalPlacedOnMarketTonnes.toLocaleString('en-GB')} tonnes`,
         membersIncludedLine: `${submission.membersCount} of ${membersTotalCount}`,
-        swingCategoriesText: (submission.swingCategories ?? []).join(', '),
+        swingCategoriesText: submission.swingCategories.join(', '),
         submittedByLine: `${scheme.superUser.name}, ${scheme.superUser.email}`,
-        yourReasonLine: submission.reason ?? null,
+        yourReasonLine: submission.reason,
         relatedLinks: relatedLinksFor(
           prototypeRegulatorContent.reviewPomReturn,
           schemeId

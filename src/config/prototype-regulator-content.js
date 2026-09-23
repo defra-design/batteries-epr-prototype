@@ -68,7 +68,6 @@ export const prototypeRegulatorContent = {
     approvedLabel: 'Approved',
     approvalExpiresLabel: 'Approval expires',
     membersLabel: 'Members',
-    seeAllMembersLink: 'See all members',
     authorisedSignatoryLabel: 'Authorised signatory',
     superUserLabel: 'Super User',
     accountManagerLabel: 'Account manager (Agency)',
@@ -461,5 +460,70 @@ export const prototypeRegulatorContent = {
       timeline: 'View activity timeline for this quarter',
       dashboard: 'Back to PoM submissions'
     }
+  },
+
+  submissionFiles: {
+    title: 'Submission files',
+    headingTemplate: '{period} submission — files',
+    checksCompleteTag: 'Checks complete',
+    introTemplate:
+      "{scheme} uploaded {count} files for {period}. Automated checks ran on the scheme's own service before submission, so every file arrives here already validated. Open a file to review it for compliance.",
+    summaryLabels: {
+      period: 'Period',
+      filesUploaded: 'Files uploaded',
+      membersCovered: 'Members covered',
+      totalPlaced: 'Total placed on market',
+      submittedBy: 'Submitted by'
+    },
+    filesHeading: 'Files uploaded',
+    columns: {
+      fileName: 'File name',
+      members: 'Members',
+      rows: 'Rows',
+      uploaded: 'Uploaded',
+      checks: 'Automated checks',
+      action: ''
+    },
+    checkStatusLabels: {
+      passed: 'Passed',
+      warningsTemplate: '{count} warnings'
+    },
+    checkStatusColours: {
+      passed: 'green',
+      warnings: 'yellow'
+    },
+    openLink: 'Open',
+    footerNote:
+      "Automated checks are run by the scheme's service at upload. Warnings do not stop a submission — open the file to see what was flagged and decide whether it affects compliance.",
+    downloadAllTemplate: 'Download all {count} files (.zip, 2.1MB)',
+    continueAction: 'Continue to review the return'
+  },
+
+  submissionFile: {
+    title: 'File',
+    warningsTag: '{count} warnings',
+    introWithWarningsTemplate:
+      "This file covers {members} and {rows} rows. The scheme's automated checks flagged {warningsCount} rows before submission. You can query or reject an individual record — you cannot edit what the scheme submitted.",
+    summaryLabels: {
+      member: 'Member',
+      rows: 'Rows in file',
+      uploaded: 'Uploaded',
+      checkedBy: 'Checks run by',
+      result: 'Result'
+    },
+    resultWithWarningsTemplate: 'Passed with {count} warnings',
+    flaggedRowsHeading: 'Rows flagged by automated checks',
+    columns: {
+      row: 'Row',
+      chemistry: 'Chemistry',
+      category: 'Category',
+      figure: 'Figure (t)',
+      check: 'Check',
+      action: 'Action'
+    },
+    rowActionLabel: 'Query · Reject',
+    viewAllRowsTemplate: 'View all {count} rows in this file',
+    downloadLink: 'Download this file (.csv)',
+    backAction: 'Back to files'
   }
 }

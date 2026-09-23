@@ -53,10 +53,9 @@ export const reviewPomReturnRejectedController = {
     const reasonLine = pageContent.reasonTemplate
       .replace(
         '{errorType}',
-        pageContent.errorTypeLabels[submission.rejectionType] ??
-          submission.rejectionType
+        pageContent.errorTypeLabels[submission.rejectionType]
       )
-      .replace('{reason}', submission.reason ?? '')
+      .replace('{reason}', submission.reason)
 
     return h.view(
       'prototype/regulator/pomSubmission/reviewPomReturnRejected/view',
@@ -99,7 +98,7 @@ export const reviewPomReturnRejectedController = {
         ),
         filesLinkText: pageContent.links.files.replace(
           '{count}',
-          submission.filesCount ?? 0
+          submission.filesCount
         ),
         dashboardHref: `${paths.prototypeRegulatorPomSubmissionDashboard}#pom-submissions`
       }

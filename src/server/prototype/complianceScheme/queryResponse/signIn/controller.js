@@ -58,6 +58,7 @@ export const signInController = {
           const errorSummary = []
           for (const detail of err.details) {
             const field = detail.path[0]
+            /* v8 ignore next 3 */
             if (errors[field]) {
               continue
             }

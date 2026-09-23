@@ -33,3 +33,11 @@ export const updateSubmission = (id, changes) => {
   )
   return submissions.find((submission) => submission.id === id)
 }
+
+// Unlike the client-side storage-adapter, this module has no browser reset
+// to hook into — it's shared server-side state, so the "Reset" dev tool
+// calls this via its own POST route to clear it back to the seed.
+export const resetStore = () => {
+  submissions = structuredClone(seedData.prototypeRegulatorSchemeSubmissions)
+  memberFigures = structuredClone(seedData.prototypeRegulatorMemberFigures)
+}

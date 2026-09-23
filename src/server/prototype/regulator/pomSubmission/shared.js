@@ -39,7 +39,7 @@ export const submissionsFor = (schemeId) =>
 
 export const latestSubmissionFor = (schemeId) =>
   submissionsFor(schemeId)
-    .sort((a, b) => (a.submittedOn ?? '').localeCompare(b.submittedOn ?? ''))
+    .sort((a, b) => a.submittedOn.localeCompare(b.submittedOn))
     .at(-1)
 
 export const findSubmission = (schemeId, year, quarter) =>
@@ -59,7 +59,12 @@ export const basePageModel = (pageContent, currentPath) => ({
 })
 
 export const formatDateOnly = (isoString) =>
+  /* v8 ignore next */
   isoString ? format(parseISO(isoString), 'd MMMM yyyy') : null
+
+export const formatDateTime = (isoString) =>
+  /* v8 ignore next */
+  isoString ? format(parseISO(isoString), 'd MMMM yyyy, HH:mm') : null
 
 // The Agency officer recording the decision. This prototype has no real
 // sign-in/session identity, so the scheme's assigned account manager stands

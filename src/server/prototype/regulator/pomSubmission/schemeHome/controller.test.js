@@ -19,6 +19,12 @@ describe('#prototypeRegulatorPomSubmissionSchemeHome', () => {
 
     expect(statusCode).toBe(statusCodes.ok)
     expect(result).toEqual(expect.stringContaining('Batteries: Regulator'))
+    const backLink = result.match(/<a[^>]*data-testid="back-link"[^>]*>/)[0]
+    expect(backLink).toEqual(
+      expect.stringContaining(
+        `href="${paths.prototypeRegulatorPomSubmissionDashboard}"`
+      )
+    )
     expect(result).toEqual(
       expect.stringContaining('data-testid="scheme-home-name"')
     )
@@ -82,7 +88,11 @@ describe('#prototypeRegulatorPomSubmissionSchemeHome', () => {
     const viewFilesTag = result.match(
       /<a[^>]*data-testid="scheme-home-view-files"[^>]*>/
     )[0]
-    expect(viewFilesTag).toEqual(expect.stringContaining('href="#"'))
+    const filesHref = pathTo(
+      paths.prototypeRegulatorPomSubmissionSubmissionFiles,
+      { schemeId: 'ironwave-compliance', year: '2026', quarter: 'Q2' }
+    )
+    expect(viewFilesTag).toEqual(expect.stringContaining(`href="${filesHref}"`))
   })
 
   test('renders REPIC home with its own accepted submission, distinct people from IronWave, and dead quick links', async () => {
@@ -129,5 +139,42 @@ describe('#prototypeRegulatorPomSubmissionSchemeHome', () => {
     const { statusCode } = await server.inject({ method: 'GET', url })
 
     expect(statusCode).toBe(statusCodes.notFound)
+  })
+
+  test('renders the queried and rejected submission-intro copy once a decision is persisted', async () => {
+    const homeUrl = pathTo(paths.prototypeRegulatorPomSubmissionSchemeHome, {
+      schemeId: 'ironwave-compliance'
+    })
+    const reviewUrl = pathTo(
+      paths.prototypeRegulatorPomSubmissionReviewPomReturn,
+      { schemeId: 'ironwave-compliance', year: '2026', quarter: 'Q2' }
+    )
+
+    await server.inject({
+      method: 'POST',
+      url: reviewUrl,
+      payload: { decision: 'query', reason: 'Test coverage: query branch.' }
+    })
+    const queried = await server.inject({ method: 'GET', url: homeUrl })
+    expect(queried.result).toEqual(
+      expect.stringContaining('record(s) queried and awaiting a response')
+    )
+
+    await server.inject({
+      method: 'POST',
+      url: pathTo(
+        paths.prototypeRegulatorPomSubmissionReviewPomReturnRejectConfirm,
+        { schemeId: 'ironwave-compliance', year: '2026', quarter: 'Q2' }
+      ),
+      payload: {
+        errorType: 'template-mismatch',
+        reason: 'Test coverage: rejected branch.',
+        confirmed: 'true'
+      }
+    })
+    const rejected = await server.inject({ method: 'GET', url: homeUrl })
+    expect(rejected.result).toEqual(
+      expect.stringContaining('return was rejected on')
+    )
   })
 })

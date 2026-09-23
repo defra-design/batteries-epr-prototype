@@ -48,6 +48,9 @@ export const schemeMembersController = {
         pageContent,
         paths.prototypeRegulatorPomSubmissionDashboard
       ),
+      backLink: pathTo(paths.prototypeRegulatorPomSubmissionSchemeHome, {
+        schemeId
+      }),
       scheme,
       periodLabel: currentSubmission.periodLabel,
       members,

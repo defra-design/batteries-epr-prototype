@@ -2258,5 +2258,71 @@
       "indicativeObligationTonnes": 4290,
       "verified": true
     }
+  ],
+  "prototypeRegulatorSubmissionFiles": [
+    {
+      "id": "eeeeaaaa-0001-4000-a000-000000000001",
+      "submissionId": "88888888-0001-4000-a000-000000000001",
+      "schemeId": "ironwave-compliance",
+      "fileName": "IronWave_Q2_2026_members_1-2.csv",
+      "membersCovered": 2,
+      "rows": 1204,
+      "uploadedOn": "2026-08-06T00:00:00Z",
+      "checkStatus": "passed",
+      "warningsCount": 0
+    },
+    {
+      "id": "eeeeaaaa-0001-4000-a000-000000000002",
+      "submissionId": "88888888-0001-4000-a000-000000000001",
+      "schemeId": "ironwave-compliance",
+      "fileName": "IronWave_Q2_2026_members_3-4.csv",
+      "membersCovered": 2,
+      "rows": 986,
+      "uploadedOn": "2026-08-06T00:00:00Z",
+      "checkStatus": "passed",
+      "warningsCount": 0
+    },
+    {
+      "id": "eeeeaaaa-0001-4000-a000-000000000003",
+      "submissionId": "88888888-0001-4000-a000-000000000001",
+      "schemeId": "ironwave-compliance",
+      "fileName": "IronWave_Q2_2026_member_5.csv",
+      "membersCovered": 1,
+      "rows": 412,
+      "uploadedOn": "2026-08-08T14:12:00Z",
+      "checkStatus": "warnings",
+      "warningsCount": 2,
+      "memberName": "Solaris Power Ltd",
+      "memberBprn": "BPRN-004821",
+      "checkedBy": "IronWave Compliance service",
+      "checkedOn": "2026-08-08T00:00:00Z",
+      "flaggedRows": [
+        {
+          "row": 118,
+          "chemistry": "Lithium-ion",
+          "category": "Light means of transport",
+          "figureTonnes": 41.2,
+          "checkLabel": "Swing +410%"
+        },
+        {
+          "row": 276,
+          "chemistry": "Other",
+          "category": "General use",
+          "figureTonnes": 1.4,
+          "checkLabel": "No evidence"
+        }
+      ]
+    },
+    {
+      "id": "eeeeaaaa-0001-4000-a000-000000000004",
+      "submissionId": "88888888-0001-4000-a000-000000000001",
+      "schemeId": "ironwave-compliance",
+      "fileName": "IronWave_Q2_2026_evidence.csv",
+      "membersCovered": null,
+      "rows": 18,
+      "uploadedOn": "2026-08-08T00:00:00Z",
+      "checkStatus": "passed",
+      "warningsCount": 0
+    }
   ]
 }

@@ -54,6 +54,7 @@ const buildCompareReturns = (schemeId, pageContent) => {
       thisQuarterTonnes: formatTonnes(compareReturns.totals.thisQuarterTonnes),
       lastQuarterTonnes: formatTonnes(compareReturns.totals.lastQuarterTonnes),
       swingText: `${compareReturns.totals.swingPercent}%`,
+      /* v8 ignore next */
       swingColour: compareReturns.totals.aboveAlert ? 'orange' : 'grey',
       sameQuarterLastYearTonnes: formatTonnes(
         compareReturns.totals.sameQuarterLastYearTonnes

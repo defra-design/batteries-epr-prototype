@@ -147,6 +147,10 @@ export const paths = {
     '/prototype/regulator/pom-submission/schemes/{schemeId}/submissions/{year}/{quarter}/reject-confirm',
   prototypeRegulatorPomSubmissionReviewPomReturnRejected:
     '/prototype/regulator/pom-submission/schemes/{schemeId}/submissions/{year}/{quarter}/rejected',
+  prototypeRegulatorPomSubmissionSubmissionFiles:
+    '/prototype/regulator/pom-submission/schemes/{schemeId}/submissions/{year}/{quarter}/files',
+  prototypeRegulatorPomSubmissionSubmissionFile:
+    '/prototype/regulator/pom-submission/schemes/{schemeId}/submissions/{year}/{quarter}/files/{fileId}',
 
   prototypeMembersListStart: '/prototype/compliance-scheme/members-list',
   prototypeMembersListHowToSend:

@@ -125,4 +125,14 @@ describe('#prototypeComplianceSchemeQueryResponseFigureResent', () => {
     })
     expect(notQueried.statusCode).toBe(statusCodes.notFound)
   })
+
+  test('404s for a quarter with no matching return', async () => {
+    const url = pathTo(
+      paths.prototypeComplianceSchemeQueryResponseFigureResent,
+      { year: '2027', quarter: 'Q1', recordId: GREENLEAF_ID }
+    )
+    const { statusCode } = await server.inject({ method: 'GET', url })
+
+    expect(statusCode).toBe(statusCodes.notFound)
+  })
 })

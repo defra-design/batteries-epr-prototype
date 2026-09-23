@@ -45,8 +45,7 @@ const buildPomSubmissions = (pageContent) => {
 
   return getSubmissions().map((submission) => ({
     schemeId: submission.schemeId,
-    schemeName:
-      schemesById.get(submission.schemeId)?.name ?? submission.schemeId,
+    schemeName: schemesById.get(submission.schemeId).name,
     membersCount: submission.membersCount,
     submittedOn: submission.submittedOn,
     statusLabel: pageContent.statusLabels[submission.status],

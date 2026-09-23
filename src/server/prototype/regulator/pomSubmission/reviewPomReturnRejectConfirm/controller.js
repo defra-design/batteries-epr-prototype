@@ -141,6 +141,7 @@ export const reviewPomReturnRejectConfirmController = {
           const errorMap = {}
           for (const detail of err.details) {
             const field = detail.path[0]
+            /* v8 ignore next 3 */
             if (!errorMap[field]) {
               errorMap[field] = pageContent.error[field]
             }

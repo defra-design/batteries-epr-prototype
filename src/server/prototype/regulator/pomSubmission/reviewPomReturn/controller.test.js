@@ -298,4 +298,48 @@ describe('#prototypeRegulatorPomSubmissionReviewPomReturn', () => {
 
     expect(statusCode).toBe(statusCodes.notFound)
   })
+
+  test('renders with no lock tag or warning for a historical quarter that has no lockOn', async () => {
+    const url = pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, {
+      schemeId: 'ironwave-compliance',
+      year: '2026',
+      quarter: 'Q1'
+    })
+    const { result, statusCode } = await server.inject({ method: 'GET', url })
+
+    expect(statusCode).toBe(statusCodes.ok)
+    expect(result).not.toEqual(
+      expect.stringContaining('data-testid="review-pom-return-lock-tag"')
+    )
+  })
+
+  test('POST 404s for REPIC, which has no review screen in this batch', async () => {
+    const url = pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, {
+      schemeId: 'repic',
+      year: '2026',
+      quarter: 'Q2'
+    })
+    const { statusCode } = await server.inject({
+      method: 'POST',
+      url,
+      payload: { decision: 'accept', reason: 'n/a' }
+    })
+
+    expect(statusCode).toBe(statusCodes.notFound)
+  })
+
+  test('POST 404s for a quarter with no matching submission', async () => {
+    const url = pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, {
+      schemeId: 'ironwave-compliance',
+      year: '2027',
+      quarter: 'Q1'
+    })
+    const { statusCode } = await server.inject({
+      method: 'POST',
+      url,
+      payload: { decision: 'accept', reason: 'n/a' }
+    })
+
+    expect(statusCode).toBe(statusCodes.notFound)
+  })
 })
