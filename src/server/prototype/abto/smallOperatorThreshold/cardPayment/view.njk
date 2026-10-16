@@ -1,0 +1,56 @@
+{% extends 'layouts/page.njk' %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{#- Prototype stub standing in for the hosted payment page. Deliberately has
+    no card, expiry, security code or name inputs. -#}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      <p class="govuk-body">{{ labels.intro }}</p>
+
+      {{
+        govukSummaryList({
+          rows: [
+            { key: { text: labels.amountLabel }, value: { text: amount } },
+            { key: { text: labels.reasonLabel }, value: { text: reason } },
+            { key: { text: labels.referenceLabel }, value: { text: reference } }
+          ],
+          attributes: { "data-testid": "abto-card-payment-summary" }
+        })
+      }}
+
+      {{
+        govukInsetText({
+          text: labels.prototypeNotice,
+          attributes: { "data-testid": "abto-card-payment-notice" }
+        })
+      }}
+
+      <form method="post" novalidate data-testid="abto-card-payment-form">
+        <div class="govuk-button-group">
+          {{
+            govukButton({
+              text: labels.success,
+              name: "outcome",
+              value: "success",
+              preventDoubleClick: true,
+              attributes: { "data-testid": "abto-card-payment-success" }
+            })
+          }}
+          {{
+            govukButton({
+              text: labels.cancel,
+              name: "outcome",
+              value: "cancel",
+              classes: "govuk-button--secondary",
+              attributes: { "data-testid": "abto-card-payment-cancel" }
+            })
+          }}
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

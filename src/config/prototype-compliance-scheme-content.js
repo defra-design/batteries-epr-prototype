@@ -244,6 +244,24 @@ export const prototypeComplianceSchemeContent = {
     }
   },
 
+  singleMemberDetails: {
+    title: 'Scheme member details',
+    heading: 'Scheme member details',
+    complianceCaption: 'batteries compliance: quarterly data',
+    stepLabel: 'Step 1 of 5',
+    memberLabel: 'Scheme member name',
+    memberPlaceholder: 'Choose a scheme member',
+    bprnLabel: 'BPRN',
+    bprnHint: 'Generated from the scheme member you choose',
+    schemeRefLabel: 'Scheme Ref Number',
+    schemeRefHint: 'Your scheme NPWD reference',
+    continueAction: 'Continue',
+    error: {
+      title: 'There is a problem',
+      member: 'Select a scheme member'
+    }
+  },
+
   uploading: {
     title: 'Uploading battery data',
     heading: 'Uploading battery data',

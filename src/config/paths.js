@@ -89,6 +89,14 @@ export const paths = {
     '/prototype/compliance-scheme/pom-submission/{year}/{quarter}/reporting-method',
   prototypeComplianceSchemeSubmissionBulkUpload:
     '/prototype/compliance-scheme/pom-submission/{year}/{quarter}/bulk-upload',
+  prototypeComplianceSchemeSubmissionSingleMemberDetails:
+    '/prototype/compliance-scheme/pom-submission/{year}/{quarter}/single-member/details',
+  prototypeComplianceSchemeSubmissionSingleMemberChemistries:
+    '/prototype/compliance-scheme/pom-submission/{year}/{quarter}/single-member/chemistries',
+  prototypeComplianceSchemeSubmissionSingleMemberTonnage:
+    '/prototype/compliance-scheme/pom-submission/{year}/{quarter}/single-member/tonnage',
+  prototypeComplianceSchemeSubmissionSingleMemberOthers:
+    '/prototype/compliance-scheme/pom-submission/{year}/{quarter}/single-member/others',
   prototypeComplianceSchemeSubmissionUploading:
     '/prototype/compliance-scheme/pom-submission/{year}/{quarter}/uploading',
   prototypeComplianceSchemeSubmissionErrors:
@@ -118,6 +126,15 @@ export const paths = {
     '/prototype/abto/incoming-waste/{deliveryId}/query',
   prototypeAbtoIncomingWasteQuerySent:
     '/prototype/abto/incoming-waste/{deliveryId}/query-sent',
+
+  prototypeAbtoThresholdEmail: '/prototype/abto/small-operator-threshold/email',
+  prototypeAbtoThreshold: '/prototype/abto/small-operator-threshold',
+  prototypeAbtoThresholdPay: '/prototype/abto/small-operator-threshold/pay',
+  prototypeAbtoThresholdCardPayment:
+    '/prototype/abto/small-operator-threshold/pay/card-payment',
+  prototypeAbtoThresholdPaymentReceived:
+    '/prototype/abto/small-operator-threshold/payment-received',
+  prototypeAbtoWasteReturns: '/prototype/abto/waste-returns',
 
   prototypeRegulatorPomSubmissionSignIn:
     '/prototype/regulator/pom-submission/sign-in',
@@ -151,6 +168,69 @@ export const paths = {
     '/prototype/regulator/pom-submission/schemes/{schemeId}/submissions/{year}/{quarter}/files',
   prototypeRegulatorPomSubmissionSubmissionFile:
     '/prototype/regulator/pom-submission/schemes/{schemeId}/submissions/{year}/{quarter}/files/{fileId}',
+
+  prototypeRegulatorRegistrationsSignIn:
+    '/prototype/regulator/registrations/sign-in',
+  prototypeRegulatorHome: '/prototype/regulator/home',
+  prototypeRegulatorRegistrations: '/prototype/regulator/registrations',
+  prototypeRegulatorPreRegistrationLink:
+    '/prototype/regulator/registrations/pre-registration-link',
+  prototypeRegulatorPreRegistrationLinkSent:
+    '/prototype/regulator/registrations/pre-registration-link/sent',
+  prototypeRegulatorPreRegistrationLinkResend:
+    '/prototype/regulator/registrations/pre-registration-link/resend',
+  prototypeRegulatorScheme:
+    '/prototype/regulator/registrations/schemes/{schemeId}',
+  prototypeRegulatorSchemeMemberList:
+    '/prototype/regulator/registrations/schemes/{schemeId}/member-list',
+  prototypeRegulatorSchemeMemberListAccepted:
+    '/prototype/regulator/registrations/schemes/{schemeId}/member-list/accepted',
+  prototypeRegulatorSchemeMemberListRejected:
+    '/prototype/regulator/registrations/schemes/{schemeId}/member-list/rejected',
+  prototypeRegulatorApplication:
+    '/prototype/regulator/registrations/applications/{applicationId}',
+  prototypeRegulatorApplicationStep:
+    '/prototype/regulator/registrations/applications/{applicationId}/steps/{step}',
+  prototypeRegulatorApplicationReview:
+    '/prototype/regulator/registrations/applications/{applicationId}/review',
+  prototypeRegulatorApplicationAccepted:
+    '/prototype/regulator/registrations/applications/{applicationId}/accepted',
+  prototypeRegulatorApplicationConditions:
+    '/prototype/regulator/registrations/applications/{applicationId}/conditions',
+  prototypeRegulatorApplicationRejected:
+    '/prototype/regulator/registrations/applications/{applicationId}/rejected',
+  prototypeRegulatorApplicationSchemeRecord:
+    '/prototype/regulator/registrations/applications/{applicationId}/scheme-record',
+
+  prototypeRegulatorWasteReturnsSignIn:
+    '/prototype/regulator/waste-returns/sign-in',
+  prototypeRegulatorWasteReturnsHome: '/prototype/regulator/waste-returns',
+  prototypeRegulatorWasteReturnsSchemeAbtos:
+    '/prototype/regulator/waste-returns/schemes/{schemeId}',
+  prototypeRegulatorWasteReturnsAbtoSites:
+    '/prototype/regulator/waste-returns/schemes/{schemeId}/abtos/{abtoId}',
+  prototypeRegulatorWasteReturnsReview:
+    '/prototype/regulator/waste-returns/schemes/{schemeId}/abtos/{abtoId}/sites/{siteId}',
+  prototypeRegulatorWasteReturnsAcceptConfirm:
+    '/prototype/regulator/waste-returns/schemes/{schemeId}/abtos/{abtoId}/sites/{siteId}/accept',
+  prototypeRegulatorWasteReturnsAccepted:
+    '/prototype/regulator/waste-returns/schemes/{schemeId}/abtos/{abtoId}/sites/{siteId}/accepted',
+  prototypeRegulatorWasteReturnsQueryCategories:
+    '/prototype/regulator/waste-returns/schemes/{schemeId}/abtos/{abtoId}/sites/{siteId}/query',
+  prototypeRegulatorWasteReturnsQueryDetails:
+    '/prototype/regulator/waste-returns/schemes/{schemeId}/abtos/{abtoId}/sites/{siteId}/query/details',
+  prototypeRegulatorWasteReturnsQuerySent:
+    '/prototype/regulator/waste-returns/schemes/{schemeId}/abtos/{abtoId}/sites/{siteId}/query/sent',
+  prototypeRegulatorWasteReturnsFlags:
+    '/prototype/regulator/waste-returns/flags',
+  prototypeRegulatorWasteReturnsAbtoAccount:
+    '/prototype/regulator/waste-returns/abtos/{abtoId}',
+  prototypeRegulatorWasteReturnsClassification:
+    '/prototype/regulator/waste-returns/abtos/{abtoId}/classification',
+  prototypeRegulatorWasteReturnsClassificationConfirm:
+    '/prototype/regulator/waste-returns/abtos/{abtoId}/classification/confirm',
+  prototypeRegulatorWasteReturnsReclassified:
+    '/prototype/regulator/waste-returns/abtos/{abtoId}/classification/done',
 
   prototypeMembersListStart: '/prototype/compliance-scheme/members-list',
   prototypeMembersListHowToSend:

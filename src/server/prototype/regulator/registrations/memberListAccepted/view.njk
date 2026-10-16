@@ -1,0 +1,36 @@
+{% extends 'layouts/regulator.njk' %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% block content %}
+  {{ govukPanel({ titleText: labels.panelTitle, text: panelBody, attributes: { "data-testid": "member-list-accepted-panel" } }) }}
+
+  <h2 class="govuk-heading-l">{{ labels.automaticHeading }}</h2>
+  <ul class="govuk-list app-regulator-ticks" data-testid="member-list-actions">
+    {% for action in actions %}
+      <li class="app-regulator-ticks__item">{{ action }}</li>
+    {% endfor %}
+  </ul>
+
+  <h2 class="govuk-heading-l">{{ labels.membersHeading }}</h2>
+  {%- set rows = [] -%}
+  {%- for registration in registrations -%}
+    {%- set rows = (rows.push([{ text: registration.companyName }, { text: registration.bprn }]), rows) -%}
+  {%- endfor -%}
+  {{
+    govukTable({
+      head: [{ text: labels.columns.member }, { text: labels.columns.number }],
+      rows: rows,
+      attributes: { "data-testid": "member-list-registered" }
+    })
+  }}
+
+  <p class="govuk-body">
+    <a
+      class="govuk-link"
+      href="{{ returnHref }}"
+      data-testid="member-list-return"
+      >{{ returnLink }}</a
+    >
+  </p>
+{% endblock %}

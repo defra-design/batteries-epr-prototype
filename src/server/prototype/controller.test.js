@@ -11,7 +11,8 @@ const CODED_JOURNEY_IDS = new Set([
   'complianceSchemeRespondsToQuery',
   'bcsSendsMembersList',
   'bcsSubmissionOfWasteData',
-  'regulatorReceivesPomSubmission'
+  'regulatorReceivesPomSubmission',
+  'abtoSmallOperatorThresholdCrossed'
 ])
 
 describe('#prototypeController', () => {
@@ -111,30 +112,30 @@ describe('#prototypeController', () => {
     expect(result).not.toEqual(expect.stringContaining('Treatment operator'))
   })
 
-  test('selects the operator tab by default, as it has the most journeys with links', async () => {
+  test('selects the regulator tab by default, as it has the most journeys with links', async () => {
     const { result } = await server.inject({
       method: 'GET',
       url: paths.prototype
     })
 
-    const operatorTabItem = result.match(
-      /<li class="govuk-tabs__list-item[^"]*"[^>]*>\s*<a[^>]*data-testid="prototype-tab-operator"/
+    const regulatorTabItem = result.match(
+      /<li class="govuk-tabs__list-item[^"]*"[^>]*>\s*<a[^>]*data-testid="prototype-tab-regulator"/
     )[0]
-    expect(operatorTabItem).toEqual(
+    expect(regulatorTabItem).toEqual(
       expect.stringContaining('govuk-tabs__list-item--selected')
-    )
-
-    const operatorPanel = result.match(
-      /<div class="govuk-tabs__panel[^"]*" id="persona-operator"/
-    )[0]
-    expect(operatorPanel).not.toEqual(
-      expect.stringContaining('govuk-tabs__panel--hidden')
     )
 
     const regulatorPanel = result.match(
       /<div class="govuk-tabs__panel[^"]*" id="persona-regulator"/
     )[0]
-    expect(regulatorPanel).toEqual(
+    expect(regulatorPanel).not.toEqual(
+      expect.stringContaining('govuk-tabs__panel--hidden')
+    )
+
+    const operatorPanel = result.match(
+      /<div class="govuk-tabs__panel[^"]*" id="persona-operator"/
+    )[0]
+    expect(operatorPanel).toEqual(
       expect.stringContaining('govuk-tabs__panel--hidden')
     )
   })
@@ -276,7 +277,7 @@ describe('#prototypeController', () => {
     )
   })
 
-  test('renders the small operator threshold crossed journey with a Figma link, opening in a new tab', async () => {
+  test('renders the small operator threshold crossed journey once, with the coded link above the Figma link', async () => {
     const { result } = await server.inject({
       method: 'GET',
       url: paths.prototype
@@ -286,18 +287,37 @@ describe('#prototypeController', () => {
     const journey = pageContent.journeys.abtoSmallOperatorThresholdCrossed
     expect(result).toEqual(expect.stringContaining(journey.title))
     expect(result).toEqual(expect.stringContaining(journey.description))
-
-    const cta = result.match(
-      /<a[^>]*data-testid="prototype-journey-abtoSmallOperatorThresholdCrossed-figma-cta"[^>]*>/
-    )[0]
-    expect(cta).toEqual(expect.stringContaining(`href="${journey.figmaHref}"`))
-    expect(cta).toEqual(expect.stringContaining('target="_blank"'))
-    expect(cta).toEqual(expect.stringContaining('rel="noopener noreferrer"'))
-    expect(result).not.toEqual(
-      expect.stringContaining(
-        'data-testid="prototype-journey-abtoSmallOperatorThresholdCrossed-coded-cta"'
+    expect(
+      result.match(
+        /data-testid="prototype-journey-abtoSmallOperatorThresholdCrossed"/g
       )
+    ).toHaveLength(1)
+
+    const codedCta = result.match(
+      /<a[^>]*data-testid="prototype-journey-abtoSmallOperatorThresholdCrossed-coded-cta"[^>]*>[^<]*/
+    )[0]
+    expect(codedCta).toEqual(
+      expect.stringContaining(`href="${paths.prototypeAbtoThresholdEmail}"`)
     )
+    expect(codedCta).toEqual(
+      expect.stringContaining('Version 2 (Gov.uk prototype)')
+    )
+
+    const figmaCta = result.match(
+      /<a[^>]*data-testid="prototype-journey-abtoSmallOperatorThresholdCrossed-figma-cta"[^>]*>[^<]*/
+    )[0]
+    expect(figmaCta).toEqual(
+      expect.stringContaining(`href="${journey.figmaHref}"`)
+    )
+    expect(figmaCta).toEqual(expect.stringContaining('target="_blank"'))
+    expect(figmaCta).toEqual(
+      expect.stringContaining('rel="noopener noreferrer"')
+    )
+    expect(figmaCta).toEqual(
+      expect.stringContaining('Version 1 (Figma prototype)')
+    )
+
+    expect(result.indexOf(codedCta)).toBeLessThan(result.indexOf(figmaCta))
     expect(result).not.toEqual(
       expect.stringContaining(
         'data-testid="prototype-journey-abtoSmallOperatorThresholdCrossed-coming-soon"'
@@ -387,7 +407,7 @@ describe('#prototypeController', () => {
     )
   })
 
-  test('renders coming soon journeys for the regulator group', async () => {
+  test('renders the journey card linking to the waste returns regulator sign in page', async () => {
     const { result } = await server.inject({
       method: 'GET',
       url: paths.prototype
@@ -398,15 +418,50 @@ describe('#prototypeController', () => {
     expect(result).toEqual(
       expect.stringContaining(journey.title.replace(/'/g, '&#39;'))
     )
-    expect(journey.description).not.toEqual('')
     expect(result).toEqual(
       expect.stringContaining(journey.description.replace(/'/g, '&#39;'))
     )
     expect(result).toEqual(
       expect.stringContaining(
+        'data-testid="prototype-journey-regulatorReviewsAbtoWasteFigures-coded-cta"'
+      )
+    )
+    expect(result).toEqual(
+      expect.stringContaining(
+        `href="${paths.prototypeRegulatorWasteReturnsSignIn}"`
+      )
+    )
+    expect(result).not.toEqual(
+      expect.stringContaining(
         'data-testid="prototype-journey-regulatorReviewsAbtoWasteFigures-coming-soon"'
       )
     )
+  })
+
+  test('renders the regulator pre-registration link journey card, labelled Version 2, linking to its sign in page', async () => {
+    const { result } = await server.inject({
+      method: 'GET',
+      url: paths.prototype
+    })
+
+    const pageContent = content.prototype({})
+    const journey = pageContent.journeys.regulatorSendsPreRegistrationLink
+    expect(journey.persona).toBe('regulator')
+    expect(journey.title).toBe(
+      'BCS registration — regulator sends pre-registration link'
+    )
+    expect(result).toEqual(expect.stringContaining(journey.title))
+    expect(result).toEqual(
+      expect.stringContaining(
+        'data-testid="prototype-journey-regulatorSendsPreRegistrationLink-coded-cta"'
+      )
+    )
+    expect(result).toEqual(
+      expect.stringContaining(
+        `href="${paths.prototypeRegulatorRegistrationsSignIn}"`
+      )
+    )
+    expect(pageContent.links.coded).toBe('Version 2 (Gov.uk prototype)')
   })
 
   test('renders the journey card linking to the PoM submission received by regulator sign in page', async () => {

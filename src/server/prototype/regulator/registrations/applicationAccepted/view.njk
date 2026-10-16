@@ -1,0 +1,51 @@
+{% extends 'layouts/regulator.njk' %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{# The H1 sits in the hero above the success banner so the page has a heading. #}
+{% block hero %}
+  {{ govukBreadcrumbs({ items: breadcrumbs, classes: "app-regulator-breadcrumbs" }) }}
+  <h1 class="govuk-heading-xl app-regulator-hero__heading">{{ heading }}</h1>
+  {% set bannerHtml %}
+    <h2 class="govuk-notification-banner__heading">
+      {{ labels.bannerHeading }}
+    </h2>
+    <p class="govuk-body">{{ bannerBody }}</p>
+  {% endset %}
+  {{ govukNotificationBanner({ type: "success", titleText: labels.bannerTitle, html: bannerHtml, attributes: { "data-testid": "application-accepted-banner" } }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="app-regulator-notes" data-testid="application-actions">
+    <h2 class="govuk-heading-l">{{ labels.actionsHeading }}</h2>
+    <ul class="govuk-list app-regulator-check-list">
+      {% for action in actions %}
+        <li
+          class="app-regulator-check-list__item"
+          data-testid="application-action-{{ action.key }}"
+        >
+          <span class="govuk-body govuk-!-margin-bottom-0">
+            {%- if action.href -%}
+              {{ action.text }}<a
+                class="govuk-link"
+                href="{{ action.href }}"
+                data-testid="application-scheme-record-link"
+                >{{ action.linkText }}</a
+              >
+            {%- else -%}
+              {{ action.text }}
+            {%- endif -%}
+          </span>
+          {{ govukTag({ text: labels.done, classes: "govuk-tag--green" }) }}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  {{ govukSummaryList({ rows: summaryRows, attributes: { "data-testid": "application-accepted-summary" } }) }}
+
+  {{ govukButton({ text: labels.conditionsButton, href: conditionsHref, attributes: { "data-testid": "application-conditions-button" } }) }}
+{% endblock %}

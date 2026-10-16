@@ -1,0 +1,26 @@
+{% extends 'layouts/regulator.njk' %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{# The H1 sits in the hero above the banner so the page has a heading. #}
+{% block hero %}
+  {{ govukBreadcrumbs({ items: breadcrumbs, classes: "app-regulator-breadcrumbs" }) }}
+  <h1 class="govuk-heading-xl app-regulator-hero__heading">{{ heading }}</h1>
+  {% set bannerHtml %}
+    <h2 class="govuk-notification-banner__heading">
+      {{ labels.bannerHeading }}
+    </h2>
+    <p class="govuk-body">{{ bannerBody }}</p>
+  {% endset %}
+  {{ govukNotificationBanner({ titleText: labels.bannerTitle, html: bannerHtml, attributes: { "data-testid": "application-rejected-banner" } }) }}
+{% endblock %}
+
+{% block content %}
+  {{ govukSummaryList({ rows: summaryRows, attributes: { "data-testid": "application-rejected-summary" } }) }}
+  <p class="govuk-body">
+    <a class="govuk-link" href="#" data-testid="application-rejected-back"
+      >{{ labels.backLink }}</a
+    >
+  </p>
+{% endblock %}

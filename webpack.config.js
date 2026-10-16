@@ -39,6 +39,8 @@ export default {
       './javascripts/prototype/complianceScheme/membersListAddMember/entry.js',
     prototypeAbtoIncomingWaste:
       './javascripts/prototype/abto/incomingWaste/entry.js',
+    prototypeAbtoThreshold:
+      './javascripts/prototype/abto/smallOperatorThreshold/entry.js',
     prototypeWasteData:
       './javascripts/prototype/complianceScheme/wasteData/entry.js',
     onboardingConfirmation: './javascripts/onboardingConfirmation/entry.js',
@@ -245,6 +247,10 @@ export default {
         {
           from: path.join(govukFrontendPath, 'dist/govuk/assets/rebrand'),
           to: 'assets'
+        },
+        {
+          from: path.join(dirname, 'src/client/assets/images'),
+          to: 'assets/images'
         }
       ]
     })

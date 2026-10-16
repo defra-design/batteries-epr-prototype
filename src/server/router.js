@@ -10,7 +10,10 @@ import { prototypeComplianceSchemeQueryResponse } from './prototype/complianceSc
 import { prototypeComplianceSchemeMembersList } from './prototype/complianceScheme/membersList/index.js'
 import { prototypeComplianceSchemeWasteData } from './prototype/complianceScheme/wasteData/index.js'
 import { prototypeAbtoIncomingWaste } from './prototype/abto/incomingWaste/index.js'
+import { prototypeAbtoSmallOperatorThreshold } from './prototype/abto/smallOperatorThreshold/index.js'
 import { prototypeRegulatorPomSubmission } from './prototype/regulator/pomSubmission/index.js'
+import { prototypeRegulatorRegistrations } from './prototype/regulator/registrations/index.js'
+import { prototypeRegulatorWasteReturns } from './prototype/regulator/wasteReturns/index.js'
 import { blueprint } from './blueprint/index.js'
 import { bcsRegistrationWalkthrough } from './bcsRegistrationWalkthrough/index.js'
 import { about } from './about/index.js'
@@ -111,8 +114,14 @@ export const router = {
         prototypeComplianceSchemeWasteData:
           prototypeComplianceSchemeWasteData.openRoutes,
         prototypeAbtoIncomingWaste: prototypeAbtoIncomingWaste.openRoutes,
+        prototypeAbtoSmallOperatorThreshold:
+          prototypeAbtoSmallOperatorThreshold.openRoutes,
         prototypeRegulatorPomSubmission:
           prototypeRegulatorPomSubmission.openRoutes,
+        prototypeRegulatorRegistrations:
+          prototypeRegulatorRegistrations.openRoutes,
+        prototypeRegulatorWasteReturns:
+          prototypeRegulatorWasteReturns.openRoutes,
         blueprint: blueprint.openRoutes,
         bcsRegistrationWalkthrough: bcsRegistrationWalkthrough.openRoutes,
         about: about.openRoutes,

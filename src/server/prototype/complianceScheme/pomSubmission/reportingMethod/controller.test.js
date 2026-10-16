@@ -87,7 +87,7 @@ describe('#prototypeComplianceSchemeSubmissionReportingMethod', () => {
     expect(result).toEqual(expect.stringContaining('href="#reportingMethod"'))
   })
 
-  test('POST with "single" re-renders the page, persists the choice, and routes nowhere for now', async () => {
+  test('POST with "single" re-renders the page, persists the choice, and gives a nextStep to single-member step 1', async () => {
     const { result, statusCode } = await server.inject({
       method: 'POST',
       url: urlFor(2026, 2),
@@ -108,7 +108,9 @@ describe('#prototypeComplianceSchemeSubmissionReportingMethod', () => {
       year: '2026',
       quarter: '2',
       savedFields: { reportingMethod: 'single' },
-      nextStep: null
+      nextStep: paths.prototypeComplianceSchemeSubmissionSingleMemberDetails
+        .replace('{year}', '2026')
+        .replace('{quarter}', '2')
     })
   })
 

@@ -1,0 +1,27 @@
+{% extends 'layouts/regulator.njk' %}
+
+{% block content %}
+  <h2 class="govuk-heading-l">{{ labels.automaticHeading }}</h2>
+  <ul class="govuk-list app-regulator-ticks" data-testid="member-list-actions">
+    {% for action in actions %}
+      <li class="app-regulator-ticks__item">{{ action }}</li>
+    {% endfor %}
+    <li class="app-regulator-ticks__item app-regulator-ticks__item--none">
+      {{ labels.notDone }}
+    </li>
+  </ul>
+
+  <h2 class="govuk-heading-l">{{ labels.reasonHeading }}</h2>
+  <div class="govuk-inset-text" data-testid="member-list-reason">
+    {{ reason }}
+  </div>
+
+  <p class="govuk-body">
+    <a
+      class="govuk-link"
+      href="{{ returnHref }}"
+      data-testid="member-list-return"
+      >{{ returnLink }}</a
+    >
+  </p>
+{% endblock %}

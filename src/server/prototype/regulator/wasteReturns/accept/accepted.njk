@@ -1,0 +1,54 @@
+{% extends 'layouts/page.njk' %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {%- set bannerHtml -%}
+        <h3
+          class="govuk-notification-banner__heading"
+          data-testid="accepted-heading"
+        >
+          {{ bannerHeading }}
+        </h3>
+        <p class="govuk-body">{{ bannerBody }}</p>
+      {%- endset -%}
+      {{
+        govukNotificationBanner({
+          type: "success",
+          titleText: labels.bannerTitle,
+          html: bannerHtml,
+          attributes: { "data-testid": "accepted-banner" }
+        })
+      }}
+
+      {%- set rows = [] -%}
+      {%- for row in summaryRows -%}
+        {%- set rows = (rows.push({ key: { text: row.label }, value: { text: row.text } }), rows) -%}
+      {%- endfor -%}
+      {{
+        govukSummaryList({
+          rows: rows,
+          classes: "govuk-summary-list--no-border",
+          attributes: { "data-testid": "accepted-summary" }
+        })
+      }}
+
+      <div class="govuk-button-group">
+        {{
+          govukButton({
+            text: labels.wasteReturnsAction,
+            href: wasteReturnsHref,
+            classes: "govuk-button--secondary",
+            attributes: { "data-testid": "accepted-waste-returns" }
+          })
+        }}
+        <a class="govuk-link" href="#" data-testid="accepted-letter"
+          >{{ labels.letterLink }}</a
+        >
+      </div>
+    </div>
+  </div>
+{% endblock %}

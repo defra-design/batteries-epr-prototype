@@ -1,0 +1,30 @@
+{% extends 'layouts/regulator.njk' %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block hero %}
+  {{ govukBreadcrumbs({ items: breadcrumbs, classes: "app-regulator-breadcrumbs" }) }}
+  <h1 class="govuk-heading-xl app-regulator-hero__heading">{{ heading }}</h1>
+  <p
+    class="govuk-heading-m app-regulator-hero__intro"
+    data-testid="application-conditions-scheme"
+  >
+    {{ schemeName }}
+  </p>
+{% endblock %}
+
+{% block content %}
+  <p class="govuk-body">{{ intro }}</p>
+  {{ govukSummaryList({ rows: summaryRows, attributes: { "data-testid": "application-conditions-summary" } }) }}
+
+  <h2 class="govuk-heading-l">{{ labels.conditionsHeading }}</h2>
+  <ul
+    class="govuk-list govuk-list--bullet"
+    data-testid="application-conditions-list"
+  >
+    {% for condition in labels.conditions %}<li>{{ condition }}</li>{% endfor %}
+  </ul>
+
+  {{ govukButton({ text: labels.downloadAction, href: "#", attributes: { "data-testid": "application-conditions-download" } }) }}
+{% endblock %}

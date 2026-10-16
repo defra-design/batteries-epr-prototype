@@ -1,0 +1,117 @@
+{% extends 'layouts/page.njk' %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "prototypeAbto/_totals-table.njk" import abtoTotalsTable %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+      {% set returnRows = [] %}
+      {% for item in returns %}
+        {% set statusHtml %}{{ govukTag({ text: item.status, classes: "govuk-tag--green" }) }}{% endset %}
+        {% set linkHtml %}
+          <a class="govuk-link" href="#"
+            >{{ labels.viewRecord }}<span class="govuk-visually-hidden">
+              {{ item.period }}</span
+            ></a
+          >
+        {% endset %}
+        {%
+          set returnRows = (returnRows.push([
+            { text: item.period },
+            { text: item.submitted },
+            { text: item.tonnes },
+            { html: statusHtml },
+            { html: linkHtml }
+          ]), returnRows)
+        %}
+      {% endfor %}
+
+      {% set siteItems = [] %}
+      {% for site in sites %}
+        {% set siteItems = (siteItems.push({ value: site.id, text: site.label }), siteItems) %}
+      {% endfor %}
+
+
+      {% set returnsPanelHtml %}
+        {{
+          govukInsetText({
+            text: insetText,
+            attributes: { "data-testid": "abto-returns-inset" }
+          })
+        }}
+
+        <h2 class="govuk-heading-m">{{ labels.returnsHeading }}</h2>
+        {{
+          govukTable({
+            head: [
+              { text: labels.returnsColumns.period },
+              { text: labels.returnsColumns.submitted },
+              { text: labels.returnsColumns.tonnes },
+              { text: labels.returnsColumns.status },
+              { text: labels.returnsColumns.action }
+            ],
+            rows: returnRows,
+            attributes: { "data-testid": "abto-returns-table" }
+          })
+        }}
+
+        <h2 class="govuk-heading-m">{{ labels.totalsHeading }}</h2>
+        {{ abtoTotalsTable(totalsRows, totalsColumns, "abto-totals-table") }}
+
+        <div class="app-action-panel" data-testid="abto-start-return">
+          <h2 class="govuk-heading-m">{{ startHeading }}</h2>
+          <p class="govuk-body">{{ startBody }}</p>
+          {{
+            govukSelect({
+              id: "site",
+              name: "site",
+              label: { text: labels.siteLabel, classes: "govuk-label--s" },
+              items: siteItems,
+              classes: "govuk-!-width-full"
+            })
+          }}
+          {{
+            govukButton({
+              text: startAction,
+              attributes: { "data-testid": "abto-start-return-button" }
+            })
+          }}
+        </div>
+      {% endset %}
+
+
+      {% set otherPanelHtml %}
+        <p class="govuk-body">{{ labels.otherTab }}</p>
+      {% endset %}
+
+      {{
+        govukTabs({
+          title: labels.tabsTitle,
+          items: [
+            { label: labels.tabs.sites, id: "your-sites", panel: { html: otherPanelHtml } },
+            { label: labels.tabs.intakeLog, id: "intake-log", panel: { html: otherPanelHtml } },
+            { label: labels.tabs.wasteReturns, id: "waste-returns", panel: { html: returnsPanelHtml } },
+            { label: labels.tabs.queries, id: "queries", panel: { html: otherPanelHtml } }
+          ],
+          attributes: { "data-testid": "abto-tabs" }
+        })
+      }}
+    </div>
+  </div>
+{% endblock %}
+
+{% block bodyEnd %}
+  {#- Selects the Waste returns tab before the Design System tabs initialise. -#}
+  <script
+    type="module"
+    src="{{ getAssetPath('prototypeAbtoThreshold.js') }}"
+  ></script>
+  {{ super() }}
+{% endblock %}

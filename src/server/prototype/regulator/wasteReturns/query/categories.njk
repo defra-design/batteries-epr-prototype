@@ -1,0 +1,61 @@
+{% extends 'layouts/page.njk' %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorSummary and errorSummary.length %}
+        {{
+          govukErrorSummary({
+            titleText: errorTitle,
+            errorList: errorSummary,
+            attributes: { "data-testid": "query-categories-error-summary" }
+          })
+        }}
+      {% endif %}
+
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+      <h2 class="govuk-heading-m" data-testid="query-site-heading">
+        {{ siteHeading }}
+      </h2>
+
+      <form
+        method="post"
+        action="{{ action }}"
+        novalidate
+        data-testid="query-categories-form"
+      >
+        {{
+          govukCheckboxes({
+            idPrefix: "categories",
+            name: "categories",
+            fieldset: {
+              legend: { text: labels.hint, classes: "govuk-fieldset__legend--s govuk-!-font-weight-regular" }
+            },
+            errorMessage: { text: errors.categories } if errors.categories,
+            items: categoryItems
+          })
+        }}
+
+        <div class="govuk-button-group">
+          {{
+            govukButton({
+              text: labels.continueAction,
+              attributes: { "data-testid": "query-categories-continue" }
+            })
+          }}
+          {{
+            govukButton({
+              text: labels.cancelAction,
+              href: cancelHref,
+              classes: "govuk-button--secondary",
+              attributes: { "data-testid": "query-categories-cancel" }
+            })
+          }}
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

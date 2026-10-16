@@ -1,0 +1,90 @@
+{% extends 'layouts/page.njk' %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "prototypeRegulatorWasteReturns/macros.njk" import sectionTabs %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl" data-testid="scheme-abtos-heading">
+        {{ heading }}
+      </h1>
+
+      {{ sectionTabs(tabs) }}
+
+      <p class="govuk-body" data-testid="scheme-abtos-intro">{{ intro }}</p>
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          {{
+            govukSelect({
+              id: "status",
+              name: "status",
+              label: { text: labels.statusLabel, classes: "govuk-label--s" },
+              items: [{ value: "", text: labels.allStatuses, selected: true }],
+              attributes: { "data-testid": "scheme-abtos-status-filter" }
+            })
+          }}
+        </div>
+        <div class="govuk-grid-column-one-third">
+          {{
+            govukSelect({
+              id: "period",
+              name: "period",
+              label: { text: labels.periodLabel, classes: "govuk-label--s" },
+              items: [{ value: "2026-q3", text: "Q3 2026 (July to September)", selected: true }],
+              attributes: { "data-testid": "scheme-abtos-period-filter" }
+            })
+          }}
+        </div>
+        <div class="govuk-grid-column-one-third">
+          {{
+            govukSelect({
+              id: "operator-type",
+              name: "operator-type",
+              label: { text: labels.operatorTypeLabel, classes: "govuk-label--s" },
+              items: [{ value: "", text: labels.allOperatorTypes, selected: true }],
+              attributes: { "data-testid": "scheme-abtos-operator-type-filter" }
+            })
+          }}
+        </div>
+      </div>
+
+      {%- set rows = [] -%}
+      {%- for operator in operators -%}
+        {%- set nameCellHtml -%}
+          <a
+            class="govuk-link"
+            href="{{ operator.href }}"
+            data-testid="scheme-abtos-operator-{{ operator.id }}"
+            >{{ operator.name }}</a
+          >
+        {%- endset -%}
+        {%-
+          set rows = (rows.push([
+            { html: nameCellHtml },
+            { text: operator.approval },
+            { text: operator.type },
+            { text: operator.submitted },
+            { html: govukTag({ text: operator.statusLabel, classes: "govuk-tag--" + operator.statusColour }) | safe }
+          ]), rows)
+        -%}
+      {%- endfor -%}
+
+      {{
+        govukTable({
+          head: [
+            { text: labels.columns.operator },
+            { text: labels.columns.approval },
+            { text: labels.columns.type },
+            { text: labels.columns.submitted },
+            { text: labels.columns.status }
+          ],
+          rows: rows,
+          attributes: { "data-testid": "scheme-abtos-table" }
+        })
+      }}
+    </div>
+  </div>
+{% endblock %}

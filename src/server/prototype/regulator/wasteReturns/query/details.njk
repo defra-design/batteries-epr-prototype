@@ -1,0 +1,75 @@
+{% extends 'layouts/page.njk' %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorSummary and errorSummary.length %}
+        {{
+          govukErrorSummary({
+            titleText: errorTitle,
+            errorList: errorSummary,
+            attributes: { "data-testid": "query-details-error-summary" }
+          })
+        }}
+      {% endif %}
+
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+      <p class="govuk-body-l" data-testid="query-details-about">
+        {{ siteHeading }}: {{ categoriesLine }}
+      </p>
+
+      <form
+        method="post"
+        action="{{ action }}"
+        novalidate
+        data-testid="query-details-form"
+      >
+        {{
+          govukCheckboxes({
+            idPrefix: "contacts",
+            name: "contacts",
+            fieldset: {
+              legend: { text: labels.recipientsHeading, classes: "govuk-fieldset__legend--l" }
+            },
+            hint: { text: labels.recipientsHint },
+            errorMessage: { text: errors.contacts } if errors.contacts,
+            items: contactItems
+          })
+        }}
+
+        {{
+          govukInput({
+            id: "reason",
+            name: "reason",
+            label: { text: labels.reasonLabel, classes: "govuk-label--s" },
+            hint: { text: labels.reasonHint },
+            value: reason,
+            errorMessage: { text: errors.reason } if errors.reason,
+            attributes: { "data-testid": "query-details-reason" }
+          })
+        }}
+
+        <div class="govuk-button-group">
+          {{
+            govukButton({
+              text: labels.sendAction,
+              attributes: { "data-testid": "query-details-send" }
+            })
+          }}
+          {{
+            govukButton({
+              text: labels.cancelAction,
+              href: cancelHref,
+              classes: "govuk-button--secondary",
+              attributes: { "data-testid": "query-details-cancel" }
+            })
+          }}
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -2117,6 +2117,53 @@
       "previousYears": ["2025: Submitted", "2024: Submitted", "2023: Submitted"]
     }
   ],
+  "prototypeRegulatorRegistrationsDashboardCases": [
+    {
+      "id": "bbbbbbbb-0001-4000-a000-000000000001",
+      "producerName": "Acme Battery Co",
+      "scheme": "Direct",
+      "type": "Large",
+      "status": "submitted",
+      "dueOn": "2026-10-01",
+      "previousYears": ["2025: Registered", "2024: Registered"]
+    },
+    {
+      "id": "bbbbbbbb-0001-4000-a000-000000000002",
+      "producerName": "Northline Power Ltd",
+      "scheme": "Direct",
+      "type": "Large",
+      "status": "paymentIssue",
+      "dueOn": "2026-10-01",
+      "previousYears": ["2025: Registered", "2024: Registered"]
+    },
+    {
+      "id": "bbbbbbbb-0001-4000-a000-000000000003",
+      "producerName": "Cobalt Traction Systems",
+      "scheme": "REPIC",
+      "type": "Large",
+      "status": "notSubmitted",
+      "dueOn": "2026-10-01",
+      "previousYears": ["2025: Registered", "2024: Not registered"]
+    },
+    {
+      "id": "bbbbbbbb-0001-4000-a000-000000000004",
+      "producerName": "GreenCell Storage",
+      "scheme": "Direct",
+      "type": "Small",
+      "status": "preReg",
+      "dueOn": "2026-04-01",
+      "previousYears": ["2025: Registered", "2024: Registered"]
+    },
+    {
+      "id": "bbbbbbbb-0001-4000-a000-000000000005",
+      "producerName": "Voltix Manufacturing",
+      "scheme": "Direct",
+      "type": "Large",
+      "status": "registrations",
+      "dueOn": "2026-10-01",
+      "previousYears": ["2025: Registered", "2024: Registered"]
+    }
+  ],
   "prototypeRegulatorDataCheckFindings": [
     {
       "id": "ffffffff-0001-4000-a000-000000000001",
@@ -2324,5 +2371,65 @@
       "checkStatus": "passed",
       "warningsCount": 0
     }
-  ]
+  ],
+  "prototypeAbtoThreshold": {
+    "operatorName": "Halton Battery Processing Ltd",
+    "approvalYear": "2026",
+    "crossedOn": "2026-09-05T00:00:00Z",
+    "payBy": "2026-10-03T00:00:00Z",
+    "balanceDuePence": 25000,
+    "categories": [
+      {
+        "id": "portable-evidence-issued",
+        "name": "Portable batteries (evidence issued)",
+        "thresholdTonnes": 15,
+        "totalTonnes": 18.4
+      },
+      {
+        "id": "portable-accepted",
+        "name": "Portable batteries accepted",
+        "thresholdTonnes": 150,
+        "totalTonnes": 96.3
+      }
+    ],
+    "payment": {
+      "reference": "PAY-2026-9931",
+      "paidOn": "2026-09-05T15:10:00"
+    },
+    "appropriatePerson": "Priya Osei"
+  },
+  "prototypeAbtoWasteReturns": {
+    "quarterLabel": "Quarter 3, 2026",
+    "quarterShort": "Q3 2026",
+    "periodStart": "2026-07-01T00:00:00",
+    "periodEnd": "2026-09-30T00:00:00",
+    "deadline": "2026-10-31T00:00:00",
+    "referenceDate": "2026-10-05T00:00:00",
+    "sites": [
+      {
+        "id": "halton-unit-4",
+        "label": "Unit 4, Halton Industrial Park – ABTO/2025/0412"
+      }
+    ],
+    "returns": [
+      {
+        "period": "Q2 2026",
+        "submittedOn": "2026-07-28T00:00:00",
+        "tonnesAccepted": 142.35,
+        "status": "Accepted"
+      },
+      {
+        "period": "Q1 2026",
+        "submittedOn": "2026-04-29T00:00:00",
+        "tonnesAccepted": 118.9,
+        "status": "Accepted"
+      },
+      {
+        "period": "Q4 2025",
+        "submittedOn": "2026-01-28T00:00:00",
+        "tonnesAccepted": 165.215,
+        "status": "Accepted"
+      }
+    ]
+  }
 }

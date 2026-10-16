@@ -1,0 +1,16 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{# White strip with a blue left rule: a bold label then a row of links.
+   Each link is { key, text, href }. #}
+{% macro quickLinks(label, links, testId) %}
+  <div class="app-quick-links" data-testid="{{ testId }}">
+    <p class="app-quick-links__label">{{ label }}</p>
+    <ul class="app-quick-links__list">
+      {% for link in links %}
+        <li class="app-quick-links__item">
+          <a class="govuk-link" href="{{ link.href }}" data-testid="{{ testId }}-{{ link.key }}">{{ link.text }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endmacro %}

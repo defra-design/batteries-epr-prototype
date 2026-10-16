@@ -7,6 +7,7 @@ import { reportingMethod } from './reportingMethod/index.js'
 import { bulkUpload } from './bulkUpload/index.js'
 import { uploading } from './uploading/index.js'
 import { errors } from './errors/index.js'
+import { singleMemberDetails } from './singleMember/details/index.js'
 import { uploadSuccess } from './uploadSuccess/index.js'
 
 export const prototypeComplianceSchemePomSubmission = {
@@ -20,6 +21,7 @@ export const prototypeComplianceSchemePomSubmission = {
     ...bulkUpload.openRoutes,
     ...uploading.openRoutes,
     ...errors.openRoutes,
+    ...singleMemberDetails.openRoutes,
     ...uploadSuccess.openRoutes
   ]
 }

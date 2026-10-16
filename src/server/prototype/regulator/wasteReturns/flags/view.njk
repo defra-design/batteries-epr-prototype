@@ -1,0 +1,59 @@
+{% extends 'layouts/page.njk' %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "prototypeRegulatorWasteReturns/macros.njk" import sectionTabs %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+      {{ sectionTabs(tabs) }}
+
+      <p class="govuk-body">{{ labels.intro }}</p>
+
+      {% if flagged.length %}
+        {%- set rows = [] -%}
+        {%- for abto in flagged -%}
+          {%- set linkHtml -%}
+            <a
+              class="govuk-link"
+              href="{{ abto.reviewHref }}"
+              data-testid="flags-review-{{ abto.id }}"
+              >{{ labels.reviewAction }}<span class="govuk-visually-hidden">
+                for {{ abto.name }}</span
+              ></a
+            >
+          {%- endset -%}
+          {%-
+            set rows = (rows.push([
+              { text: abto.name },
+              { text: abto.approvalNumber },
+              { text: abto.classification },
+              { text: abto.bens },
+              { html: govukTag({ text: statusText, classes: "govuk-tag--orange" }) | safe },
+              { html: linkHtml }
+            ]), rows)
+          -%}
+        {%- endfor -%}
+
+        {{
+          govukTable({
+            head: [
+              { text: labels.columns.operator },
+              { text: labels.columns.approval },
+              { text: labels.columns.classification },
+              { text: labels.columns.bens },
+              { text: labels.columns.status },
+              { html: '<span class="govuk-visually-hidden">Action</span>' }
+            ],
+            rows: rows,
+            attributes: { "data-testid": "flags-table" }
+          })
+        }}
+      {% else %}
+        <p class="govuk-body" data-testid="flags-empty">{{ labels.empty }}</p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

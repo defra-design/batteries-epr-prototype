@@ -1,0 +1,28 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{# Tab-style navigation between the regulator's top-level sections. Plain links,
+   not govukTabs: each tab is its own page. #}
+{% macro sectionTabs(tabs) %}
+  <nav class="app-section-tabs" aria-label="Sections" data-testid="waste-returns-tabs">
+    <ul class="app-section-tabs__list">
+      {% for tab in tabs %}
+        <li class="app-section-tabs__item{% if tab.current %} app-section-tabs__item--current{% endif %}">
+          <a class="app-section-tabs__link" href="{{ tab.href }}"{% if tab.current %} aria-current="page"{% endif %} data-testid="waste-returns-tab-{{ tab.key }}">{{ tab.text }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+{% endmacro %}
+
+{# Grey summary panel of label / value facts, e.g. approval number. Each fact
+   is { label, value } or { label, tag: { text, colour } }. #}
+{% macro factsPanel(facts, testId) %}
+  <dl class="app-facts-panel" data-testid="{{ testId }}">
+    {% for fact in facts %}
+      <div class="app-facts-panel__fact">
+        <dt class="app-facts-panel__label">{{ fact.label }}</dt>
+        <dd class="app-facts-panel__value">{% if fact.tag %}{{ govukTag({ text: fact.tag.text, classes: "govuk-tag--" + fact.tag.colour }) }}{% else %}{{ fact.value }}{% endif %}</dd>
+      </div>
+    {% endfor %}
+  </dl>
+{% endmacro %}

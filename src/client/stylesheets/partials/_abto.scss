@@ -1,0 +1,13 @@
+@use "govuk-frontend" as *;
+
+.app-email {
+  border: 1px solid $govuk-border-colour;
+  padding: govuk-spacing(4);
+  margin-bottom: govuk-spacing(6);
+}
+
+.app-action-panel {
+  border: 1px solid $govuk-border-colour;
+  padding: govuk-spacing(6);
+  margin-bottom: govuk-spacing(6);
+}

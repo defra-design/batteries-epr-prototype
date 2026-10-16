@@ -1,0 +1,50 @@
+{% extends 'layouts/regulator.njk' %}
+{% from "prototypeRegulator/macros.njk" import quickLinks %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% block content %}
+  {{ quickLinks(labels.quickLinks.label, quickLinkItems, "regulator-home-quick-links") }}
+
+  <h2 class="govuk-heading-m">{{ labels.tasks.heading }}</h2>
+  {% for card in taskCards %}
+    <div
+      class="app-regulator-card"
+      data-testid="regulator-home-card-{{ card.key }}"
+    >
+      <div class="app-regulator-card__title-row">
+        <h3 class="govuk-heading-s app-regulator-card__title">
+          {{ card.title }}
+        </h3>
+        {{ govukTag({ text: card.tag.text, classes: "govuk-tag--" + card.tag.colour }) }}
+      </div>
+      <p class="govuk-body-s app-regulator-card__description">
+        {{ card.description }}
+      </p>
+      <p class="govuk-body-s govuk-!-margin-bottom-0">
+        <a class="govuk-link" href="{{ card.href }}">{{ card.link }}</a>
+      </p>
+    </div>
+  {% endfor %}
+
+  <h2 class="govuk-heading-m govuk-!-margin-top-8">
+    {{ labels.moreLinks.heading }}
+  </h2>
+  <div
+    class="app-regulator-link-groups"
+    data-testid="regulator-home-link-groups"
+  >
+    {% for group in labels.moreLinks.groups %}
+      <div
+        class="app-regulator-card app-regulator-card--links"
+        data-testid="regulator-home-links-{{ group.key }}"
+      >
+        <h3 class="govuk-heading-s">{{ group.title }}</h3>
+        <ul class="govuk-list govuk-list--spaced govuk-body-s">
+          {% for link in group.links %}
+            <li><a class="govuk-link" href="#">{{ link }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

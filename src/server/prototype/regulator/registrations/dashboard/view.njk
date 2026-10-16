@@ -1,0 +1,99 @@
+{% extends 'layouts/regulator.njk' %}
+{% from "prototypeRegulator/macros.njk" import quickLinks %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  {{ quickLinks(labels.quickLinks.label, quickLinkItems, "regulator-registrations-quick-links") }}
+
+  <h2 class="govuk-heading-m">{{ labels.year.heading }}</h2>
+  <form
+    method="get"
+    action="{{ action }}"
+    data-testid="regulator-registrations-year-form"
+  >
+    {{
+      govukSelect({
+        id: "year",
+        name: "year",
+        label: { text: labels.year.label, classes: "govuk-visually-hidden" },
+        hint: { text: labels.year.hint },
+        items: years,
+        attributes: { "data-testid": "regulator-registrations-year" }
+      })
+    }}
+    {{ govukButton({ text: labels.year.action, classes: "govuk-button--secondary", attributes: { "data-testid": "regulator-registrations-year-submit" } }) }}
+  </form>
+
+  <h2 class="govuk-heading-m">{{ labels.tasks.heading }}</h2>
+  <div
+    class="app-regulator-task-cards"
+    data-testid="regulator-registrations-task-cards"
+  >
+    {% for card in taskCards %}
+      <div
+        class="app-task-card"
+        data-testid="regulator-registrations-card-{{ card.key }}"
+      >
+        <p class="govuk-body-s app-task-card__label">{{ card.label }}</p>
+        <p class="govuk-heading-xl app-task-card__count">{{ card.count }}</p>
+        <a class="govuk-link" href="{{ card.href }}">{{ card.link }}</a>
+      </div>
+    {% endfor %}
+  </div>
+
+  {%- set tabItems = [] -%}
+  {%- for tab in tabs -%}
+    {%- set rows = [] -%}
+    {%- for registrationCase in tab.cases -%}
+      {%- set schemeHtml -%}
+        {%- if registrationCase.scheme != "Direct" -%}
+          <a class="govuk-link" href="#">{{ registrationCase.scheme }}</a>
+        {%- else -%}
+          {{ registrationCase.scheme }}
+        {%- endif -%}
+      {%- endset -%}
+      {%-
+        set rows = (rows.push([
+          { text: registrationCase.producerName },
+          { html: schemeHtml },
+          { text: registrationCase.type },
+          { html: govukTag({ text: registrationCase.statusLabel, classes: "govuk-tag--" + registrationCase.statusColour }) },
+          { text: registrationCase.dueOn | formatDate('d MMM yyyy') },
+          { html: registrationCase.previousYears | join("<br>") | safe },
+          { html: '<a class="govuk-link" href="#">' + labels.cases.viewLink + '<span class="govuk-visually-hidden"> ' + registrationCase.producerName + '</span></a>' }
+        ]), rows)
+      -%}
+    {%- endfor -%}
+    {%- set panelHtml -%}
+      <h2 class="govuk-heading-l">{{ labels.cases.heading }}</h2>
+      {{
+        govukTable({
+          head: [
+            { text: labels.cases.columns.producer },
+            { text: labels.cases.columns.scheme },
+            { text: labels.cases.columns.type },
+            { text: labels.cases.columns.status },
+            { text: labels.cases.columns.dueDate },
+            { text: labels.cases.columns.previousYears },
+            { text: labels.cases.columns.case }
+          ],
+          rows: rows,
+          attributes: { "data-testid": "regulator-registrations-table-" + tab.key }
+        })
+      }}
+    {%- endset -%}
+    {%-
+      set tabItems = (tabItems.push({
+        label: tab.label + " (" + tab.cases.length + ")",
+        id: "registrations-" + tab.key,
+        panel: { html: panelHtml }
+      }), tabItems)
+    -%}
+  {%- endfor -%}
+
+  {{ govukTabs({ idPrefix: "registrations", items: tabItems, attributes: { "data-testid": "regulator-registrations-tabs" } }) }}
+{% endblock %}

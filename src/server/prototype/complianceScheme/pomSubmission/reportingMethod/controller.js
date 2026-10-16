@@ -85,7 +85,10 @@ export const reportingMethodController = {
               year,
               quarter
             })
-          : null
+          : pathFor(
+              paths.prototypeComplianceSchemeSubmissionSingleMemberDetails,
+              { year, quarter }
+            )
 
       return h.view(
         'prototype/complianceScheme/pomSubmission/reportingMethod/view',

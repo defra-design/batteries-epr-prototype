@@ -1,0 +1,30 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{#- Running totals per category. Shared by the small operator threshold
+    screen and the waste returns account home. -#}
+{% macro abtoTotalsTable(rows, columns, testId) %}
+  {%- set tableRows = [] -%}
+  {%- for row in rows -%}
+    {%- set statusHtml -%}
+      {{ govukTag({ text: row.statusText, classes: "govuk-tag--" + row.statusColour }) }}
+    {%- endset -%}
+    {%- set tableRows = (tableRows.push([
+      { text: row.name },
+      { text: row.threshold },
+      { text: row.total },
+      { html: statusHtml }
+    ]), tableRows) -%}
+  {%- endfor -%}
+
+  {{ govukTable({
+    head: [
+      { text: columns.category },
+      { text: columns.threshold },
+      { text: columns.total },
+      { text: columns.status }
+    ],
+    rows: tableRows,
+    attributes: { "data-testid": testId }
+  }) }}
+{% endmacro %}

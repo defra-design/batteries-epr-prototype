@@ -1,0 +1,83 @@
+{% extends 'layouts/regulator.njk' %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block hero %}
+  {{ govukBreadcrumbs({ items: breadcrumbs, classes: "app-regulator-breadcrumbs" }) }}
+  <h1 class="govuk-heading-xl app-regulator-hero__heading">
+    {{ heading }}
+    {{ govukTag({ text: statusTag, classes: "govuk-tag--blue app-regulator-hero__tag", attributes: { "data-testid": "review-status-tag" } }) }}
+  </h1>
+  <p class="govuk-body-l app-regulator-hero__intro">{{ intro }}</p>
+{% endblock %}
+
+{% block content %}
+  {% if errorSummary and errorSummary.length %}
+    {{ govukErrorSummary({ titleText: labels.errorTitle, errorList: errorSummary, attributes: { "data-testid": "review-error-summary" } }) }}
+  {% endif %}
+
+  <h2 class="govuk-heading-l">{{ labels.organisationHeading }}</h2>
+  {{ govukSummaryList({ rows: organisationRows, attributes: { "data-testid": "review-organisation" } }) }}
+
+  <h2 class="govuk-heading-l">{{ labels.signatoryHeading }}</h2>
+  {{ govukSummaryList({ rows: signatoryRows, attributes: { "data-testid": "review-signatory" } }) }}
+
+  <h2 class="govuk-heading-l">{{ labels.superUserHeading }}</h2>
+  {{ govukSummaryList({ rows: superUserRows, attributes: { "data-testid": "review-super-user" } }) }}
+
+  <div class="app-regulator-notes" data-testid="review-checks">
+    <h2 class="govuk-heading-m">{{ labels.checksHeading }}</h2>
+    <ul class="govuk-list app-regulator-check-list">
+      {% for check in labels.checks %}
+        <li class="app-regulator-check-list__item">
+          <span class="govuk-body-s govuk-!-margin-bottom-0">{{ check }}</span>
+          {{ govukTag({ text: labels.passed, classes: "govuk-tag--green" }) }}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <h2 class="govuk-heading-l">{{ labels.decisionHeading }}</h2>
+  <p class="govuk-body">{{ labels.decisionIntro }}</p>
+
+  <form
+    method="post"
+    action="{{ action }}"
+    novalidate
+    data-testid="review-decision-form"
+  >
+    {{
+      govukTextarea({
+        id: "reason",
+        name: "reason",
+        label: { text: labels.reasonLabel, classes: "govuk-label--m" },
+        hint: { text: labels.reasonHint },
+        rows: 4,
+        value: formValues.reason,
+        errorMessage: { text: errors.reason } if errors.reason,
+        attributes: { "data-testid": "review-reason" }
+      })
+    }}
+    {{
+      govukCheckboxes({
+        name: "confirm",
+        errorMessage: { text: errors.confirm } if errors.confirm,
+        items: [{
+          value: "yes",
+          text: labels.confirmLabel,
+          checked: formValues.confirm,
+          attributes: { "data-testid": "review-confirm" }
+        }]
+      })
+    }}
+    <div class="govuk-button-group">
+      {{ govukButton({ text: labels.reject, name: "decision", value: "reject", classes: "govuk-button--secondary", preventDoubleClick: true, attributes: { "data-testid": "review-reject" } }) }}
+      {{ govukButton({ text: labels.approve, name: "decision", value: "approve", preventDoubleClick: true, attributes: { "data-testid": "review-approve" } }) }}
+    </div>
+  </form>
+{% endblock %}

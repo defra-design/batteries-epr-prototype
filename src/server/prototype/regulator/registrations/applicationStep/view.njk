@@ -1,0 +1,113 @@
+{% extends 'layouts/regulator.njk' %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block hero %}
+  {{ govukBreadcrumbs({ items: breadcrumbs, classes: "app-regulator-breadcrumbs" }) }}
+  <h1 class="govuk-heading-xl app-regulator-hero__heading">
+    {{ heading }}
+    {{ govukTag({ text: headingTag.text, classes: "govuk-tag--" + headingTag.colour + " app-regulator-hero__tag", attributes: { "data-testid": "application-step-result" } }) }}
+  </h1>
+  <p class="govuk-body-l app-regulator-hero__intro">{{ intro }}</p>
+{% endblock %}
+
+{% block content %}
+  {% if errorSummary and errorSummary.length %}
+    {{ govukErrorSummary({ titleText: labels.errorTitle, errorList: errorSummary, attributes: { "data-testid": "application-step-error-summary" } }) }}
+  {% endif %}
+
+  <h2 class="govuk-heading-l">{{ labels.detailsHeading }}</h2>
+  {{ govukSummaryList({ rows: details, attributes: { "data-testid": "application-step-details" } }) }}
+
+  <h2 class="govuk-heading-l">{{ labels.checksHeading }}</h2>
+  {% if warning %}
+    {{ govukWarningText({ text: warning, iconFallbackText: "Warning", attributes: { "data-testid": "application-step-warning" } }) }}
+  {% endif %}
+  <ul
+    class="govuk-list app-regulator-check-list"
+    data-testid="application-step-checks"
+  >
+    {% for check in checks %}
+      <li class="app-regulator-check-list__item">
+        <div>
+          <p
+            class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1"
+          >
+            {{ check.title }}
+          </p>
+          <p
+            class="govuk-body-s govuk-!-margin-bottom-0 app-regulator-check-list__detail"
+          >
+            {{ check.detail }}
+          </p>
+        </div>
+        {{ govukTag({ text: check.tag.text, classes: "govuk-tag--" + check.tag.colour }) }}
+      </li>
+    {% endfor %}
+  </ul>
+
+  <form
+    method="post"
+    action="{{ action }}"
+    novalidate
+    data-testid="application-step-form"
+  >
+    <h2 class="govuk-heading-l">{{ labels.confirmHeading }}</h2>
+    <p class="govuk-body">{{ labels.confirmIntro }}</p>
+    {{
+      govukCheckboxes({
+        name: "checked",
+        items: [{
+          value: "yes",
+          text: labels.confirmLabel,
+          checked: checked,
+          attributes: { "data-testid": "application-step-checked" }
+        }]
+      })
+    }}
+
+    <div class="app-regulator-notes" data-testid="application-step-notes">
+      <h2 class="govuk-heading-l">{{ labels.notesHeading }}</h2>
+      <p class="govuk-body">{{ notesIntro }}</p>
+      {% if notes.length %}
+        <ul
+          class="govuk-list govuk-list--bullet"
+          data-testid="application-step-note-list"
+        >
+          {% for note in notes %}<li>{{ note }}</li>{% endfor %}
+        </ul>
+      {% else %}
+        <p class="govuk-body">{{ labels.noNotes }}</p>
+      {% endif %}
+      {{
+        govukTextarea({
+          id: "note",
+          name: "note",
+          label: { text: labels.noteLabel, classes: "govuk-visually-hidden" },
+          value: noteText,
+          rows: 4,
+          errorMessage: { text: errors.note } if errors.note,
+          attributes: { "data-testid": "application-step-note" }
+        })
+      }}
+      {{ govukButton({ text: labels.addNote, name: "action", value: "addNote", classes: "govuk-button--secondary", preventDoubleClick: true, attributes: { "data-testid": "application-step-add-note" } }) }}
+    </div>
+
+    <div class="govuk-button-group">
+      {{ govukButton({ text: labels.saveAndContinue, name: "action", value: "save", preventDoubleClick: true, attributes: { "data-testid": "application-step-save" } }) }}
+      <a
+        class="govuk-button govuk-button--secondary"
+        href="{{ backHref }}"
+        data-module="govuk-button"
+        data-testid="application-step-back"
+        >{{ labels.backToChecks }}</a
+      >
+    </div>
+  </form>
+{% endblock %}

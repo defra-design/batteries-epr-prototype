@@ -1,0 +1,132 @@
+{% extends 'layouts/regulator.njk' %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
+{% block content %}
+  {% if errorSummary and errorSummary.length %}
+    {{ govukErrorSummary({ titleText: labels.decision.errorTitle, errorList: errorSummary, attributes: { "data-testid": "application-error-summary" } }) }}
+  {% endif %}
+
+  <p class="govuk-body">
+    <a
+      class="govuk-link"
+      href="{{ reviewHref }}"
+      data-testid="application-review-link"
+      >{{ labels.decision.reviewLink }}</a
+    >
+  </p>
+
+  <h2 class="govuk-heading-l" id="application-checks">
+    {{ labels.checks.heading }}
+  </h2>
+  <p class="govuk-body" data-testid="application-progress">{{ progress }}</p>
+  {% if errors.steps %}
+    <p class="govuk-error-message" data-testid="application-steps-error">
+      <span class="govuk-visually-hidden">Error:</span> {{ errors.steps }}
+    </p>
+  {% endif %}
+
+  <table
+    class="govuk-table app-regulator-checks"
+    data-testid="application-checks-table"
+  >
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">
+          {{ labels.checks.columns.step }}
+        </th>
+        <th scope="col" class="govuk-table__header">
+          {{ labels.checks.columns.result }}
+        </th>
+        <th scope="col" class="govuk-table__header">
+          {{ labels.checks.columns.check }}
+        </th>
+        <th
+          scope="col"
+          class="govuk-table__header govuk-table__header--numeric"
+        >
+          {{ labels.checks.columns.notes }}
+        </th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      {% for step in steps %}
+        <tr
+          class="govuk-table__row"
+          data-testid="application-step-row-{{ step.number }}"
+        >
+          <td class="govuk-table__cell">
+            <a
+              class="govuk-link"
+              href="{{ step.href }}"
+              data-testid="application-step-link-{{ step.number }}"
+              >{{ step.number }}. {{ step.title }}</a
+            >
+            <p class="govuk-body-s app-regulator-checks__summary">
+              {{ step.summary }}
+            </p>
+          </td>
+          <td class="govuk-table__cell">
+            {{ govukTag({ text: step.result.text, classes: "govuk-tag--" + step.result.colour }) }}
+          </td>
+          <td class="govuk-table__cell">
+            {% if step.checked %}
+              {{ govukTag({ text: labels.checks.checked, classes: "govuk-tag--blue" }) }}
+            {% else %}
+              {{ govukTag({ text: labels.checks.notChecked, classes: "govuk-tag--grey" }) }}
+            {% endif %}
+          </td>
+          <td class="govuk-table__cell govuk-table__cell--numeric">
+            {{ step.noteCount }}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2 class="govuk-heading-l">{{ labels.decision.heading }}</h2>
+  <p class="govuk-body">{{ decision.intro }}</p>
+
+  <form
+    method="post"
+    action="{{ decision.action }}"
+    novalidate
+    data-testid="application-decision-form"
+  >
+    {{
+      govukTextarea({
+        id: "reason",
+        name: "reason",
+        label: { text: labels.decision.reasonLabel, classes: "govuk-label--m", isPageHeading: false },
+        hint: { text: decision.reasonHint },
+        rows: 2,
+        value: formValues.reason,
+        errorMessage: { text: errors.reason } if errors.reason,
+        attributes: { "data-testid": "application-decision-reason" }
+      })
+    }}
+
+    {% if allChecked %}
+      {{
+        govukCheckboxes({
+          name: "confirm",
+          errorMessage: { text: errors.confirm } if errors.confirm,
+          items: [{
+            value: "yes",
+            text: decision.confirmLabel,
+            checked: formValues.confirm,
+            attributes: { "data-testid": "application-decision-confirm" }
+          }]
+        })
+      }}
+    {% endif %}
+
+    <div class="govuk-button-group">
+      {{ govukButton({ text: labels.decision.reject, name: "decision", value: "reject", classes: "govuk-button--secondary", preventDoubleClick: true, attributes: { "data-testid": "application-decision-reject" } }) }}
+      {{ govukButton({ text: labels.decision.approve, name: "decision", value: "approve", preventDoubleClick: true, attributes: { "data-testid": "application-decision-approve" } }) }}
+    </div>
+  </form>
+{% endblock %}
