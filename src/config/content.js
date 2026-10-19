@@ -13,20 +13,21 @@ export const content = {
   landing: (request) =>
     getContentForLanguage(request, {
       en: {
-        title: 'Battery EPR prototypes',
-        heading: 'Battery EPR prototypes',
-        intro: 'Choose an area to explore.',
+        title: 'Battery EPR alpha prototypes',
+        heading: 'Battery EPR alpha prototypes',
+        intro:
+          'Built and tested during alpha, from May to September 2026. Kept for reference while private beta journeys are built in a new prototype. Choose an area to explore.',
         areas: {
           playground: {
-            title: 'Playground',
+            title: 'Alpha playground',
             description:
               'The full end-to-end walkthrough of the Battery Extended Producer Responsibility service journeys for producers, compliance schemes, treatment operators and regulators.',
             linkText: 'Open the playground'
           },
           prototype: {
-            title: 'Prototype',
+            title: 'Alpha playground',
             description:
-              'New design prototypes being explored, starting with the small producer registration journey.',
+              'New design prototypes being explored, starting with the small producer registDesign prototypes tested in alpha research, including small producer registration and the regulator journeys.',
             linkText: 'Open the prototypes'
           },
           bcsRegistrationWalkthrough: {
@@ -63,10 +64,10 @@ export const content = {
   prototype: (request) =>
     getContentForLanguage(request, {
       en: {
-        title: 'Prototype',
-        heading: 'Prototype',
+        title: 'Battery EPR alpha prototype',
+        heading: 'Battery EPR alpha prototype',
         intro:
-          'This area is where new Battery EPR design prototypes will be built.',
+          'This area is where new Battery EPR design prototyDesign prototypes built and tested during alpha. New private beta journeys are being built in a separate prototype.',
         personas: {
           producer: 'Producer',
           complianceScheme: 'Compliance scheme',
@@ -240,7 +241,7 @@ export const content = {
             figmaHref: 'https://www.figma.com/design/bYwqXLtafJh9OGWE9J7hqd/BCS'
           }
         },
-        backLinkText: 'Back to Battery EPR prototypes'
+        backLinkText: 'Back to Battery EPR alpha prototypes'
       },
       cy: {
         title: 'TODO welsh',
@@ -396,8 +397,8 @@ export const content = {
   playground: (request) =>
     getContentForLanguage(request, {
       en: {
-        title: 'Battery EPR Playground',
-        heading: 'Battery EPR Playground',
+        title: 'Battery EPR alpha playground',
+        heading: 'Battery EPR alpha playground',
         intro:
           'A walkthrough of the new Battery Extended Producer Responsibility service journeys.',
         prototypeBanner:
