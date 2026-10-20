@@ -17,6 +17,7 @@
     "frontend:watch": "NODE_ENV=development webpack --watch",
     "git:pre-commit-hook": "npm run format:check && npm run lint && npm run test-long-timeout",
     "postinstall": "npm run setup:husky",
+    "test:a11y": "playwright test",
     "lint": "run-s lint:js lint:scss",
     "lint:js": "eslint .",
     "lint:js:fix": "eslint . --fix",
@@ -60,7 +61,9 @@
     "pino-pretty": "13.0.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@babel/preset-env": "7.27.2",
+    "@playwright/test": "1.63.0",
     "@testing-library/dom": "10.4.1",
     "@testing-library/jest-dom": "6.9.1",
     "@vitest/coverage-v8": "4.1.10",

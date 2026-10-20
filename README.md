@@ -1,5 +1,7 @@
 # batteries-epr-prototype
 
+> **Alpha prototype.** Built and tested during alpha (May to September 2026) and kept for reference. Private beta journeys are being built in a separate repository.
+
 > **This is a prototype.** No backend. All persistence lives in the browser via `localStorage`. Refresh the page in a different browser or incognito session and you start over. This service is for validating user journeys, copy, and the data model on screen — not for handling real producer data.
 
 A GDS-pattern Hapi.js + Nunjucks frontend that reproduces the producer-facing journeys from legacy NPWD for the Waste Batteries and Accumulators Regulations 2009.

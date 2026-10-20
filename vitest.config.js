@@ -8,6 +8,7 @@ export default defineConfig({
     testTimeout: 20000,
     hookTimeout: 30000,
     maxWorkers: 4,
+    exclude: [...configDefaults.exclude, 'src/test/accessibility/**'],
     coverage: {
       provider: 'v8',
       reportsDirectory: './coverage',
@@ -16,6 +17,7 @@ export default defineConfig({
       exclude: [
         ...configDefaults.exclude,
         'src/test-utils',
+        'src/test/accessibility',
         'src/index.js',
         'src/client/javascripts/application.js',
         'src/client/javascripts/**/entry.js',

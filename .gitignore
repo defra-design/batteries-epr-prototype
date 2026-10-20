@@ -15,3 +15,7 @@ scratch/
 
 
 .pnpm-store
+
+playwright-report/
+test-results/
+src/test/accessibility/.auth/
