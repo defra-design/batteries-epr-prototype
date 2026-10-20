@@ -1,53 +1,63 @@
-{% extends 'layouts/page.njk' %}
-
+{% extends 'layouts/regulator.njk' %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/tag/macro.njk" import govukTag %}
 
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      <h1 class="govuk-heading-xl">{{ heading }}</h1>
-      <p class="govuk-body" data-testid="scheme-submissions-scheme-name">{{ scheme.name }} · {{ scheme.npwdRef }}</p>
-      <p class="govuk-body">Every quarter is decided on its own. A queried or rejected quarter does not block the ones after it.</p>
+  <p class="govuk-body">{{ summary }}</p>
 
-      {% for yearGroup in years %}
-        <h2 class="govuk-heading-l">{{ yearGroup.year }}</h2>
+  {% for yearGroup in years %}
+    <h2 class="govuk-heading-l">{{ yearGroup.year }}</h2>
 
-        {% set submissionRows = [] %}
-        {% for submission in yearGroup.submissions %}
-          {% set viewCellHtml %}
-            <a class="govuk-link" href="#" data-testid="scheme-submissions-view-{{ submission.periodLabel | lower | replace(' ', '-') | replace('(', '') | replace(')', '') }}">{{ labels.viewAction }}</a>
-          {% endset %}
-          {% set submissionRows = (submissionRows.push([
-            { text: submission.periodLabel },
-            { text: (submission.submittedOn | formatDate('d MMMM yyyy')) if submission.submittedOn else "–" },
-            { text: submission.filesCount },
-            { html: govukTag({ text: submission.statusLabel, classes: "govuk-tag--" + submission.statusColour }) | safe },
-            { text: submission.decided },
-            { html: viewCellHtml }
-          ]), submissionRows) %}
-        {% endfor %}
+    {% set submissionRows = [] %}
+    {% for submission in yearGroup.submissions %}
+      {% set viewCellHtml %}
+        <a class="govuk-link" href="#" data-testid="scheme-submissions-view-{{ submission.id }}">{{ labels.viewAction }}<span class="govuk-visually-hidden"> {{ submission.periodLabel }}</span></a>
+      {% endset %}
+      {% set submissionRows = (submissionRows.push([
+        { text: submission.periodLabel },
+        { text: (submission.submittedOn | formatDate('d MMMM yyyy')) if submission.submittedOn else "–" },
+        { text: submission.filesCount },
+        { html: govukTag({ text: submission.statusLabel, classes: "govuk-tag--" + submission.statusColour }) },
+        { text: submission.decided },
+        { html: viewCellHtml }
+      ]), submissionRows) %}
+    {% endfor %}
 
-        {{ govukTable({
-          head: [
-            { text: labels.columns.quarter },
-            { text: labels.columns.submitted },
-            { text: labels.columns.files },
-            { text: labels.columns.decision },
-            { text: labels.columns.decided },
-            { text: "" }
-          ],
-          rows: submissionRows,
-          attributes: { "data-testid": "scheme-submissions-table-" + yearGroup.year }
-        }) }}
-      {% endfor %}
+    {{ govukTable({
+      head: [
+        { text: labels.columns.quarter },
+        { text: labels.columns.submitted },
+        { text: labels.columns.files },
+        { text: labels.columns.decision },
+        { text: labels.columns.decided },
+        { html: '<span class="govuk-visually-hidden">Action</span>' }
+      ],
+      rows: submissionRows,
+      attributes: { "data-testid": "scheme-submissions-table-" + yearGroup.year }
+    }) }}
+  {% endfor %}
 
-      <p class="govuk-body">
-        <a class="govuk-link" href="#" data-testid="scheme-submissions-download">{{ labels.downloadLink }}</a>
-      </p>
-      <p class="govuk-body">
-        <a class="govuk-link" href="#" data-testid="scheme-submissions-timeline">{{ labels.timelineLink }}</a>
-      </p>
-    </div>
-  </div>
+  <h2 class="govuk-heading-m">{{ labels.windows.heading }}</h2>
+  <p class="govuk-hint">{{ labels.windows.hint }}</p>
+  {% set windowRows = [] %}
+  {% for window in windows %}
+    {% set windowRows = (windowRows.push([
+      { text: window.period, classes: "govuk-!-font-weight-bold" },
+      { text: window.description },
+      { html: govukTag({ text: window.tag.text, classes: "govuk-tag--" + window.tag.colour }) }
+    ]), windowRows) %}
+  {% endfor %}
+  {{ govukTable({
+    firstCellIsHeader: true,
+    caption: labels.windows.heading,
+    captionClasses: "govuk-visually-hidden",
+    rows: windowRows,
+    attributes: { "data-testid": "scheme-submissions-windows" }
+  }) }}
+
+  <ul class="govuk-list">
+    <li><a class="govuk-link" href="#" data-testid="scheme-submissions-download">{{ labels.downloadLink }}</a></li>
+    <li><a class="govuk-link" href="#" data-testid="scheme-submissions-history">{{ labels.historyLink }}</a></li>
+    <li><a class="govuk-link" href="{{ homeLink.href }}" data-testid="scheme-submissions-home-link">{{ homeLink.text }}</a></li>
+  </ul>
 {% endblock %}

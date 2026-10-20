@@ -1,21 +1,6 @@
-// Content for the regulator "BCS registration — regulator sends
-// pre-registration link" journey. `layout` feeds the shared regulator layout
-// (layouts/regulator.njk) that every regulator screen in this styling uses.
-export const PROTOTYPE_REGULATOR_SERVICE_NAME = 'pEPR: Regulator'
-
+// Content for the regulator registrations journeys. The shared regulator
+// layout's own content lives in prototype-regulator-layout-content.js.
 export const prototypeRegulatorRegistrationsContent = {
-  layout: {
-    logoAlt: 'Department for Environment Food & Rural Affairs',
-    navigationLabel: 'Service navigation',
-    navigation: {
-      registrations: 'Registrations',
-      pomSubmissions: 'PoM submissions',
-      complianceSchemes: 'Compliance schemes',
-      manageAccount: 'Manage account'
-    },
-    resetData: 'Reset data'
-  },
-
   signIn: {
     title: 'Sign in',
     heading: 'Sign in'

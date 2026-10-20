@@ -16,6 +16,106 @@ let submissions = structuredClone(seedData.prototypeRegulatorSchemeSubmissions)
 // scheme sees exactly the records the regulator queried.
 let memberFigures = structuredClone(seedData.prototypeRegulatorMemberFigures)
 
+// Records the regulator has queried, each answered ("responded") or still
+// "awaiting" the scheme. Used by the dashboard counts and the queried records
+// screen.
+let queriedRecords = structuredClone(seedData.prototypeRegulatorQueriedRecords)
+
+export const getQueriedRecords = () => queriedRecords
+
+// Uploads the service rejected at validation before the scheme corrected them.
+// Read-only: used by the scheme home row and the failed validation screen.
+export const getFailedUploads = () => seedData.prototypeRegulatorFailedUploads
+
+// Figures the service flagged on a return (read-only prompts to look, not
+// errors), and the regulator's private notes on a return.
+export const getFlags = () => seedData.prototypeRegulatorFlags
+
+let submissionNotes = structuredClone(
+  seedData.prototypeRegulatorSubmissionNotes
+)
+
+export const getSubmissionNote = (schemeId, year, quarter) =>
+  submissionNotes.find(
+    (entry) =>
+      entry.schemeId === schemeId &&
+      entry.compliancePeriodYear === year &&
+      entry.quarter === quarter
+  )?.note ?? ''
+
+export const saveSubmissionNote = (schemeId, year, quarter, note) => {
+  const existing = submissionNotes.find(
+    (entry) =>
+      entry.schemeId === schemeId &&
+      entry.compliancePeriodYear === year &&
+      entry.quarter === quarter
+  )
+  if (existing) {
+    existing.note = note
+  } else {
+    submissionNotes.push({
+      id: `note-${schemeId}-${year}-${quarter}`,
+      schemeId,
+      compliancePeriodYear: year,
+      quarter,
+      note
+    })
+  }
+}
+
+// The producer figures on a return, with the previous quarter and the same
+// quarter last year for comparison. Read-only.
+export const getProducerFigures = () =>
+  seedData.prototypeRegulatorProducerFigures
+
+// Queries the regulator has drafted against producers. Nothing reaches the
+// scheme until the regulator confirms "Send queries to the scheme".
+let draftQueries = structuredClone(seedData.prototypeRegulatorDraftQueries)
+
+export const getDraftQueries = () => draftQueries
+
+export const removeDraftQuery = (id) => {
+  draftQueries = draftQueries.filter((query) => query.id !== id)
+}
+
+// Turns the drafts for a return into sent queries: each becomes a queried
+// record awaiting the scheme's response.
+export const sendDraftQueries = (schemeId, year, quarter, queriedOn) => {
+  const forReturn = (query) =>
+    query.schemeId === schemeId &&
+    query.compliancePeriodYear === year &&
+    query.quarter === quarter
+  const sending = draftQueries.filter(forReturn)
+  const figures = getProducerFigures()
+
+  for (const query of sending) {
+    const figure = figures.find(
+      (entry) =>
+        entry.schemeId === schemeId &&
+        entry.compliancePeriodYear === year &&
+        entry.quarter === quarter &&
+        entry.producer === query.producer
+    )
+    queriedRecords.push({
+      id: `sent-${query.id}`,
+      schemeId,
+      compliancePeriodYear: year,
+      quarter,
+      member: query.producer,
+      chemistry: figure?.chemistry,
+      originalTonnes: figure?.figureTonnes,
+      queriedOn,
+      reason: query.text,
+      status: 'awaiting',
+      respondedOn: null,
+      response: null,
+      correctedTonnes: null
+    })
+  }
+  draftQueries = draftQueries.filter((query) => !forReturn(query))
+  return sending.length
+}
+
 export const getSubmissions = () => submissions
 
 export const getMemberFigures = () => memberFigures
@@ -40,4 +140,7 @@ export const updateSubmission = (id, changes) => {
 export const resetStore = () => {
   submissions = structuredClone(seedData.prototypeRegulatorSchemeSubmissions)
   memberFigures = structuredClone(seedData.prototypeRegulatorMemberFigures)
+  queriedRecords = structuredClone(seedData.prototypeRegulatorQueriedRecords)
+  submissionNotes = structuredClone(seedData.prototypeRegulatorSubmissionNotes)
+  draftQueries = structuredClone(seedData.prototypeRegulatorDraftQueries)
 }

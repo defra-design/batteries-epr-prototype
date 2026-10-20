@@ -5,6 +5,8 @@
 {% extends "govuk/template.njk" %}
 
 {% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
 
 {% block head %}
   <link href="{{ getAssetPath('stylesheets/application.scss') }}" rel="stylesheet" />
@@ -42,10 +44,16 @@
   <div class="app-regulator-hero" data-testid="regulator-hero">
     <div class="govuk-width-container">
       {% block hero %}
+        {% if backLink %}
+          {{ govukBackLink({ text: backLink.text, href: backLink.href, classes: "app-regulator-back-link", attributes: { "data-testid": "back-link" } }) }}
+        {% endif %}
         {% if breadcrumbs.length > 1 %}
           {{ govukBreadcrumbs({ items: breadcrumbs, classes: "app-regulator-breadcrumbs" }) }}
         {% endif %}
-        <h1 class="govuk-heading-xl app-regulator-hero__heading">{{ heading }}</h1>
+        <h1 class="govuk-heading-xl app-regulator-hero__heading">
+          {{- heading -}}
+          {%- if headingTag %} {{ govukTag({ text: headingTag.text, classes: "govuk-tag--" + headingTag.colour + " app-regulator-hero__tag", attributes: { "data-testid": "heading-tag" } }) }}{% endif -%}
+        </h1>
         {% if intro %}
           <p class="govuk-body-l app-regulator-hero__intro">{{ intro }}</p>
         {% endif %}

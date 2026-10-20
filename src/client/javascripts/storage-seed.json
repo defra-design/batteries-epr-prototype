@@ -1854,7 +1854,24 @@
       "id": "copper-and-co-compliance",
       "name": "Copper & Co Compliance",
       "npwdRef": "NPWD378131",
-      "approvalNumber": "NPWD-APR-2026-0161"
+      "approvalNumber": "NPWD-APR-2026-0161",
+      "approvedOn": "2026-02-03",
+      "approvalExpires": "2027-02-02",
+      "approvedBy": "R. Patel",
+      "companyName": "Copper & Co Compliance Ltd",
+      "companyRegistrationNo": "13560471",
+      "registeredOffice": "Unit 9, Canal Wharf, Birmingham, B5 4TL",
+      "tradingAddress": "Unit 9, Canal Wharf, Birmingham, B5 4TL",
+      "website": "https://copperandco.example",
+      "authorisedSignatory": {
+        "name": "Ruth Adeyemi",
+        "email": "ruth.adeyemi@copperandco.example"
+      },
+      "superUser": {
+        "name": "Tom Blake",
+        "email": "tom.blake@copperandco.example"
+      },
+      "accountManager": "A. Nwosu"
     },
     {
       "id": "brightcell-compliance",
@@ -1893,11 +1910,11 @@
       "quarter": "Q1",
       "periodLabel": "Q1 2026",
       "membersCount": 5,
-      "filesCount": 4,
+      "filesCount": 3,
       "status": "accepted",
       "issuesFound": 0,
       "submittedBy": "Michael Osei",
-      "submittedOn": "2026-05-01T09:00:00Z",
+      "submittedOn": "2026-04-28T09:00:00Z",
       "decidedOn": "2026-05-06",
       "decidedBy": "A. Nwosu",
       "totalPlacedOnMarketTonnes": 598410,
@@ -1914,9 +1931,9 @@
       "status": "accepted",
       "issuesFound": 0,
       "submittedBy": null,
-      "submittedOn": "2026-01-31T00:00:00Z",
-      "decidedOn": "2026-02-10",
-      "decidedBy": "R. Patel",
+      "submittedOn": "2026-01-29T00:00:00Z",
+      "decidedOn": "2026-02-09",
+      "decidedBy": "A. Nwosu",
       "totalPlacedOnMarketTonnes": 587220,
       "swingCategories": []
     },
@@ -1927,11 +1944,11 @@
       "quarter": "Q3",
       "periodLabel": "Q3 2025",
       "membersCount": 5,
-      "filesCount": 3,
-      "status": "rejected",
-      "issuesFound": null,
+      "filesCount": 4,
+      "status": "accepted",
+      "issuesFound": 0,
       "submittedBy": null,
-      "submittedOn": "2025-10-31T00:00:00Z",
+      "submittedOn": "2025-10-30T00:00:00Z",
       "decidedOn": "2025-11-12",
       "decidedBy": "R. Patel",
       "totalPlacedOnMarketTonnes": 571050,
@@ -1943,7 +1960,7 @@
       "compliancePeriodYear": "2026",
       "quarter": "Q2",
       "periodLabel": "Q2 2026",
-      "membersCount": 8,
+      "membersCount": 24,
       "filesCount": 3,
       "status": "accepted",
       "issuesFound": 0,
@@ -1973,12 +1990,14 @@
       "compliancePeriodYear": "2026",
       "quarter": "Q2",
       "periodLabel": "Q2 2026",
-      "membersCount": null,
-      "filesCount": null,
-      "status": "notYetSubmitted",
-      "issuesFound": null,
-      "submittedBy": null,
-      "submittedOn": null,
+      "membersCount": 8,
+      "filesCount": 3,
+      "recordsCount": 248,
+      "status": "queried",
+      "issuesFound": 2,
+      "submittedBy": "Tom Blake",
+      "submittedOn": "2026-08-01T09:47:00Z",
+      "responseDueOn": "2026-09-09",
       "decidedOn": null,
       "decidedBy": null
     },
@@ -1988,14 +2007,14 @@
       "compliancePeriodYear": "2026",
       "quarter": "Q2",
       "periodLabel": "Q2 2026",
-      "membersCount": 4,
+      "membersCount": 3,
       "filesCount": 3,
-      "status": "received",
-      "issuesFound": 1,
+      "status": "accepted",
+      "issuesFound": 0,
       "submittedBy": null,
-      "submittedOn": "2026-08-07T11:00:00Z",
-      "decidedOn": null,
-      "decidedBy": null
+      "submittedOn": "2026-07-31T11:00:00Z",
+      "decidedOn": "2026-08-06",
+      "decidedBy": "R. Patel"
     },
     {
       "id": "88888888-0001-4000-a000-000000000009",
@@ -2164,29 +2183,6 @@
       "previousYears": ["2025: Registered", "2024: Registered"]
     }
   ],
-  "prototypeRegulatorDataCheckFindings": [
-    {
-      "id": "ffffffff-0001-4000-a000-000000000001",
-      "schemeId": "ironwave-compliance",
-      "member": "GreenLeaf Ltd",
-      "issue": "Lithium-ion figure is 10x higher than same quarter last year",
-      "type": "swing"
-    },
-    {
-      "id": "ffffffff-0001-4000-a000-000000000002",
-      "schemeId": "ironwave-compliance",
-      "member": "Voltguard Ltd",
-      "issue": "Lead-acid figure has no supporting evidence attached",
-      "type": "swing"
-    },
-    {
-      "id": "ffffffff-0001-4000-a000-000000000003",
-      "schemeId": "ironwave-compliance",
-      "member": "Copper & Co Ltd",
-      "issue": "Category code missing on row 14",
-      "type": "validation"
-    }
-  ],
   "prototypeRegulatorMemberFigures": [
     {
       "id": "cccccccc-0001-4000-a000-000000000001",
@@ -2303,6 +2299,7 @@
       "obligationRatePercent": 45,
       "indicativeObligationYear": 2027,
       "indicativeObligationTonnes": 4290,
+      "evidenceAcquiredTonnes": 1850,
       "verified": true
     }
   ],
@@ -2313,6 +2310,7 @@
       "schemeId": "ironwave-compliance",
       "fileName": "IronWave_Q2_2026_members_1-2.csv",
       "membersCovered": 2,
+      "totalTonnes": 343.5,
       "rows": 1204,
       "uploadedOn": "2026-08-06T00:00:00Z",
       "checkStatus": "passed",
@@ -2324,10 +2322,11 @@
       "schemeId": "ironwave-compliance",
       "fileName": "IronWave_Q2_2026_members_3-4.csv",
       "membersCovered": 2,
+      "totalTonnes": 222.273,
       "rows": 986,
       "uploadedOn": "2026-08-06T00:00:00Z",
-      "checkStatus": "passed",
-      "warningsCount": 0
+      "checkStatus": "warnings",
+      "warningsCount": 2
     },
     {
       "id": "eeeeaaaa-0001-4000-a000-000000000003",
@@ -2335,7 +2334,8 @@
       "schemeId": "ironwave-compliance",
       "fileName": "IronWave_Q2_2026_member_5.csv",
       "membersCovered": 1,
-      "rows": 412,
+      "totalTonnes": 57.3,
+      "rows": 449,
       "uploadedOn": "2026-08-08T14:12:00Z",
       "checkStatus": "warnings",
       "warningsCount": 2,
@@ -2346,10 +2346,10 @@
       "flaggedRows": [
         {
           "row": 118,
-          "chemistry": "Lithium-ion",
+          "chemistry": "Other",
           "category": "Light means of transport",
           "figureTonnes": 41.2,
-          "checkLabel": "Swing +410%"
+          "checkLabel": "Variance +410%"
         },
         {
           "row": 276,
@@ -2366,6 +2366,7 @@
       "schemeId": "ironwave-compliance",
       "fileName": "IronWave_Q2_2026_evidence.csv",
       "membersCovered": null,
+      "totalTonnes": null,
       "rows": 18,
       "uploadedOn": "2026-08-08T00:00:00Z",
       "checkStatus": "passed",
@@ -2431,5 +2432,210 @@
         "status": "Accepted"
       }
     ]
-  }
+  },
+  "prototypeRegulatorQueriedRecords": [
+    {
+      "id": "99999999-0001-4000-a000-000000000001",
+      "schemeId": "copper-and-co-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "member": "Northline Power Ltd",
+      "originalTonnes": 128.6,
+      "queriedOn": "2026-08-05",
+      "reason": "Figure is about 1,000x the same quarter in 2025.",
+      "status": "responded",
+      "respondedOn": "2026-08-12",
+      "response": "Member confirmed the figure was entered in kilograms, not tonnes.",
+      "correctedTonnes": 0.129
+    },
+    {
+      "id": "99999999-0001-4000-a000-000000000002",
+      "schemeId": "copper-and-co-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "member": "Halden Cells Ltd",
+      "originalTonnes": 3.1,
+      "queriedOn": "2026-08-05",
+      "reason": "No supporting evidence provided.",
+      "status": "awaiting",
+      "respondedOn": null,
+      "response": null,
+      "correctedTonnes": null
+    }
+  ],
+  "prototypeRegulatorFailedUploads": [
+    {
+      "id": "aaaaaaaa-0001-4000-a000-000000000001",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "fileName": "IronWave_Q2_2026_member_5.csv",
+      "uploadedOn": "2026-08-08T13:58:00Z",
+      "reason": "12 rows reported in kilograms, not tonnes",
+      "outcome": "Corrected and uploaded again",
+      "resolvedOn": "2026-08-08T14:12:00Z"
+    },
+    {
+      "id": "aaaaaaaa-0001-4000-a000-000000000002",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q1",
+      "fileName": "IronWave_Q1_2026_members_1-2.csv",
+      "uploadedOn": "2026-04-14T09:21:00Z",
+      "reason": "Chemistry column missing from the template",
+      "outcome": "Corrected and uploaded again",
+      "resolvedOn": "2026-04-15T11:03:00Z"
+    }
+  ],
+  "prototypeRegulatorFlags": [
+    {
+      "id": "bbbbbbbb-0002-4000-a000-000000000001",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "producer": "GreenLeaf Ltd",
+      "description": "Other: 212.400 t, up 191.160 t (+900%) on Q1 2026 (21.240 t)",
+      "type": "variance"
+    },
+    {
+      "id": "bbbbbbbb-0002-4000-a000-000000000002",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "producer": "Voltguard Ltd",
+      "description": "Lead-acid: 131.100 t — the same tonnage was reported as Other in Q1 2026",
+      "type": "chemistryChange"
+    },
+    {
+      "id": "bbbbbbbb-0002-4000-a000-000000000003",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "producer": "BrightCell Ltd",
+      "description": "Other: up 7.823 t (+4.5%) on Q1 — under the % level but over the tonnage level",
+      "type": "variance"
+    },
+    {
+      "id": "bbbbbbbb-0002-4000-a000-000000000004",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "producer": "Solaris Power Ltd",
+      "description": "Lead-acid: 57.300 t — identical figure for the 4th quarter running",
+      "type": "repeatedFigure"
+    },
+    {
+      "id": "bbbbbbbb-0002-4000-a000-000000000005",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "producer": "BrightCell Ltd",
+      "description": "Other: figure marked as estimated by the scheme",
+      "type": "estimated"
+    }
+  ],
+  "prototypeRegulatorSubmissionNotes": [
+    {
+      "id": "bbbbbbbb-0003-4000-a000-000000000001",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "note": "Evidence doc explains GreenLeaf (new e-bike range). Voltguard chemistry change not explained — query."
+    }
+  ],
+  "prototypeRegulatorProducerFigures": [
+    {
+      "id": "dddddddd-0001-4000-a000-000000000001",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "producer": "GreenLeaf Ltd",
+      "chemistry": "Other",
+      "figureTonnes": 212.4,
+      "lastQuarterTonnes": 21.24,
+      "lastQuarterChemistry": null,
+      "sameQuarterLastYearTonnes": 20.9,
+      "sameQuarterLastYearChemistry": null
+    },
+    {
+      "id": "dddddddd-0001-4000-a000-000000000002",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "producer": "Voltguard Ltd",
+      "chemistry": "Lead-acid",
+      "figureTonnes": 131.1,
+      "lastQuarterTonnes": 131.1,
+      "lastQuarterChemistry": "Other",
+      "sameQuarterLastYearTonnes": 128.0,
+      "sameQuarterLastYearChemistry": "Other"
+    },
+    {
+      "id": "dddddddd-0001-4000-a000-000000000003",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "producer": "Copper & Co",
+      "chemistry": "Ni-Cd",
+      "figureTonnes": 42.0,
+      "lastQuarterTonnes": 44.1,
+      "lastQuarterChemistry": null,
+      "sameQuarterLastYearTonnes": 41.2,
+      "sameQuarterLastYearChemistry": null
+    },
+    {
+      "id": "dddddddd-0001-4000-a000-000000000004",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "producer": "BrightCell Ltd",
+      "chemistry": "Other",
+      "figureTonnes": 180.273,
+      "lastQuarterTonnes": 172.45,
+      "lastQuarterChemistry": null,
+      "sameQuarterLastYearTonnes": 168.9,
+      "sameQuarterLastYearChemistry": null
+    },
+    {
+      "id": "dddddddd-0001-4000-a000-000000000005",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "producer": "Solaris Power",
+      "chemistry": "Lead-acid",
+      "figureTonnes": 57.3,
+      "lastQuarterTonnes": 57.3,
+      "lastQuarterChemistry": null,
+      "sameQuarterLastYearTonnes": 57.3,
+      "sameQuarterLastYearChemistry": null
+    }
+  ],
+  "prototypeRegulatorDraftQueries": [
+    {
+      "id": "dddddddd-0002-4000-a000-000000000001",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "producer": "GreenLeaf Ltd",
+      "text": "Other is up 191.160 t (+900%) on Q1 2026. Please explain the increase or correct the figure."
+    },
+    {
+      "id": "dddddddd-0002-4000-a000-000000000002",
+      "schemeId": "ironwave-compliance",
+      "compliancePeriodYear": "2026",
+      "quarter": "Q2",
+      "producer": "Voltguard Ltd",
+      "text": "The same tonnage was reported as Other in Q1 2026. Please confirm which chemistry is correct."
+    }
+  ],
+  "prototypeRegulatorSupportingEvidence": [
+    {
+      "id": "eeeebbbb-0001-4000-a000-000000000001",
+      "submissionId": "88888888-0001-4000-a000-000000000001",
+      "schemeId": "ironwave-compliance",
+      "fileName": "IronWave_Q2_2026_explanations.docx",
+      "covers": "Nil return (Northfield Cells), trend explanation (Solaris Power), liquidation notice (Halden Cells)",
+      "uploadedOn": "2026-08-08T00:00:00Z"
+    }
+  ]
 }

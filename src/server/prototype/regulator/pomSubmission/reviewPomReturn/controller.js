@@ -1,70 +1,236 @@
 import { createRequire } from 'node:module'
 import Boom from '@hapi/boom'
-import joi from 'joi'
-import { format, parseISO } from 'date-fns'
+import {
+  differenceInCalendarDays,
+  endOfMonth,
+  addMonths,
+  format,
+  parseISO
+} from 'date-fns'
 
 import { paths, pathTo } from '../../../../../config/paths.js'
 import { prototypeRegulatorContent } from '../../../../../config/prototype-regulator-content.js'
 import {
   basePageModel,
-  SCHEMES_WITH_DETAIL_SCREENS_BUILT,
-  findSubmission,
-  buildLockInfo,
   decidedByFor,
-  relatedLinksFor,
-  rejectReasonFlashKey
+  fill,
+  findSubmission,
+  formatDateOnly,
+  formatTonnes3,
+  nextPeriodLabel,
+  normaliseMemberName,
+  rejectReasonFlashKey,
+  SCHEMES_WITH_DETAIL_SCREENS_BUILT
 } from '../shared.js'
-import { updateSubmission } from '../store.js'
+import {
+  formatRespondBy,
+  readRespondBy,
+  respondByFields
+} from '../reviewShared.js'
+import {
+  getDraftQueries,
+  getMemberFigures,
+  getProducerFigures,
+  getQueriedRecords,
+  sendDraftQueries,
+  updateSubmission
+} from '../store.js'
 
 const seedData = createRequire(import.meta.url)(
   '../../../../../client/javascripts/storage-seed.json'
 )
 
-const schema = joi
-  .object({
-    decision: joi.string().valid('accept', 'query', 'reject').required(),
-    reason: joi.string().trim().min(1).required()
+const REASON_MAX_LENGTH = 1000
+const view = 'prototype/regulator/pomSubmission/reviewPomReturn/view'
+
+const reviewPath = ({ schemeId, year, quarter }) =>
+  pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, {
+    schemeId,
+    year,
+    quarter
   })
-  .options({ abortEarly: false, stripUnknown: true })
 
-const formatDateOnly = (isoString) =>
-  /* v8 ignore next */
-  isoString ? format(parseISO(isoString), 'd MMMM yyyy') : null
+// Q1–Q3 lock two months after the quarter's deadline (end of that month).
+const lockDateFor = (submission) =>
+  endOfMonth(addMonths(parseISO(submission.deadlineOn), 2))
 
-const formatDateTime = (isoString) =>
-  /* v8 ignore next */
-  isoString ? format(parseISO(isoString), 'd MMM yyyy, HH:mm') : null
+const whole = (tonnes) => tonnes.toLocaleString('en-GB')
 
-const buildStatusSteps = (pageContent, submission) => [
-  {
-    label: pageContent.statusSteps.submitted,
-    date: formatDateTime(submission.submittedOn)
-  },
-  {
-    label: pageContent.statusSteps.checksPassed,
-    date: formatDateTime(submission.automatedChecksPassedOn)
-  },
-  {
-    label: pageContent.statusSteps.underReview,
-    date: submission.underReviewSince
-      ? `Since ${formatDateOnly(submission.underReviewSince)}`
-      : null
-  },
-  {
-    label: pageContent.statusSteps.decision,
-    date: submission.decidedOn
-      ? formatDateOnly(submission.decidedOn)
-      : pageContent.notDecidedYet
+const figuresFor = (submission) =>
+  getProducerFigures().filter(
+    (figure) =>
+      figure.schemeId === submission.schemeId &&
+      figure.compliancePeriodYear === submission.compliancePeriodYear &&
+      figure.quarter === submission.quarter
+  )
+
+const draftsFor = (submission) =>
+  getDraftQueries().filter(
+    (draft) =>
+      draft.schemeId === submission.schemeId &&
+      draft.compliancePeriodYear === submission.compliancePeriodYear &&
+      draft.quarter === submission.quarter
+  )
+
+const sentQueriesFor = (submission) =>
+  getQueriedRecords().filter(
+    (record) =>
+      record.schemeId === submission.schemeId &&
+      record.compliancePeriodYear === submission.compliancePeriodYear &&
+      record.quarter === submission.quarter
+  )
+
+const buildSummary = (labels, scheme, submission, drafts, sent) => {
+  const copy = labels.summary
+  const figures = figuresFor(submission)
+  const total = figures.reduce((sum, figure) => sum + figure.figureTonnes, 0)
+  const obligation = seedData.prototypeRegulatorIndicativeObligation.find(
+    (entry) => entry.schemeId === submission.schemeId
+  )
+  const remaining =
+    obligation.indicativeObligationTonnes - obligation.evidenceAcquiredTonnes
+  const row = (key, value) => ({ key: { text: key }, value: { text: value } })
+  const assessedBy = () =>
+    fill(labels.assessedByValue, {
+      name: (submission.decidedBy ?? '').split(',')[0],
+      date: formatDateOnly(submission.decidedOn)
+    })
+
+  const totalText = fill(labels.tonnesValue, {
+    amount: formatTonnes3(total)
+  })
+
+  switch (submission.status) {
+    case 'accepted':
+      return [
+        row(copy.totalPlaced, totalText),
+        row(
+          fill(copy.obligation, {
+            year: obligation.indicativeObligationYear
+          }),
+          fill(labels.obligationValue, {
+            amount: whole(obligation.indicativeObligationTonnes),
+            period: submission.periodLabel
+          })
+        ),
+        row(
+          copy.evidence,
+          fill(labels.tonnesValue, {
+            amount: whole(obligation.evidenceAcquiredTonnes)
+          })
+        ),
+        row(
+          copy.remaining,
+          fill(labels.remainingValue, {
+            amount: whole(remaining),
+            percent: Math.round(
+              (remaining / obligation.indicativeObligationTonnes) * 100
+            )
+          })
+        )
+      ].filter(Boolean)
+    case 'queried':
+      return [
+        row(
+          copy.decision,
+          fill(labels.decisionValue.queried, { count: sent.length })
+        ),
+        row(copy.restOfReturn, labels.restOfReturnValue),
+        row(copy.assessedBy, assessedBy()),
+        row(copy.respondBy, formatRespondBy(submission.respondBy) ?? '–')
+      ]
+    case 'rejected':
+      return [
+        row(copy.decision, labels.decisionValue.rejected),
+        submission.rejectionType && row(copy.reason, submission.rejectionType),
+        submission.reason && row(copy.details, submission.reason),
+        submission.respondBy &&
+          row(copy.resubmitBy, formatRespondBy(submission.respondBy)),
+        row(copy.assessedBy, assessedBy())
+      ].filter(Boolean)
+    default:
+      return [
+        row(copy.totalPlaced, totalText),
+        row(
+          copy.producers,
+          fill(labels.producersValue, {
+            included: figures.length,
+            total: seedData.prototypeRegulatorSchemeMembers.filter(
+              (member) => member.schemeId === submission.schemeId
+            ).length
+          })
+        ),
+        row(
+          copy.queries,
+          drafts.length > 0
+            ? fill(labels.draftQueriesValue, {
+                count: drafts.length,
+                producers: drafts.map((draft) => draft.producer).join(', ')
+              })
+            : labels.noDraftQueries
+        ),
+        row(
+          copy.waste,
+          fill(labels.wasteValue, { period: submission.periodLabel })
+        ),
+        row(
+          copy.submittedBy,
+          `${scheme.superUser.name}, ${scheme.superUser.email}`
+        )
+      ]
   }
-]
+}
+
+// The records queried on a return. Queries the regulator sent from this
+// journey are read first; where none exist (the return was queried in the
+// compliance scheme's own seed), the scheme's queried figures stand in, so both
+// sides of the journey list the same records.
+const queriedRowsFor = (labels, submission, sent) => {
+  const figures = getMemberFigures().filter(
+    (figure) => figure.submissionId === submission.id
+  )
+  const correction = (member) =>
+    figures.find(
+      (figure) =>
+        figure.status === 'resubmitted' &&
+        normaliseMemberName(figure.member) === normaliseMemberName(member)
+    )
+
+  if (sent.length > 0) {
+    return sent.map((record) => {
+      const corrected = correction(record.member)
+      return {
+        producer: record.member,
+        chemistry: record.chemistry,
+        figure: corrected
+          ? String(corrected.amendedTonnes)
+          : formatTonnes3(record.originalTonnes),
+        query: record.reason,
+        status: corrected ? labels.queries.resubmitted : labels.queries.sent
+      }
+    })
+  }
+
+  return figures
+    .filter((figure) => ['queried', 'resubmitted'].includes(figure.status))
+    .map((figure) => ({
+      producer: figure.member,
+      chemistry: figure.chemistry,
+      figure: String(figure.amendedTonnes ?? figure.figureTonnes),
+      query: figure.reason,
+      status:
+        figure.status === 'resubmitted'
+          ? labels.queries.resubmitted
+          : labels.queries.sent
+    }))
+}
 
 const buildViewModel = (
   request,
-  { errorSummary = [], errors = {}, formValues = {} } = {}
+  { errors = {}, formValues = {}, forceDecisionForm = false } = {}
 ) => {
   const { schemeId, year, quarter } = request.params
-  const pageContent = prototypeRegulatorContent.reviewPomReturn
-
+  const labels = prototypeRegulatorContent.reviewPomReturn
   const scheme = seedData.prototypeRegulatorSchemes.find(
     (s) => s.id === schemeId
   )
@@ -73,168 +239,275 @@ const buildViewModel = (
     throw Boom.notFound()
   }
 
-  const membersTotalCount = seedData.prototypeRegulatorSchemeMembers.filter(
-    (m) => m.schemeId === schemeId
-  ).length
+  const drafts = draftsFor(submission)
+  const sent = sentQueriesFor(submission)
+  const queriedRows =
+    submission.status === 'queried'
+      ? queriedRowsFor(labels, submission, sent)
+      : []
+  const status = submission.status
+  const decided = ['accepted', 'queried', 'rejected'].includes(status)
+  const values = {
+    scheme: scheme.name,
+    period: submission.periodLabel,
+    quarter: submission.quarter,
+    nextPeriod: nextPeriodLabel(quarter, year),
+    submittedOn: formatDateOnly(submission.submittedOn),
+    decidedOn: formatDateOnly(submission.decidedOn),
+    deadline: submission.deadlineOn
+      ? format(parseISO(submission.deadlineOn), 'd MMMM')
+      : '',
+    daysLate: submission.deadlineOn
+      ? differenceInCalendarDays(
+          parseISO(submission.submittedOn),
+          parseISO(submission.deadlineOn)
+        )
+      : 0,
+    lockOn: submission.deadlineOn
+      ? format(lockDateFor(submission), 'd MMMM yyyy')
+      : '',
+    count: status === 'queried' ? queriedRows.length : drafts.length
+  }
+  const late = values.daysLate > 0
+  const introKey =
+    status === 'received'
+      ? late
+        ? 'received'
+        : 'receivedOnTime'
+      : status === 'accepted'
+        ? late
+          ? 'accepted'
+          : 'acceptedOnTime'
+        : status
+  const banner = labels.banner[status]
+  const filesCount = submission.filesCount + 1
 
-  const { lockTagText, lockWarning } = buildLockInfo(submission)
-
-  const action = pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, {
-    schemeId,
-    year,
-    quarter
-  })
+  const sectionHref = (fragment) =>
+    `${pathTo(paths.prototypeRegulatorPomSubmissionBatterySalesDataSubmission, { schemeId })}#${fragment}`
 
   return {
     ...basePageModel(
       {
-        ...pageContent,
-        heading: `${scheme.name} — ${submission.periodLabel} return`
-      },
-      paths.prototypeRegulatorPomSubmissionDashboard
-    ),
-    backLink: pathTo(
-      paths.prototypeRegulatorPomSubmissionBatterySalesDataSubmission,
-      { schemeId }
-    ),
-    action,
-    scheme,
-    submission,
-    statusLabel: pageContent.statusLabels[submission.status],
-    statusColour: pageContent.statusColours[submission.status],
-    intro: `${scheme.name} submitted their ${submission.periodLabel} return on ${formatDateOnly(submission.submittedOn)}. Review the summary below, then accept it, query individual figures, or — only for a systemic problem — reject the whole return.`,
-    lockTagText,
-    lockWarning,
-    statusSteps: buildStatusSteps(pageContent, submission),
-    totalPlacedOnMarketLine: `${submission.totalPlacedOnMarketTonnes.toLocaleString('en-GB')} tonnes`,
-    membersIncludedLine: `${submission.membersCount} of ${membersTotalCount}`,
-    swingCategoriesText: submission.swingCategories.join(', '),
-    submittedByLine: `${scheme.superUser.name}, ${scheme.superUser.email}`,
-    yourReasonLine: submission.reason ?? null,
-    relatedLinks: relatedLinksFor(pageContent, schemeId),
-    decisionIntro: `Decide this quarter's return on its own — a problem here does not block later quarters. Your decision and reason are recorded in the service, and ${scheme.name} and the Agency see the same record.`,
-    decisionOptions: [
-      {
-        value: 'accept',
-        text: pageContent.decisionOptions.accept.label,
-        hint: pageContent.decisionOptions.accept.hintTemplate
-          .replace('{period}', submission.periodLabel)
-          .replace('{scheme}', scheme.name)
+        ...labels,
+        heading: fill(labels.heading, values),
+        intro: fill(labels.intro[introKey], values)
       },
       {
-        value: 'query',
-        text: pageContent.decisionOptions.query.label,
-        hint: pageContent.decisionOptions.query.hint
-      },
-      {
-        value: 'reject',
-        text: pageContent.decisionOptions.reject.label,
-        hint: pageContent.decisionOptions.reject.hint
+        backLink: {
+          href: paths.prototypeRegulatorPomSubmissionDashboard,
+          text: labels.backLink
+        },
+        headingTag: {
+          text: labels.statusLabels[status],
+          colour: labels.statusColours[status]
+        }
       }
+    ),
+    status,
+    decided,
+    showDecisionForm: !decided || forceDecisionForm,
+    banner: banner
+      ? {
+          ...banner,
+          heading: fill(banner.heading, values),
+          body: fill(banner.body, values)
+        }
+      : null,
+    late: late ? labels.late : null,
+    lockNote: values.lockOn ? fill(labels.lockNote, values) : null,
+    summaryRows: buildSummary(labels, scheme, submission, drafts, queriedRows),
+    queriesTable: queriedRows,
+    seesHeading: fill(labels.sees.heading, values),
+    seesBody: labels.sees.body,
+    downloads: [
+      fill(labels.downloads.queried, {
+        file: `${scheme.name.replace(/\s+/g, '')}_${quarter}_${year}_queried.csv`
+      }),
+      labels.downloads.full
     ],
-    reasonHint: pageContent.reasonHintTemplate.replace('{scheme}', scheme.name),
-    errorTitle: pageContent.error.title,
-    errorSummary,
+    reviewLinks: [
+      {
+        key: 'documents',
+        text: fill(labels.links.documents, {
+          file: `${scheme.name.replace(/\s+/g, '')}_${quarter}_${year}_explanations.docx`
+        }),
+        href: '#'
+      },
+      {
+        key: 'figures',
+        text: labels.links.figures,
+        href: sectionHref('producer-figures')
+      },
+      {
+        key: 'compare',
+        text: labels.links.compare,
+        href: sectionHref('compare-returns')
+      },
+      { key: 'waste', text: fill(labels.links.waste, values), href: '#' },
+      {
+        key: 'obligation',
+        text: labels.links.obligation,
+        href: sectionHref('indicative-obligation')
+      },
+      { key: 'reconcile', text: labels.links.reconcile, href: '#' },
+      { key: 'amendments', text: labels.links.amendments, href: '#' },
+      { key: 'threeYear', text: labels.links.threeYear, href: '#' }
+    ],
+    footerLinks: {
+      obligationFull: {
+        text: labels.footerLinks.obligationFull,
+        href: sectionHref('indicative-obligation')
+      },
+      waste: { text: fill(labels.links.waste, values), href: '#' },
+      files: {
+        text: fill(labels.footerLinks.files, { count: filesCount }),
+        href: pathTo(paths.prototypeRegulatorPomSubmissionSubmissionFiles, {
+          schemeId,
+          year,
+          quarter
+        })
+      },
+      history: { text: labels.footerLinks.history, href: '#' },
+      figures: {
+        text: labels.footerLinks.figures,
+        href: sectionHref('producer-figures')
+      },
+      obligation: {
+        text: labels.footerLinks.obligation,
+        href: sectionHref('indicative-obligation')
+      },
+      back: {
+        text: labels.footerLinks.back,
+        href: paths.prototypeRegulatorPomSubmissionDashboard
+      }
+    },
+    rejectedNote: labels.rejectedNote,
+    decisionIntro: fill(labels.decisionIntro, values),
+    options: {
+      accept: labels.options.accept,
+      query: {
+        ...labels.options.query,
+        hint: fill(labels.options.query.hint, { count: drafts.length })
+      },
+      reject: labels.options.reject
+    },
+    reasonHint: fill(labels.reasonHint, values),
+    action: reviewPath({ schemeId, year, quarter }),
     errors,
-    formValues
+    formValues,
+    errorSummary: Object.entries(errors).map(([field, text]) => ({
+      text,
+      href:
+        field === 'decision'
+          ? '#decision'
+          : field === 'respondBy'
+            ? '#respondBy-day'
+            : `#${field}`
+    }))
   }
 }
 
 export const reviewPomReturnController = {
   get: {
     handler(request, h) {
-      const { schemeId } = request.params
-
-      if (!SCHEMES_WITH_DETAIL_SCREENS_BUILT.has(schemeId)) {
+      if (!SCHEMES_WITH_DETAIL_SCREENS_BUILT.has(request.params.schemeId)) {
         throw Boom.notFound()
       }
-
-      return h.view(
-        'prototype/regulator/pomSubmission/reviewPomReturn/view',
-        buildViewModel(request)
-      )
+      return h.view(view, buildViewModel(request))
     }
   },
 
   post: {
-    options: {
-      validate: {
-        payload: schema,
-        failAction: (request, h, err) => {
-          const pageContent = prototypeRegulatorContent.reviewPomReturn
-          const errorMap = {}
-          for (const detail of err.details) {
-            const field = detail.path[0]
-            /* v8 ignore next 3 */
-            if (!errorMap[field]) {
-              errorMap[field] = pageContent.error[field]
-            }
-          }
-          const errorSummary = Object.entries(errorMap).map(
-            ([field, text]) => ({ text, href: `#${field}` })
-          )
-
-          return h
-            .view(
-              'prototype/regulator/pomSubmission/reviewPomReturn/view',
-              buildViewModel(request, {
-                errorSummary,
-                errors: errorMap,
-                formValues: request.payload
-              })
-            )
-            .takeover()
-        }
-      }
-    },
     handler(request, h) {
       const { schemeId, year, quarter } = request.params
 
       if (!SCHEMES_WITH_DETAIL_SCREENS_BUILT.has(schemeId)) {
         throw Boom.notFound()
       }
-
-      const { decision, reason } = request.payload
       const submission = findSubmission(schemeId, year, quarter)
       if (!submission) {
         throw Boom.notFound()
       }
 
-      // Rejection needs an extra confirmation step (the systemic error type
-      // and a checkbox) before anything is written — nothing is persisted
-      // here for that path. The reason already typed is carried forward via
-      // a one-time session flash so the confirm screen can prefill it.
-      if (decision === 'reject') {
-        request.yar.flash(rejectReasonFlashKey(schemeId, year, quarter), reason)
-        return h.redirect(
-          pathTo(
-            paths.prototypeRegulatorPomSubmissionReviewPomReturnRejectConfirm,
-            {
-              schemeId,
-              year,
-              quarter
-            }
-          )
+      const labels = prototypeRegulatorContent.reviewPomReturn
+      const payload = request.payload
+      const decision = ['accept', 'query', 'reject'].includes(payload.decision)
+        ? payload.decision
+        : undefined
+      const reason = (payload.reason ?? '').trim()
+      const errors = {}
+      let respondBy
+
+      if (!decision) {
+        errors.decision = labels.errors.decisionRequired
+      }
+      if (decision === 'query' || decision === 'reject') {
+        if (!reason) {
+          errors.reason = labels.errors.reasonRequired
+        } else if (reason.length > REASON_MAX_LENGTH) {
+          errors.reason = labels.errors.reasonTooLong
+        }
+        const read = readRespondBy(payload)
+        if (read.error) {
+          errors.respondBy = labels.errors[read.error]
+        } else {
+          respondBy = read.value
+        }
+      }
+      if (decision === 'query' && draftsFor(submission).length === 0) {
+        errors.decision = labels.errors.noDraftQueries
+      }
+
+      if (Object.keys(errors).length > 0) {
+        return h.view(
+          view,
+          buildViewModel(request, {
+            errors,
+            formValues: payload,
+            forceDecisionForm: true
+          })
         )
       }
 
       const scheme = seedData.prototypeRegulatorSchemes.find(
         (s) => s.id === schemeId
       )
+      const now = new Date().toISOString()
 
-      updateSubmission(submission.id, {
-        status: decision === 'accept' ? 'accepted' : 'queried',
-        decidedOn: new Date().toISOString(),
-        decidedBy: decidedByFor(scheme),
-        reason
-      })
+      if (decision === 'reject') {
+        // The whole-return rejection is confirmed on its own screen, which
+        // starts from what was typed here.
+        request.yar.flash(
+          rejectReasonFlashKey(schemeId, year, quarter),
+          JSON.stringify({ reason, ...respondByFields(respondBy) })
+        )
+        return h.redirect(
+          pathTo(
+            paths.prototypeRegulatorPomSubmissionReviewPomReturnRejectConfirm,
+            { schemeId, year, quarter }
+          )
+        )
+      }
 
-      const outcomeRoute =
-        decision === 'accept'
-          ? paths.prototypeRegulatorPomSubmissionReviewPomReturnAccepted
-          : paths.prototypeRegulatorPomSubmissionReviewPomReturnQueried
+      if (decision === 'accept') {
+        updateSubmission(submission.id, {
+          status: 'accepted',
+          decidedOn: now,
+          decidedBy: decidedByFor(scheme)
+        })
+      } else {
+        const count = sendDraftQueries(schemeId, year, quarter, now)
+        updateSubmission(submission.id, {
+          status: 'queried',
+          decidedOn: now,
+          decidedBy: decidedByFor(scheme),
+          reason,
+          respondBy,
+          issuesFound: count
+        })
+      }
 
-      return h.redirect(pathTo(outcomeRoute, { schemeId, year, quarter }))
+      return h.redirect(reviewPath({ schemeId, year, quarter }))
     }
   }
 }

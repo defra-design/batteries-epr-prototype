@@ -11,173 +11,130 @@ describe('#prototypeRegulatorPomSubmissionDashboard', () => {
     await server.stop({ timeout: 0 })
   })
 
-  test('renders the dashboard heading and service navigation', async () => {
-    const { result, statusCode } = await server.inject({
+  const get = (query = '') =>
+    server.inject({
       method: 'GET',
-      url: paths.prototypeRegulatorPomSubmissionDashboard
+      url: `${paths.prototypeRegulatorPomSubmissionDashboard}${query}`
     })
+
+  test('renders the H1, breadcrumb and the shared regulator navigation including Reports', async () => {
+    const { result, statusCode } = await get()
 
     expect(statusCode).toBe(statusCodes.ok)
-    expect(result).toEqual(expect.stringContaining('Regulator dashboard'))
-    expect(result).toEqual(expect.stringContaining('Batteries: Regulator'))
-    expect(result).toEqual(expect.stringContaining('Home'))
-    expect(result).toEqual(expect.stringContaining('Manage account'))
-    expect(result).toEqual(expect.stringContaining('My profile'))
-    expect(result).toEqual(expect.stringContaining('Sign out'))
-    const resetTag = result.match(
-      /<a[^>]*class="govuk-service-navigation__link"[^>]*>\s*Reset data\s*<\/a>/
-    )
-    expect(resetTag).not.toBeNull()
-    expect(result).toEqual(expect.stringContaining(`href="${paths.devReset}"`))
-    expect(result).toEqual(
-      expect.stringContaining('govuk-service-navigation__item--active')
-    )
-  })
-
-  test('renders both dashboard tabs', async () => {
-    const { result } = await server.inject({
-      method: 'GET',
-      url: paths.prototypeRegulatorPomSubmissionDashboard
-    })
-
-    expect(result).toEqual(
-      expect.stringContaining('data-testid="regulator-dashboard-tabs"')
-    )
-    expect(result).toEqual(
-      expect.stringContaining(
-        'data-testid="regulator-dashboard-tab-registrations"'
-      )
-    )
-    expect(result).toEqual(
-      expect.stringContaining(
-        'data-testid="regulator-dashboard-tab-pom-submissions"'
-      )
-    )
-    expect(result).toEqual(expect.stringContaining('Registration cases'))
-    expect(result).toEqual(expect.stringContaining('PoM submissions'))
-  })
-
-  test('renders the registrations table from seeded data, with corrected status tags', async () => {
-    const { result } = await server.inject({
-      method: 'GET',
-      url: paths.prototypeRegulatorPomSubmissionDashboard
-    })
-
-    expect(result).toEqual(
-      expect.stringContaining(
-        'data-testid="regulator-dashboard-registrations-table"'
-      )
-    )
-    expect(result).toEqual(expect.stringContaining('Acme Battery Co'))
-    expect(result).toEqual(expect.stringContaining('Northline Power Ltd'))
-    expect(result).toEqual(expect.stringContaining('Cobalt Traction Systems'))
-    expect(result).toEqual(expect.stringContaining('Voltix Manufacturing'))
-
-    // Figma tagged these rows' status "Registrations" in green, which both
-    // repeats the column name and reuses green (success) for a merely
-    // submitted, still-pending case. Corrected to "In progress" in blue.
-    expect(result).not.toEqual(expect.stringContaining('>Registrations<'))
-    expect(result).toEqual(
-      expect.stringMatching(/govuk-tag--blue">\s*In progress\s*<\/strong>/)
-    )
-    expect(result).toEqual(
-      expect.stringMatching(/govuk-tag--orange">\s*Payment issue\s*<\/strong>/)
-    )
-    expect(result).toEqual(
-      expect.stringMatching(/govuk-tag--grey">\s*Not submitted\s*<\/strong>/)
-    )
-  })
-
-  test('renders the PoM submissions table from seeded data', async () => {
-    const { result } = await server.inject({
-      method: 'GET',
-      url: paths.prototypeRegulatorPomSubmissionDashboard
-    })
-
-    expect(result).toEqual(
-      expect.stringContaining(
-        'data-testid="regulator-dashboard-pom-submissions-table"'
-      )
-    )
-    expect(result).toEqual(expect.stringContaining('IronWave Compliance'))
-    expect(result).toEqual(expect.stringContaining('REPIC'))
-    expect(result).toEqual(expect.stringContaining('Voltguard Batteries'))
-    expect(result).toEqual(
-      expect.stringContaining('Copper &amp; Co Compliance')
-    )
-    expect(result).toEqual(expect.stringContaining('BrightCell Compliance'))
-
-    expect(result).toEqual(
-      expect.stringMatching(/govuk-tag--blue">\s*Received\s*<\/strong>/)
-    )
-    expect(result).toEqual(
-      expect.stringMatching(/govuk-tag--green">\s*Accepted\s*<\/strong>/)
-    )
-    expect(result).toEqual(
-      expect.stringMatching(/govuk-tag--orange">\s*Queried\s*<\/strong>/)
-    )
+    expect(result).toEqual(expect.stringContaining('>PoM submissions</h1>'))
+    expect(result).toEqual(expect.stringContaining('pEPR: Regulator'))
+    expect(result).toEqual(expect.stringContaining('>NPWD</a>'))
+    for (const item of [
+      'Registrations',
+      'PoM submissions',
+      'Compliance schemes',
+      'Reports',
+      'Manage account'
+    ]) {
+      expect(result).toEqual(expect.stringContaining(`>${item}</a>`))
+    }
+    expect(result).not.toEqual(expect.stringContaining('My profile'))
     expect(result).toEqual(
       expect.stringMatching(
-        /govuk-tag--grey">\s*Not yet submitted\s*<\/strong>/
+        /app-regulator-nav__item--current[^>]*>\s*<a[^>]*data-testid="regulator-nav-pomSubmissions"/
       )
     )
+    expect(result).toEqual(expect.stringContaining(`href="${paths.devReset}"`))
   })
 
-  test('links the IronWave Compliance and REPIC rows to their scheme homes, and leaves every other scheme dead for now', async () => {
-    const { result } = await server.inject({
-      method: 'GET',
-      url: paths.prototypeRegulatorPomSubmissionDashboard
-    })
+  test('shows the quick links, the year select and the four task cards from the data', async () => {
+    const { result } = await get()
 
-    const ironwaveHref = pathTo(
-      paths.prototypeRegulatorPomSubmissionSchemeHome,
-      {
+    for (const text of [
+      'Overdue submissions',
+      'Open queries',
+      'Failed validation uploads',
+      'Other reports'
+    ]) {
+      expect(result).toEqual(expect.stringContaining(text))
+    }
+    expect(result).toEqual(
+      expect.stringContaining('data-testid="pom-dashboard-year"')
+    )
+    expect(result).toEqual(expect.stringContaining('Q2 2026 tasks'))
+    const card = (key) =>
+      result
+        .split(`data-testid="pom-dashboard-card-${key}"`)[1]
+        .split('</div>')[0]
+    expect(card('toReview')).toEqual(
+      expect.stringContaining('Review IronWave Compliance return')
+    )
+    expect(card('toReview')).toMatch(/>\s*1\s*</)
+    expect(card('newResponses')).toMatch(/>\s*1\s*</)
+    expect(card('openQueries')).toMatch(/>\s*1\s*</)
+  })
+
+  test('lists every scheme in the All tab with Design System status tags', async () => {
+    const { result } = await get()
+    const table = result
+      .split('data-testid="pom-dashboard-table-all"')[1]
+      .split('</table>')[0]
+
+    for (const name of [
+      'IronWave Compliance',
+      'REPIC',
+      'Copper &amp; Co Compliance',
+      'BrightCell Compliance',
+      'Voltguard Batteries'
+    ]) {
+      expect(table).toEqual(expect.stringContaining(name))
+    }
+    expect(table).toMatch(/govuk-tag--blue">\s*Received\s*</)
+    expect(table).toMatch(/govuk-tag--orange">\s*Queried\s*</)
+    expect(table.match(/govuk-tag--green">\s*Accepted\s*</g)).toHaveLength(2)
+    expect(result).toEqual(expect.stringContaining('All (5)'))
+    expect(result).toEqual(expect.stringContaining('Received (1)'))
+    expect(result).toEqual(expect.stringContaining('Accepted (2)'))
+    expect(result).toEqual(expect.stringContaining('Queried (2)'))
+  })
+
+  test('shows the seeded member counts, submitted dates and flags', async () => {
+    const { result } = await get()
+    const table = result
+      .split('data-testid="pom-dashboard-table-all"')[1]
+      .split('</table>')[0]
+    expect(table).toEqual(expect.stringContaining('8 August 2026'))
+    expect(table).toEqual(expect.stringContaining('1 August 2026'))
+    expect(table).toEqual(expect.stringContaining('31 July 2026'))
+    expect(table).toMatch(/>\s*24\s*</)
+  })
+
+  test('only IronWave and REPIC have a built scheme home to link to; the others are dead', async () => {
+    const { result } = await get()
+    const href = (id) =>
+      result.match(
+        new RegExp(
+          `href="([^"]*)"[^>]*data-testid="pom-dashboard-scheme-${id}"`
+        )
+      )[1]
+
+    expect(href('ironwave-compliance')).toBe(
+      pathTo(paths.prototypeRegulatorPomSubmissionSchemeHome, {
         schemeId: 'ironwave-compliance'
-      }
+      })
     )
-    const repicHref = pathTo(paths.prototypeRegulatorPomSubmissionSchemeHome, {
-      schemeId: 'repic'
-    })
-
-    expect(result).toEqual(
-      expect.stringContaining(
-        `data-testid="regulator-dashboard-pom-view-ironwave-compliance"`
-      )
-    )
-    expect(result).toEqual(expect.stringContaining(`href="${ironwaveHref}"`))
-
-    expect(result).toEqual(
-      expect.stringContaining(
-        `data-testid="regulator-dashboard-pom-view-repic"`
-      )
-    )
-    expect(result).toEqual(expect.stringContaining(`href="${repicHref}"`))
-
-    const voltguardViewTag = result.match(
-      /<a[^>]*data-testid="regulator-dashboard-pom-view-voltguard-batteries"[^>]*>/
-    )[0]
-    expect(voltguardViewTag).toEqual(expect.stringContaining('href="#"'))
-
-    const copperCoViewTag = result.match(
-      /<a[^>]*data-testid="regulator-dashboard-pom-view-copper-and-co-compliance"[^>]*>/
-    )[0]
-    expect(copperCoViewTag).toEqual(expect.stringContaining('href="#"'))
+    expect(href('voltguard-batteries')).toBe('#')
   })
 
-  test('renders dead links for actions outside this batch of screens', async () => {
-    const { result } = await server.inject({
-      method: 'GET',
-      url: paths.prototypeRegulatorPomSubmissionDashboard
-    })
+  test('sorts by status when asked, marking the column with aria-sort', async () => {
+    const { result } = await get('?sort=status&order=asc')
+    const table = result
+      .split('data-testid="pom-dashboard-table-all"')[1]
+      .split('</table>')[0]
 
-    const allocateTag = result.match(
-      /<a[^>]*data-testid="regulator-dashboard-allocate-case"[^>]*>/
-    )[0]
-    expect(allocateTag).toEqual(expect.stringContaining('href="#"'))
+    expect(table).toEqual(expect.stringContaining('aria-sort="ascending"'))
+    expect(table.indexOf('REPIC')).toBeLessThan(table.indexOf('IronWave'))
+  })
 
-    const complianceCheckTag = result.match(
-      /<a[^>]*data-testid="regulator-dashboard-run-compliance-check"[^>]*>/
-    )[0]
-    expect(complianceCheckTag).toEqual(expect.stringContaining('href="#"'))
+  test('a year with no returns shows an empty state instead of a table', async () => {
+    const { result } = await get('?year=2024')
+    expect(result).toEqual(
+      expect.stringContaining('There are no returns for Q2 2024.')
+    )
   })
 })

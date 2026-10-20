@@ -95,13 +95,13 @@ describe('#prototypeComplianceSchemeQueryResponseReturnQueried', () => {
       )
     })
 
-    test('lists the same records the regulator’s queried screen does', async () => {
+    test('lists the same records the regulator’s queried return does', async () => {
       const regulator = await server.inject({
         method: 'GET',
-        url: pathTo(
-          paths.prototypeRegulatorPomSubmissionReviewPomReturnQueried,
-          { schemeId: 'ironwave-compliance', ...params }
-        )
+        url: pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, {
+          schemeId: 'ironwave-compliance',
+          ...params
+        })
       })
       expect(regulator.statusCode).toBe(statusCodes.ok)
       for (const member of ['GreenLeaf Ltd', 'Voltguard Ltd']) {

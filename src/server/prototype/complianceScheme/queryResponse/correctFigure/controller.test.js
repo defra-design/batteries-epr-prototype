@@ -144,29 +144,17 @@ describe('#prototypeComplianceSchemeQueryResponseCorrectFigure', () => {
 
       const queried = await server.inject({
         method: 'GET',
-        url: pathTo(
-          paths.prototypeRegulatorPomSubmissionReviewPomReturnQueried,
-          { schemeId: 'ironwave-compliance', ...params }
-        )
+        url: pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, {
+          schemeId: 'ironwave-compliance',
+          ...params
+        })
       })
       expect(queried.statusCode).toBe(statusCodes.ok)
       expect(queried.result).toMatch(
         /govuk-tag--blue">\s*Resubmitted\s*<\/strong>/
       )
       expect(queried.result).toContain('1.24')
-      expect(queried.result).toContain('2 records queried')
-
-      const sales = await server.inject({
-        method: 'GET',
-        url: pathTo(
-          paths.prototypeRegulatorPomSubmissionBatterySalesDataSubmission,
-          { schemeId: 'ironwave-compliance' }
-        )
-      })
-      expect(sales.statusCode).toBe(statusCodes.ok)
-      expect(sales.result).toMatch(
-        /govuk-tag--blue">\s*Resubmitted\s*<\/strong>/
-      )
+      expect(queried.result).toContain('2 producer records queried')
     })
 
     test('a corrected record cannot be corrected again', async () => {

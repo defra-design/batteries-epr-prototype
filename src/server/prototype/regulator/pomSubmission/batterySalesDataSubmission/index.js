@@ -6,7 +6,12 @@ export const batterySalesDataSubmission = {
     {
       method: 'GET',
       path: paths.prototypeRegulatorPomSubmissionBatterySalesDataSubmission,
-      ...batterySalesDataSubmissionController
+      ...batterySalesDataSubmissionController.get
+    },
+    {
+      method: 'POST',
+      path: paths.prototypeRegulatorPomSubmissionRemoveDraftQuery,
+      ...batterySalesDataSubmissionController.removeDraft
     }
   ]
 }

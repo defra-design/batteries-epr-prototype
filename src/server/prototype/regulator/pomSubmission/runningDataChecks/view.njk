@@ -1,23 +1,23 @@
-{% extends 'layouts/page.njk' %}
+{% extends 'layouts/regulator.njk' %}
 
+{# Moves on after 5 seconds: JavaScript timeout (data attributes below), a
+   meta refresh for when JavaScript is off, and a visible Continue link. #}
 {% block head %}
   {{ super() }}
-  <meta http-equiv="refresh" content="3;url={{ nextStep }}">
+  <meta http-equiv="refresh" content="{{ autoAdvanceSeconds }};url={{ nextStep }}">
 {% endblock %}
 
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-xl">{{ heading }}</h1>
-
-      <p class="govuk-body" data-testid="running-data-checks-body">{{ body1 }}</p>
-      <p class="govuk-body">{{ labels.body2 }}</p>
-
-      <div class="app-spinner" aria-hidden="true" data-testid="running-data-checks-spinner"></div>
-
-      <p class="govuk-body">
-        <a class="govuk-link" href="{{ nextStep }}" data-testid="running-data-checks-continue">{{ labels.continueLink }}</a>
-      </p>
-    </div>
+  <div data-auto-advance-url="{{ nextStep }}" data-auto-advance-delay="{{ autoAdvanceSeconds * 1000 }}" data-testid="running-data-checks-advance">
+    <p class="govuk-body" data-testid="running-data-checks-wait">{{ labels.wait }}</p>
+    <div class="app-spinner" aria-hidden="true" data-testid="running-data-checks-spinner"></div>
+    <p class="govuk-body">
+      <a class="govuk-link" href="{{ nextStep }}" data-testid="running-data-checks-continue">{{ labels.continueLink }}</a>
+    </p>
   </div>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script type="module" src="{{ getAssetPath('regulatorAutoAdvance.js') }}"></script>
 {% endblock %}

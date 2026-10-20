@@ -1,70 +1,82 @@
-{% extends 'layouts/page.njk' %}
-
-{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% extends 'layouts/regulator.njk' %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+
+{% block hero %}
+  {{ govukBackLink({ text: backLink.text, href: backLink.href, classes: "app-regulator-back-link", attributes: { "data-testid": "back-link" } }) }}
+  <h1 class="govuk-heading-xl app-regulator-hero__heading">
+    {{- heading }} {{ govukTag({ text: tag.text, classes: "govuk-tag--" + tag.colour + " app-regulator-hero__tag", attributes: { "data-testid": "heading-tag" } }) -}}
+  </h1>
+  <p class="govuk-body-l app-regulator-hero__intro app-regulator-hero__subtitle" data-testid="submission-files-subtitle">{{ subtitle }}</p>
+  <p class="govuk-body">{{ intro }}</p>
+{% endblock %}
 
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      <div class="govuk-!-margin-bottom-4">
-        <span class="govuk-heading-xl govuk-!-margin-bottom-0 govuk-!-display-inline-block govuk-!-margin-right-3" data-testid="submission-files-heading">{{ heading }}</span>
-        {{ govukTag({ text: labels.checksCompleteTag, classes: "govuk-tag--green", attributes: { "data-testid": "submission-files-status" } }) }}
-      </div>
-      <p class="govuk-body" data-testid="submission-files-intro">{{ intro }}</p>
+  {{ govukSummaryList({ rows: summaryRows, attributes: { "data-testid": "submission-files-summary" } }) }}
 
-      {{ govukSummaryList({
-        rows: [
-          { key: { text: labels.summaryLabels.period }, value: { text: periodLine } },
-          { key: { text: labels.summaryLabels.filesUploaded }, value: { text: files.length } },
-          { key: { text: labels.summaryLabels.membersCovered }, value: { text: membersCoveredLine } },
-          { key: { text: labels.summaryLabels.totalPlaced }, value: { text: totalPlacedOnMarketLine } },
-          { key: { text: labels.summaryLabels.submittedBy }, value: { text: submittedByLine } }
-        ],
-        attributes: { "data-testid": "submission-files-summary" }
-      }) }}
+  <h2 class="govuk-heading-l">{{ labels.dataFilesHeading }}</h2>
+  {%- set fileRows = [] -%}
+  {%- for file in files -%}
+    {%- set actionsHtml -%}
+      <a class="govuk-link" href="{{ file.openHref }}" data-testid="submission-files-open-{{ file.id }}">{{ labels.open }}<span class="govuk-visually-hidden"> {{ file.fileName }}</span></a><br>
+      <a class="govuk-link" href="#">{{ labels.download }}<span class="govuk-visually-hidden"> {{ file.fileName }}</span></a>
+    {%- endset -%}
+    {%- set fileRows = (fileRows.push([
+      { text: file.fileName },
+      { text: file.members },
+      { text: file.records },
+      { text: file.total },
+      { text: file.uploadedShort },
+      { html: govukTag({ text: file.check.text, classes: "govuk-tag--" + file.check.colour }) },
+      { html: actionsHtml }
+    ]), fileRows) -%}
+  {%- endfor -%}
+  {{ govukTable({
+    head: [
+      { text: labels.columns.file },
+      { text: labels.columns.members },
+      { text: labels.columns.records },
+      { text: labels.columns.total },
+      { text: labels.columns.uploaded },
+      { text: labels.columns.checks },
+      { text: labels.columns.action }
+    ],
+    rows: fileRows,
+    attributes: { "data-testid": "submission-files-table" }
+  }) }}
 
-      <h2 class="govuk-heading-l">{{ labels.filesHeading }}</h2>
+  <h2 class="govuk-heading-l">{{ labels.evidenceHeading }}</h2>
+  {%- set evidenceRows = [] -%}
+  {%- for doc in evidence -%}
+    {%- set evidenceActions -%}
+      <a class="govuk-link" href="#">{{ labels.openBeside }}<span class="govuk-visually-hidden"> {{ doc.fileName }}</span></a><br>
+      <a class="govuk-link" href="#">{{ labels.download }}<span class="govuk-visually-hidden"> {{ doc.fileName }}</span></a>
+    {%- endset -%}
+    {%- set evidenceRows = (evidenceRows.push([
+      { text: doc.fileName },
+      { text: doc.covers },
+      { text: doc.uploadedShort },
+      { html: evidenceActions }
+    ]), evidenceRows) -%}
+  {%- endfor -%}
+  {{ govukTable({
+    head: [
+      { text: labels.evidenceColumns.document },
+      { text: labels.evidenceColumns.covers },
+      { text: labels.evidenceColumns.uploaded },
+      { text: labels.evidenceColumns.action }
+    ],
+    rows: evidenceRows,
+    attributes: { "data-testid": "submission-files-evidence" }
+  }) }}
 
-      {% set fileRows = [] %}
-      {% for file in files %}
-        {% set openCellHtml %}
-          <a class="govuk-link" href="{{ file.openHref }}" data-testid="submission-files-open-{{ loop.index }}">{{ labels.openLink }}</a>
-        {% endset %}
-        {% set fileRows = (fileRows.push([
-          { text: file.fileName },
-          { text: file.membersCovered },
-          { text: file.rows },
-          { text: file.uploadedOn },
-          { html: govukTag({ text: file.checkStatusLabel, classes: "govuk-tag--" + file.checkStatusColour }) | safe },
-          { html: openCellHtml }
-        ]), fileRows) %}
-      {% endfor %}
+  {{ govukInsetText({ text: labels.inset }) }}
 
-      {{ govukTable({
-        head: [
-          { text: labels.columns.fileName },
-          { text: labels.columns.members },
-          { text: labels.columns.rows },
-          { text: labels.columns.uploaded },
-          { text: labels.columns.checks },
-          { text: labels.columns.action }
-        ],
-        rows: fileRows,
-        attributes: { "data-testid": "submission-files-table" }
-      }) }}
-
-      <p class="govuk-body">{{ labels.footerNote }}</p>
-      <p class="govuk-body">
-        <a class="govuk-link" href="#" data-testid="submission-files-download-all">{{ downloadAllText }}</a>
-      </p>
-
-      {{ govukButton({
-        text: labels.continueAction,
-        href: continueHref,
-        attributes: { "data-testid": "submission-files-continue" }
-      }) }}
-    </div>
-  </div>
+  <ul class="govuk-list app-regulator-inline-links">
+    <li><a class="govuk-link" href="#" data-testid="submission-files-history">{{ labels.historyLink }}</a></li>
+    <li><a class="govuk-link" href="{{ reviewHref }}" data-testid="submission-files-review">{{ labels.reviewLink }}</a></li>
+  </ul>
 {% endblock %}

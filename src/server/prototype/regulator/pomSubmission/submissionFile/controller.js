@@ -5,10 +5,11 @@ import { paths, pathTo } from '../../../../../config/paths.js'
 import { prototypeRegulatorContent } from '../../../../../config/prototype-regulator-content.js'
 import {
   basePageModel,
-  SCHEMES_WITH_DETAIL_SCREENS_BUILT,
+  fill,
   findSubmission,
   formatDateOnly,
-  formatDateTime
+  formatDateTime,
+  SCHEMES_WITH_DETAIL_SCREENS_BUILT
 } from '../shared.js'
 
 const seedData = createRequire(import.meta.url)(
@@ -31,48 +32,61 @@ export const submissionFileController = {
     const file = seedData.prototypeRegulatorSubmissionFiles.find(
       (f) => f.id === fileId && f.submissionId === submission.id
     )
-    // Only files with warnings have been read from Figma so far — every
-    // other file's row is a dead "Open" link until it's built.
-    if (!file || file.checkStatus !== 'warnings') {
+    // Only a file with flagged rows has an Open screen; the rest stay dead
+    // links on the files list.
+    if (!file || file.checkStatus !== 'warnings' || !file.flaggedRows) {
       throw Boom.notFound()
     }
 
-    const pageContent = prototypeRegulatorContent.submissionFile
+    const labels = prototypeRegulatorContent.submissionFile
+    const count = file.flaggedRows.length
+    const filesHref = pathTo(
+      paths.prototypeRegulatorPomSubmissionSubmissionFiles,
+      { schemeId, year, quarter }
+    )
+    const row = (key, value) => ({ key: { text: key }, value: { text: value } })
 
     return h.view('prototype/regulator/pomSubmission/submissionFile/view', {
       ...basePageModel(
-        { ...pageContent, heading: file.fileName },
-        paths.prototypeRegulatorPomSubmissionDashboard
+        {
+          ...labels,
+          heading: file.fileName,
+          intro: fill(labels.intro, {
+            members: `${file.membersCovered}`,
+            rows: file.rows,
+            count
+          })
+        },
+        {
+          backLink: {
+            href: paths.prototypeRegulatorPomSubmissionDashboard,
+            text: labels.backLink
+          },
+          headingTag: {
+            text: fill(labels.tag.text, { count }),
+            colour: labels.tag.colour
+          }
+        }
       ),
-      backLink: pathTo(paths.prototypeRegulatorPomSubmissionSubmissionFiles, {
-        schemeId,
-        year,
-        quarter
-      }),
-      file,
-      memberLine: `${file.memberName} (${file.memberBprn})`,
-      warningsTagText: pageContent.warningsTag.replace(
-        '{count}',
-        file.warningsCount
-      ),
-      intro: pageContent.introWithWarningsTemplate
-        .replace('{members}', `${file.membersCovered} member`)
-        .replace('{rows}', file.rows)
-        .replace('{warningsCount}', file.warningsCount),
-      uploadedOnLine: formatDateTime(file.uploadedOn),
-      checkedByLine: `${file.checkedBy}, ${formatDateOnly(file.checkedOn)}`,
-      resultLine: pageContent.resultWithWarningsTemplate.replace(
-        '{count}',
-        file.warningsCount
-      ),
-      viewAllRowsText: pageContent.viewAllRowsTemplate.replace(
-        '{count}',
-        file.rows
-      ),
-      backToFilesHref: pathTo(
-        paths.prototypeRegulatorPomSubmissionSubmissionFiles,
-        { schemeId, year, quarter }
-      )
+      summaryRows: [
+        row(labels.summary.member, `${file.memberName} (${file.memberBprn})`),
+        row(labels.summary.rows, String(file.rows)),
+        row(labels.summary.uploaded, formatDateTime(file.uploadedOn)),
+        row(
+          labels.summary.checkedBy,
+          `${file.checkedBy}, ${formatDateOnly(file.checkedOn)}`
+        ),
+        row(labels.summary.result, fill(labels.resultValue, { count }))
+      ],
+      flaggedRows: file.flaggedRows.map((flagged) => ({
+        row: flagged.row,
+        chemistry: flagged.chemistry,
+        category: flagged.category,
+        figure: String(flagged.figureTonnes),
+        check: flagged.checkLabel
+      })),
+      viewAllRowsText: fill(labels.viewAllRows, { count: file.rows }),
+      backToFilesHref: filesHref
     })
   }
 }

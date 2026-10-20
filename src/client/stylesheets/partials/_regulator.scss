@@ -274,3 +274,38 @@ $app-regulator-card-border: #b1b4b6;
   content: "\2013";
   color: $govuk-text-colour;
 }
+
+// Row of plain links under a summary list (scheme home quick links)
+.app-regulator-inline-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: govuk-spacing(2) govuk-spacing(4);
+  margin-bottom: govuk-spacing(6);
+}
+
+.app-regulator-back-link {
+  margin-top: 0;
+}
+
+// Remove/Edit-style actions that post a form but read as links
+.app-regulator-inline-form {
+  display: inline;
+}
+
+.app-regulator-link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: $govuk-link-colour;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    color: $govuk-link-hover-colour;
+  }
+
+  &:focus {
+    @include govuk-focused-text;
+  }
+}

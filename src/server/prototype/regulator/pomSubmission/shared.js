@@ -1,13 +1,23 @@
-import { differenceInCalendarDays, format, parseISO } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 
 import { paths, pathTo } from '../../../../config/paths.js'
-import { PROTOTYPE_REGULATOR_SERVICE_NAME } from '../../../../config/prototype-regulator-content.js'
-import { getSubmissions } from './store.js'
+import { regulatorPageModel } from '../layout.js'
+import { getFlags, getSubmissions } from './store.js'
 
 // Every scheme has a home screen (schemeId-parameterised), but only these
 // schemes have real, populated homes in this batch — every other scheme's
 // "View" link stays dead (href="#") until its home is built.
-export const SCHEMES_WITH_HOME_BUILT = new Set(['ironwave-compliance', 'repic'])
+export const SCHEMES_WITH_HOME_BUILT = new Set([
+  'ironwave-compliance',
+  'repic',
+  'copper-and-co-compliance'
+])
+
+// The scheme record screen is built for IronWave Compliance and REPIC.
+export const SCHEMES_WITH_RECORD_BUILT = new Set([
+  'ironwave-compliance',
+  'repic'
+])
 
 // Of the schemes with a home, only these have their scheme record, members
 // and submissions screens populated — the others' homes render but their
@@ -15,31 +25,6 @@ export const SCHEMES_WITH_HOME_BUILT = new Set(['ironwave-compliance', 'repic'])
 export const SCHEMES_WITH_DETAIL_SCREENS_BUILT = new Set([
   'ironwave-compliance'
 ])
-
-// This is an authenticated account area, not a task flow: every screen keeps
-// the header and service navigation, unlike the compliance scheme submission
-// journey's "before you start" onward task-flow screens.
-//
-// "Reset data" is a real, live link (not one of the standing-dead nav items
-// below) — the regulator's decisions persist in a shared server-side store
-// for the life of the process, and /prototype/* pages hide the usual phase
-// banner dev links, so this is the only obvious way back to a clean seed
-// while testing this journey.
-const buildNavigation = (currentPath) => [
-  {
-    text: 'Home',
-    href: paths.prototypeRegulatorPomSubmissionDashboard,
-    current: currentPath === paths.prototypeRegulatorPomSubmissionDashboard
-  },
-  { text: 'Manage account', href: '#' },
-  { text: 'My profile', href: '#' },
-  { text: 'Reset data', href: paths.devReset },
-  { text: 'Sign out', href: '#' }
-]
-
-// Matches the Figma filenames, e.g. "IronWaveCompliance_Q2_2026.csv"
-export const filenameFor = (scheme, submission) =>
-  `${scheme.name.replace(/\s+/g, '').replace(/&/g, '')}_${submission.quarter}_${submission.compliancePeriodYear}.csv`
 
 export const submissionsFor = (schemeId) =>
   getSubmissions().filter((s) => s.schemeId === schemeId)
@@ -57,13 +42,20 @@ export const findSubmission = (schemeId, year, quarter) =>
       s.quarter === quarter
   ) ?? null
 
-export const basePageModel = (pageContent, currentPath) => ({
-  pageTitle: pageContent.title,
-  heading: pageContent.heading,
-  labels: pageContent,
-  serviceName: PROTOTYPE_REGULATOR_SERVICE_NAME,
-  navigation: buildNavigation(currentPath)
-})
+// Every PoM screen is on the shared regulator layout (layouts/regulator.njk)
+// with PoM submissions as the current nav item. Pass `backLink`, `breadcrumbs`
+// and `headingTag` for the hero.
+export const basePageModel = (pageContent, options = {}) =>
+  regulatorPageModel(pageContent, { currentNav: 'pomSubmissions', ...options })
+
+export const schemeHomeHref = (schemeId) =>
+  SCHEMES_WITH_HOME_BUILT.has(schemeId)
+    ? pathTo(paths.prototypeRegulatorPomSubmissionSchemeHome, { schemeId })
+    : '#'
+
+// "{name}" placeholders in content strings.
+export const fill = (template, values) =>
+  template.replace(/\{(\w+)\}/g, (_, key) => values[key])
 
 export const formatDateOnly = (isoString) =>
   /* v8 ignore next */
@@ -79,20 +71,6 @@ export const formatDateTime = (isoString) =>
 export const decidedByFor = (scheme) =>
   `${scheme.accountManager}, Environment Agency`
 
-export const buildLockInfo = (submission) => {
-  if (!submission.lockOn) {
-    return { lockTagText: null, lockWarning: null }
-  }
-  const lockInDays = differenceInCalendarDays(
-    parseISO(submission.lockOn),
-    new Date()
-  )
-  return {
-    lockTagText: `Locks in ${lockInDays} days`,
-    lockWarning: `${submission.periodLabel} figures lock on ${formatDateOnly(submission.lockOn)} — 2 months after the ${formatDateOnly(submission.deadlineOn)} deadline. After that, changes need a formal adjustment.`
-  }
-}
-
 // Carries the reason the regulator already typed on the review screen
 // forward to the reject-confirm screen's prefilled textarea (read-once,
 // via the session flash — the same mechanism the registration journey uses
@@ -100,14 +78,45 @@ export const buildLockInfo = (submission) => {
 export const rejectReasonFlashKey = (schemeId, year, quarter) =>
   `prototypeRegulatorRejectReason:${schemeId}:${year}:${quarter}`
 
-// Only the first two of these are wired to a real destination (the two
-// battery sales data submission tabs); the rest stay dead until those
-// screens exist. Reused by the review screen (all 8) and the accept/query
-// outcome screens (first 3, matching what Figma shows on those screens).
-export const relatedLinksFor = (pageContent, schemeId) =>
-  pageContent.relatedLinks.map((link) => ({
-    text: link.text,
-    href: link.fragment
-      ? `${pathTo(paths.prototypeRegulatorPomSubmissionBatterySalesDataSubmission, { schemeId })}#${link.fragment}`
-      : '#'
-  }))
+// "Copper & Co Ltd" and "Copper & Co" are the same member: figures and queries
+// use the short form.
+export const normaliseMemberName = (name) =>
+  name
+    .replace(/\s+(Ltd|Limited)$/i, '')
+    .trim()
+    .toLowerCase()
+
+export const flagsFor = (schemeId, year, quarter) =>
+  getFlags().filter(
+    (flag) =>
+      flag.schemeId === schemeId &&
+      flag.compliancePeriodYear === year &&
+      flag.quarter === quarter
+  )
+
+// The number of figures flagged: the flags themselves where they exist, else
+// the count recorded on the submission.
+export const flagCountFor = (submission) => {
+  const flags = flagsFor(
+    submission.schemeId,
+    submission.compliancePeriodYear,
+    submission.quarter
+  )
+  return flags.length > 0 ? flags.length : submission.issuesFound
+}
+
+// Tonnes to three decimal places, as the figures are shown on every screen.
+export const formatTonnes3 = (tonnes) =>
+  tonnes.toLocaleString('en-GB', {
+    minimumFractionDigits: 3,
+    maximumFractionDigits: 3
+  })
+
+export const formatSigned = (tonnes) =>
+  `${tonnes < 0 ? '−' : '+'}${formatTonnes3(Math.abs(tonnes))} t`
+
+// The next quarter's label: Q2 2026 → Q3 2026, Q4 2025 → Q1 2026.
+export const nextPeriodLabel = (quarter, year) => {
+  const number = Number(quarter.slice(1))
+  return number === 4 ? `Q1 ${Number(year) + 1}` : `Q${number + 1} ${year}`
+}

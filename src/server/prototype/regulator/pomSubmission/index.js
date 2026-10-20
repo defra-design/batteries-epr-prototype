@@ -8,9 +8,6 @@ import { runningDataChecks } from './runningDataChecks/index.js'
 import { dataCheckReport } from './dataCheckReport/index.js'
 import { batterySalesDataSubmission } from './batterySalesDataSubmission/index.js'
 import { reviewPomReturn } from './reviewPomReturn/index.js'
-import { reviewPomReturnAccepted } from './reviewPomReturnAccepted/index.js'
-import { reviewPomReturnQueried } from './reviewPomReturnQueried/index.js'
-import { reviewPomReturnRejected } from './reviewPomReturnRejected/index.js'
 import { reviewPomReturnRejectConfirm } from './reviewPomReturnRejectConfirm/index.js'
 import { submissionFiles } from './submissionFiles/index.js'
 import { submissionFile } from './submissionFile/index.js'
@@ -27,10 +24,7 @@ export const prototypeRegulatorPomSubmission = {
     ...dataCheckReport.openRoutes,
     ...batterySalesDataSubmission.openRoutes,
     ...reviewPomReturn.openRoutes,
-    ...reviewPomReturnAccepted.openRoutes,
-    ...reviewPomReturnQueried.openRoutes,
     ...reviewPomReturnRejectConfirm.openRoutes,
-    ...reviewPomReturnRejected.openRoutes,
     ...submissionFiles.openRoutes,
     ...submissionFile.openRoutes
   ]

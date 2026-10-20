@@ -148,6 +148,8 @@ export const paths = {
     '/prototype/regulator/pom-submission/schemes/{schemeId}/members',
   prototypeRegulatorPomSubmissionSchemeSubmissions:
     '/prototype/regulator/pom-submission/schemes/{schemeId}/submissions',
+  prototypeRegulatorPomSubmissionRemoveDraftQuery:
+    '/prototype/regulator/pom-submission/schemes/{schemeId}/battery-sales-data-submission/queries/{queryId}/remove',
   prototypeRegulatorPomSubmissionRunningDataChecks:
     '/prototype/regulator/pom-submission/schemes/{schemeId}/running-data-checks',
   prototypeRegulatorPomSubmissionDataCheckReport:
@@ -156,14 +158,8 @@ export const paths = {
     '/prototype/regulator/pom-submission/schemes/{schemeId}/battery-sales-data-submission',
   prototypeRegulatorPomSubmissionReviewPomReturn:
     '/prototype/regulator/pom-submission/schemes/{schemeId}/submissions/{year}/{quarter}/review',
-  prototypeRegulatorPomSubmissionReviewPomReturnAccepted:
-    '/prototype/regulator/pom-submission/schemes/{schemeId}/submissions/{year}/{quarter}/accepted',
-  prototypeRegulatorPomSubmissionReviewPomReturnQueried:
-    '/prototype/regulator/pom-submission/schemes/{schemeId}/submissions/{year}/{quarter}/queried',
   prototypeRegulatorPomSubmissionReviewPomReturnRejectConfirm:
     '/prototype/regulator/pom-submission/schemes/{schemeId}/submissions/{year}/{quarter}/reject-confirm',
-  prototypeRegulatorPomSubmissionReviewPomReturnRejected:
-    '/prototype/regulator/pom-submission/schemes/{schemeId}/submissions/{year}/{quarter}/rejected',
   prototypeRegulatorPomSubmissionSubmissionFiles:
     '/prototype/regulator/pom-submission/schemes/{schemeId}/submissions/{year}/{quarter}/files',
   prototypeRegulatorPomSubmissionSubmissionFile:

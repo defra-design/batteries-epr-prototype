@@ -24,6 +24,7 @@ export default {
       import: ['./javascripts/application.js', './stylesheets/application.scss']
     },
     signIn: './javascripts/signIn/entry.js',
+    regulatorAutoAdvance: './javascripts/regulator/autoAdvance/entry.js',
     signOut: './javascripts/signOut/entry.js',
     dashboard: './javascripts/dashboard/entry.js',
     publicRegisterSearch: './javascripts/publicRegister/search/entry.js',

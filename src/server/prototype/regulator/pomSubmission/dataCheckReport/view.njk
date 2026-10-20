@@ -1,53 +1,51 @@
-{% extends 'layouts/page.njk' %}
-
+{% extends 'layouts/regulator.njk' %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/tag/macro.njk" import govukTag %}
-{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-xl">{{ heading }}</h1>
-      <p class="govuk-body" data-testid="data-check-report-intro">{{ intro }}</p>
+  {% if errorSummary and errorSummary.length %}
+    {{ govukErrorSummary({ titleText: labels.errorTitle, errorList: errorSummary, attributes: { "data-testid": "data-check-report-error-summary" } }) }}
+  {% endif %}
 
-      <h2 class="govuk-heading-l">{{ labels.findingsHeading }}</h2>
-      <p class="govuk-body govuk-!-margin-bottom-4">{{ labels.findingsCaption }}</p>
-
-      {% set findingRows = [] %}
-      {% for finding in findings %}
-        {% set findingRows = (findingRows.push([
-          { text: finding.member },
-          { text: finding.issue },
-          { html: govukTag({ text: finding.typeLabel, classes: "govuk-tag--" + finding.typeColour }) | safe }
-        ]), findingRows) %}
-      {% endfor %}
-
-      {{ govukTable({
-        head: [
-          { text: labels.columns.member },
-          { text: labels.columns.issue },
-          { text: labels.columns.type }
-        ],
-        rows: findingRows,
-        attributes: { "data-testid": "data-check-report-findings-table" }
-      }) }}
-
-      <h2 class="govuk-heading-l">{{ labels.observationsHeading }}</h2>
-      <p class="govuk-body">{{ labels.observationsIntro }}</p>
-
-      {{ govukTextarea({
-        id: "observations",
-        name: "observations",
-        label: { text: labels.observationsLabel, classes: "govuk-visually-hidden" },
-        attributes: { "data-testid": "data-check-report-observations" }
-      }) }}
-
-      {{ govukButton({
-        text: labels.continueAction,
-        href: continueHref,
-        attributes: { "data-testid": "data-check-report-continue" }
-      }) }}
-    </div>
+  <div class="app-regulator-notes" data-testid="data-check-report-flags">
+    <h2 class="govuk-heading-l">{{ labels.flagsHeading }}</h2>
+    <p class="govuk-hint">{{ labels.flagsHint }}</p>
+    {% set flagRows = [] %}
+    {% for flag in flags %}
+      {% set flagRows = (flagRows.push([
+        { text: flag.producer },
+        { text: flag.description },
+        { html: govukTag({ text: flag.type.text, classes: "govuk-tag--" + flag.type.colour }) }
+      ]), flagRows) %}
+    {% endfor %}
+    {{ govukTable({
+      head: [
+        { text: labels.columns.producer },
+        { text: labels.columns.flagged },
+        { text: labels.columns.flag }
+      ],
+      rows: flagRows,
+      attributes: { "data-testid": "data-check-report-findings-table" }
+    }) }}
   </div>
+
+  <form method="post" action="{{ action }}" novalidate data-testid="data-check-report-form">
+    <h2 class="govuk-heading-l">{{ labels.notesHeading }}</h2>
+    <p class="govuk-body">{{ labels.notesIntro }}</p>
+    {{ govukCharacterCount({
+      id: "notes",
+      name: "notes",
+      maxlength: labels.notesMax,
+      rows: 4,
+      value: note,
+      label: { text: labels.notesLabel, classes: "govuk-visually-hidden" },
+      errorMessage: { text: errors.notes } if errors.notes,
+      attributes: { "data-testid": "data-check-report-notes" }
+    }) }}
+
+    {{ govukButton({ text: labels.continueAction, preventDoubleClick: true, attributes: { "data-testid": "data-check-report-continue" } }) }}
+  </form>
 {% endblock %}

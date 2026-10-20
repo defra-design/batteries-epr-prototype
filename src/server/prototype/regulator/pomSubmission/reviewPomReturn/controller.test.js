@@ -1,13 +1,25 @@
-import { differenceInCalendarDays, parseISO } from 'date-fns'
-
 import { initialiseServer } from '../../../../../test-utils/initialise-server.js'
 import { paths, pathTo } from '../../../../../config/paths.js'
 import { statusCodes } from '../../../../common/constants/status-codes.js'
+import {
+  getDraftQueries,
+  getMemberFigures,
+  getQueriedRecords,
+  getSubmissions,
+  removeDraftQuery,
+  resetStore,
+  updateSubmission
+} from '../store.js'
 
-const IRONWAVE_Q2_2026_URL = pathTo(
-  paths.prototypeRegulatorPomSubmissionReviewPomReturn,
-  { schemeId: 'ironwave-compliance', year: '2026', quarter: 'Q2' }
-)
+const params = { schemeId: 'ironwave-compliance', year: '2026', quarter: 'Q2' }
+const url = pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, params)
+
+const respondBy = {
+  'respondBy-day': '21',
+  'respondBy-month': '8',
+  'respondBy-year': '2026',
+  respondByTime: '12pm'
+}
 
 describe('#prototypeRegulatorPomSubmissionReviewPomReturn', () => {
   let server
@@ -17,329 +29,459 @@ describe('#prototypeRegulatorPomSubmissionReviewPomReturn', () => {
   afterAll(async () => {
     await server.stop({ timeout: 0 })
   })
-
-  test('renders the return summary, status tag and status steps from seeded data', async () => {
-    const { result, statusCode } = await server.inject({
-      method: 'GET',
-      url: IRONWAVE_Q2_2026_URL
-    })
-
-    expect(statusCode).toBe(statusCodes.ok)
-    expect(result).toEqual(
-      expect.stringContaining('IronWave Compliance — Q2 2026 return')
-    )
-    expect(result).toEqual(
-      expect.stringMatching(/govuk-tag--blue"[^>]*>\s*Received\s*<\/strong>/)
-    )
-    expect(result).toEqual(
-      expect.stringContaining(
-        'IronWave Compliance submitted their Q2 2026 return on 8 August 2026'
-      )
-    )
-
-    expect(result).toEqual(
-      expect.stringContaining('data-testid="review-pom-return-status-steps"')
-    )
-    expect(result).toEqual(expect.stringContaining('Submitted'))
-    expect(result).toEqual(expect.stringContaining('Automated checks passed'))
-    expect(result).toEqual(expect.stringContaining('Under regulator review'))
-    expect(result).toEqual(expect.stringContaining('Since 9 August 2026'))
-    expect(result).toEqual(expect.stringContaining('Decision'))
-
-    const expectedLockInDays = differenceInCalendarDays(
-      parseISO('2026-09-30'),
-      new Date()
-    )
-    expect(result).toEqual(
-      expect.stringContaining(`Locks in ${expectedLockInDays} days`)
-    )
-    expect(result).toEqual(
-      expect.stringContaining('figures lock on 30 September 2026')
-    )
+  beforeEach(() => {
+    resetStore()
   })
 
-  test('renders the summary list from seeded data, including derived member counts and swing categories', async () => {
-    const { result } = await server.inject({
-      method: 'GET',
-      url: IRONWAVE_Q2_2026_URL
-    })
+  const get = () => server.inject({ method: 'GET', url })
+  const post = (payload) => server.inject({ method: 'POST', url, payload })
+  const currentStatus = () =>
+    getSubmissions().find(
+      (s) =>
+        s.schemeId === 'ironwave-compliance' &&
+        s.compliancePeriodYear === '2026' &&
+        s.quarter === 'Q2'
+    ).status
 
-    expect(result).toEqual(
-      expect.stringContaining('data-testid="review-pom-return-summary"')
-    )
-    expect(result).toEqual(expect.stringContaining('623,073 tonnes'))
-    expect(result).toEqual(expect.stringContaining('5 of 5'))
-    expect(result).toEqual(
-      expect.stringContaining('General use, Light means of transport')
-    )
-    expect(result).toEqual(
-      expect.stringContaining('Michael Osei, michael.osei@ironwave.co.uk')
-    )
-  })
+  describe('submitted state', () => {
+    test('H1, status tag, intro, late tag and the lock note', async () => {
+      const { result, statusCode } = await get()
 
-  test('renders all 8 related links, with the first two wired to the battery sales data submission tabs and the rest dead for now', async () => {
-    const { result } = await server.inject({
-      method: 'GET',
-      url: IRONWAVE_Q2_2026_URL
-    })
-
-    expect(result).toEqual(
-      expect.stringContaining('data-testid="review-pom-return-related-links"')
-    )
-
-    const batterySalesDataSubmissionUrl = pathTo(
-      paths.prototypeRegulatorPomSubmissionBatterySalesDataSubmission,
-      { schemeId: 'ironwave-compliance' }
-    )
-
-    const compareReturnsLinkTag = result.match(
-      /<a[^>]*data-testid="review-pom-return-related-link-1"[^>]*>/
-    )[0]
-    expect(compareReturnsLinkTag).toEqual(
-      expect.stringContaining(
-        `href="${batterySalesDataSubmissionUrl}#compare-returns"`
+      expect(statusCode).toBe(statusCodes.ok)
+      expect(result).toEqual(
+        expect.stringContaining('>IronWave Compliance — Q2 2026 return')
       )
-    )
-
-    const indicativeObligationLinkTag = result.match(
-      /<a[^>]*data-testid="review-pom-return-related-link-2"[^>]*>/
-    )[0]
-    expect(indicativeObligationLinkTag).toEqual(
-      expect.stringContaining(
-        `href="${batterySalesDataSubmissionUrl}#indicative-obligation"`
-      )
-    )
-
-    for (let i = 3; i <= 8; i += 1) {
-      const linkTag = result.match(
-        new RegExp(
-          `<a[^>]*data-testid="review-pom-return-related-link-${i}"[^>]*>`
+      expect(result).toMatch(/data-testid="heading-tag"[^>]*>\s*Received\s*</)
+      expect(result).toEqual(
+        expect.stringContaining(
+          'Submitted on 8 August 2026 — 8 days after the 31 July deadline.'
         )
-      )[0]
-      expect(linkTag).toEqual(expect.stringContaining('href="#"'))
-    }
-    expect(result).toEqual(
-      expect.stringContaining('Compare figures — 3-year view and anomaly flags')
-    )
-    expect(result).toEqual(expect.stringContaining('View amendment history'))
-  })
-
-  test('renders the decision radios with none pre-selected, and a reason textarea', async () => {
-    const { result } = await server.inject({
-      method: 'GET',
-      url: IRONWAVE_Q2_2026_URL
-    })
-
-    expect(result).toEqual(
-      expect.stringContaining('data-testid="review-pom-return-decision-accept"')
-    )
-    expect(result).toEqual(expect.stringContaining('Accept the return'))
-    expect(result).toEqual(expect.stringContaining('Query one or more figures'))
-    expect(result).toEqual(
-      expect.stringContaining('Reject the whole return (systemic errors only)')
-    )
-    expect(result).not.toEqual(expect.stringContaining('checked'))
-
-    expect(result).toEqual(
-      expect.stringContaining('data-testid="review-pom-return-reason"')
-    )
-    expect(result).toEqual(expect.stringContaining('Reason for your decision'))
-  })
-
-  test('shows an error summary and inline errors when no decision is selected and the reason is empty', async () => {
-    const { result, statusCode } = await server.inject({
-      method: 'POST',
-      url: IRONWAVE_Q2_2026_URL,
-      payload: {}
-    })
-
-    expect(statusCode).toBe(statusCodes.ok)
-    expect(result).toEqual(
-      expect.stringContaining('data-testid="review-pom-return-error-summary"')
-    )
-    expect(result).toEqual(
-      expect.stringContaining(
-        'Select whether to accept, query or reject the return'
       )
-    )
-    expect(result).toEqual(
-      expect.stringContaining('Enter a reason for your decision')
-    )
-  })
-
-  test('shows only the reason error when a decision is selected but the reason is empty', async () => {
-    const { result } = await server.inject({
-      method: 'POST',
-      url: IRONWAVE_Q2_2026_URL,
-      payload: { decision: 'query', reason: '' }
+      expect(result).toMatch(/govuk-tag--red">\s*Submitted late\s*</)
+      expect(result).toEqual(
+        expect.stringContaining(
+          'After 30 September 2026, any changes to Q2 figures must be made in the Q3 2026 submission.'
+        )
+      )
     })
 
-    expect(result).toEqual(
-      expect.stringContaining('Enter a reason for your decision')
-    )
-    expect(result).not.toEqual(
-      expect.stringContaining(
-        'Select whether to accept, query or reject the return'
+    test('summary reads the figures and draft queries from the data', async () => {
+      const { result } = await get()
+      const summary = result
+        .split('data-testid="review-summary"')[1]
+        .split('</dl>')[0]
+
+      expect(summary).toEqual(expect.stringContaining('623.073 tonnes'))
+      expect(summary).toEqual(expect.stringContaining('5 of 5'))
+      expect(summary).toEqual(
+        expect.stringContaining(
+          '2 draft queries — GreenLeaf Ltd, Voltguard Ltd (not sent yet)'
+        )
       )
-    )
-  })
+      expect(summary).toEqual(
+        expect.stringContaining('michael.osei@ironwave.co.uk')
+      )
+    })
 
-  test('persists an accept decision to the storage adapter and redirects to the accepted outcome screen', async () => {
-    const acceptedUrl = pathTo(
-      paths.prototypeRegulatorPomSubmissionReviewPomReturnAccepted,
-      { schemeId: 'ironwave-compliance', year: '2026', quarter: 'Q2' }
-    )
+    test('links to the producer figures, compare returns and indicative obligation tabs by fragment', async () => {
+      const { result } = await get()
+      const base = pathTo(
+        paths.prototypeRegulatorPomSubmissionBatterySalesDataSubmission,
+        { schemeId: 'ironwave-compliance' }
+      )
+      const href = (key) =>
+        result.match(
+          new RegExp(`href="([^"]*)" data-testid="review-link-${key}"`)
+        )[1]
 
-    const { statusCode, headers } = await server.inject({
-      method: 'POST',
-      url: IRONWAVE_Q2_2026_URL,
-      payload: {
-        decision: 'accept',
-        reason: 'All figures reconcile against last quarter.'
+      expect(href('figures')).toBe(`${base}#producer-figures`)
+      expect(href('compare')).toBe(`${base}#compare-returns`)
+      expect(href('obligation')).toBe(`${base}#indicative-obligation`)
+      expect(result).toEqual(
+        expect.stringContaining('Compare figures — 3-year view')
+      )
+    })
+
+    test('the decision is govukRadios with nothing pre-selected, a reason and a respond-by date and time', async () => {
+      const { result } = await get()
+
+      for (const id of ['accept', 'query', 'reject']) {
+        const radio = result.match(
+          new RegExp(`<input[^>]*data-testid="review-decision-${id}"[^>]*>`)
+        )[0]
+        expect(radio).not.toEqual(expect.stringContaining('checked'))
       }
+      expect(result).toEqual(
+        expect.stringContaining(
+          'Sends the 2 draft queries from the producer figures screen'
+        )
+      )
+      expect(result).toEqual(
+        expect.stringContaining('Reason (only needed to query or reject)')
+      )
+      expect(result).toEqual(
+        expect.stringContaining(
+          'IronWave Compliance sees this in the service when they sign in.'
+        )
+      )
+      expect(result).toEqual(expect.stringContaining('name="respondBy-day"'))
+      expect(result).toEqual(
+        expect.stringContaining('data-testid="review-respond-by-time"')
+      )
+      expect(result).toEqual(expect.stringContaining('Confirm decision'))
     })
-
-    expect(statusCode).toBe(statusCodes.found)
-    expect(headers.location).toBe(acceptedUrl)
-
-    const { result } = await server.inject({
-      method: 'GET',
-      url: IRONWAVE_Q2_2026_URL
-    })
-    expect(result).toEqual(
-      expect.stringMatching(/govuk-tag--green"[^>]*>\s*Accepted\s*<\/strong>/)
-    )
-    expect(result).toEqual(
-      expect.stringContaining('All figures reconcile against last quarter.')
-    )
   })
 
-  test('persists a query decision to the storage adapter and redirects to the queried outcome screen', async () => {
-    const queriedUrl = pathTo(
-      paths.prototypeRegulatorPomSubmissionReviewPomReturnQueried,
-      { schemeId: 'ironwave-compliance', year: '2026', quarter: 'Q2' }
-    )
+  describe('validation', () => {
+    test('nothing selected → error summary and inline error, nothing saved', async () => {
+      const { result, statusCode } = await post({})
 
-    const { statusCode, headers } = await server.inject({
-      method: 'POST',
-      url: IRONWAVE_Q2_2026_URL,
-      payload: {
+      expect(statusCode).toBe(statusCodes.ok)
+      expect(result).toEqual(
+        expect.stringContaining('data-testid="review-error-summary"')
+      )
+      expect(result).toEqual(expect.stringContaining('href="#decision"'))
+      expect(result).toEqual(
+        expect.stringContaining('Select what you want to do with the return')
+      )
+      expect(currentStatus()).toBe('received')
+    })
+
+    test('a reason and a respond-by are required to query or reject, but not to accept', async () => {
+      for (const decision of ['query', 'reject']) {
+        const { result } = await post({ decision })
+        expect(result).toEqual(expect.stringContaining('href="#reason"'))
+        expect(result).toEqual(expect.stringContaining('href="#respondBy-day"'))
+        expect(result).toEqual(expect.stringContaining('Enter a reason'))
+        expect(result).toEqual(
+          expect.stringContaining(
+            'Enter a date and time to respond or resubmit by'
+          )
+        )
+      }
+      expect(currentStatus()).toBe('received')
+
+      const accept = await post({ decision: 'accept' })
+      expect(accept.statusCode).toBe(statusCodes.found)
+    })
+
+    test('a bad date or time is reported and the typed values are kept', async () => {
+      const { result } = await post({
         decision: 'query',
-        reason: 'Swing of +410% is not supported by the evidence provided.'
+        reason: 'Please explain',
+        ...respondBy,
+        'respondBy-day': '31',
+        'respondBy-month': '2'
+      })
+      expect(result).toEqual(expect.stringContaining('Enter a real date'))
+      expect(result).toEqual(expect.stringContaining('Please explain'))
+
+      const time = await post({
+        decision: 'query',
+        reason: 'Please explain',
+        ...respondBy,
+        respondByTime: 'soon'
+      })
+      expect(time.result).toEqual(expect.stringContaining('Enter a time'))
+    })
+
+    test('querying with no draft queries left is an error', async () => {
+      for (const draft of [...getDraftQueries()]) {
+        removeDraftQuery(draft.id)
       }
-    })
-
-    expect(statusCode).toBe(statusCodes.found)
-    expect(headers.location).toBe(queriedUrl)
-
-    const { result } = await server.inject({
-      method: 'GET',
-      url: IRONWAVE_Q2_2026_URL
-    })
-    expect(result).toEqual(
-      expect.stringMatching(/govuk-tag--orange"[^>]*>\s*Queried\s*<\/strong>/)
-    )
-    expect(result).toEqual(
-      expect.stringContaining(
-        'Swing of +410% is not supported by the evidence provided.'
+      const { result } = await post({
+        decision: 'query',
+        reason: 'x',
+        ...respondBy
+      })
+      expect(result).toEqual(
+        expect.stringContaining('There are no draft queries to send')
       )
-    )
+      expect(currentStatus()).toBe('received')
+    })
+
+    test('a reason over 1000 characters is rejected', async () => {
+      const { result } = await post({
+        decision: 'query',
+        reason: 'a'.repeat(1001),
+        ...respondBy
+      })
+      expect(result).toEqual(
+        expect.stringContaining('Reason must be 1000 characters or fewer')
+      )
+    })
   })
 
-  test('redirects a reject decision to the reject-confirm screen without persisting anything, carrying the reason forward', async () => {
-    const rejectConfirmUrl = pathTo(
-      paths.prototypeRegulatorPomSubmissionReviewPomReturnRejectConfirm,
-      { schemeId: 'ironwave-compliance', year: '2026', quarter: 'Q2' }
-    )
+  describe('accepted state', () => {
+    test('accepting records the decision and the page shows the banner, H1, tag and obligation', async () => {
+      const { statusCode, headers } = await post({ decision: 'accept' })
+      expect(statusCode).toBe(statusCodes.found)
+      expect(headers.location).toBe(url)
+      expect(currentStatus()).toBe('accepted')
 
-    const { statusCode, headers } = await server.inject({
-      method: 'POST',
-      url: IRONWAVE_Q2_2026_URL,
-      payload: {
+      const { result } = await get()
+      expect(result).toEqual(
+        expect.stringContaining('data-testid="review-banner"')
+      )
+      expect(result).toEqual(expect.stringContaining('Return accepted'))
+      expect(result.indexOf('Return accepted')).toBeLessThan(
+        result.indexOf('>IronWave Compliance — Q2 2026 return')
+      )
+      expect(result).toMatch(/data-testid="heading-tag"[^>]*>\s*Accepted\s*</)
+      expect(result).toMatch(/govuk-tag--green/)
+      const summary = result
+        .split('data-testid="review-summary"')[1]
+        .split('</dl>')[0]
+      expect(summary).toEqual(
+        expect.stringContaining('4,290 tonnes — updated with Q2 2026')
+      )
+      expect(summary).toEqual(expect.stringContaining('1,850 tonnes'))
+      expect(summary).toEqual(
+        expect.stringContaining('2,440 tonnes (57% of the obligation)')
+      )
+      expect(result).not.toEqual(
+        expect.stringContaining('data-testid="review-decision-form"')
+      )
+    })
+
+    test('the scheme home and the dashboard show the accepted decision', async () => {
+      await post({ decision: 'accept' })
+      const home = await server.inject({
+        method: 'GET',
+        url: pathTo(paths.prototypeRegulatorPomSubmissionSchemeHome, {
+          schemeId: 'ironwave-compliance'
+        })
+      })
+      expect(home.result).toMatch(
+        /data-testid="heading-tag"[^>]*>\s*Accepted\s*</
+      )
+
+      const dashboard = await server.inject({
+        method: 'GET',
+        url: paths.prototypeRegulatorPomSubmissionDashboard
+      })
+      expect(dashboard.result).toEqual(expect.stringContaining('Accepted (3)'))
+    })
+  })
+
+  describe('queried state', () => {
+    const query = () =>
+      post({ decision: 'query', reason: 'Please check', ...respondBy })
+
+    test('sending queries turns the drafts into sent queried records', async () => {
+      const { statusCode } = await query()
+
+      expect(statusCode).toBe(statusCodes.found)
+      expect(currentStatus()).toBe('queried')
+      expect(getDraftQueries()).toHaveLength(0)
+      const sent = getQueriedRecords().filter(
+        (record) => record.schemeId === 'ironwave-compliance'
+      )
+      expect(sent.map((record) => record.member)).toEqual([
+        'GreenLeaf Ltd',
+        'Voltguard Ltd'
+      ])
+      expect(sent[0]).toMatchObject({
+        status: 'awaiting',
+        originalTonnes: 212.4,
+        chemistry: 'Other'
+      })
+    })
+
+    test('the page shows the banner, Queried tag, decision, respond-by and the query table', async () => {
+      await query()
+      const { result } = await get()
+
+      expect(result).toEqual(
+        expect.stringContaining('Queries sent to IronWave Compliance')
+      )
+      expect(result.indexOf('Queries sent to IronWave')).toBeLessThan(
+        result.indexOf('>IronWave Compliance — Q2 2026 return')
+      )
+      expect(result).toMatch(/data-testid="heading-tag"[^>]*>\s*Queried\s*</)
+      expect(result).toEqual(
+        expect.stringContaining(
+          '2 producer records queried. The rest of the Q2 2026 return is not changed while the scheme responds, and Q3 2026 is not blocked.'
+        )
+      )
+      const summary = result
+        .split('data-testid="review-summary"')[1]
+        .split('</dl>')[0]
+      expect(summary).toEqual(
+        expect.stringContaining('Queried — 2 producer records')
+      )
+      expect(summary).toEqual(expect.stringContaining('12pm, 21 August 2026'))
+      expect(summary).toEqual(expect.stringContaining('A. Nwosu'))
+      const table = result
+        .split('data-testid="review-queries"')[1]
+        .split('</table>')[0]
+      expect(table).toEqual(expect.stringContaining('GreenLeaf Ltd'))
+      expect(table).toEqual(
+        expect.stringContaining('Other is up 191.160 t (+900%) on Q1 2026.')
+      )
+      expect(table.match(/govuk-tag--orange">\s*Sent\s*</g)).toHaveLength(2)
+      expect(result).toEqual(
+        expect.stringContaining('What IronWave Compliance sees')
+      )
+    })
+
+    test('the scheme-side query response sees the return as queried', async () => {
+      await query()
+      const scheme = await server.inject({
+        method: 'GET',
+        url: pathTo(paths.prototypeComplianceSchemeQueryResponseReturnQueried, {
+          year: '2026',
+          quarter: 'Q2'
+        })
+      })
+      expect(scheme.statusCode).toBe(statusCodes.ok)
+      expect(scheme.result).toContain('GreenLeaf Ltd')
+    })
+
+    test('members and the Copper & Co style counts reflect the queries', async () => {
+      await query()
+      const members = await server.inject({
+        method: 'GET',
+        url: pathTo(paths.prototypeRegulatorPomSubmissionSchemeMembers, {
+          schemeId: 'ironwave-compliance'
+        })
+      })
+      expect(
+        members.result.match(/govuk-tag--orange">\s*Queried\s*</g)
+      ).toHaveLength(2)
+    })
+  })
+
+  describe('rejecting', () => {
+    test('rejecting on this screen hands the reason and date on to the confirmation screen', async () => {
+      const { statusCode, headers } = await post({
         decision: 'reject',
-        reason: 'Every chemistry column is shifted one place right from row 2.'
-      }
-    })
+        reason: 'Figures entered in kilograms',
+        ...respondBy
+      })
 
-    expect(statusCode).toBe(statusCodes.found)
-    expect(headers.location).toBe(rejectConfirmUrl)
-
-    const cookie = headers['set-cookie']?.[0]?.split(';')[0]
-    const { result } = await server.inject({
-      method: 'GET',
-      url: rejectConfirmUrl,
-      headers: { cookie }
-    })
-    expect(result).toEqual(
-      expect.stringContaining(
-        'Every chemistry column is shifted one place right from row 2.'
+      expect(statusCode).toBe(statusCodes.found)
+      expect(headers.location).toBe(
+        pathTo(
+          paths.prototypeRegulatorPomSubmissionReviewPomReturnRejectConfirm,
+          params
+        )
       )
-    )
+      expect(currentStatus()).toBe('received')
+    })
   })
 
-  test('404s for REPIC, which has no review screen in this batch', async () => {
-    const url = pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, {
-      schemeId: 'repic',
-      year: '2026',
-      quarter: 'Q2'
-    })
-    const { statusCode } = await server.inject({ method: 'GET', url })
+  describe('other returns and edge cases', () => {
+    test('a seeded accepted return with no deadline shows the on-time wording and no late tag', async () => {
+      const { result, statusCode } = await server.inject({
+        method: 'GET',
+        url: pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, {
+          ...params,
+          quarter: 'Q1'
+        })
+      })
 
-    expect(statusCode).toBe(statusCodes.notFound)
+      expect(statusCode).toBe(statusCodes.ok)
+      expect(result).toEqual(
+        expect.stringContaining(
+          'Submitted 28 April 2026. Accepted on 6 May 2026.'
+        )
+      )
+      expect(result).not.toEqual(expect.stringContaining('Submitted late'))
+      expect(result).not.toEqual(
+        expect.stringContaining('data-testid="review-lock-note"')
+      )
+    })
+
+    test('a seeded rejected return without a recorded reason still renders', async () => {
+      const { result, statusCode } = await server.inject({
+        method: 'GET',
+        url: pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, {
+          ...params,
+          year: '2025'
+        })
+      })
+
+      expect(statusCode).toBe(statusCodes.ok)
+      expect(result).toMatch(/data-testid="heading-tag"[^>]*>\s*Rejected\s*</)
+      expect(result).toEqual(expect.stringContaining('Rejected — whole return'))
+    })
+
+    test('a return submitted before the deadline says so', async () => {
+      const [submission] = getSubmissions().filter(
+        (s) =>
+          s.schemeId === 'ironwave-compliance' &&
+          s.compliancePeriodYear === '2026' &&
+          s.quarter === 'Q2'
+      )
+      updateSubmission(submission.id, { submittedOn: '2026-07-30T10:00:00Z' })
+
+      const { result } = await get()
+      expect(result).toEqual(
+        expect.stringContaining(
+          'Submitted on 30 July 2026, before the 31 July deadline.'
+        )
+      )
+      expect(result).not.toEqual(expect.stringContaining('Submitted late'))
+    })
+
+    test('once the scheme corrects a queried record the table shows Resubmitted and the new figure', async () => {
+      await post({ decision: 'query', reason: 'Please check', ...respondBy })
+      const figure = getMemberFigures().find(
+        (entry) => entry.member === 'GreenLeaf Ltd'
+      )
+      figure.status = 'resubmitted'
+      figure.amendedTonnes = 1.24
+
+      const { result } = await get()
+      const table = result
+        .split('data-testid="review-queries"')[1]
+        .split('</table>')[0]
+      expect(table).toMatch(/govuk-tag--blue">\s*Resubmitted\s*</)
+      expect(table).toEqual(expect.stringContaining('1.24'))
+      expect(table).toMatch(/govuk-tag--orange">\s*Sent\s*</)
+    })
+
+    test('posting a decision for an unbuilt scheme or an unknown return is a 404', async () => {
+      const unbuilt = await server.inject({
+        method: 'POST',
+        url: pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, {
+          ...params,
+          schemeId: 'repic'
+        }),
+        payload: { decision: 'accept' }
+      })
+      expect(unbuilt.statusCode).toBe(statusCodes.notFound)
+
+      const unknown = await server.inject({
+        method: 'POST',
+        url: pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, {
+          ...params,
+          year: '2019'
+        }),
+        payload: { decision: 'accept' }
+      })
+      expect(unknown.statusCode).toBe(statusCodes.notFound)
+    })
   })
 
-  test('404s for a quarter with no matching submission', async () => {
-    const url = pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, {
-      schemeId: 'ironwave-compliance',
-      year: '2027',
-      quarter: 'Q1'
+  test('unknown returns and unbuilt schemes are 404s', async () => {
+    const missing = await server.inject({
+      method: 'GET',
+      url: pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, {
+        ...params,
+        year: '2019'
+      })
     })
-    const { statusCode } = await server.inject({ method: 'GET', url })
+    expect(missing.statusCode).toBe(statusCodes.notFound)
 
-    expect(statusCode).toBe(statusCodes.notFound)
-  })
-
-  test('renders with no lock tag or warning for a historical quarter that has no lockOn', async () => {
-    const url = pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, {
-      schemeId: 'ironwave-compliance',
-      year: '2026',
-      quarter: 'Q1'
+    const unbuilt = await server.inject({
+      method: 'GET',
+      url: pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, {
+        ...params,
+        schemeId: 'repic'
+      })
     })
-    const { result, statusCode } = await server.inject({ method: 'GET', url })
-
-    expect(statusCode).toBe(statusCodes.ok)
-    expect(result).not.toEqual(
-      expect.stringContaining('data-testid="review-pom-return-lock-tag"')
-    )
-  })
-
-  test('POST 404s for REPIC, which has no review screen in this batch', async () => {
-    const url = pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, {
-      schemeId: 'repic',
-      year: '2026',
-      quarter: 'Q2'
-    })
-    const { statusCode } = await server.inject({
-      method: 'POST',
-      url,
-      payload: { decision: 'accept', reason: 'n/a' }
-    })
-
-    expect(statusCode).toBe(statusCodes.notFound)
-  })
-
-  test('POST 404s for a quarter with no matching submission', async () => {
-    const url = pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, {
-      schemeId: 'ironwave-compliance',
-      year: '2027',
-      quarter: 'Q1'
-    })
-    const { statusCode } = await server.inject({
-      method: 'POST',
-      url,
-      payload: { decision: 'accept', reason: 'n/a' }
-    })
-
-    expect(statusCode).toBe(statusCodes.notFound)
+    expect(unbuilt.statusCode).toBe(statusCodes.notFound)
   })
 })
