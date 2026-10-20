@@ -1,136 +1,95 @@
-{% extends 'layouts/page.njk' %}
-
+{% extends 'layouts/regulator.njk' %}
+{% from "prototypeRegulator/macros.njk" import quickLinks %}
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/tag/macro.njk" import govukTag %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+  {{ quickLinks(labels.quickLinks.label, quickLinkItems, "pom-dashboard-quick-links") }}
 
-      {%- set registrationRows = [] -%}
-      {%- for registrationCase in registrationCases -%}
-        {%- set registrationRows = (registrationRows.push([
-          { text: registrationCase.producerName },
-          { text: registrationCase.scheme },
-          { text: registrationCase.type },
-          { html: govukTag({ text: registrationCase.statusLabel, classes: "govuk-tag--" + registrationCase.statusColour }) | safe },
-          { text: registrationCase.dueOn | formatDate('d MMM yyyy') },
-          { html: registrationCase.previousYears | join("<br>") | safe }
-        ]), registrationRows) -%}
-      {%- endfor -%}
+  <h2 class="govuk-heading-m">{{ labels.year.heading }}</h2>
+  <form method="get" action="{{ action }}" data-testid="pom-dashboard-year-form">
+    {{
+      govukSelect({
+        id: "year",
+        name: "year",
+        label: { text: labels.year.label, classes: "govuk-visually-hidden" },
+        hint: { text: labels.year.hint },
+        items: years,
+        attributes: { "data-testid": "pom-dashboard-year" }
+      })
+    }}
+    {{ govukButton({ text: labels.year.action, classes: "govuk-button--secondary", attributes: { "data-testid": "pom-dashboard-year-submit" } }) }}
+  </form>
 
-      {%- set registrationsPanelHtml -%}
-        <h2 class="govuk-heading-l">{{ registrationsTab.heading }}</h2>
-        <p class="govuk-body">{{ registrationsTab.intro }}</p>
-
-        <div class="govuk-button-group">
-          {{ govukButton({
-            text: registrationsTab.allocateAction,
-            href: "#",
-            classes: "govuk-button--secondary",
-            attributes: { "data-testid": "regulator-dashboard-allocate-case" }
-          }) }}
-          {{ govukButton({
-            text: registrationsTab.complianceCheckAction,
-            href: "#",
-            classes: "govuk-button--secondary",
-            attributes: { "data-testid": "regulator-dashboard-run-compliance-check" }
-          }) }}
-        </div>
-
-        {{ govukTable({
-          head: [
-            { text: registrationsTab.columns.name },
-            { text: registrationsTab.columns.scheme },
-            { text: registrationsTab.columns.type },
-            { text: registrationsTab.columns.status },
-            { text: registrationsTab.columns.dueDate },
-            { text: registrationsTab.columns.previousYears }
-          ],
-          rows: registrationRows,
-          attributes: { "data-testid": "regulator-dashboard-registrations-table" }
-        }) }}
-      {%- endset -%}
-
-      {%- set pomRows = [] -%}
-      {%- for submission in pomSubmissions -%}
-        {%- set schemeCellHtml -%}
-          <a class="govuk-link" href="{{ submission.viewHref }}" data-testid="regulator-dashboard-pom-scheme-{{ submission.schemeId }}">{{ submission.schemeName }}</a>
-        {%- endset -%}
-        {%- set viewCellHtml -%}
-          <a class="govuk-link" href="{{ submission.viewHref }}" data-testid="regulator-dashboard-pom-view-{{ submission.schemeId }}">{{ pomSubmissionsTab.viewAction }}</a>
-        {%- endset -%}
-        {%- set pomRows = (pomRows.push([
-          { html: schemeCellHtml },
-          { text: submission.membersCount if submission.membersCount != null else "–" },
-          { text: (submission.submittedOn | formatDate('d MMMM yyyy')) if submission.submittedOn else "–" },
-          { html: govukTag({ text: submission.statusLabel, classes: "govuk-tag--" + submission.statusColour }) | safe },
-          { text: submission.issuesFound if submission.issuesFound != null else "–" },
-          { html: viewCellHtml }
-        ]), pomRows) -%}
-      {%- endfor -%}
-
-      {%- set pomSubmissionsPanelHtml -%}
-        <h2 class="govuk-heading-l">{{ pomSubmissionsTab.heading }}</h2>
-        <p class="govuk-body">{{ pomSubmissionsTab.intro }}</p>
-
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-quarter">
-            {{ govukSelect({
-              id: "year",
-              name: "year",
-              label: { text: pomSubmissionsTab.yearLabel },
-              items: [{ value: "2026", text: "2026", selected: true }],
-              attributes: { "data-testid": "regulator-dashboard-pom-year" }
-            }) }}
-          </div>
-          <div class="govuk-grid-column-one-quarter">
-            {{ govukSelect({
-              id: "quarter",
-              name: "quarter",
-              label: { text: pomSubmissionsTab.quarterLabel },
-              items: [{ value: "Q2", text: "Q2", selected: true }],
-              attributes: { "data-testid": "regulator-dashboard-pom-quarter" }
-            }) }}
-          </div>
-        </div>
-
-        {{ govukTable({
-          head: [
-            { text: pomSubmissionsTab.columns.scheme },
-            { text: pomSubmissionsTab.columns.members },
-            { text: pomSubmissionsTab.columns.submitted },
-            { text: pomSubmissionsTab.columns.status },
-            { text: pomSubmissionsTab.columns.issuesFound },
-            { text: "" }
-          ],
-          rows: pomRows,
-          attributes: { "data-testid": "regulator-dashboard-pom-submissions-table" }
-        }) }}
-      {%- endset -%}
-
-      {{ govukTabs({
-        idPrefix: "regulator-dashboard",
-        attributes: { "data-testid": "regulator-dashboard-tabs" },
-        items: [
-          {
-            label: registrationsTab.text,
-            id: registrationsTab.id,
-            panel: { html: registrationsPanelHtml },
-            attributes: { "data-testid": "regulator-dashboard-tab-" + registrationsTab.id }
-          },
-          {
-            label: pomSubmissionsTab.text,
-            id: pomSubmissionsTab.id,
-            panel: { html: pomSubmissionsPanelHtml },
-            attributes: { "data-testid": "regulator-dashboard-tab-" + pomSubmissionsTab.id }
-          }
-        ]
-      }) }}
-    </div>
+  <h2 class="govuk-heading-m">{{ tasksHeading }}</h2>
+  <div class="app-regulator-task-cards" data-testid="pom-dashboard-task-cards">
+    {% for card in taskCards %}
+      <div class="app-task-card" data-testid="pom-dashboard-card-{{ card.key }}">
+        <p class="govuk-body-s app-task-card__label">{{ card.label }}</p>
+        <p class="govuk-heading-xl app-task-card__count">{{ card.count }}</p>
+        {% if card.link %}<a class="govuk-link" href="{{ card.href }}">{{ card.link }}</a>{% endif %}
+      </div>
+    {% endfor %}
   </div>
+
+  {%- set tabItems = [] -%}
+  {%- for tab in tabs -%}
+    {%- set rows = [] -%}
+    {%- for entry in tab.returns -%}
+      {%- set schemeHtml -%}
+        <a class="govuk-link" href="{{ entry.viewHref }}" data-testid="pom-dashboard-scheme-{{ entry.schemeId }}">{{ entry.schemeName }}</a>
+      {%- endset -%}
+      {%- set viewHtml -%}
+        <a class="govuk-link" href="{{ entry.viewHref }}" data-testid="pom-dashboard-view-{{ entry.schemeId }}">{{ labels.viewAction }}<span class="govuk-visually-hidden"> {{ entry.schemeName }}</span></a>
+      {%- endset -%}
+      {%- set rows = (rows.push([
+        { html: schemeHtml },
+        { text: entry.membersCount if entry.membersCount != null else "–" },
+        { text: (entry.submittedOn | formatDate('d MMMM yyyy')) if entry.submittedOn else "–" },
+        { html: govukTag({ text: entry.statusLabel, classes: "govuk-tag--" + entry.statusColour }) },
+        { text: entry.flags if entry.flags != null else "–" },
+        { html: viewHtml }
+      ]), rows) -%}
+    {%- endfor -%}
+    {%- set submittedHeadHtml -%}
+      <a class="govuk-link govuk-link--no-visited-state" href="{{ headings.submitted.href }}">{{ headings.submitted.text }}</a>
+    {%- endset -%}
+    {%- set statusHeadHtml -%}
+      <a class="govuk-link govuk-link--no-visited-state" href="{{ headings.status.href }}">{{ headings.status.text }}</a>
+    {%- endset -%}
+    {%- set panelHtml -%}
+      <h2 class="govuk-heading-l">{{ returnsHeading }}</h2>
+      <p class="govuk-body">{{ labels.returnsIntro }}</p>
+      {% if rows.length %}
+        {{
+          govukTable({
+            head: [
+              { text: labels.columns.scheme },
+              { text: labels.columns.members },
+              { html: submittedHeadHtml, attributes: { "aria-sort": headings.submitted.ariaSort } },
+              { html: statusHeadHtml, attributes: { "aria-sort": headings.status.ariaSort } },
+              { text: labels.columns.flags },
+              { html: '<span class="govuk-visually-hidden">Action</span>' }
+            ],
+            rows: rows,
+            attributes: { "data-testid": "pom-dashboard-table-" + tab.key }
+          })
+        }}
+      {% else %}
+        <p class="govuk-body" data-testid="pom-dashboard-empty">{{ noReturns }}</p>
+      {% endif %}
+    {%- endset -%}
+    {%-
+      set tabItems = (tabItems.push({
+        label: tab.label + " (" + tab.returns.length + ")",
+        id: "pom-" + tab.key,
+        panel: { html: panelHtml }
+      }), tabItems)
+    -%}
+  {%- endfor -%}
+
+  {{ govukTabs({ idPrefix: "pom", items: tabItems, attributes: { "data-testid": "pom-dashboard-tabs" } }) }}
 {% endblock %}

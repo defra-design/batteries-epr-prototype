@@ -1,0 +1,538 @@
+<title>Battery Compliance Reconciliation</title>
+<style>
+  :root{
+    --gds-black:#0b0c0c;
+    --gds-white:#ffffff;
+    --gds-blue:#1d70b8;
+    --gds-dark-grey:#505a5f;
+    --gds-mid-grey:#b1b4b6;
+    --gds-light-grey:#f3f2f1;
+    --gds-grey-3:#f8f8f8;
+    --gds-green:#00703c;
+    --gds-green-bg:#eaf4ea;
+    --gds-red:#d4351c;
+    --gds-red-bg:#fceeec;
+    --gds-orange:#f47738;
+    --gds-orange-bg:#fdf3e8;
+    --gds-yellow:#ffdd00;
+    --gds-purple:#4c2c92;
+    --focus:#ffdd00;
+    --border:var(--gds-mid-grey);
+    --link:var(--gds-blue);
+    --link-visited:#4c2c92;
+    --page-bg:var(--gds-light-grey);
+    --surface:var(--gds-white);
+    --text:var(--gds-black);
+    --text-secondary:var(--gds-dark-grey);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --page-bg:#141414;
+      --surface:#1d1d1d;
+      --text:#f3f2f1;
+      --text-secondary:#b1b4b6;
+      --border:#454545;
+      --gds-light-grey:#262626;
+      --gds-grey-3:#232323;
+      --gds-green-bg:#0f2318;
+      --gds-red-bg:#2c1512;
+      --gds-orange-bg:#2c1f10;
+    }
+  }
+  :root[data-theme="dark"]{
+    --page-bg:#141414;
+    --surface:#1d1d1d;
+    --text:#f3f2f1;
+    --text-secondary:#b1b4b6;
+    --border:#454545;
+    --gds-light-grey:#262626;
+    --gds-grey-3:#232323;
+    --gds-green-bg:#0f2318;
+    --gds-red-bg:#2c1512;
+    --gds-orange-bg:#2c1f10;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--page-bg);
+    color:var(--text);
+    font-family:"GDS Transport",arial,sans-serif;
+    font-size:16px;
+    line-height:1.4;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{font-weight:700;text-wrap:balance;margin:0;}
+  a{color:var(--link);}
+  a:visited{color:var(--link-visited);}
+  a:focus,button:focus,input:focus,textarea:focus,[tabindex]:focus{
+    outline:3px solid var(--focus);
+    outline-offset:0;
+    box-shadow:inset 0 0 0 2px var(--gds-black);
+  }
+  :root[data-theme="dark"] a:focus, :root:not([data-theme="light"]) a:focus{box-shadow:inset 0 0 0 2px var(--gds-black);}
+  button{font-family:inherit;}
+  .wrap{max-width:1220px;margin:0 auto;padding:0 24px;}
+  table{border-collapse:collapse;width:100%;}
+  .num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap;}
+
+  /* ---- Masthead ---- */
+  .masthead{background:var(--gds-black);color:var(--gds-white);border-bottom:10px solid var(--gds-blue);}
+  .masthead .row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;gap:16px;}
+  .crown{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem;letter-spacing:.2px;}
+  .crown svg{flex:none;}
+  .service-name{font-weight:400;font-size:1.05rem;border-left:1px solid rgba(255,255,255,.3);padding-left:14px;margin-left:4px;}
+  .masthead-meta{display:flex;align-items:center;gap:18px;font-size:.9rem;color:#d6d9db;}
+  .masthead-meta .id{color:var(--gds-white);}
+
+  /* ---- Phase / cycle banner ---- */
+  .cycle-banner{background:var(--surface);border-bottom:1px solid var(--border);}
+  .cycle-inner{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px;padding:22px 0 18px;}
+  .cycle-title{display:flex;flex-direction:column;gap:4px;}
+  .eyebrow{text-transform:uppercase;letter-spacing:.08em;font-size:.75rem;font-weight:700;color:var(--text-secondary);}
+  .cycle-title h1{font-size:2rem;}
+  .deadline-pill{display:inline-flex;align-items:center;gap:8px;background:var(--gds-orange-bg);color:#7a3d0e;border:1px solid var(--gds-orange);padding:6px 12px;font-weight:700;font-size:.9rem;}
+  :root[data-theme="dark"] .deadline-pill, :root:not([data-theme="light"]) .deadline-pill{color:#ffb37a;}
+  .cycle-stats{display:flex;gap:32px;flex-wrap:wrap;}
+  .cycle-stat{display:flex;flex-direction:column;}
+  .cycle-stat .v{font-size:1.6rem;font-weight:700;font-variant-numeric:tabular-nums;}
+  .cycle-stat .l{font-size:.8rem;color:var(--text-secondary);}
+
+  /* ---- Service bus status strip ---- */
+  .bus-strip{background:var(--gds-grey-3);border-bottom:1px solid var(--border);}
+  .bus-inner{display:flex;align-items:center;gap:28px;padding:12px 0;flex-wrap:wrap;}
+  .bus-label{font-size:.8rem;font-weight:700;color:var(--text-secondary);white-space:nowrap;}
+  .bus-nodes{display:flex;gap:22px;flex-wrap:wrap;}
+  .bus-node{display:flex;align-items:center;gap:7px;font-size:.9rem;}
+  .dot{width:9px;height:9px;border-radius:50%;flex:none;}
+  .dot.up{background:var(--gds-green);}
+  .dot.degraded{background:var(--gds-orange);}
+  .dot.down{background:var(--gds-red);}
+  .bus-node .agency{font-weight:700;}
+  .bus-node .stat{color:var(--text-secondary);}
+  .xborder-note{margin-left:auto;font-size:.85rem;color:var(--text-secondary);display:flex;align-items:center;gap:8px;}
+
+  /* ---- Tags ---- */
+  .tag{display:inline-block;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:3px 9px;border:1px solid transparent;}
+  .tag-green{background:var(--gds-green-bg);color:var(--gds-green);border-color:var(--gds-green);}
+  .tag-red{background:var(--gds-red-bg);color:var(--gds-red);border-color:var(--gds-red);}
+  .tag-amber{background:var(--gds-orange-bg);color:#7a3d0e;border-color:var(--gds-orange);}
+  :root[data-theme="dark"] .tag-amber, :root:not([data-theme="light"]) .tag-amber{color:#ffb37a;}
+  .tag-grey{background:var(--gds-light-grey);color:var(--text-secondary);border-color:var(--border);}
+
+  /* ---- Tabs ---- */
+  .tabs{margin-top:28px;}
+  .tablist{display:flex;gap:2px;border-bottom:1px solid var(--border);list-style:none;padding:0;margin:0;}
+  .tablist button{background:none;border:1px solid transparent;border-bottom:none;padding:12px 18px;font-size:1rem;font-weight:700;cursor:pointer;color:var(--link);position:relative;top:1px;}
+  .tablist button[aria-selected="true"]{background:var(--surface);border-color:var(--border);color:var(--text);}
+  .tablist button .count{font-variant-numeric:tabular-nums;color:var(--text-secondary);font-weight:400;margin-left:4px;}
+  .tablist button[aria-selected="true"] .count{color:var(--text-secondary);}
+  .tabpanel{background:var(--surface);border:1px solid var(--border);border-top:none;padding:24px;}
+
+  /* ---- Summary matrix ---- */
+  .matrix{margin-top:4px;}
+  .matrix thead th{text-align:left;font-size:.85rem;text-transform:uppercase;letter-spacing:.03em;color:var(--text-secondary);border-bottom:2px solid var(--gds-black);padding:0 12px 10px;font-weight:700;}
+  :root[data-theme="dark"] .matrix thead th, :root:not([data-theme="light"]) .matrix thead th{border-bottom-color:#f3f2f1;}
+  .matrix thead th.num{text-align:right;}
+  .matrix tbody td{padding:14px 12px;border-bottom:1px solid var(--border);}
+  .matrix tbody tr{cursor:pointer;}
+  .matrix tbody tr:hover td{background:var(--gds-light-grey);}
+  .scheme-name{font-weight:700;}
+  .scheme-name .go{color:var(--link);font-weight:400;font-size:.85rem;display:block;}
+  .delta-pos{color:var(--gds-green);}
+  .delta-neg{color:var(--gds-red);}
+  .delta-zero{color:var(--text-secondary);}
+
+  /* ---- Discrepancy hub ---- */
+  .hub-header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:18px;}
+  .back-link{display:inline-flex;align-items:center;gap:6px;font-size:.95rem;font-weight:700;margin-bottom:14px;}
+  .hub-title{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .hub-title h2{font-size:1.7rem;}
+  .hub-obligation{display:flex;gap:26px;flex-wrap:wrap;padding:16px 18px;background:var(--gds-grey-3);border:1px solid var(--border);margin-bottom:22px;}
+  .hub-obligation div{display:flex;flex-direction:column;}
+  .hub-obligation .v{font-size:1.3rem;font-weight:700;font-variant-numeric:tabular-nums;}
+  .hub-obligation .l{font-size:.78rem;color:var(--text-secondary);}
+
+  .warning-block{display:flex;gap:14px;align-items:flex-start;border:2px solid var(--gds-red);background:var(--gds-red-bg);padding:14px 16px;margin-bottom:18px;}
+  .warning-block .icon{flex:none;width:32px;height:32px;border-radius:50%;background:var(--gds-red);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;}
+  .warning-block strong{display:block;color:var(--gds-red);text-transform:uppercase;font-size:.8rem;letter-spacing:.03em;margin-bottom:2px;}
+
+  .variance-banner{display:flex;gap:14px;align-items:flex-start;border-left:5px solid var(--gds-orange);background:var(--gds-orange-bg);padding:12px 16px;margin-bottom:18px;}
+  .variance-banner strong{display:block;font-size:.85rem;text-transform:uppercase;letter-spacing:.03em;color:#7a3d0e;margin-bottom:2px;}
+  :root[data-theme="dark"] .variance-banner strong, :root:not([data-theme="light"]) .variance-banner strong{color:#ffb37a;}
+
+  .batch-grid{margin-bottom:6px;}
+  .batch-grid thead th{text-align:left;font-size:.8rem;text-transform:uppercase;letter-spacing:.03em;color:var(--text-secondary);border-bottom:2px solid var(--gds-black);padding:0 10px 9px;font-weight:700;}
+  :root[data-theme="dark"] .batch-grid thead th, :root:not([data-theme="light"]) .batch-grid thead th{border-bottom-color:#f3f2f1;}
+  .batch-grid thead th.num{text-align:right;}
+  .batch-grid tbody td{padding:12px 10px;border-bottom:1px solid var(--border);vertical-align:top;}
+  .batch-grid tbody tr.flagged td{background:var(--gds-red-bg);}
+  .batch-id{font-weight:700;font-variant-numeric:tabular-nums;}
+  .chemistry{font-size:.85rem;color:var(--text-secondary);}
+  .flag-note{font-size:.82rem;color:var(--gds-red);font-weight:700;margin-top:3px;}
+  .op-note{font-size:.85rem;color:var(--text-secondary);font-style:italic;margin-top:4px;max-width:34ch;}
+
+  .table-scroll{overflow-x:auto;border:1px solid var(--border);border-bottom:none;}
+  .table-scroll table{border:none;min-width:760px;}
+  .table-scroll thead th{background:var(--gds-grey-3);}
+
+  /* ---- Query form (conditional GDS radio pattern) ---- */
+  .query-panel{margin-top:26px;border-top:1px solid var(--border);padding-top:22px;}
+  .query-panel h3{font-size:1.15rem;margin-bottom:14px;}
+  fieldset{border:none;padding:0;margin:0;}
+  legend{font-weight:700;margin-bottom:10px;}
+  .radio-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;}
+  .radio-item input{width:20px;height:20px;flex:none;margin-top:2px;accent-color:var(--gds-blue);}
+  .radio-item label{font-size:1rem;}
+  .conditional{margin:0 0 18px 30px;padding-left:16px;border-left:4px solid var(--border);}
+  .conditional[hidden]{display:none;}
+  .conditional textarea{width:100%;max-width:640px;min-height:110px;font-family:inherit;font-size:1rem;padding:10px;border:2px solid var(--gds-black);background:var(--surface);color:var(--text);}
+  :root[data-theme="dark"] .conditional textarea, :root:not([data-theme="light"]) .conditional textarea{border-color:#8a8a8a;}
+  .hint{color:var(--text-secondary);font-size:.9rem;margin:2px 0 10px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--gds-green);color:#fff;border:2px solid transparent;padding:10px 20px;font-size:1rem;font-weight:700;cursor:pointer;}
+  .btn:hover{background:#005a30;}
+  .btn.secondary{background:transparent;color:var(--text);border-color:var(--border);}
+  .btn.secondary:hover{background:var(--gds-light-grey);}
+
+  .notif-banner{background:var(--gds-green-bg);border:2px solid var(--gds-green);color:var(--gds-green);padding:14px 16px;margin-top:16px;font-weight:700;display:flex;gap:10px;align-items:center;}
+  .notif-banner[hidden]{display:none;}
+
+  /* ---- Timeline ---- */
+  .timeline-wrap{margin-top:34px;border-top:1px solid var(--border);padding-top:20px;}
+  .timeline-wrap h3{font-size:1.15rem;margin-bottom:16px;}
+  .timeline{list-style:none;margin:0;padding:0;border-left:2px solid var(--border);}
+  .timeline li{position:relative;padding:0 0 20px 24px;}
+  .timeline li::before{content:"";position:absolute;left:-7px;top:3px;width:12px;height:12px;border-radius:50%;background:var(--surface);border:3px solid var(--gds-blue);}
+  .timeline li:last-child{padding-bottom:0;}
+  .t-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;}
+  .t-state{font-weight:700;}
+  .t-time{font-size:.85rem;color:var(--text-secondary);font-variant-numeric:tabular-nums;}
+  .t-detail{font-size:.92rem;color:var(--text-secondary);margin-top:2px;}
+  .t-detail code{background:var(--gds-light-grey);padding:1px 5px;font-family:ui-monospace,"SFMono-Regular",Consolas,monospace;font-size:.85em;}
+  .t-user{font-size:.82rem;color:var(--text-secondary);margin-top:2px;}
+
+  .view{display:none;}
+  .view.active{display:block;}
+
+  footer{margin:48px 0 32px;color:var(--text-secondary);font-size:.85rem;border-top:1px solid var(--border);padding-top:18px;}
+
+  @media (prefers-reduced-motion: no-preference){
+    .tabpanel, .view{ }
+  }
+</style>
+
+<div class="masthead">
+  <div class="wrap row">
+    <div style="display:flex;align-items:center;">
+      <span class="crown">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 18h16M6 18l-1.2-8.4L9 12l3-6 3 6 4.2-2.4L18 18" stroke="#fff" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        Environment Agency
+      </span>
+      <span class="service-name">Battery Compliance Reconciliation</span>
+    </div>
+    <div class="masthead-meta">
+      <span>Signed in as <span class="id">C.Okafor · Enforcement Officer</span></span>
+      <span>|</span>
+      <a href="#" style="color:#fff;">Sign out</a>
+    </div>
+  </div>
+</div>
+
+<div class="cycle-banner">
+  <div class="wrap cycle-inner">
+    <div class="cycle-title">
+      <span class="eyebrow">Active compliance cycle</span>
+      <h1>Q2 2026 reconciliation</h1>
+      <span class="deadline-pill">⏱ Submission deadline: 15 working days — closes 20 Oct 2026</span>
+    </div>
+    <div class="cycle-stats">
+      <div class="cycle-stat"><span class="v">14</span><span class="l">Schemes reporting</span></div>
+      <div class="cycle-stat"><span class="v">6</span><span class="l">Outstanding reviews</span></div>
+      <div class="cycle-stat"><span class="v">3</span><span class="l">Under official query</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="bus-strip">
+  <div class="wrap bus-inner">
+    <span class="bus-label">Pan-UK shared visibility log</span>
+    <div class="bus-nodes">
+      <span class="bus-node"><span class="dot up"></span><span class="agency">SEPA</span><span class="stat">connected · synced 14:02</span></span>
+      <span class="bus-node"><span class="dot up"></span><span class="agency">EA</span><span class="stat">connected · synced 14:02</span></span>
+      <span class="bus-node"><span class="dot up"></span><span class="agency">NRW</span><span class="stat">connected · synced 13:58</span></span>
+      <span class="bus-node"><span class="dot degraded"></span><span class="agency">NIEA</span><span class="stat">delayed · last sync 09:41</span></span>
+    </div>
+    <span class="xborder-note">🛡 Cross-border double-counting check: <strong style="color:var(--gds-green);margin-left:4px;">no conflicts detected</strong></span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- MAIN VIEW -->
+  <div id="view-main" class="view active">
+    <div class="tabs">
+      <ul class="tablist" role="tablist">
+        <li role="presentation"><button role="tab" aria-selected="true" data-tab="outstanding">Outstanding reviews <span class="count">(6)</span></button></li>
+        <li role="presentation"><button role="tab" aria-selected="false" data-tab="matched">Fully matched <span class="count">(5)</span></button></li>
+        <li role="presentation"><button role="tab" aria-selected="false" data-tab="query">Under official query <span class="count">(3)</span></button></li>
+      </ul>
+
+      <div class="tabpanel" id="panel-outstanding" role="tabpanel">
+        <table class="matrix">
+          <thead>
+            <tr>
+              <th>Scheme</th>
+              <th class="num">Target obligation (~45% POM)</th>
+              <th class="num">Matched evidence</th>
+              <th class="num">Variance (Δ)</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-scheme="erp"><td><span class="scheme-name">ERP Recycling<span class="go">Open discrepancy hub →</span></span></td><td class="num">945.100 t</td><td class="num">912.350 t</td><td class="num delta-neg">−32.750 t</td><td><span class="tag tag-red">Mismatch</span></td></tr>
+            <tr data-scheme="ecosurety"><td><span class="scheme-name">Ecosurety<span class="go">Open discrepancy hub →</span></span></td><td class="num">780.250 t</td><td class="num">950.000 t</td><td class="num delta-pos">+169.750 t</td><td><span class="tag tag-amber">Variance</span></td></tr>
+            <tr data-scheme="valpak"><td><span class="scheme-name">Valpak Battery Compliance<span class="go">Open discrepancy hub →</span></span></td><td class="num">1,102.900 t</td><td class="num">1,061.005 t</td><td class="num delta-neg">−41.895 t</td><td><span class="tag tag-red">Mismatch</span></td></tr>
+            <tr data-scheme="repic"><td><span class="scheme-name">REPIC<span class="go">Open discrepancy hub →</span></span></td><td class="num">601.300 t</td><td class="num">618.220 t</td><td class="num delta-pos">+16.920 t</td><td><span class="tag tag-amber">Variance</span></td></tr>
+            <tr data-scheme="ele"><td><span class="scheme-name">Electrical Compliance UK<span class="go">Open discrepancy hub →</span></span></td><td class="num">334.700 t</td><td class="num">301.480 t</td><td class="num delta-neg">−33.220 t</td><td><span class="tag tag-red">Mismatch</span></td></tr>
+            <tr data-scheme="wte"><td><span class="scheme-name">WeeeCare Take-Back<span class="go">Open discrepancy hub →</span></span></td><td class="num">212.000 t</td><td class="num">198.640 t</td><td class="num delta-neg">−13.360 t</td><td><span class="tag tag-amber">Variance</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tabpanel" id="panel-matched" role="tabpanel" hidden>
+        <table class="matrix">
+          <thead>
+            <tr><th>Scheme</th><th class="num">Target obligation (~45% POM)</th><th class="num">Matched evidence</th><th class="num">Variance (Δ)</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="scheme-name">WasteCare</span></td><td class="num">1,250.450 t</td><td class="num">1,250.450 t</td><td class="num delta-zero">0.000 t</td><td><span class="tag tag-green">Match</span></td></tr>
+            <tr><td><span class="scheme-name">Recolight Compliance</span></td><td class="num">418.600 t</td><td class="num">418.600 t</td><td class="num delta-zero">0.000 t</td><td><span class="tag tag-green">Match</span></td></tr>
+            <tr><td><span class="scheme-name">Budget Battery Scheme</span></td><td class="num">96.220 t</td><td class="num">96.220 t</td><td class="num delta-zero">0.000 t</td><td><span class="tag tag-green">Match</span></td></tr>
+            <tr><td><span class="scheme-name">Ecobat Compliance</span></td><td class="num">560.900 t</td><td class="num">560.900 t</td><td class="num delta-zero">0.000 t</td><td><span class="tag tag-green">Match</span></td></tr>
+            <tr><td><span class="scheme-name">Comply Direct</span></td><td class="num">309.140 t</td><td class="num">309.140 t</td><td class="num delta-zero">0.000 t</td><td><span class="tag tag-green">Match</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tabpanel" id="panel-query" role="tabpanel" hidden>
+        <table class="matrix">
+          <thead>
+            <tr><th>Scheme</th><th class="num">Target obligation (~45% POM)</th><th class="num">Matched evidence</th><th class="num">Disputed tonnage (excluded)</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="scheme-name">Veolia Battery Returns</span></td><td class="num">720.300 t</td><td class="num">683.900 t</td><td class="num">36.400 t</td><td><span class="tag tag-amber">Under query — day 4</span></td></tr>
+            <tr><td><span class="scheme-name">Biffa Compliance Scheme</span></td><td class="num">455.800 t</td><td class="num">440.150 t</td><td class="num">15.650 t</td><td><span class="tag tag-amber">Under query — day 9</span></td></tr>
+            <tr><td><span class="scheme-name">GreenCell Recovery</span></td><td class="num">188.400 t</td><td class="num">150.900 t</td><td class="num">37.500 t</td><td><span class="tag tag-amber">Under query — day 2</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <p style="margin-top:14px;font-size:.85rem;color:var(--text-secondary);">Target obligations are calculated against ~45% of each scheme's rolling 3-year average Placed on the Market (POM) declaration. Select a scheme row above to open its line-item discrepancy hub.</p>
+  </div>
+
+  <!-- DISCREPANCY HUB VIEW -->
+  <div id="view-hub" class="view">
+    <a href="#" class="back-link" id="back-link">← Back to Outstanding reviews</a>
+
+    <div class="hub-header">
+      <div class="hub-title">
+        <h2 id="hub-scheme-name">ERP Recycling</h2>
+        <span class="tag tag-red" id="hub-status-tag">Mismatch</span>
+      </div>
+    </div>
+
+    <div class="hub-obligation">
+      <div><span class="v">945.100 t</span><span class="l">Target obligation</span></div>
+      <div><span class="v">912.350 t</span><span class="l">Matched evidence</span></div>
+      <div><span class="v" style="color:var(--gds-red);">−32.750 t</span><span class="l">Net variance</span></div>
+      <div><span class="v">6</span><span class="l">Batches under review</span></div>
+    </div>
+
+    <div class="warning-block">
+      <span class="icon">!</span>
+      <div>
+        <strong>Permit bounds warning</strong>
+        Batch <strong>ERP-QB2-0117</strong> declares Lithium-ion (Li-ion) evidence, but ERP's contracted operator (Midland Battery Recovery Ltd, PPC permit EPR/PP3392ZX) is authorised only for Nickel-based and Lead-acid chemistries at this site.
+      </div>
+    </div>
+
+    <div class="variance-banner">
+      <span style="font-size:1.3rem;line-height:1;">📈</span>
+      <div>
+        <strong>20% variance rule triggered — Batch ERP-QB2-0094</strong>
+        Declared intake is 24.6% above the trailing 4-quarter baseline for this site. Operator's note cites a new retail take-back contract starting April 2026 — see note below before raising a query.
+      </div>
+    </div>
+
+    <h3 style="font-size:1.05rem;margin-bottom:10px;">Batch-level comparison</h3>
+    <div class="table-scroll">
+      <table class="batch-grid">
+        <thead>
+          <tr>
+            <th>Batch ID</th>
+            <th>Chemistry</th>
+            <th class="num">Scheme declared</th>
+            <th class="num">Operator evidence</th>
+            <th class="num">Δ</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="batch-id">ERP-QB2-0081</td>
+            <td class="chemistry">Lead-acid</td>
+            <td class="num">210.000 t</td>
+            <td class="num">210.000 t</td>
+            <td class="num delta-zero">0.000 t</td>
+            <td>—</td>
+          </tr>
+          <tr class="flagged">
+            <td class="batch-id">ERP-QB2-0094</td>
+            <td class="chemistry">Nickel-cadmium</td>
+            <td class="num">318.400 t</td>
+            <td class="num">318.400 t</td>
+            <td class="num delta-zero">0.000 t</td>
+            <td>
+              <span class="flag-note">⚠ +24.6% vs baseline</span>
+              <div class="op-note">"New Tesco retail collection contract onboarded 03/2026 — volumes expected to hold at this level."</div>
+            </td>
+          </tr>
+          <tr class="flagged">
+            <td class="batch-id">ERP-QB2-0117</td>
+            <td class="chemistry">Lithium-ion</td>
+            <td class="num">156.200 t</td>
+            <td class="num">128.630 t</td>
+            <td class="num delta-neg">−27.570 t</td>
+            <td><span class="flag-note">⚠ Chemistry outside PPC permit</span></td>
+          </tr>
+          <tr>
+            <td class="batch-id">ERP-QB2-0132</td>
+            <td class="chemistry">Nickel-metal hydride</td>
+            <td class="num">94.500 t</td>
+            <td class="num">94.500 t</td>
+            <td class="num delta-zero">0.000 t</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td class="batch-id">ERP-QB2-0148</td>
+            <td class="chemistry">Lead-acid</td>
+            <td class="num">120.900 t</td>
+            <td class="num">115.720 t</td>
+            <td class="num delta-neg">−5.180 t</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td class="batch-id">ERP-QB2-0159</td>
+            <td class="chemistry">Lithium-ion</td>
+            <td class="num">45.100 t</td>
+            <td class="num">45.100 t</td>
+            <td class="num delta-zero">0.000 t</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="query-panel">
+      <h3>Case action</h3>
+      <fieldset>
+        <legend>What would you like to do with batch ERP-QB2-0117?</legend>
+        <div class="radio-item">
+          <input type="radio" name="action" id="action-none" checked>
+          <label for="action-none">Take no action — variance is explained</label>
+        </div>
+        <div class="radio-item">
+          <input type="radio" name="action" id="action-query">
+          <label for="action-query">Open an official regulatory query</label>
+        </div>
+        <div class="conditional" id="query-conditional" hidden>
+          <label for="query-reason" style="font-weight:700;display:block;margin-bottom:4px;">Reason for query</label>
+          <p class="hint">This will exclude 128.630 t from ERP Recycling's final obligation total and notify both the scheme and operator Resolution Hubs.</p>
+          <textarea id="query-reason" placeholder="e.g. Evidence issued for Li-ion outside operator's authorised PPC permit scope at Midland Battery Recovery Ltd — request revised evidence note or permit variation confirmation."></textarea>
+        </div>
+      </fieldset>
+      <button class="btn" id="submit-query">Submit case action</button>
+      <button class="btn secondary" style="margin-left:8px;">Save as draft</button>
+      <div class="notif-banner" id="confirm-banner" hidden>✓ Batch ERP-QB2-0117 flagged Under Query and routed to both Resolution Hubs.</div>
+    </div>
+
+    <div class="timeline-wrap">
+      <h3>Activity timeline — Batch ERP-QB2-0117</h3>
+      <ul class="timeline">
+        <li>
+          <div class="t-head"><span class="t-state">Draft created</span><span class="t-time">02 Sep 2026, 09:14</span></div>
+          <div class="t-detail">Batch entered by operator ahead of quarterly submission window.</div>
+          <div class="t-user">Midland Battery Recovery Ltd · account MBRL-EV-004</div>
+        </li>
+        <li>
+          <div class="t-head"><span class="t-state">Submitted</span><span class="t-time">08 Sep 2026, 16:47</span></div>
+          <div class="t-detail">Evidence tonnage adjusted from <code>244.600 t</code> to <code>128.630 t</code> prior to submission.</div>
+          <div class="t-user">Midland Battery Recovery Ltd · account MBRL-EV-004</div>
+        </li>
+        <li>
+          <div class="t-head"><span class="t-state">Locked</span><span class="t-time">10 Sep 2026, 00:02</span></div>
+          <div class="t-detail">Submission window closed; record locked for the Q2 2026 cycle.</div>
+          <div class="t-user">System · cycle-lock-service</div>
+        </li>
+        <li>
+          <div class="t-head"><span class="t-state">Flagged — permit mismatch</span><span class="t-time">11 Sep 2026, 11:23</span></div>
+          <div class="t-detail">Automated tripwire: chemistry Lithium-ion not present on PPC permit EPR/PP3392ZX.</div>
+          <div class="t-user">System · permit-bounds-check</div>
+        </li>
+        <li>
+          <div class="t-head"><span class="t-state">Under review</span><span class="t-time">12 Sep 2026, 14:02</span></div>
+          <div class="t-detail">Assigned for officer review.</div>
+          <div class="t-user">C.Okafor · Enforcement Officer</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<footer class="wrap">
+  Battery Compliance Reconciliation · Environment Agency, on behalf of the pan-UK Battery Compliance Scheme regulators (SEPA, EA, NRW, NIEA) · Cycle data refreshes automatically every 15 minutes.
+</footer>
+
+<script>
+  const tabs = document.querySelectorAll('.tablist button');
+  const panels = { outstanding: document.getElementById('panel-outstanding'), matched: document.getElementById('panel-matched'), query: document.getElementById('panel-query') };
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabs.forEach(b => b.setAttribute('aria-selected', 'false'));
+      btn.setAttribute('aria-selected', 'true');
+      Object.values(panels).forEach(p => p.hidden = true);
+      panels[btn.dataset.tab].hidden = false;
+    });
+  });
+
+  const viewMain = document.getElementById('view-main');
+  const viewHub = document.getElementById('view-hub');
+  document.querySelectorAll('tr[data-scheme]').forEach(row => {
+    row.addEventListener('click', () => {
+      viewMain.classList.remove('active');
+      viewHub.classList.add('active');
+      window.scrollTo({top:0, behavior:'instant'});
+    });
+  });
+  document.getElementById('back-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    viewHub.classList.remove('active');
+    viewMain.classList.add('active');
+  });
+
+  const actionNone = document.getElementById('action-none');
+  const actionQuery = document.getElementById('action-query');
+  const conditional = document.getElementById('query-conditional');
+  function syncConditional(){ conditional.hidden = !actionQuery.checked; }
+  actionNone.addEventListener('change', syncConditional);
+  actionQuery.addEventListener('change', syncConditional);
+
+  document.getElementById('submit-query').addEventListener('click', () => {
+    if (actionQuery.checked) {
+      document.getElementById('confirm-banner').hidden = false;
+      document.getElementById('hub-status-tag').textContent = 'Under Query';
+      document.getElementById('hub-status-tag').className = 'tag tag-amber';
+    }
+  });
+</script>

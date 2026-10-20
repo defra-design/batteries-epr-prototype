@@ -1,0 +1,50 @@
+{% extends 'layouts/page.njk' %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "prototypeRegulatorWasteReturns/macros.njk" import sectionTabs %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+      {{ sectionTabs(tabs) }}
+
+      <p class="govuk-body">{{ labels.intro }}</p>
+
+      {%- set rows = [] -%}
+      {%- for scheme in schemes -%}
+        {%- set nameCellHtml -%}
+          {%- if scheme.hasReturns -%}
+            <a
+              class="govuk-link"
+              href="{{ scheme.href }}"
+              data-testid="waste-returns-scheme-{{ scheme.id }}"
+              >{{ scheme.name }}</a
+            >
+          {%- else -%}
+            {{ scheme.name }}
+          {%- endif -%}
+        {%- endset -%}
+        {%-
+          set rows = (rows.push([
+            { html: nameCellHtml },
+            { text: scheme.operatorsCount if scheme.hasReturns else labels.noReturns },
+            { text: scheme.awaitingReviewCount if scheme.hasReturns else "–" }
+          ]), rows)
+        -%}
+      {%- endfor -%}
+
+      {{
+        govukTable({
+          head: [
+            { text: labels.columns.scheme },
+            { text: labels.columns.operators },
+            { text: labels.columns.awaitingReview }
+          ],
+          rows: rows,
+          attributes: { "data-testid": "waste-returns-schemes-table" }
+        })
+      }}
+    </div>
+  </div>
+{% endblock %}

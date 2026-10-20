@@ -2,6 +2,9 @@ import { initialiseServer } from '../../../../../test-utils/initialise-server.js
 import { paths, pathTo } from '../../../../../config/paths.js'
 import { statusCodes } from '../../../../common/constants/status-codes.js'
 
+const recordUrl = (schemeId) =>
+  pathTo(paths.prototypeRegulatorPomSubmissionSchemeRecord, { schemeId })
+
 describe('#prototypeRegulatorPomSubmissionSchemeRecord', () => {
   let server
   beforeAll(async () => {
@@ -11,69 +14,91 @@ describe('#prototypeRegulatorPomSubmissionSchemeRecord', () => {
     await server.stop({ timeout: 0 })
   })
 
-  test('renders the IronWave Compliance scheme record from seeded data', async () => {
-    const url = pathTo(paths.prototypeRegulatorPomSubmissionSchemeRecord, {
-      schemeId: 'ironwave-compliance'
-    })
-    const { result, statusCode } = await server.inject({ method: 'GET', url })
+  const get = (schemeId) =>
+    server.inject({ method: 'GET', url: recordUrl(schemeId) })
+
+  test('IronWave Compliance: scheme name H1, Approved tag, back link and the NPWD reference', async () => {
+    const { result, statusCode } = await get('ironwave-compliance')
 
     expect(statusCode).toBe(statusCodes.ok)
-    expect(result).toEqual(expect.stringContaining('Scheme record'))
+    expect(result).toMatch(/<h1[^>]*>\s*IronWave Compliance/)
+    expect(result).toMatch(
+      /govuk-tag--green[^>]*data-testid="heading-tag"[^>]*>\s*Approved\s*</
+    )
     const backLink = result.match(/<a[^>]*data-testid="back-link"[^>]*>/)[0]
     expect(backLink).toEqual(
       expect.stringContaining(
-        `href="${pathTo(paths.prototypeRegulatorPomSubmissionSchemeHome, { schemeId: 'ironwave-compliance' })}"`
-      )
-    )
-    expect(result).toEqual(
-      expect.stringContaining('data-testid="scheme-record-organisation"')
-    )
-    expect(result).toEqual(expect.stringContaining('IronWave Compliance Ltd'))
-    expect(result).toEqual(expect.stringContaining('09112477'))
-    expect(result).toEqual(
-      expect.stringContaining('2 Foundry Road, Sheffield, S9 2LP')
-    )
-    expect(result).toEqual(
-      expect.stringMatching(/govuk-tag--blue"[^>]*>\s*Received\s*<\/strong>/)
-    )
-    expect(result).toEqual(
-      expect.stringContaining('Priya Shah — priya.shah@ironwave.co.uk')
-    )
-    expect(result).toEqual(
-      expect.stringContaining('Michael Osei — michael.osei@ironwave.co.uk')
-    )
-
-    const membersHref = pathTo(
-      paths.prototypeRegulatorPomSubmissionSchemeMembers,
-      { schemeId: 'ironwave-compliance' }
-    )
-    const submissionsHref = pathTo(
-      paths.prototypeRegulatorPomSubmissionSchemeSubmissions,
-      { schemeId: 'ironwave-compliance' }
-    )
-    expect(result).toEqual(
-      expect.stringContaining(
-        `href="${membersHref}" data-testid="scheme-record-link-members"`
+        `href="${paths.prototypeRegulatorPomSubmissionDashboard}"`
       )
     )
     expect(result).toEqual(
       expect.stringContaining(
-        `href="${submissionsHref}" data-testid="scheme-record-link-submissions"`
+        'The full record the regulator holds for this scheme.'
       )
     )
-
-    const timelineTag = result.match(
-      /<a[^>]*data-testid="scheme-record-link-timeline"[^>]*>/
-    )[0]
-    expect(timelineTag).toEqual(expect.stringContaining('href="#"'))
+    expect(result).toEqual(expect.stringContaining('NPWD378112'))
   })
 
-  test('404s for REPIC, which has no scheme record in this batch', async () => {
-    const url = pathTo(paths.prototypeRegulatorPomSubmissionSchemeRecord, {
-      schemeId: 'repic'
-    })
-    const { statusCode } = await server.inject({ method: 'GET', url })
+  test('shows organisation details, approval and people from the seed', async () => {
+    const { result } = await get('ironwave-compliance')
+    const section = (id) =>
+      result.split(`data-testid="scheme-record-${id}"`)[1].split('</dl>')[0]
 
-    expect(statusCode).toBe(statusCodes.notFound)
+    expect(section('organisation')).toEqual(
+      expect.stringContaining('IronWave Compliance Ltd')
+    )
+    expect(section('organisation')).toEqual(expect.stringContaining('09112477'))
+    expect(section('organisation')).toEqual(
+      expect.stringContaining('2 Foundry Road, Sheffield, S9 2LP')
+    )
+    expect(section('approval')).toEqual(
+      expect.stringContaining('NPWD-APR-2026-0142')
+    )
+    expect(section('approval')).toEqual(
+      expect.stringContaining('Issued 15 January 2026')
+    )
+    expect(section('people')).toEqual(expect.stringContaining('Priya Shah'))
+    expect(section('people')).toEqual(expect.stringContaining('Michael Osei'))
+    expect(section('people')).toEqual(expect.stringContaining('A. Nwosu'))
+  })
+
+  test('REPIC gets its own values and a bottom link back to REPIC, not to IronWave', async () => {
+    const { result, statusCode } = await get('repic')
+
+    expect(statusCode).toBe(statusCodes.ok)
+    expect(result).toMatch(/<h1[^>]*>\s*REPIC/)
+    expect(result).toEqual(expect.stringContaining('NPWD378119'))
+    expect(result).toEqual(expect.stringContaining('NPWD-APR-2026-0148'))
+    expect(result).toEqual(expect.stringContaining('Elaine Morrow'))
+    // The Figma record for REPIC repeated IronWave's references and people.
+    expect(result).not.toEqual(expect.stringContaining('NPWD378112'))
+    expect(result).not.toEqual(expect.stringContaining('Priya Shah'))
+    expect(result).toEqual(expect.stringContaining('Back to REPIC'))
+    expect(result).not.toEqual(expect.stringContaining('Back to IronWave'))
+    expect(result).toEqual(
+      expect.stringContaining(
+        `href="${pathTo(paths.prototypeRegulatorPomSubmissionSchemeHome, { schemeId: 'repic' })}" data-testid="scheme-record-home-link"`
+      )
+    )
+  })
+
+  test('lists the four documents and history links and does not use "activity timeline"', async () => {
+    const { result } = await get('ironwave-compliance')
+
+    for (const text of [
+      'View conditions of approval',
+      'View agency files',
+      'View notes on this scheme',
+      'View scheme history'
+    ]) {
+      expect(result).toEqual(expect.stringContaining(text))
+    }
+    expect(result).not.toEqual(expect.stringContaining('activity timeline'))
+  })
+
+  test('a scheme without a built record is a 404', async () => {
+    expect((await get('copper-and-co-compliance')).statusCode).toBe(
+      statusCodes.notFound
+    )
   })
 })

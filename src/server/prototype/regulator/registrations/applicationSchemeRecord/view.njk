@@ -1,0 +1,34 @@
+{% extends 'layouts/regulator.njk' %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <h2 class="govuk-heading-l">{{ labels.organisationHeading }}</h2>
+  {{ govukSummaryList({ rows: organisationRows, attributes: { "data-testid": "scheme-record-organisation" } }) }}
+
+  <h2 class="govuk-heading-l">{{ labels.officeHeading }}</h2>
+  {{ govukSummaryList({ rows: officeRows, attributes: { "data-testid": "scheme-record-office" } }) }}
+
+  <h2 class="govuk-heading-l">
+    {{ labels.statusHeading }}
+    {{ govukTag({ text: status.label, classes: "govuk-tag--" + status.colour + " app-regulator-hero__tag", attributes: { "data-testid": "scheme-record-status" } }) }}
+  </h2>
+
+  <h2 class="govuk-heading-l">{{ labels.manageHeading }}</h2>
+  <div class="app-regulator-task-cards" data-testid="scheme-record-manage">
+    {% for card in [labels.notes, labels.files, labels.users] %}
+      <div class="app-task-card">
+        <h3 class="govuk-heading-m">{{ card.heading }}</h3>
+        <p class="govuk-body">{{ card.body }}</p>
+        <a class="govuk-link" href="#">{{ card.link }}</a>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="app-regulator-notes" data-testid="scheme-record-signatory">
+    <h2 class="govuk-heading-m">{{ labels.signatoryHeading }}</h2>
+    <p class="govuk-body">{{ signatory }}</p>
+    {{ govukButton({ text: labels.signatoryAction, href: "#" }) }}
+  </div>
+{% endblock %}

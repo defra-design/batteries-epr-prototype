@@ -1,0 +1,70 @@
+{% extends 'layouts/page.njk' %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "prototypeRegulatorWasteReturns/macros.njk" import factsPanel %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      {% if errorSummary and errorSummary.length %}
+        {{
+          govukErrorSummary({
+            titleText: errorTitle,
+            errorList: errorSummary,
+            attributes: { "data-testid": "classification-error-summary" }
+          })
+        }}
+      {% endif %}
+
+      <h1 class="govuk-heading-xl" data-testid="classification-heading">
+        {{ heading }}
+      </h1>
+
+      {{ factsPanel(facts, "classification-facts") }}
+
+      <h2 class="govuk-heading-m">{{ labels.thresholdHeading }}</h2>
+      <p class="govuk-body">{{ labels.thresholdBody }}</p>
+
+      <div class="app-facts-panel">
+        <div>
+          <p
+            class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-2"
+          >
+            {{ bensLine }}
+          </p>
+          <p class="govuk-body-s govuk-!-margin-bottom-1">
+            {{ labels.thresholdLine }}
+          </p>
+          <p class="govuk-body-s govuk-!-margin-bottom-0">{{ overLine }}</p>
+        </div>
+      </div>
+
+      <form
+        method="post"
+        action="{{ action }}"
+        novalidate
+        data-testid="classification-form"
+      >
+        {{
+          govukRadios({
+            idPrefix: "decision",
+            name: "decision",
+            fieldset: {
+              legend: { text: labels.questionHeading, classes: "govuk-fieldset__legend--l" }
+            },
+            errorMessage: { text: errors.decision } if errors.decision,
+            items: optionItems
+          })
+        }}
+
+        {{
+          govukButton({
+            text: labels.continueAction,
+            attributes: { "data-testid": "classification-continue" }
+          })
+        }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

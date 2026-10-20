@@ -5,20 +5,21 @@ import { paths, pathTo } from '../../../../../config/paths.js'
 import { prototypeRegulatorContent } from '../../../../../config/prototype-regulator-content.js'
 import {
   basePageModel,
-  SCHEMES_WITH_DETAIL_SCREENS_BUILT,
+  fill,
+  flagCountFor,
   findSubmission,
-  formatDateOnly,
-  formatDateTime
+  formatDateTime,
+  formatTonnes3,
+  SCHEMES_WITH_DETAIL_SCREENS_BUILT
 } from '../shared.js'
+import { getFailedUploads } from '../store.js'
 
 const seedData = createRequire(import.meta.url)(
   '../../../../../client/javascripts/storage-seed.json'
 )
 
-// The scheme's own service ran checks and passed all rows before upload, so
-// there is no per-file "Open" destination unless Figma showed us the file's
-// content — only IronWave_Q2_2026_member_5.csv (the one with warnings) has
-// been read. The other 3 files' Open links stay dead until those are built.
+// Only the file with flags (member_5) has an Open screen built; the other
+// files' Open links stay dead until those screens exist.
 const OPEN_LINK_BUILT = new Set(['eeeeaaaa-0001-4000-a000-000000000003'])
 
 const QUARTER_MONTH_RANGES = {
@@ -41,72 +42,148 @@ export const submissionFilesController = {
       throw Boom.notFound()
     }
 
-    const pageContent = prototypeRegulatorContent.submissionFiles
+    const labels = prototypeRegulatorContent.submissionFiles
     const scheme = seedData.prototypeRegulatorSchemes.find(
       (s) => s.id === schemeId
     )
-    const membersTotalCount = seedData.prototypeRegulatorSchemeMembers.filter(
-      (m) => m.schemeId === schemeId
+    const membersTotal = seedData.prototypeRegulatorSchemeMembers.filter(
+      (member) => member.schemeId === schemeId
     ).length
+    const evidence = seedData.prototypeRegulatorSupportingEvidence.filter(
+      (entry) => entry.submissionId === submission.id
+    )
+    const memberFiles = seedData.prototypeRegulatorSubmissionFiles.filter(
+      (file) => file.submissionId === submission.id
+    )
 
-    const files = seedData.prototypeRegulatorSubmissionFiles
-      .filter((f) => f.submissionId === submission.id)
-      .map((file) => ({
-        fileName: file.fileName,
-        membersCovered: file.membersCovered ?? '–',
-        rows: file.rows,
-        uploadedOn: formatDateOnly(file.uploadedOn),
-        checkStatusLabel:
-          file.checkStatus === 'warnings'
-            ? pageContent.checkStatusLabels.warningsTemplate.replace(
-                '{count}',
-                file.warningsCount
-              )
-            : pageContent.checkStatusLabels.passed,
-        checkStatusColour: pageContent.checkStatusColours[file.checkStatus],
-        openHref: OPEN_LINK_BUILT.has(file.id)
-          ? pathTo(paths.prototypeRegulatorPomSubmissionSubmissionFile, {
-              schemeId,
-              year,
-              quarter,
-              fileId: file.id
-            })
-          : '#'
-      }))
+    const files = memberFiles.map((file) => ({
+      id: file.id,
+      fileName: file.fileName,
+      members: file.membersCovered ?? 'All',
+      records: file.rows.toLocaleString('en-GB'),
+      total: file.totalTonnes == null ? '–' : formatTonnes3(file.totalTonnes),
+      uploadedShort: new Date(file.uploadedOn).toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        timeZone: 'UTC'
+      }),
+      check:
+        file.checkStatus === 'warnings'
+          ? {
+              ...labels.checkStatus.flags,
+              text: fill(labels.checkStatus.flags.text, {
+                count: file.warningsCount
+              })
+            }
+          : labels.checkStatus.passed,
+      openHref: OPEN_LINK_BUILT.has(file.id)
+        ? pathTo(paths.prototypeRegulatorPomSubmissionSubmissionFile, {
+            schemeId,
+            year,
+            quarter,
+            fileId: file.id
+          })
+        : '#'
+    }))
+
+    const records = memberFiles.reduce((sum, file) => sum + file.rows, 0)
+    const dataRecords = memberFiles
+      .filter((file) => file.membersCovered)
+      .reduce((sum, file) => sum + file.rows, 0)
+    const total = memberFiles.reduce(
+      (sum, file) => sum + (file.totalTonnes ?? 0),
+      0
+    )
+    const failed = getFailedUploads().filter(
+      (upload) =>
+        upload.schemeId === schemeId && upload.compliancePeriodYear === year
+    )
+    const values = {
+      scheme: scheme.name,
+      period: submission.periodLabel,
+      range: QUARTER_MONTH_RANGES[quarter]
+    }
+    const summaryRow = (key, value, action) => ({
+      key: { text: key },
+      value: { text: value },
+      actions: action ? { items: [action] } : undefined
+    })
 
     return h.view('prototype/regulator/pomSubmission/submissionFiles/view', {
       ...basePageModel(
+        { ...labels, heading: labels.title },
         {
-          ...pageContent,
-          heading: pageContent.headingTemplate.replace(
-            '{period}',
-            submission.periodLabel
-          )
-        },
-        paths.prototypeRegulatorPomSubmissionDashboard
+          backLink: {
+            href: pathTo(paths.prototypeRegulatorPomSubmissionSchemeHome, {
+              schemeId
+            }),
+            text: fill(labels.backLink, values)
+          }
+        }
       ),
-      backLink: pathTo(paths.prototypeRegulatorPomSubmissionSchemeHome, {
-        schemeId
+      tag: {
+        text: fill(labels.tag.text, {
+          count: memberFiles.length + evidence.length
+        }),
+        colour: labels.tag.colour
+      },
+      subtitle: fill(labels.subtitle, values),
+      intro: fill(labels.intro, {
+        dataFiles: memberFiles.length,
+        evidence: evidence.length
       }),
-      scheme,
-      submission,
-      intro: pageContent.introTemplate
-        .replace('{scheme}', scheme.name)
-        .replace('{count}', files.length)
-        .replace('{period}', submission.periodLabel),
-      periodLine: `${submission.periodLabel} (${QUARTER_MONTH_RANGES[quarter]})`,
-      membersCoveredLine: `${submission.membersCount} of ${membersTotalCount}`,
-      totalPlacedOnMarketLine: `${submission.totalPlacedOnMarketTonnes.toLocaleString('en-GB')} tonnes`,
-      submittedByLine: `${scheme.superUser.name}, ${formatDateTime(submission.submittedOn)}`,
+      summaryRows: [
+        summaryRow(
+          labels.summary.records,
+          fill(labels.recordsValue, {
+            records: dataRecords.toLocaleString('en-GB'),
+            included: submission.membersCount,
+            total: membersTotal
+          })
+        ),
+        summaryRow(
+          labels.summary.total,
+          fill(labels.totalValue, { amount: formatTonnes3(total) })
+        ),
+        summaryRow(
+          labels.summary.checks,
+          fill(labels.checksValue, { flags: flagCountFor(submission) }),
+          {
+            href: pathTo(paths.prototypeRegulatorPomSubmissionDataCheckReport, {
+              schemeId
+            }),
+            text: labels.viewFlagged
+          }
+        ),
+        summaryRow(
+          labels.summary.submittedBy,
+          `${submission.submittedBy}, ${formatDateTime(submission.submittedOn)}`
+        ),
+        failed.length > 0 &&
+          summaryRow(
+            fill(labels.summary.failed, { year }),
+            fill(labels.failedValue, { count: failed.length }),
+            { href: '#', text: labels.viewAll }
+          )
+      ].filter(Boolean),
+      recordsTotal: records,
       files,
-      downloadAllText: pageContent.downloadAllTemplate.replace(
-        '{count}',
-        files.length
-      ),
-      continueHref: pathTo(
-        paths.prototypeRegulatorPomSubmissionReviewPomReturn,
-        { schemeId, year, quarter }
-      )
+      evidence: evidence.map((entry) => ({
+        fileName: entry.fileName,
+        covers: entry.covers,
+        uploadedShort: new Date(entry.uploadedOn).toLocaleDateString('en-GB', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+          timeZone: 'UTC'
+        })
+      })),
+      reviewHref: pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, {
+        schemeId,
+        year,
+        quarter
+      })
     })
   }
 }

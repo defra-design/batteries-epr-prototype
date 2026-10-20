@@ -24,6 +24,7 @@ export default {
       import: ['./javascripts/application.js', './stylesheets/application.scss']
     },
     signIn: './javascripts/signIn/entry.js',
+    regulatorAutoAdvance: './javascripts/regulator/autoAdvance/entry.js',
     signOut: './javascripts/signOut/entry.js',
     dashboard: './javascripts/dashboard/entry.js',
     publicRegisterSearch: './javascripts/publicRegister/search/entry.js',
@@ -39,6 +40,8 @@ export default {
       './javascripts/prototype/complianceScheme/membersListAddMember/entry.js',
     prototypeAbtoIncomingWaste:
       './javascripts/prototype/abto/incomingWaste/entry.js',
+    prototypeAbtoThreshold:
+      './javascripts/prototype/abto/smallOperatorThreshold/entry.js',
     prototypeWasteData:
       './javascripts/prototype/complianceScheme/wasteData/entry.js',
     onboardingConfirmation: './javascripts/onboardingConfirmation/entry.js',
@@ -245,6 +248,10 @@ export default {
         {
           from: path.join(govukFrontendPath, 'dist/govuk/assets/rebrand'),
           to: 'assets'
+        },
+        {
+          from: path.join(dirname, 'src/client/assets/images'),
+          to: 'assets/images'
         }
       ]
     })

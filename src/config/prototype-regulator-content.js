@@ -13,70 +13,71 @@ export const prototypeRegulatorContent = {
   },
 
   dashboard: {
-    title: 'Regulator dashboard',
-    heading: 'Regulator dashboard',
-    tabsLabel: 'Dashboard sections',
-    registrationsTab: {
-      id: 'registrations',
-      text: 'Registrations',
-      heading: 'Registration cases',
-      intro: 'Registration applications from producers and compliance schemes.',
-      allocateAction: 'Allocate case',
-      complianceCheckAction: 'Run compliance check',
-      columns: {
-        name: 'Large producer',
-        scheme: 'Scheme',
-        type: 'Type',
-        status: 'Status',
-        dueDate: 'Due date',
-        previousYears: 'Previous years'
-      },
-      statusLabels: {
-        submitted: 'In progress',
-        paymentIssue: 'Payment issue',
-        notSubmitted: 'Not submitted'
+    title: 'PoM submissions',
+    heading: 'PoM submissions',
+    quickLinks: {
+      label: 'Quick links',
+      links: {
+        overdue: 'Overdue submissions',
+        openQueries: 'Open queries',
+        failedValidation: 'Failed validation uploads',
+        otherReports: 'Other reports'
       }
     },
-    pomSubmissionsTab: {
-      id: 'pom-submissions',
-      text: 'PoM submissions',
-      heading: 'PoM submissions',
-      intro: 'Quarterly battery data returns across all compliance schemes.',
-      yearLabel: 'Year',
-      quarterLabel: 'Quarter',
-      columns: {
-        scheme: 'Scheme',
-        members: 'Members',
-        submitted: 'Submitted',
-        status: 'Status',
-        issuesFound: 'Issues found'
-      },
-      statusLabels: {
-        received: 'Received',
-        accepted: 'Accepted',
-        queried: 'Queried',
-        notYetSubmitted: 'Not yet submitted'
-      },
-      viewAction: 'View'
-    }
+    year: {
+      heading: 'Submissions year',
+      hint: 'View submission counts for a different year (2010 to 2026)',
+      label: 'Submissions year',
+      action: 'View year',
+      first: 2010,
+      last: 2026
+    },
+    tasksHeading: 'Q{quarter} {year} tasks',
+    tasks: {
+      toReview: { label: 'To review', link: 'Review {scheme} return' },
+      overdue: { label: 'Overdue', link: 'View overdue submissions' },
+      newResponses: { label: 'New responses', link: 'Review answered record' },
+      openQueries: { label: 'Open queries', link: 'View open queries' }
+    },
+    returnsHeading: 'Q{quarter} {year} returns',
+    returnsIntro:
+      'Quarterly battery data returns across all compliance schemes. Newest first — select a column heading to sort by submitted date or status.',
+    noReturns: 'There are no returns for Q{quarter} {year}.',
+    allTab: 'All',
+    columns: {
+      scheme: 'Scheme',
+      members: 'Members',
+      submitted: 'Submitted',
+      status: 'Status',
+      flags: 'Flags'
+    },
+    statusLabels: {
+      received: 'Received',
+      accepted: 'Accepted',
+      queried: 'Queried',
+      rejected: 'Rejected',
+      notYetSubmitted: 'Not yet submitted',
+      overdue: 'Overdue'
+    },
+    viewAction: 'View'
   },
 
   schemeHome: {
-    heading: 'Scheme home',
+    title: 'Scheme home',
+    backLink: 'Back to submissions',
     detailsHeading: 'Scheme details',
     approvalNumberLabel: 'Approval number',
     approvedLabel: 'Approved',
-    approvalExpiresLabel: 'Approval expires',
     membersLabel: 'Members',
+    seeAllMembers: 'See all members',
     authorisedSignatoryLabel: 'Authorised signatory',
     superUserLabel: 'Super User',
-    accountManagerLabel: 'Account manager (Agency)',
     quickLinks: {
       record: 'View scheme record',
       members: 'View members',
       submissions: 'View all submissions'
     },
-    submissionHeadingPrefix: 'submission',
+    submissionHeading: '{period} submission',
     statusLabels: {
       received: 'Received',
       accepted: 'Accepted',
@@ -84,59 +85,122 @@ export const prototypeRegulatorContent = {
       rejected: 'Rejected',
       notYetSubmitted: 'Not yet submitted'
     },
-    runDataChecksAction: 'Run data checks',
-    viewFilesLink: 'View all submission files',
-    viewTimelineLink: 'View activity timeline for this quarter'
+    intro: {
+      received:
+        'Received on {submittedOn} as {filesCount} CSV data files and {evidenceCount} supporting evidence document. Files that failed validation were rejected at upload, so everything below is ready to review.',
+      accepted: '{scheme} return was accepted on {decidedOn}.',
+      rejected: '{scheme} return was rejected on {decidedOn}.',
+      queried:
+        'You queried {queried} records in this return on {queriedOn}. {scheme} can see the query and the reason in their account — nothing was sent by email. The other {others} records in the quarter are unaffected and stand as submitted.',
+      notYetSubmitted: '{scheme} has not yet submitted a return for {period}.'
+    },
+    deadline:
+      'Due {deadline} — received {daysLate} days late. After {lockOn}, any changes to {quarter} figures must be made in the {nextPeriod} submission.',
+    deadlineOnTime:
+      'Due {deadline}. After {lockOn}, any changes to {quarter} figures must be made in the {nextPeriod} submission.',
+    statusHeading: 'Submission status',
+    tasks: {
+      submitted: { title: 'Submitted by the scheme', status: 'Done' },
+      checks: { title: 'Automated data checks', status: 'Passed' },
+      review: { title: 'Regulator review', status: 'Not started' },
+      decision: { title: 'Decision', status: 'Cannot start yet' }
+    },
+    summary: {
+      scheme: 'Scheme',
+      period: 'Period',
+      files: 'Files',
+      validation: 'Validation',
+      failedValidation: 'Failed validation ({year})',
+      submittedBy: 'Submitted by',
+      submitted: 'Submitted',
+      recordsQueried: 'Records queried',
+      responseDue: 'Response due',
+      decided: 'Decided'
+    },
+    filesValue:
+      '{filesCount} CSV files ({members} producers) + {evidenceCount} supporting evidence document',
+    filesValueSimple: '{filesCount}',
+    validationValue: 'Passed — {flags} figures flagged for review',
+    failedValidationValue:
+      '{count} uploads rejected — {byQuarter}. Used in the scheme risk (RAG) rating.',
+    viewAll: 'View all',
+    statusLabel: 'Status:',
+    viewFilesLink: 'View submission files and supporting evidence ({count})',
+    viewFilesLinkSimple: 'View submission files ({count})',
+    viewQueriedLink: 'View queried records ({count})',
+    viewHistoryLink: 'View history for this quarter',
+    reviewAction: 'Review this return',
+    reviewAnsweredAction: 'Review answered records'
   },
 
   schemeRecord: {
     title: 'Scheme record',
-    heading: 'Scheme record',
-    organisationHeading: 'Organisation',
-    registeredNameLabel: 'Registered name',
-    companyRegistrationNoLabel: 'Companies House number',
-    registeredOfficeLabel: 'Registered office',
-    tradingAddressLabel: 'Trading address',
-    websiteLabel: 'Website',
+    backLink: 'Back to submissions',
+    status: { text: 'Approved', colour: 'green' },
+    intro:
+      'The full record the regulator holds for this scheme. Nothing here can be edited by the regulator — changes are made by the scheme and confirmed on review.',
+    organisationHeading: 'Organisation details',
+    organisation: {
+      legalName: 'Legal name',
+      tradingName: 'Trading name',
+      companiesHouseNumber: 'Companies House number',
+      registeredOffice: 'Registered office',
+      nation: 'Nation'
+    },
+    nation: 'England',
     approvalHeading: 'Approval',
-    approvalNumberLabel: 'Approval number',
-    approvedLabel: 'Approved',
-    approvalExpiresLabel: 'Approval expires',
-    approvedByLabel: 'Approved by',
+    approval: {
+      number: 'Approval number',
+      approvedOn: 'Approved on',
+      expires: 'Approval expires',
+      status: 'Approval status',
+      conditions: 'Conditions of approval'
+    },
+    approvalStatus: 'Approved',
+    conditionsValue: 'Issued {approvedOn}',
     peopleHeading: 'People',
-    authorisedSignatoryLabel: 'Authorised signatory',
-    superUserLabel: 'Super User',
-    accountManagerLabel: 'Account manager (Agency)',
-    relatedLinks: {
-      members: 'View members',
-      submissions: 'View all submissions',
-      timeline: 'View activity timeline',
-      notes: 'View notes and agency files',
-      applications: 'View applications for approval'
-    }
+    people: {
+      authorisedSignatory: 'Authorised signatory',
+      superUser: 'Super User',
+      accountManager: 'Regulator account manager'
+    },
+    documentsHeading: 'Documents and history',
+    documents: {
+      conditions: 'View conditions of approval',
+      files: 'View agency files',
+      notes: 'View notes on this scheme',
+      history: 'View scheme history'
+    },
+    backToScheme: 'Back to {scheme}'
   },
 
   schemeMembers: {
-    title: 'Members',
-    heading: 'Members',
+    title: 'Scheme members',
+    backLink: 'Back to submissions',
+    intro:
+      '{count} producers are registered through this scheme for {year}. Members are added by the scheme; the regulator confirms them and issues the BPRN. A member with no figures in the quarter still appears here, so a gap is visible rather than silent.',
     columns: {
       member: 'Member',
       bprn: 'BPRN',
-      producerSize: 'Producer size',
-      joinedScheme: 'Joined scheme'
+      joined: 'Joined',
+      returnStatus: '{period} return'
     },
     statusLabels: {
-      queried: 'Queried',
-      submitted: 'Submitted'
+      included: { text: 'Included', colour: 'green' },
+      queried: { text: 'Queried', colour: 'orange' },
+      noFigures: { text: 'No figures', colour: 'grey' }
     },
     viewAction: 'View',
-    downloadLink: 'Download member list (.csv)',
-    recordLink: 'View scheme record'
+    downloadLink: 'Download member list (CSV)',
+    submissionsLink: 'View all submissions',
+    backToScheme: 'Back to {scheme}'
   },
 
   schemeSubmissions: {
     title: 'All submissions',
-    heading: 'All submissions',
+    backLink: 'Back to submissions',
+    intro:
+      'Every quarter is decided on its own. A queried or rejected quarter does not block the ones after it.',
     columns: {
       quarter: 'Quarter',
       submitted: 'Submitted',
@@ -153,115 +217,141 @@ export const prototypeRegulatorContent = {
     },
     awaitingDecision: 'Awaiting decision',
     viewAction: 'View',
+    windows: {
+      heading: 'Submission windows',
+      hint: 'Q1–Q3 figures lock 2 months after the deadline. Q4 stays open for historical adjustments for 3 years.',
+      locksOn: 'Locks {date}',
+      lockedOn: 'Locked {date}',
+      openUntil: 'Open for adjustments until {date}',
+      open: { text: 'Open · locks in {days} days', colour: 'yellow' },
+      locked: { text: 'Locked', colour: 'grey' },
+      extended: { text: 'Extended window · 3 years', colour: 'blue' }
+    },
     downloadLink: 'Download submission history (.csv)',
-    timelineLink: 'View activity timeline'
+    historyLink: 'View scheme history',
+    backToScheme: 'Back to {scheme}'
   },
 
   runningDataChecks: {
     title: 'Running data checks',
     heading: 'Running data checks',
-    body2: 'This will take a few seconds. Do not close the page.',
+    intro:
+      'Comparing each producer’s figures with the previous quarter and the same quarter last year.',
+    wait: 'This will take a few seconds. Do not close the page.',
     continueLink: 'Continue'
   },
 
   dataCheckReport: {
-    title: 'Data check report',
-    heading: 'Data check report',
-    findingsHeading: 'Automated findings',
-    findingsCaption:
-      'Detected automatically by the data checker – no manual review yet.',
+    title: 'Figures flagged for review',
+    heading: 'Figures flagged for review',
+    backLink: 'Back to submissions',
+    intro:
+      '{count} figures flagged across {producers} producers in {scheme}’s {period} return. Each producer is compared with the previous quarter and the same quarter last year, by tonnes as well as percentage. Check the scheme’s supporting evidence before raising a query.',
+    flagsHeading: 'Flags',
+    flagsHint:
+      'Flagged by the service. These are prompts to look, not errors — you decide what to query.',
     columns: {
-      member: 'Member',
-      issue: 'Issue',
-      type: 'Type'
+      producer: 'Producer',
+      flagged: 'What was flagged',
+      flag: 'Flag'
     },
-    typeLabels: {
-      swing: 'Swing',
-      validation: 'Validation'
+    // Colours by meaning: all of these are prompts to look rather than errors,
+    // so none is red; yellow is a plain heads-up and purple marks estimates.
+    types: {
+      variance: { text: 'Variance', colour: 'orange' },
+      chemistryChange: { text: 'Chemistry change', colour: 'orange' },
+      repeatedFigure: { text: 'Repeated figure', colour: 'yellow' },
+      estimated: { text: 'Estimated', colour: 'purple' }
     },
-    typeColours: {
-      swing: 'orange',
-      validation: 'red'
-    },
-    observationsHeading: 'Your observations',
-    observationsIntro:
-      'Add any notes based on your own review. These will be included if you send a query to the scheme.',
-    observationsLabel: 'Your observations',
-    continueAction: 'Continue to review flagged members'
+    notesHeading: 'Your notes',
+    notesIntro:
+      'Private to the regulator. Notes are not sent to the scheme — you raise queries against individual producers on the next screen.',
+    notesLabel: 'Your notes',
+    notesMax: 1000,
+    continueAction: 'Review producer figures',
+    errorTitle: 'There is a problem',
+    errors: { notesTooLong: 'Notes must be 1000 characters or fewer' }
   },
 
   batterySalesDataSubmission: {
     title: 'Battery sales data submission',
+    heading: '{scheme} — {period} return',
+    backLink: 'Back to submissions',
     tabsLabel: 'Review sections',
-    memberFiguresTab: {
-      id: 'member-figures',
-      text: 'Member figures'
-    },
-    compareReturnsTab: {
-      id: 'compare-returns',
-      text: 'Compare returns'
-    },
+    producerFiguresTab: { id: 'producer-figures', text: 'Producer figures' },
+    compareReturnsTab: { id: 'compare-returns', text: 'Compare returns' },
     indicativeObligationTab: {
       id: 'indicative-obligation',
       text: 'Indicative obligation'
     },
-    panelHeading: 'Member figures',
-    columns: {
-      member: 'Member',
-      chemistry: 'Chemistry',
-      figure: 'Figure (t)',
-      status: 'Status',
-      reason: 'Reason',
-      action: 'Action'
-    },
-    statusLabels: {
-      queried: 'Queried',
-      resubmitted: 'Resubmitted',
-      ok: 'OK'
-    },
-    statusColours: {
-      queried: 'orange',
-      resubmitted: 'blue',
-      ok: 'grey'
-    },
-    editQueryLink: 'Edit query',
-    queryAction: 'Query',
-    rejectAction: 'Reject',
-    continueAction: 'Continue',
-    compareReturns: {
-      heading: 'Compare returns',
+    producerFigures: {
+      heading: 'Producer figures',
       intro:
-        "The service compares this quarter's figures against previous quarters and flags any swing beyond the alert level you set below. It flags for review — it never auto-rejects a return.",
-      alertLevelLabel: 'Swing alert level (%)',
+        'Every producer in the return is listed. Raise your own query against any figure, or remove a flag if the supporting evidence explains it. Queries are saved as drafts — nothing is sent to {scheme} until you confirm your decision.',
+      showLabel: 'Show:',
+      filters: {
+        all: 'All ({count})',
+        flagged: 'Flagged ({count})',
+        drafts: 'Draft queries ({count})'
+      },
+      searchLabel: 'Search producer',
+      searchAction: 'Search',
       columns: {
-        category: 'Category',
+        producer: 'Producer',
+        chemistry: 'Chemistry',
+        figure: 'Figure (t)',
+        change: 'Change on Q1',
+        draftQuery: 'Draft query',
+        action: 'Action'
+      },
+      none: 'None',
+      chemistry: 'Chemistry',
+      edit: 'Edit',
+      remove: 'Remove',
+      raise: 'Raise query',
+      empty: 'No producers match.'
+    },
+    compareReturns: {
+      heading: 'Compare producer returns',
+      intro:
+        'Each producer is compared with the previous quarter and the same quarter last year. A figure is flagged if it changes by more than the percentage OR the tonnage you set, or if the chemistry changes with the same tonnage. Select a producer to see their full history.',
+      thresholdHeading: 'Flag changes over',
+      threshold: '{percent}% or {tonnes} t',
+      columns: {
+        producer: 'Producer',
         thisQuarter: 'This quarter (t)',
         lastQuarter: 'Last quarter (t)',
-        swing: 'Swing',
-        sameQuarterLastYear: 'Same qtr last year (t)',
-        action: ''
+        change: 'Change',
+        lastYear: 'Same qtr last year (t)'
       },
-      viewReasonLink: 'View reason',
-      totalLabel: 'Total'
+      total: 'Total',
+      viewExplanation: 'View explanation'
     },
     indicativeObligation: {
       heading: 'Indicative obligation',
       intro:
-        "This is the same calculation IronWave Compliance sees as a live estimate throughout the year. The figures and the working are shown in full, so you don't need to redo the sums to trust the number.",
-      summaryLabels: {
-        placedOnMarket2024: '2024 placed on market',
-        placedOnMarket2025: '2025 placed on market',
-        placedOnMarket2026SoFar: '2026 placed on market so far',
-        rollingAverage: '3-year rolling average',
-        obligationRate: 'Obligation rate',
-        indicativeObligation: 'Indicative obligation ({year})'
+        'The same calculation {scheme} sees as a live estimate during the year, updated with this return once it is accepted.',
+      rows: {
+        2024: '2024 placed on market',
+        2025: '2025 placed on market',
+        2026: '2026 placed on market so far',
+        average: '3-year average',
+        evidence: 'Evidence acquired so far',
+        obligation: 'Indicative obligation ({year}, at {rate}%)',
+        remaining: 'Still to acquire'
       },
-      verifiedTag: 'Calculation verified'
-    }
+      tonnes: '{amount} tonnes',
+      annualised: '{amount} tonnes (annualised: {annualised} tonnes)',
+      partYear: '{amount} tonnes ({year} is a part year so far)',
+      remaining: '{amount} tonnes ({percent}% of the obligation)'
+    },
+    continueAction: 'Continue to decision'
   },
 
   reviewPomReturn: {
     title: 'Review PoM return',
+    heading: '{scheme} — {period} return',
+    backLink: 'Back to submissions',
     statusLabels: {
       received: 'Received',
       accepted: 'Accepted',
@@ -269,6 +359,8 @@ export const prototypeRegulatorContent = {
       rejected: 'Rejected',
       notYetSubmitted: 'Not yet submitted'
     },
+    // Colours by meaning, shared with the compliance scheme's query response
+    // journey so "Queried" is the same word and colour on both sides.
     statusColours: {
       received: 'blue',
       accepted: 'green',
@@ -276,243 +368,268 @@ export const prototypeRegulatorContent = {
       rejected: 'red',
       notYetSubmitted: 'grey'
     },
-    lockWarningColour: 'yellow',
-    statusPathHeading: 'Submission status',
-    statusSteps: {
-      submitted: 'Submitted',
-      checksPassed: 'Automated checks passed',
-      underReview: 'Under regulator review',
-      decision: 'Decision'
+    intro: {
+      received:
+        'Submitted on {submittedOn} — {daysLate} days after the {deadline} deadline.',
+      receivedOnTime:
+        'Submitted on {submittedOn}, before the {deadline} deadline.',
+      accepted:
+        'Submitted {submittedOn} ({daysLate} days late). Accepted on {decidedOn}. The scheme’s obligation has been updated with these figures.',
+      acceptedOnTime:
+        'Submitted {submittedOn}. Accepted on {decidedOn}. The scheme’s obligation has been updated with these figures.',
+      queried:
+        '{count} producer records queried. The rest of the {period} return is not changed while the scheme responds, and {nextPeriod} is not blocked.',
+      rejected:
+        'Rejecting this return does not block any other quarter. {nextPeriod} can still be submitted on time and is assessed on its own.'
     },
-    notDecidedYet: '—',
-    summaryLabels: {
+    late: { text: 'Submitted late', colour: 'red' },
+    lockNote:
+      'After {lockOn}, any changes to {quarter} figures must be made in the {nextPeriod} submission.',
+    summary: {
       totalPlaced: 'Total placed on market',
-      membersIncluded: 'Members included',
-      swingsFlagged: 'Swings flagged for review',
+      producers: 'Producers included',
+      queries: 'Queries raised',
+      waste: 'Waste data',
       submittedBy: 'Submitted by',
-      yourReason: 'Your reason for this decision'
+      obligation: 'Indicative obligation ({year})',
+      evidence: 'Evidence acquired so far',
+      remaining: 'Still to acquire',
+      decision: 'Decision',
+      restOfReturn: 'Rest of return',
+      assessedBy: 'Assessed by',
+      respondBy: 'Respond by',
+      reason: 'Reason',
+      details: 'Details',
+      resubmitBy: 'Resubmit by'
     },
-    relatedLinks: [
-      {
-        text: 'View compare returns and swing flags',
-        fragment: 'compare-returns'
-      },
-      { text: 'View target calculation', fragment: 'indicative-obligation' },
-      { text: 'View battery sales data submission' },
-      { text: 'Compare figures — 3-year view and anomaly flags' },
-      { text: 'Review with supporting documents' },
-      { text: 'Reconcile with waste and evidence' },
-      { text: 'View amendment history' },
-      { text: 'Query records by theme' }
-    ],
-    decisionHeading: 'Make a decision',
-    decisionOptions: {
+    producersValue: '{included} of {total}',
+    tonnesValue: '{amount} tonnes',
+    draftQueriesValue: '{count} draft queries — {producers} (not sent yet)',
+    noDraftQueries: 'No draft queries',
+    wasteValue: '{period} waste return received — review before accepting',
+    obligationValue: '{amount} tonnes — updated with {period}',
+    remainingValue: '{amount} tonnes ({percent}% of the obligation)',
+    decisionValue: {
+      queried: 'Queried — {count} producer records',
+      rejected: 'Rejected — whole return'
+    },
+    restOfReturnValue:
+      'Not changed — no resubmission needed unless a figure is corrected',
+    assessedByValue: 'Environment Agency ({name}), {date}',
+    links: {
+      documents: 'Review with supporting documents ({file})',
+      figures: 'View producer figures and draft queries',
+      compare: 'Compare producer returns',
+      waste: 'View {period} waste data',
+      obligation: 'View indicative obligation',
+      reconcile: 'Reconcile with waste and evidence',
+      amendments: 'View amendment history',
+      threeYear: 'Compare figures — 3-year view'
+    },
+    decisionHeading: 'Confirm your decision',
+    decisionIntro:
+      'This quarter is assessed on its own — it does not block later quarters. The outcome is recorded against the return, and {scheme} sees it when they sign in.',
+    decisionLegend: 'What do you want to do?',
+    options: {
       accept: {
-        label: 'Accept the return',
-        hintTemplate:
-          'Records the {period} return as complete. {scheme} sees the decision straight away.'
+        text: 'Accept the return',
+        hint: 'No reason needed. The return is accepted by the Environment Agency and the scheme’s obligation is updated.'
       },
       query: {
-        label: 'Query one or more figures',
-        hint: 'Only the records you query go back to the scheme. The rest of the quarter stands.'
+        text: 'Send queries to the scheme',
+        hint: 'Sends the {count} draft queries from the producer figures screen, each against its own producer. The rest of the return is not changed while the scheme responds. You can add more queries before sending.'
       },
       reject: {
-        label: 'Reject the whole return (systemic errors only)',
-        hint: "Only for a corrupted, misaligned or out-of-sync file. You'll be asked to confirm and give the type of error. The scheme has 28 days to resubmit."
+        text: 'Reject the whole return',
+        hint: 'For example, data was changed for a producer without being declared as a resubmission, or the scheme has asked for the return to be rejected. The scheme corrects and resubmits by a date you set.'
       }
     },
-    reasonLabel: 'Reason for your decision',
-    reasonHintTemplate:
-      '{scheme} sees this reason in the service. It is recorded against the return — it is not sent by email.',
-    continueAction: 'Save and continue',
-    error: {
-      title: 'There is a problem',
-      decision: 'Select whether to accept, query or reject the return',
-      reason: 'Enter a reason for your decision'
-    }
-  },
-
-  reviewPomReturnAccepted: {
-    title: 'Acceptance recorded',
-    bannerHeading: 'Acceptance recorded',
-    bannerBodyTemplate:
-      'This decision is recorded in the service and is visible to {scheme} immediately — dated {decidedOn}.',
-    introTemplate:
-      '{scheme} submitted their {period} return on {submittedOn}. It was accepted on {decidedOn}.',
-    lockWarningColour: 'yellow',
-    summaryLabels: {
-      totalPlaced: 'Total placed on market',
-      membersIncluded: 'Members included',
-      swingsFlagged: 'Swings flagged for review',
-      submittedBy: 'Submitted by',
-      yourReason: 'Your reason for this decision'
-    }
-  },
-
-  reviewPomReturnQueried: {
-    title: 'Records queried',
-    bannerHeadingTemplate: '{count} records queried',
-    bannerBodyTemplate:
-      '{scheme} has been told in the service and can download the queried records now. The rest of the {period} return stands.',
-    introTemplate:
-      '{scheme} submitted their {period} return on {submittedOn}. You queried {count} member records on {decidedOn}. Nothing else in the return moves, and the next quarter is not blocked.',
-    summaryLabels: {
-      decision: 'Decision',
-      decidedBy: 'Decided by',
-      decidedOn: 'Decided on',
-      schemeNotified: 'Scheme notified',
-      respondBy: 'Respond by',
-      restOfReturn: 'Rest of return',
-      yourReason: 'Your reason for this decision'
-    },
-    decisionTemplate: 'Queried — {count} of {total} records',
-    schemeNotifiedTemplate: 'In the service, {decidedOn} (no email)',
-    respondByTemplate: '{respondBy} (28 days)',
-    restOfReturnValue: 'Stands — no resubmission needed',
-    recordsHeading: 'Records queried',
-    columns: {
-      member: 'Member',
-      chemistry: 'Chemistry',
-      figure: 'Figure (t)',
-      reason: 'Your reason',
-      status: 'Status'
-    },
-    statusLabel: 'Queried',
-    statusColour: 'orange',
-    figureStatusLabels: { queried: 'Queried', resubmitted: 'Resubmitted' },
-    figureStatusColours: { queried: 'orange', resubmitted: 'blue' },
-    whatSchemeSeesHeading: 'What {scheme} sees',
-    whatSchemeSeesBody:
-      'The scheme sees these records — and only these — in their own service, each with the reason you recorded. They can go back to the member for the right figure and fix it with a form. They do not re-upload the submission, and they cannot edit the file already held as evidence.'
-  },
-
-  reviewPomReturnRejectConfirm: {
-    title: 'Reject the whole return?',
-    headingTemplate: 'Reject the whole {period} return?',
-    tagText: 'Systemic only',
-    introTemplate:
-      "Rejecting sends every record in {scheme}'s {period} return back — including the {recordsWithNoIssues} records with no issues. Use this only when the file itself can't be trusted. For wrong figures, query those records instead and the rest of the return stands.",
-    warningTextTemplate:
-      "This removes 100% of the scheme's data for {period} until they resubmit. It does not affect any other quarter.",
-    errorTypeHeading: 'What type of systemic error is it?',
-    errorTypeOptions: {
-      corruptedFile: {
-        label: 'Corrupted file',
-        hint: "The file won't open or rows are unreadable"
+    reasonLabel: 'Reason (only needed to query or reject)',
+    reasonHint: '{scheme} sees this in the service when they sign in.',
+    respondByLabel: 'Respond or resubmit by (only needed to query or reject)',
+    respondByHint:
+      'Set a date and time. Short deadlines are fine for quick answers — for example, 12pm on 21 August 2026.',
+    timeLabel: 'Time',
+    timeHint: 'For example, 12pm',
+    confirmAction: 'Confirm decision',
+    banner: {
+      accepted: {
+        title: 'Success',
+        type: 'success',
+        heading: 'Return accepted',
+        body: 'Accepted by the Environment Agency on {decidedOn}. {scheme} sees this when they sign in.'
       },
-      templateMismatch: {
-        label: 'Template mismatch',
-        hint: 'Columns are missing, renamed or shifted from the BCS member template'
+      queried: {
+        title: 'Important',
+        type: 'information',
+        heading: 'Queries sent to {scheme}',
+        body: 'They see each query when they sign in.'
       },
-      filesOutOfSync: {
-        label: 'Files out of sync',
-        hint: "Totals across the uploaded files don't agree with each other"
-      },
-      otherSystemic: {
-        label: 'Other systemic problem',
-        hint: 'Explain in the reason below'
+      rejected: {
+        title: 'Important',
+        type: 'information',
+        heading: 'Return rejected',
+        body: '{scheme} sees the reason when they sign in.'
       }
     },
-    reasonLabel: 'Reason for blanket rejection',
-    reasonHintTemplate:
-      "Required. {scheme} sees this reason in the service, and it's kept in the audit record.",
-    confirmCheckboxLabel:
-      "I've checked this can't be handled by querying individual records",
-    confirmCheckboxHint:
-      'Querying keeps the valid data live for national compilation.',
-    rejectAction: 'Reject',
-    cancelLink: 'Cancel — query records instead',
-    error: {
-      title: 'There is a problem',
-      errorType: 'Select the type of systemic error',
-      reason: 'Enter a reason for the blanket rejection',
-      confirmed:
-        "Confirm you've checked this can't be handled by querying individual records"
-    }
-  },
-  reviewPomReturnRejected: {
-    title: 'Rejection recorded',
-    bannerHeading: 'Rejection recorded',
-    bannerBodyTemplate:
-      'The whole {period} return has been sent back to {scheme} with your reason attached. The scheme has until {resubmitBy} to correct and resubmit.',
-    introTemplate:
-      'Rejecting a return does not block any other quarter. {nextPeriod} can still be submitted on time and will be decided on its own.',
-    summaryLabels: {
-      decision: 'Decision',
-      reason: 'Reason',
-      resubmitBy: 'Resubmit by',
-      decidedBy: 'Decided by',
-      decidedOn: 'Decided on'
+    queries: {
+      heading: 'Queries',
+      columns: {
+        producer: 'Producer',
+        chemistry: 'Chemistry',
+        figure: 'Figure (t)',
+        query: 'Query',
+        status: 'Status'
+      },
+      sent: { text: 'Sent', colour: 'orange' },
+      resubmitted: { text: 'Resubmitted', colour: 'blue' }
     },
-    decisionValue: 'Rejected',
-    reasonTemplate: 'Systemic — {errorType}. {reason}',
-    errorTypeLabels: {
-      'corrupted-file': 'corrupted file',
-      'template-mismatch': 'template mismatch',
-      'files-out-of-sync': 'files out of sync',
-      'other-systemic': 'other systemic problem'
+    sees: {
+      heading: 'What {scheme} sees',
+      body: 'They see each query against the producer it relates to. For each one they can either reply with an explanation (for example, extra stock bought in for Christmas) or correct the figure by resending just that producer’s record. You then review each response and accept it or query again.'
     },
-    resubmitByTemplate: '{resubmitBy} (28 days)',
-    filesKeptNote:
+    downloads: {
+      queried: 'Download queried records ({file}, 4KB)',
+      full: 'Download the full submission as uploaded (.zip, 2.1MB)'
+    },
+    rejectedNote:
       'The submitted files are kept as they were. When the scheme resubmits, both versions stay in the record so the change is auditable.',
-    links: {
+    footerLinks: {
+      obligationFull: 'View obligation and evidence in full',
       files: 'View submission files ({count})',
-      timeline: 'View activity timeline for this quarter',
-      dashboard: 'Back to PoM submissions'
+      history: 'View history for this quarter',
+      figures: 'View producer figures',
+      obligation: 'View indicative obligation',
+      back: 'Back to PoM submissions'
+    },
+    errorTitle: 'There is a problem',
+    errors: {
+      decisionRequired: 'Select what you want to do with the return',
+      reasonRequired: 'Enter a reason',
+      reasonTooLong: 'Reason must be 1000 characters or fewer',
+      respondByRequired: 'Enter a date and time to respond or resubmit by',
+      respondByDate: 'Enter a real date, like 21 8 2026',
+      respondByTime: 'Enter a time, like 12pm or 9:30am',
+      noDraftQueries:
+        'There are no draft queries to send. Raise a query against a producer first'
+    }
+  },
+
+  // How a single queried record is labelled and coloured; also read by the
+  // compliance scheme's query response journey.
+  reviewPomReturnQueried: {
+    figureStatusLabels: { queried: 'Queried', resubmitted: 'Resubmitted' },
+    figureStatusColours: { queried: 'orange', resubmitted: 'blue' }
+  },
+
+  rejectConfirm: {
+    title: 'Reject the whole return?',
+    heading: 'Reject the whole {period} return?',
+    tag: { text: 'Whole return', colour: 'red' },
+    backLink: 'Back to submissions',
+    intro:
+      'The whole return goes back to {scheme} to correct and resubmit. If only a few figures are wrong, you can send queries instead.',
+    warning:
+      '{scheme}’s {period} data won’t be used for national compilation until they resubmit. Other quarters are not affected.',
+    typeLegend: 'Why are you rejecting the return?',
+    types: {
+      undeclaredChange: {
+        text: 'Data changed without being declared as a resubmission',
+        hint: 'Figures for one or more producers differ from the earlier return, but the return was not marked as a resubmission'
+      },
+      schemeRequested: {
+        text: 'The scheme asked for it to be rejected',
+        hint: 'For example, the scheme found an error after submitting'
+      },
+      tooManyErrors: {
+        text: 'Errors across too many records to query',
+        hint: 'For example, a decimal point in the wrong place throughout a file'
+      },
+      other: { text: 'Other', hint: 'Explain in the details below' }
+    },
+    detailsLabel: 'Details',
+    detailsHint: 'Required. {scheme} sees this in the service.',
+    resubmitLabel: 'Resubmit by',
+    resubmitHint: 'Set a date and time. For example, 12pm on 28 August 2026.',
+    timeLabel: 'Time',
+    timeHint: 'For example, 12pm',
+    rejectAction: 'Reject return',
+    cancelLink: 'Cancel',
+    errorTitle: 'There is a problem',
+    errors: {
+      typeRequired: 'Select why you are rejecting the return',
+      detailsRequired: 'Enter the details',
+      detailsTooLong: 'Details must be 1000 characters or fewer',
+      respondByRequired: 'Enter a date and time to resubmit by',
+      respondByDate: 'Enter a real date, like 28 8 2026',
+      respondByTime: 'Enter a time, like 12pm or 9:30am'
     }
   },
 
   submissionFiles: {
-    title: 'Submission files',
-    headingTemplate: '{period} submission — files',
-    checksCompleteTag: 'Checks complete',
-    introTemplate:
-      "{scheme} uploaded {count} files for {period}. Automated checks ran on the scheme's own service before submission, so every file arrives here already validated. Open a file to review it for compliance.",
-    summaryLabels: {
-      period: 'Period',
-      filesUploaded: 'Files uploaded',
-      membersCovered: 'Members covered',
-      totalPlaced: 'Total placed on market',
-      submittedBy: 'Submitted by'
-    },
-    filesHeading: 'Files uploaded',
-    columns: {
-      fileName: 'File name',
-      members: 'Members',
-      rows: 'Rows',
-      uploaded: 'Uploaded',
+    title: 'Submission files and supporting evidence',
+    backLink: 'Back to {scheme}',
+    tag: { text: '{count} files', colour: 'blue' },
+    subtitle: '{scheme} · {period} ({range})',
+    intro:
+      'Everything the scheme uploaded for this quarter: {dataFiles} data files and {evidence} supporting evidence document. Files are read only — if a figure is wrong, the record goes back to the scheme to correct.',
+    summary: {
+      records: 'Records',
+      total: 'Total placed on market',
       checks: 'Automated checks',
-      action: ''
+      submittedBy: 'Submitted by',
+      failed: 'Failed validation ({year})'
     },
-    checkStatusLabels: {
-      passed: 'Passed',
-      warningsTemplate: '{count} warnings'
+    recordsValue: '{records} across {included} of {total} producers',
+    totalValue: '{amount} tonnes',
+    checksValue: 'Passed — {flags} figures flagged for review',
+    failedValue: '{count} uploads rejected before submission',
+    viewFlagged: 'View flagged figures',
+    viewAll: 'View all',
+    dataFilesHeading: 'Data files',
+    columns: {
+      file: 'File',
+      members: 'Members',
+      records: 'Records',
+      total: 'Total (t)',
+      uploaded: 'Uploaded',
+      checks: 'Checks',
+      action: 'Action'
     },
-    checkStatusColours: {
-      passed: 'green',
-      warnings: 'yellow'
+    checkStatus: {
+      passed: { text: 'Passed', colour: 'green' },
+      flags: { text: '{count} flags', colour: 'orange' }
     },
-    openLink: 'Open',
-    footerNote:
-      "Automated checks are run by the scheme's service at upload. Warnings do not stop a submission — open the file to see what was flagged and decide whether it affects compliance.",
-    downloadAllTemplate: 'Download all {count} files (.zip, 2.1MB)',
-    continueAction: 'Continue to review the return'
+    open: 'Open',
+    download: 'Download',
+    evidenceHeading: 'Supporting evidence',
+    evidenceColumns: {
+      document: 'Document',
+      covers: 'Covers',
+      uploaded: 'Uploaded',
+      action: 'Action'
+    },
+    openBeside: 'Open beside the data',
+    inset:
+      'Flags don’t stop a submission — they point to figures worth checking. Uploads that fail the scheme’s validation never reach this page; they’re listed under failed validation.',
+    historyLink: 'View history for this quarter',
+    reviewLink: 'Review this return'
   },
 
   submissionFile: {
     title: 'File',
-    warningsTag: '{count} warnings',
-    introWithWarningsTemplate:
-      "This file covers {members} and {rows} rows. The scheme's automated checks flagged {warningsCount} rows before submission. You can query or reject an individual record — you cannot edit what the scheme submitted.",
-    summaryLabels: {
+    tag: { text: '{count} flags', colour: 'orange' },
+    intro:
+      'This file covers {members} member and {rows} rows. The scheme’s automated checks flagged {count} rows before submission. You can query or reject an individual record — you cannot edit what the scheme submitted.',
+    summary: {
       member: 'Member',
       rows: 'Rows in file',
       uploaded: 'Uploaded',
       checkedBy: 'Checks run by',
       result: 'Result'
     },
-    resultWithWarningsTemplate: 'Passed with {count} warnings',
-    flaggedRowsHeading: 'Rows flagged by automated checks',
+    resultValue: 'Passed with {count} flags',
+    flaggedHeading: 'Rows flagged by automated checks',
     columns: {
       row: 'Row',
       chemistry: 'Chemistry',
@@ -521,9 +638,11 @@ export const prototypeRegulatorContent = {
       check: 'Check',
       action: 'Action'
     },
-    rowActionLabel: 'Query · Reject',
-    viewAllRowsTemplate: 'View all {count} rows in this file',
-    downloadLink: 'Download this file (.csv)',
-    backAction: 'Back to files'
+    query: 'Query',
+    reject: 'Reject',
+    viewAllRows: 'View all {count} rows in this file',
+    download: 'Download this file (.csv)',
+    backToFiles: 'Back to files',
+    backLink: 'Back to submissions'
   }
 }

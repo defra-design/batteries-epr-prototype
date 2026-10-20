@@ -1,5 +1,9 @@
 // custom partial styles
 
+@use 'waste-returns';
+@use 'abto';
+@use 'regulator';
+
 .app-prototype-password {
   .govuk-heading-xl,
   .govuk-body,

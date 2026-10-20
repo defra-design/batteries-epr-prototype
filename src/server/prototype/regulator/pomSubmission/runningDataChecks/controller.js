@@ -1,18 +1,11 @@
-import { createRequire } from 'node:module'
 import Boom from '@hapi/boom'
 
 import { paths, pathTo } from '../../../../../config/paths.js'
 import { prototypeRegulatorContent } from '../../../../../config/prototype-regulator-content.js'
-import {
-  basePageModel,
-  SCHEMES_WITH_DETAIL_SCREENS_BUILT,
-  latestSubmissionFor,
-  filenameFor
-} from '../shared.js'
+import { basePageModel, SCHEMES_WITH_DETAIL_SCREENS_BUILT } from '../shared.js'
 
-const seedData = createRequire(import.meta.url)(
-  '../../../../../client/javascripts/storage-seed.json'
-)
+// How long the interstitial waits before moving on by itself.
+export const AUTO_ADVANCE_SECONDS = 5
 
 export const runningDataChecksController = {
   handler(request, h) {
@@ -22,26 +15,14 @@ export const runningDataChecksController = {
       throw Boom.notFound()
     }
 
-    const pageContent = prototypeRegulatorContent.runningDataChecks
-    const scheme = seedData.prototypeRegulatorSchemes.find(
-      (s) => s.id === schemeId
-    )
-    const submission = latestSubmissionFor(schemeId)
-    const nextStep = pathTo(
-      paths.prototypeRegulatorPomSubmissionDataCheckReport,
-      { schemeId }
-    )
+    const labels = prototypeRegulatorContent.runningDataChecks
 
     return h.view('prototype/regulator/pomSubmission/runningDataChecks/view', {
-      ...basePageModel(
-        pageContent,
-        paths.prototypeRegulatorPomSubmissionDashboard
-      ),
-      backLink: pathTo(paths.prototypeRegulatorPomSubmissionSchemeHome, {
+      ...basePageModel(labels),
+      autoAdvanceSeconds: AUTO_ADVANCE_SECONDS,
+      nextStep: pathTo(paths.prototypeRegulatorPomSubmissionDataCheckReport, {
         schemeId
-      }),
-      body1: `Checking ${filenameFor(scheme, submission)} against the CSV template, and comparing figures against previous quarters.`,
-      nextStep
+      })
     })
   }
 }

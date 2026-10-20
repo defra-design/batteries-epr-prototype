@@ -1,0 +1,59 @@
+{% extends 'layouts/regulator.njk' %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+
+{# The H1 sits in the hero above the success banner so the page has a heading. #}
+{% block hero %}
+  {% if breadcrumbs.length > 1 %}
+    {{ govukBreadcrumbs({ items: breadcrumbs, classes: "app-regulator-breadcrumbs" }) }}
+  {% endif %}
+  <h1 class="govuk-heading-xl app-regulator-hero__heading">{{ heading }}</h1>
+
+  {% set bannerHtml %}
+    <h2 class="govuk-notification-banner__heading">
+      {{ labels.bannerHeading }}
+    </h2>
+    <p class="govuk-body">{{ labels.bannerBody }}</p>
+  {% endset %}
+  {{
+    govukNotificationBanner({
+      type: "success",
+      titleText: labels.bannerTitle,
+      html: bannerHtml,
+      attributes: { "data-testid": "pre-registration-link-sent-banner" }
+    })
+  }}
+
+  {{
+    govukSummaryList({
+      classes: "app-regulator-summary",
+      attributes: { "data-testid": "pre-registration-link-sent-summary" },
+      rows: [
+        { key: { text: labels.summary.status }, value: { text: labels.summary.statusValue } },
+        { key: { text: labels.summary.contact }, value: { text: contact } },
+        { key: { text: labels.summary.linkSent }, value: { text: linkSent } }
+      ]
+    })
+  }}
+
+  <p class="govuk-body govuk-!-margin-bottom-0">
+    <a
+      class="govuk-link"
+      href="{{ resendHref }}"
+      data-testid="pre-registration-link-resend"
+      >{{ labels.resendLink }}</a
+    >
+  </p>
+{% endblock %}
+
+{% block content %}
+  <p class="govuk-body">
+    <a
+      class="govuk-link"
+      href="{{ backHref }}"
+      data-testid="pre-registration-link-back"
+      >{{ labels.backLink }}</a
+    >
+  </p>
+{% endblock %}

@@ -1,0 +1,311 @@
+@use "govuk-frontend" as *;
+
+// Shared regulator layout (layouts/regulator.njk): colours are taken from the
+// EPR packaging team's regulator styling in Figma.
+$app-regulator-green: #4c9456;
+$app-regulator-hero-background: #e8f4eb;
+$app-regulator-content-background: #f5f5f5;
+$app-regulator-footer-background: #f4f8fb;
+$app-regulator-card-border: #b1b4b6;
+
+.app-regulator-header {
+  background: govuk-colour("white");
+}
+
+.app-regulator-header__brand {
+  padding: govuk-spacing(2) 0;
+}
+
+.app-regulator-header__logo-link {
+  display: inline-block;
+  line-height: 0;
+}
+
+.app-regulator-header__logo {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.app-regulator-header__service {
+  border-bottom: 3px solid $app-regulator-green;
+}
+
+.app-regulator-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: govuk-spacing(6);
+  padding: govuk-spacing(3) 0;
+}
+
+.app-regulator-nav__service-name {
+  @include govuk-font($size: 19, $weight: bold);
+  @include govuk-link-common;
+  @include govuk-link-style-text;
+
+  text-decoration: none;
+}
+
+.app-regulator-nav__list {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: govuk-spacing(5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-regulator-nav__link {
+  @include govuk-font($size: 19);
+  @include govuk-link-common;
+  @include govuk-link-style-text;
+
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.app-regulator-nav__item--current .app-regulator-nav__link {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.app-regulator-hero {
+  padding-top: govuk-spacing(3);
+  padding-bottom: govuk-spacing(6);
+  background: $app-regulator-hero-background;
+}
+
+.app-regulator-hero__heading {
+  margin-bottom: govuk-spacing(3);
+}
+
+.app-regulator-hero__intro {
+  margin-bottom: 0;
+  color: govuk-colour("dark-grey");
+}
+
+.app-regulator-content {
+  background: $app-regulator-content-background;
+}
+
+.app-quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: govuk-spacing(5);
+  row-gap: govuk-spacing(1);
+  margin-bottom: govuk-spacing(6);
+  padding: govuk-spacing(3) govuk-spacing(4);
+  border-left: 5px solid govuk-colour("blue");
+  background: govuk-colour("white");
+}
+
+.app-quick-links__label {
+  @include govuk-font($size: 16, $weight: bold);
+
+  margin: 0;
+}
+
+.app-quick-links__list {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: govuk-spacing(5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-regulator-card {
+  margin-bottom: govuk-spacing(4);
+  padding: govuk-spacing(4);
+  border: 1px solid $app-regulator-card-border;
+  background: govuk-colour("white");
+}
+
+.app-regulator-card__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: govuk-spacing(3);
+  margin-bottom: govuk-spacing(2);
+}
+
+.app-regulator-card__title {
+  margin: 0;
+}
+
+.app-regulator-card__description {
+  margin-bottom: govuk-spacing(2);
+  color: $govuk-secondary-text-colour;
+}
+
+.app-regulator-link-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  column-gap: govuk-spacing(4);
+
+  @include govuk-media-query($from: desktop) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.app-regulator-card--links {
+  .govuk-list {
+    margin-bottom: 0;
+  }
+}
+
+.app-regulator-footer {
+  border-top: 10px solid $app-regulator-green;
+  background: $app-regulator-footer-background;
+}
+
+// Figma's footer has no small crown above the links, only the large one
+.app-regulator-footer .govuk-footer__crown {
+  display: none;
+}
+
+.app-regulator-task-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: govuk-spacing(4);
+  margin-bottom: govuk-spacing(6);
+
+  @include govuk-media-query($from: desktop) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.app-task-card {
+  padding: govuk-spacing(4);
+  border-top: 5px solid govuk-colour("blue");
+  background: govuk-colour("white");
+}
+
+.app-task-card__label {
+  margin-bottom: govuk-spacing(1);
+  color: $govuk-secondary-text-colour;
+}
+
+.app-task-card__count {
+  margin-bottom: govuk-spacing(2);
+}
+
+// The confirmation's summary list sits on white inside the hero band
+.app-regulator-summary {
+  margin-bottom: govuk-spacing(4);
+  padding: govuk-spacing(2) govuk-spacing(4);
+  background: govuk-colour("white");
+
+  .govuk-summary-list__row:last-child {
+    border-bottom: 0;
+  }
+}
+
+// Application for approval: checks table, automated-check rows and notes panel
+.app-regulator-checks__summary {
+  margin: govuk-spacing(1) 0 0;
+  color: $govuk-secondary-text-colour;
+}
+
+.app-regulator-check-list {
+  margin-bottom: govuk-spacing(8);
+}
+
+.app-regulator-check-list__item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: govuk-spacing(4);
+  padding: govuk-spacing(3) 0;
+  border-bottom: 1px solid $app-regulator-card-border;
+}
+
+.app-regulator-check-list__detail {
+  color: $govuk-secondary-text-colour;
+}
+
+.app-regulator-notes {
+  margin-bottom: govuk-spacing(6);
+  padding: govuk-spacing(4);
+  border: 1px solid $app-regulator-card-border;
+  background: govuk-colour("white");
+}
+
+.app-regulator-hero__tag {
+  vertical-align: middle;
+}
+
+// "To do" task panel on the compliance scheme dashboard
+.app-regulator-todo {
+  margin-bottom: govuk-spacing(6);
+  padding: govuk-spacing(4);
+  border-left: 5px solid $govuk-link-colour;
+  background: govuk-colour("white");
+}
+
+.app-regulator-todo__title {
+  margin-bottom: govuk-spacing(2);
+}
+
+.app-regulator-todo__received {
+  color: $govuk-secondary-text-colour;
+}
+
+// "What happened automatically" rows on member list outcome pages
+.app-regulator-ticks__item {
+  display: flex;
+  gap: govuk-spacing(2);
+  padding: govuk-spacing(3) 0;
+  border-bottom: 1px solid $app-regulator-card-border;
+
+  &::before {
+    content: "\2713";
+    color: $govuk-success-colour;
+    font-weight: bold;
+  }
+}
+
+.app-regulator-ticks__item--none::before {
+  content: "\2013";
+  color: $govuk-text-colour;
+}
+
+// Row of plain links under a summary list (scheme home quick links)
+.app-regulator-inline-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: govuk-spacing(2) govuk-spacing(4);
+  margin-bottom: govuk-spacing(6);
+}
+
+.app-regulator-back-link {
+  margin-top: 0;
+}
+
+// Remove/Edit-style actions that post a form but read as links
+.app-regulator-inline-form {
+  display: inline;
+}
+
+.app-regulator-link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: $govuk-link-colour;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    color: $govuk-link-hover-colour;
+  }
+
+  &:focus {
+    @include govuk-focused-text;
+  }
+}

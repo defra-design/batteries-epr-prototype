@@ -1,0 +1,101 @@
+{% extends 'layouts/regulator.njk' %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  {% if errorSummary and errorSummary.length %}
+    {{ govukErrorSummary({ titleText: labels.errorTitle, errorList: errorSummary, attributes: { "data-testid": "member-list-error-summary" } }) }}
+  {% endif %}
+
+  {%- set rows = [] -%}
+  {%- for member in members -%}
+    {%-
+      set rows = (rows.push([
+        { text: member.companyName },
+        { html: govukTag({ text: labels.check.text, classes: "govuk-tag--" + labels.check.colour }) },
+        { text: member.type },
+        { html: govukTag({ text: labels.status.text, classes: "govuk-tag--" + labels.status.colour }) }
+      ]), rows)
+    -%}
+  {%- endfor -%}
+  {{
+    govukTable({
+      head: [
+        { text: labels.columns.member },
+        { text: labels.columns.check },
+        { text: labels.columns.type },
+        { text: labels.columns.status }
+      ],
+      rows: rows,
+      attributes: { "data-testid": "member-list-table" }
+    })
+  }}
+
+  <h2 class="govuk-heading-l">{{ labels.decisionHeading }}</h2>
+  <p class="govuk-body">{{ decisionIntro }}</p>
+
+  <form
+    method="post"
+    action="{{ action }}"
+    novalidate
+    data-testid="member-list-form"
+  >
+    {{
+      govukRadios({
+        idPrefix: "decision",
+        name: "decision",
+        fieldset: { legend: { text: labels.decisionLegend, classes: "govuk-fieldset__legend--m" } },
+        errorMessage: { text: errors.decision } if errors.decision,
+        items: [
+          {
+            value: "accept",
+            text: options.accept.text,
+            hint: { text: options.accept.hint },
+            checked: formValues.decision == "accept",
+            attributes: { "data-testid": "member-list-decision-accept" }
+          },
+          {
+            value: "reject",
+            text: options.reject.text,
+            hint: { text: options.reject.hint },
+            checked: formValues.decision == "reject",
+            attributes: { "data-testid": "member-list-decision-reject" }
+          }
+        ]
+      })
+    }}
+
+    {{
+      govukTextarea({
+        id: "reason",
+        name: "reason",
+        label: { text: labels.reasonLabel, classes: "govuk-label--m" },
+        hint: { text: reasonHint },
+        rows: 5,
+        value: formValues.reason,
+        errorMessage: { text: errors.reason } if errors.reason,
+        attributes: { "data-testid": "member-list-reason" }
+      })
+    }}
+
+    {{
+      govukCheckboxes({
+        name: "confirm",
+        errorMessage: { text: errors.confirm } if errors.confirm,
+        items: [{
+          value: "yes",
+          text: labels.confirmLabel,
+          checked: formValues.confirm,
+          attributes: { "data-testid": "member-list-confirm" }
+        }]
+      })
+    }}
+
+    {{ govukButton({ text: labels.continue, preventDoubleClick: true, attributes: { "data-testid": "member-list-continue" } }) }}
+  </form>
+{% endblock %}

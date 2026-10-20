@@ -231,7 +231,25 @@ export const content = {
             persona: 'regulator',
             title: "Regulator reviews ABTO's submitted waste figures",
             description:
-              'The regulator checks the tonnages an approved treatment operator has reported.'
+              "The regulator picks a compliance scheme, then an approved treatment operator and one of its sites, and checks that site's waste figures before accepting, querying or reclassifying."
+          },
+          regulatorSendsPreRegistrationLink: {
+            persona: 'regulator',
+            title: 'BCS registration — regulator sends pre-registration link',
+            description:
+              'The regulator signs in, opens the registrations dashboard and emails a pre-registration link to someone who enquired about registering a new batteries compliance scheme.'
+          },
+          regulatorVerifiesBcsMemberList: {
+            persona: 'regulator',
+            title: 'BCS member list — regulator verification and decision',
+            description:
+              "The regulator opens a compliance scheme's dashboard, reviews the member list it submitted and its Companies House checks, then accepts it to issue registration numbers or rejects it with a reason."
+          },
+          regulatorVerifiesBcsRegistration: {
+            persona: 'regulator',
+            title: 'Regulator verifies a BCS registration',
+            description:
+              'The regulator opens a compliance scheme application from the registrations dashboard, checks each of the ten automated steps and adds notes, then approves or rejects it and sees the conditions of approval or the rejection record.'
           },
           bcsRegulatorReview: {
             persona: 'regulator',
@@ -380,6 +398,21 @@ export const content = {
             figmaHref: 'https://chop-epic-15301554.figma.site/'
           },
           regulatorReviewsAbtoWasteFigures: {
+            persona: 'regulator',
+            title: 'TODO welsh',
+            description: 'TODO welsh'
+          },
+          regulatorSendsPreRegistrationLink: {
+            persona: 'regulator',
+            title: 'TODO welsh',
+            description: 'TODO welsh'
+          },
+          regulatorVerifiesBcsMemberList: {
+            persona: 'regulator',
+            title: 'TODO welsh',
+            description: 'TODO welsh'
+          },
+          regulatorVerifiesBcsRegistration: {
             persona: 'regulator',
             title: 'TODO welsh',
             description: 'TODO welsh'

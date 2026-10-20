@@ -54,14 +54,14 @@ describe('#devResetController', () => {
     })
     const decided = await server.inject({ method: 'GET', url: reviewUrl })
     expect(decided.result).toEqual(
-      expect.stringMatching(/govuk-tag--green"[^>]*>\s*Accepted\s*<\/strong>/)
+      expect.stringMatching(/govuk-tag--green[^>]*>\s*Accepted\s*<\/strong>/)
     )
 
     await server.inject({ method: 'POST', url: paths.devReset })
 
     const reset = await server.inject({ method: 'GET', url: reviewUrl })
     expect(reset.result).toEqual(
-      expect.stringMatching(/govuk-tag--blue"[^>]*>\s*Received\s*<\/strong>/)
+      expect.stringMatching(/govuk-tag--blue[^>]*>\s*Received\s*<\/strong>/)
     )
   })
 })

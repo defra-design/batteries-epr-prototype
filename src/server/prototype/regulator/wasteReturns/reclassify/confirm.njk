@@ -1,0 +1,76 @@
+{% extends 'layouts/page.njk' %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "prototypeRegulatorWasteReturns/macros.njk" import factsPanel %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      {% if errorSummary and errorSummary.length %}
+        {{
+          govukErrorSummary({
+            titleText: errorTitle,
+            errorList: errorSummary,
+            attributes: { "data-testid": "confirm-error-summary" }
+          })
+        }}
+      {% endif %}
+
+      <h1 class="govuk-heading-xl" data-testid="confirm-heading">
+        {{ heading }}
+      </h1>
+
+      {{ factsPanel(facts, "confirm-facts") }}
+
+      <p class="govuk-body">{{ labels.intro }}</p>
+
+      {%- set rows = [] -%}
+      {%- for row in summaryRows -%}
+        {%- set rows = (rows.push({ key: { text: row.label }, value: { text: row.text } }), rows) -%}
+      {%- endfor -%}
+      {{
+        govukSummaryList({
+          rows: rows,
+          classes: "govuk-summary-list--no-border",
+          attributes: { "data-testid": "confirm-summary" }
+        })
+      }}
+
+      <form
+        method="post"
+        action="{{ action }}"
+        novalidate
+        data-testid="confirm-form"
+      >
+        {{
+          govukInput({
+            id: "fee",
+            name: "fee",
+            label: { text: labels.feeLabel, classes: "govuk-label--s" },
+            hint: { text: labels.feeHint },
+            value: fee,
+            errorMessage: { text: errors.fee } if errors.fee,
+            attributes: { "data-testid": "confirm-fee" }
+          })
+        }}
+
+        <div class="govuk-button-group">
+          {{
+            govukButton({
+              text: labels.confirmAction,
+              attributes: { "data-testid": "confirm-submit" }
+            })
+          }}
+          <a
+            class="govuk-link"
+            href="{{ cancelHref }}"
+            data-testid="confirm-cancel"
+            >{{ labels.cancelAction }}</a
+          >
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

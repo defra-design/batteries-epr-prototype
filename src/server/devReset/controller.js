@@ -1,5 +1,8 @@
 import { content } from '../../config/content.js'
 import { resetStore as resetRegulatorStore } from '../prototype/regulator/pomSubmission/store.js'
+import { resetWasteReturnsStore } from '../prototype/regulator/wasteReturns/store.js'
+import { resetRegistrationsStore } from '../prototype/regulator/registrations/store.js'
+import { resetThresholdStore } from '../prototype/abto/smallOperatorThreshold/store.js'
 
 export const devResetController = {
   get: {
@@ -16,10 +19,13 @@ export const devResetController = {
   },
 
   // Resets server-side state that has no browser storage to clear via the
-  // client-side reset — currently just the regulator's in-memory decisions.
+  // client-side reset — currently the regulator's in-memory decisions.
   post: {
     handler(request, h) {
       resetRegulatorStore()
+      resetWasteReturnsStore()
+      resetThresholdStore()
+      resetRegistrationsStore()
       return h.response().code(204)
     }
   }

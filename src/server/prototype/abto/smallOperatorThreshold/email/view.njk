@@ -1,0 +1,43 @@
+{% extends 'layouts/page.njk' %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <span class="govuk-caption-m" data-testid="abto-email-caption"
+        >{{ labels.caption }}</span
+      >
+
+      <div class="app-email" data-testid="abto-email">
+        <h1 class="govuk-heading-m">{{ heading }}</h1>
+
+        {{
+          govukSummaryList({
+            classes: "govuk-summary-list--no-border",
+            rows: [
+              { key: { text: labels.fromLabel }, value: { text: labels.from } },
+              { key: { text: labels.toLabel }, value: { text: recipient } },
+              { key: { text: labels.dateLabel }, value: { text: sentOn } }
+            ]
+          })
+        }}
+
+        <p class="govuk-body">{{ greeting }}</p>
+        <p class="govuk-body">{{ body }}</p>
+        <p class="govuk-body">{{ labels.signIn }}</p>
+
+        {{
+          govukButton({
+            text: labels.action,
+            href: actionHref,
+            attributes: { "data-testid": "abto-email-action" }
+          })
+        }}
+
+        <p class="govuk-body">{{ deadline }}</p>
+        <p class="govuk-body-s">{{ labels.error }}</p>
+      </div>
+    </div>
+  </div>
+{% endblock %}

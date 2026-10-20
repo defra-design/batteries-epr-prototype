@@ -10,7 +10,13 @@ const journeyHrefs = {
     paths.prototypeComplianceSchemeQueryResponseSignIn,
   bcsSendsMembersList: paths.prototypeMembersListStart,
   bcsSubmissionOfWasteData: paths.prototypeWasteDataAccountHome,
-  regulatorReceivesPomSubmission: paths.prototypeRegulatorPomSubmissionSignIn
+  regulatorReceivesPomSubmission: paths.prototypeRegulatorPomSubmissionSignIn,
+  abtoSmallOperatorThresholdCrossed: paths.prototypeAbtoThresholdEmail,
+  regulatorReviewsAbtoWasteFigures: paths.prototypeRegulatorWasteReturnsSignIn,
+  regulatorSendsPreRegistrationLink:
+    paths.prototypeRegulatorRegistrationsSignIn,
+  regulatorVerifiesBcsRegistration: paths.prototypeRegulatorRegistrationsSignIn,
+  regulatorVerifiesBcsMemberList: paths.prototypeRegulatorRegistrationsSignIn
 }
 
 export const buildPersonaGroups = (journeys, personas) =>

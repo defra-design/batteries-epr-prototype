@@ -3,10 +3,7 @@ import { paths, pathTo } from '../../../../../config/paths.js'
 import { statusCodes } from '../../../../common/constants/status-codes.js'
 
 const params = { schemeId: 'ironwave-compliance', year: '2026', quarter: 'Q2' }
-const FILES_URL = pathTo(
-  paths.prototypeRegulatorPomSubmissionSubmissionFiles,
-  params
-)
+const url = pathTo(paths.prototypeRegulatorPomSubmissionSubmissionFiles, params)
 
 describe('#prototypeRegulatorPomSubmissionSubmissionFiles', () => {
   let server
@@ -17,96 +14,141 @@ describe('#prototypeRegulatorPomSubmissionSubmissionFiles', () => {
     await server.stop({ timeout: 0 })
   })
 
-  test('renders the files list, summary and per-file rows from seeded data', async () => {
-    const { result, statusCode } = await server.inject({
-      method: 'GET',
-      url: FILES_URL
-    })
+  const get = () => server.inject({ method: 'GET', url })
+
+  test('H1, 5 files tag, scheme and period line, intro and back link to the scheme', async () => {
+    const { result, statusCode } = await get()
 
     expect(statusCode).toBe(statusCodes.ok)
     expect(result).toEqual(
-      expect.stringContaining('Q2 2026 submission — files')
+      expect.stringContaining('>Submission files and supporting evidence')
     )
+    expect(result).toMatch(/data-testid="heading-tag"[^>]*>\s*5 files\s*</)
     expect(result).toEqual(
-      expect.stringMatching(
-        /govuk-tag--green"[^>]*>\s*Checks complete\s*<\/strong>/
-      )
+      expect.stringContaining('IronWave Compliance · Q2 2026 (1 Apr – 30 Jun)')
     )
     expect(result).toEqual(
       expect.stringContaining(
-        'IronWave Compliance uploaded 4 files for Q2 2026'
+        'Everything the scheme uploaded for this quarter: 4 data files and 1 supporting evidence document.'
+      )
+    )
+    const backLink = result.match(/<a[^>]*data-testid="back-link"[^>]*>/)[0]
+    expect(backLink).toEqual(
+      expect.stringContaining(
+        `href="${pathTo(paths.prototypeRegulatorPomSubmissionSchemeHome, { schemeId: 'ironwave-compliance' })}"`
       )
     )
     expect(result).toEqual(
-      expect.stringContaining('data-testid="submission-files-summary"')
+      expect.stringContaining('Back to IronWave Compliance')
     )
-    expect(result).toEqual(expect.stringContaining('Q2 2026 (1 Apr – 30 Jun)'))
-    expect(result).toEqual(expect.stringContaining('623,073 tonnes'))
-    expect(result).toEqual(
+  })
+
+  test('summary: records, total, automated checks with a link to the flagged figures, submitter and failed uploads', async () => {
+    const { result } = await get()
+    const summary = result
+      .split('data-testid="submission-files-summary"')[1]
+      .split('</dl>')[0]
+
+    expect(summary).toEqual(
+      expect.stringContaining('2,639 across 5 of 5 producers')
+    )
+    expect(summary).toEqual(expect.stringContaining('623.073 tonnes'))
+    expect(summary).toEqual(
+      expect.stringContaining('Passed — 5 figures flagged for review')
+    )
+    expect(summary).toEqual(
+      expect.stringContaining(
+        pathTo(paths.prototypeRegulatorPomSubmissionDataCheckReport, {
+          schemeId: 'ironwave-compliance'
+        })
+      )
+    )
+    expect(summary).toEqual(
       expect.stringContaining('Michael Osei, 8 August 2026, 14:12')
     )
-
-    expect(result).toEqual(
-      expect.stringContaining('IronWave_Q2_2026_members_1-2.csv')
-    )
-    expect(result).toEqual(
-      expect.stringContaining('IronWave_Q2_2026_member_5.csv')
-    )
-    expect(result).toEqual(
-      expect.stringContaining('IronWave_Q2_2026_evidence.csv')
-    )
-    expect(result).toEqual(
-      expect.stringMatching(/govuk-tag--green">\s*Passed\s*<\/strong>/)
-    )
-    expect(result).toEqual(
-      expect.stringMatching(/govuk-tag--yellow">\s*2 warnings\s*<\/strong>/)
+    expect(summary).toEqual(
+      expect.stringContaining('2 uploads rejected before submission')
     )
   })
 
-  test('wires Open to the built file screen for the file with warnings, and leaves the rest dead', async () => {
-    const { result } = await server.inject({ method: 'GET', url: FILES_URL })
+  test('data files table: the four seeded files with check tags, and only member_5 can be opened', async () => {
+    const { result } = await get()
+    const table = result
+      .split('data-testid="submission-files-table"')[1]
+      .split('</table>')[0]
 
-    const fileUrl = pathTo(
-      paths.prototypeRegulatorPomSubmissionSubmissionFile,
-      {
+    for (const name of [
+      'IronWave_Q2_2026_members_1-2.csv',
+      'IronWave_Q2_2026_members_3-4.csv',
+      'IronWave_Q2_2026_member_5.csv',
+      'IronWave_Q2_2026_evidence.csv'
+    ]) {
+      expect(table).toEqual(expect.stringContaining(name))
+    }
+    expect(table).toEqual(expect.stringContaining('343.500'))
+    expect(table).toEqual(expect.stringContaining('1,204'))
+    expect(table.match(/govuk-tag--green">\s*Passed\s*</g)).toHaveLength(2)
+    expect(table.match(/govuk-tag--orange">\s*2 flags\s*</g)).toHaveLength(2)
+
+    const openHref = (id) =>
+      result.match(
+        new RegExp(`href="([^"]*)" data-testid="submission-files-open-${id}"`)
+      )[1]
+    expect(openHref('eeeeaaaa-0001-4000-a000-000000000003')).toBe(
+      pathTo(paths.prototypeRegulatorPomSubmissionSubmissionFile, {
         ...params,
         fileId: 'eeeeaaaa-0001-4000-a000-000000000003'
-      }
+      })
     )
-    const openLink3 = result.match(
-      /<a[^>]*data-testid="submission-files-open-3"[^>]*>/
-    )[0]
-    expect(openLink3).toEqual(expect.stringContaining(`href="${fileUrl}"`))
-
-    const openLink1 = result.match(
-      /<a[^>]*data-testid="submission-files-open-1"[^>]*>/
-    )[0]
-    expect(openLink1).toEqual(expect.stringContaining('href="#"'))
+    expect(openHref('eeeeaaaa-0001-4000-a000-000000000001')).toBe('#')
   })
 
-  test('links Continue to the review screen', async () => {
-    const { result } = await server.inject({ method: 'GET', url: FILES_URL })
+  test('supporting evidence, the flags note and the history and review links', async () => {
+    const { result } = await get()
+    const evidence = result
+      .split('data-testid="submission-files-evidence"')[1]
+      .split('</table>')[0]
 
-    const continueTag = result.match(
-      /<a[^>]*data-testid="submission-files-continue"[^>]*>/
+    expect(evidence).toEqual(
+      expect.stringContaining('IronWave_Q2_2026_explanations.docx')
+    )
+    expect(evidence).toEqual(
+      expect.stringContaining('Nil return (Northfield Cells)')
+    )
+    expect(evidence).toEqual(expect.stringContaining('Open beside the data'))
+    expect(result).toEqual(
+      expect.stringContaining('Flags don’t stop a submission')
+    )
+    expect(result).toEqual(
+      expect.stringContaining('View history for this quarter')
+    )
+    const review = result.match(
+      /<a[^>]*data-testid="submission-files-review"[^>]*>/
     )[0]
-    expect(continueTag).toEqual(
+    expect(review).toEqual(
       expect.stringContaining(
-        `href="${pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, params)}"`
+        pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, params)
       )
     )
   })
 
-  test('404s for REPIC and for a quarter with no submission', async () => {
-    for (const bad of [
-      { ...params, schemeId: 'repic' },
-      { ...params, year: '2027', quarter: 'Q1' }
-    ]) {
-      const { statusCode } = await server.inject({
-        method: 'GET',
-        url: pathTo(paths.prototypeRegulatorPomSubmissionSubmissionFiles, bad)
+  test('unknown returns and unbuilt schemes are 404s', async () => {
+    const missing = await server.inject({
+      method: 'GET',
+      url: pathTo(paths.prototypeRegulatorPomSubmissionSubmissionFiles, {
+        ...params,
+        year: '2019'
       })
-      expect(statusCode).toBe(statusCodes.notFound)
-    }
+    })
+    expect(missing.statusCode).toBe(statusCodes.notFound)
+
+    const unbuilt = await server.inject({
+      method: 'GET',
+      url: pathTo(paths.prototypeRegulatorPomSubmissionSubmissionFiles, {
+        ...params,
+        schemeId: 'repic'
+      })
+    })
+    expect(unbuilt.statusCode).toBe(statusCodes.notFound)
   })
 })

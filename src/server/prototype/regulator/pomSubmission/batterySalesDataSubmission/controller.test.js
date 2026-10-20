@@ -1,6 +1,12 @@
 import { initialiseServer } from '../../../../../test-utils/initialise-server.js'
 import { paths, pathTo } from '../../../../../config/paths.js'
 import { statusCodes } from '../../../../common/constants/status-codes.js'
+import { getDraftQueries, resetStore } from '../store.js'
+
+const url = pathTo(
+  paths.prototypeRegulatorPomSubmissionBatterySalesDataSubmission,
+  { schemeId: 'ironwave-compliance' }
+)
 
 describe('#prototypeRegulatorPomSubmissionBatterySalesDataSubmission', () => {
   let server
@@ -10,190 +16,185 @@ describe('#prototypeRegulatorPomSubmissionBatterySalesDataSubmission', () => {
   afterAll(async () => {
     await server.stop({ timeout: 0 })
   })
+  beforeEach(() => {
+    resetStore()
+  })
 
-  test('renders member figures from seeded data, with queried rows offering Edit query and OK rows offering Query/Reject', async () => {
-    const url = pathTo(
-      paths.prototypeRegulatorPomSubmissionBatterySalesDataSubmission,
-      { schemeId: 'ironwave-compliance' }
-    )
-    const { result, statusCode } = await server.inject({ method: 'GET', url })
+  const get = (query = '') =>
+    server.inject({ method: 'GET', url: `${url}${query}` })
+
+  test('H1 is the return heading, with a back link and three govukTabs deep-linkable by fragment', async () => {
+    const { result, statusCode } = await get()
 
     expect(statusCode).toBe(statusCodes.ok)
     expect(result).toEqual(
-      expect.stringContaining('Battery sales data submission — Q2 2026')
+      expect.stringContaining('>IronWave Compliance — Q2 2026 return</h1>')
     )
-    expect(result).toEqual(
+    const backLink = result.match(/<a[^>]*data-testid="back-link"[^>]*>/)[0]
+    expect(backLink).toEqual(
       expect.stringContaining(
-        'data-testid="battery-sales-data-submission-table"'
+        `href="${paths.prototypeRegulatorPomSubmissionDashboard}"`
       )
     )
-    expect(result).toEqual(expect.stringContaining('GreenLeaf Ltd'))
-    expect(result).toEqual(expect.stringContaining('Lithium-ion'))
-    expect(result).toEqual(expect.stringContaining('12.4'))
     expect(result).toEqual(
-      expect.stringContaining('Figure looks around 10x higher')
+      expect.stringContaining('data-testid="battery-sales-tabs"')
     )
+    for (const id of [
+      'producer-figures',
+      'compare-returns',
+      'indicative-obligation'
+    ]) {
+      expect(result).toEqual(expect.stringContaining(`href="#${id}"`))
+      expect(result).toEqual(expect.stringContaining(`id="${id}"`))
+    }
+  })
 
-    expect(result).toEqual(
-      expect.stringMatching(/govuk-tag--orange">\s*Queried\s*<\/strong>/)
-    )
-    expect(result).toEqual(
-      expect.stringMatching(/govuk-tag--grey">\s*OK\s*<\/strong>/)
-    )
+  test('producer figures: the five seeded producers with change tags coloured by meaning and the draft queries', async () => {
+    const { result } = await get()
+    const table = result
+      .split('data-testid="producer-figures-table"')[1]
+      .split('</table>')[0]
 
-    expect(result).toEqual(
+    for (const name of [
+      'GreenLeaf Ltd',
+      'Voltguard Ltd',
+      'Copper &amp; Co',
+      'BrightCell Ltd',
+      'Solaris Power'
+    ]) {
+      expect(table).toEqual(expect.stringContaining(name))
+    }
+    expect(table).toEqual(expect.stringContaining('212.400'))
+    expect(table).toMatch(/govuk-tag--orange">\s*\+191\.160 t\s*</)
+    expect(table).toMatch(/govuk-tag--orange">\s*Chemistry\s*</)
+    // Over the tonnage alert level, so flagged — Figma had it grey.
+    expect(table).toMatch(/govuk-tag--orange">\s*\+7\.823 t\s*</)
+    expect(table).toMatch(/govuk-tag--grey">\s*−2\.100 t\s*</)
+    expect(table).toMatch(/govuk-tag--grey">\s*None\s*</)
+    expect(table).toEqual(
       expect.stringContaining(
-        'data-testid="battery-sales-data-submission-edit-query-greenleaf-ltd"'
+        'Other is up 191.160 t (+900%) on Q1 2026. Please explain the increase or correct the figure.'
       )
     )
-    expect(result).toEqual(expect.stringContaining('Edit query'))
-    expect(result).toEqual(
-      expect.stringContaining(
-        'data-testid="battery-sales-data-submission-query-copper-and-co"'
-      )
-    )
-    expect(result).toEqual(
-      expect.stringContaining(
-        'data-testid="battery-sales-data-submission-reject-copper-and-co"'
-      )
-    )
+    expect(table.match(/>Raise query/g)).toHaveLength(3)
+    expect(table.match(/>Edit/g)).toHaveLength(2)
+  })
 
-    const continueHref = pathTo(
-      paths.prototypeRegulatorPomSubmissionReviewPomReturn,
-      { schemeId: 'ironwave-compliance', year: '2026', quarter: 'Q2' }
-    )
-    const continueTag = result.match(
-      /<a[^>]*data-testid="battery-sales-data-submission-continue"[^>]*>/
-    )[0]
-    expect(continueTag).toEqual(
-      expect.stringContaining(`href="${continueHref}"`)
+  test('the filters count all, flagged and draft producers and narrow the table', async () => {
+    const { result } = await get()
+    expect(result).toEqual(expect.stringContaining('All (5)'))
+    expect(result).toEqual(expect.stringContaining('Draft queries (2)'))
+    expect(result).toEqual(expect.stringContaining('Flagged (3)'))
+
+    const drafts = await get('?show=drafts')
+    const table = drafts.result
+      .split('data-testid="producer-figures-table"')[1]
+      .split('</table>')[0]
+    expect(table).toEqual(expect.stringContaining('GreenLeaf Ltd'))
+    expect(table).not.toEqual(expect.stringContaining('Solaris Power'))
+
+    const flagged = await get('?show=flagged')
+    const flaggedTable = flagged.result
+      .split('data-testid="producer-figures-table"')[1]
+      .split('</table>')[0]
+    expect(flaggedTable).toEqual(expect.stringContaining('BrightCell Ltd'))
+    expect(flaggedTable).not.toEqual(expect.stringContaining('Copper'))
+
+    const search = await get('?producer=solaris')
+    expect(
+      search.result
+        .split('data-testid="producer-figures-table"')[1]
+        .split('</table>')[0]
+    ).toEqual(expect.stringContaining('Solaris Power'))
+
+    const none = await get('?producer=zzz')
+    expect(none.result).toEqual(
+      expect.stringContaining('data-testid="producer-figures-empty"')
     )
   })
 
-  test('renders a real govukTabs strip with Member figures selected by default, each panel deep-linkable by fragment', async () => {
-    const url = pathTo(
-      paths.prototypeRegulatorPomSubmissionBatterySalesDataSubmission,
-      { schemeId: 'ironwave-compliance' }
+  test('removing a draft query posts, drops it from the table and keeps the other', async () => {
+    const [first] = getDraftQueries()
+    const removeUrl = pathTo(
+      paths.prototypeRegulatorPomSubmissionRemoveDraftQuery,
+      { schemeId: 'ironwave-compliance', queryId: first.id }
     )
-    const { result } = await server.inject({ method: 'GET', url })
+    const { statusCode, headers } = await server.inject({
+      method: 'POST',
+      url: removeUrl
+    })
 
-    expect(result).toEqual(
-      expect.stringContaining(
-        'data-testid="battery-sales-data-submission-tabs"'
-      )
-    )
-
-    const memberFiguresTabItem = result.match(
-      /<li class="govuk-tabs__list-item[^"]*"[^>]*>\s*<a[^>]*href="#member-figures"[^>]*data-testid="battery-sales-data-submission-tab-member-figures"/
-    )[0]
-    expect(memberFiguresTabItem).toEqual(
-      expect.stringContaining('govuk-tabs__list-item--selected')
-    )
-    expect(result).toEqual(expect.stringContaining('Member figures'))
-
-    const compareReturnsTag = result.match(
-      /<a[^>]*data-testid="battery-sales-data-submission-tab-compare-returns"[^>]*>/
-    )[0]
-    expect(compareReturnsTag).toEqual(
-      expect.stringContaining('href="#compare-returns"')
-    )
-    expect(result).toEqual(expect.stringContaining('Compare returns'))
-
-    const indicativeObligationTag = result.match(
-      /<a[^>]*data-testid="battery-sales-data-submission-tab-indicative-obligation"[^>]*>/
-    )[0]
-    expect(indicativeObligationTag).toEqual(
-      expect.stringContaining('href="#indicative-obligation"')
-    )
-    expect(result).toEqual(expect.stringContaining('Indicative obligation'))
+    expect(statusCode).toBe(statusCodes.found)
+    expect(headers.location).toBe(`${url}#producer-figures`)
+    expect(getDraftQueries()).toHaveLength(1)
+    const { result } = await get()
+    expect(result).toEqual(expect.stringContaining('Draft queries (1)'))
   })
 
-  test('renders the Compare returns panel content from seeded data, with tags coloured by swing threshold', async () => {
-    const url = pathTo(
-      paths.prototypeRegulatorPomSubmissionBatterySalesDataSubmission,
-      { schemeId: 'ironwave-compliance' }
-    )
-    const { result } = await server.inject({ method: 'GET', url })
+  test('compare returns: threshold, per-producer comparison, chemistry on last quarter and totals', async () => {
+    const { result } = await get()
+    const table = result
+      .split('data-testid="compare-returns-table"')[1]
+      .split('</table>')[0]
 
-    expect(result).toEqual(
-      expect.stringContaining(
-        'data-testid="battery-sales-data-submission-compare-returns-table"'
-      )
-    )
-    expect(result).toEqual(expect.stringContaining('General use'))
-    expect(result).toEqual(expect.stringContaining('125,000'))
-    expect(result).toEqual(expect.stringContaining('204,070'))
-    expect(result).toEqual(expect.stringContaining('Light means of transport'))
-    expect(result).toEqual(expect.stringContaining('Coin &amp; button cells'))
-    expect(result).toEqual(expect.stringContaining('623,073'))
-
-    expect(result).toEqual(
-      expect.stringMatching(/govuk-tag--orange">\s*39% ↑\s*<\/strong>/)
-    )
-    expect(result).toEqual(
-      expect.stringMatching(/govuk-tag--orange">\s*54% ↑\s*<\/strong>/)
-    )
-    expect(result).toEqual(
-      expect.stringMatching(/govuk-tag--grey">\s*16%\s*<\/strong>/)
-    )
-    expect(result).toEqual(
-      expect.stringMatching(/govuk-tag--grey">\s*15%\s*<\/strong>/)
-    )
-    expect(result).toEqual(
-      expect.stringMatching(/govuk-tag--grey">\s*3%\s*<\/strong>/)
-    )
-
-    expect(result).toEqual(
-      expect.stringContaining(
-        'data-testid="battery-sales-data-submission-view-reason-general-use"'
-      )
-    )
-    expect(result).toEqual(
-      expect.stringContaining(
-        'data-testid="battery-sales-data-submission-alert-level"'
-      )
-    )
-    expect(result).toEqual(expect.stringContaining('value="20"'))
+    expect(result).toEqual(expect.stringContaining('Compare producer returns'))
+    expect(result).toEqual(expect.stringContaining('20% or 5.000 t'))
+    expect(table).toEqual(expect.stringContaining('GreenLeaf Ltd (Other)'))
+    expect(table).toEqual(expect.stringContaining('131.100 (Other)'))
+    expect(table).toEqual(expect.stringContaining('128.000 (Other)'))
+    // Solaris is in the total, so it must be in the table (Figma omitted it).
+    expect(table).toEqual(expect.stringContaining('Solaris Power (Lead-acid)'))
+    expect(table).toEqual(expect.stringContaining('623.073'))
+    expect(table).toEqual(expect.stringContaining('426.190'))
+    expect(table).toEqual(expect.stringContaining('+196.883 t'))
+    expect(table).toEqual(expect.stringContaining('416.300'))
   })
 
-  test('renders the Indicative obligation panel content from seeded data, with a verified tag', async () => {
-    const url = pathTo(
-      paths.prototypeRegulatorPomSubmissionBatterySalesDataSubmission,
-      { schemeId: 'ironwave-compliance' }
-    )
-    const { result } = await server.inject({ method: 'GET', url })
+  test('indicative obligation reads the seeded calculation', async () => {
+    const { result } = await get()
+    const list = result
+      .split('data-testid="indicative-obligation-list"')[1]
+      .split('</dl>')[0]
 
-    expect(result).toEqual(
-      expect.stringContaining(
-        'data-testid="battery-sales-data-submission-indicative-obligation-summary"'
-      )
-    )
-    expect(result).toEqual(expect.stringContaining('9,800 tonnes'))
-    expect(result).toEqual(expect.stringContaining('9,500 tonnes'))
-    expect(result).toEqual(
+    expect(list).toEqual(expect.stringContaining('9,800 tonnes'))
+    expect(list).toEqual(
       expect.stringContaining('9,100 tonnes (annualised: 9,300 tonnes)')
     )
-    expect(result).toEqual(expect.stringContaining('9,533 tonnes'))
-    expect(result).toEqual(expect.stringContaining('45%'))
-    expect(result).toEqual(
-      expect.stringContaining('Indicative obligation (2027)')
+    expect(list).toEqual(
+      expect.stringContaining('9,533 tonnes (2026 is a part year so far)')
     )
-    expect(result).toEqual(expect.stringContaining('4,290 tonnes'))
-
-    expect(result).toEqual(
-      expect.stringMatching(
-        /govuk-tag--green"[^>]*>\s*Calculation verified\s*<\/strong>/
-      )
+    expect(list).toEqual(expect.stringContaining('1,850 tonnes'))
+    expect(list).toEqual(
+      expect.stringContaining('Indicative obligation (2027, at 45%)')
+    )
+    expect(list).toEqual(expect.stringContaining('4,290 tonnes'))
+    expect(list).toEqual(
+      expect.stringContaining('2,440 tonnes (57% of the obligation)')
     )
   })
 
-  test('404s for REPIC, which has no battery sales data submission screen in this batch', async () => {
-    const url = pathTo(
-      paths.prototypeRegulatorPomSubmissionBatterySalesDataSubmission,
-      { schemeId: 'repic' }
+  test('Continue to decision goes to the review, and an unbuilt scheme is a 404', async () => {
+    const { result } = await get()
+    const button = result.match(
+      /<a[^>]*data-testid="battery-sales-continue"[^>]*>/
+    )[0]
+    expect(button).toEqual(
+      expect.stringContaining(
+        pathTo(paths.prototypeRegulatorPomSubmissionReviewPomReturn, {
+          schemeId: 'ironwave-compliance',
+          year: '2026',
+          quarter: 'Q2'
+        })
+      )
     )
-    const { statusCode } = await server.inject({ method: 'GET', url })
 
+    const { statusCode } = await server.inject({
+      method: 'GET',
+      url: pathTo(
+        paths.prototypeRegulatorPomSubmissionBatterySalesDataSubmission,
+        { schemeId: 'repic' }
+      )
+    })
     expect(statusCode).toBe(statusCodes.notFound)
   })
 })

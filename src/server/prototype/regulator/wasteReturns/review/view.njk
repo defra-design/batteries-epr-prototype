@@ -1,0 +1,153 @@
+{% extends 'layouts/page.njk' %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "prototypeRegulatorWasteReturns/macros.njk" import factsPanel %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl" data-testid="waste-return-heading">
+        {{ heading }}
+      </h1>
+
+      {{ factsPanel(facts, "waste-return-facts") }}
+
+      {% if closedNotice %}
+        {{
+          govukInsetText({
+            text: closedNotice,
+            attributes: { "data-testid": "waste-return-closed-notice" }
+          })
+        }}
+      {% endif %}
+
+      {% if reconciliation %}
+        <h2 class="govuk-heading-m">{{ reconciliation.heading }}</h2>
+
+        {%- set reconciliationRows = [] -%}
+        {%- for row in reconciliation.rows -%}
+          {%-
+            set reconciliationRows = (reconciliationRows.push([
+              { text: row.label, classes: "govuk-!-font-weight-bold" },
+              { text: row.intake },
+              { text: row.bens }
+            ]), reconciliationRows)
+          -%}
+        {%- endfor -%}
+        {%- set intakeStatusHtml = govukTag({ text: reconciliation.intakeStatus.text, classes: "govuk-tag--" + reconciliation.intakeStatus.colour }) -%}
+        {%- set bensStatusHtml = govukTag({ text: reconciliation.bensStatus.text, classes: "govuk-tag--" + reconciliation.bensStatus.colour }) if reconciliation.bensStatus else "" -%}
+        {%-
+          set reconciliationRows = (reconciliationRows.push([
+            { text: labels.reconciliationStatusRow, classes: "govuk-!-font-weight-bold" },
+            { html: intakeStatusHtml },
+            { html: bensStatusHtml }
+          ]), reconciliationRows)
+        -%}
+
+        {{
+          govukTable({
+            head: [
+              { text: labels.reconciliationColumns.category },
+              { text: labels.reconciliationColumns.intake },
+              { text: labels.reconciliationColumns.bens }
+            ],
+            rows: reconciliationRows,
+            attributes: { "data-testid": "waste-return-reconciliation" }
+          })
+        }}
+
+        <h2 class="govuk-heading-m">{{ bensHeading }}</h2>
+        <p class="govuk-body" data-testid="waste-return-bens-summary">
+          {{ bensSummary }}
+        </p>
+        <p class="govuk-body">{{ labels.bensNote }}</p>
+        <p class="govuk-body">
+          <a class="govuk-link" href="#" data-testid="waste-return-view-bens"
+            >{{ viewBensLabel }}</a
+          >
+        </p>
+
+        <h2 class="govuk-heading-m">{{ labels.checksHeading }}</h2>
+        {% if checks.length %}
+          {% for check in checks %}
+            <div
+              class="app-check-card"
+              data-testid="waste-return-check-{{ loop.index }}"
+            >
+              <p
+                class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1"
+              >
+                {{ check.title }}
+              </p>
+              <p class="govuk-body-s govuk-!-margin-bottom-0">
+                {{ check.body }}
+              </p>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p class="govuk-body" data-testid="waste-return-no-checks">
+            {{ labels.noChecks }}
+          </p>
+        {% endif %}
+      {% endif %}
+
+      {% if canDecide %}
+        <h2 class="govuk-heading-m">{{ labels.actionsHeading }}</h2>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-half">
+            <div class="app-action-card">
+              {{
+                govukButton({
+                  text: labels.acceptAction,
+                  href: acceptHref,
+                  attributes: { "data-testid": "waste-return-accept" }
+                })
+              }}
+              <p class="govuk-body-s govuk-!-margin-bottom-0">
+                {{ labels.acceptHint }}
+              </p>
+            </div>
+          </div>
+          <div class="govuk-grid-column-one-half">
+            <div class="app-action-card">
+              {{
+                govukButton({
+                  text: labels.queryAction,
+                  href: queryHref,
+                  classes: "govuk-button--secondary",
+                  attributes: { "data-testid": "waste-return-query" }
+                })
+              }}
+              <p class="govuk-body-s govuk-!-margin-bottom-0">
+                {{ labels.queryHint }}
+              </p>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if timeline.length %}
+        <h2 class="govuk-heading-m">{{ labels.timelineHeading }}</h2>
+        <ol class="app-timeline" data-testid="waste-return-timeline">
+          {% for event in timeline %}
+            <li
+              class="app-timeline__item{% if event.current %}app-timeline__item--current{% endif %}"
+            >
+              <span class="app-timeline__time">{{ event.time }}</span>
+              {% if event.current %}
+                <span
+                  class="govuk-link--no-visited-state govuk-!-font-weight-bold"
+                  >{{ event.text }} {{ labels.currentView }}</span
+                >
+              {% else %}
+                {{ event.text }}
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ol>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

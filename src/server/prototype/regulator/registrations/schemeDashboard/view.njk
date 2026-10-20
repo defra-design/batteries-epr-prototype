@@ -1,0 +1,50 @@
+{% extends 'layouts/regulator.njk' %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block hero %}
+  {{ govukBreadcrumbs({ items: breadcrumbs, classes: "app-regulator-breadcrumbs" }) }}
+  <h1 class="govuk-heading-xl app-regulator-hero__heading">
+    {{ heading }}
+    {{ govukTag({ text: statusTag.text, classes: "govuk-tag--" + statusTag.colour + " app-regulator-hero__tag", attributes: { "data-testid": "scheme-status-tag" } }) }}
+  </h1>
+{% endblock %}
+
+{% block content %}
+  {{ govukSummaryList({ rows: summaryRows, attributes: { "data-testid": "scheme-summary" } }) }}
+
+  <h2 class="govuk-heading-l">{{ labels.todoHeading }}</h2>
+  {% if not task %}
+    <p class="govuk-body" data-testid="scheme-no-tasks">{{ labels.noTasks }}</p>
+  {% else %}
+    <div class="app-regulator-todo" data-testid="scheme-todo-member-list">
+      <h3 class="govuk-heading-m app-regulator-todo__title">
+        {{ task.title }}
+        {{ govukTag({ text: task.tag.text, classes: "govuk-tag--" + task.tag.colour }) }}
+      </h3>
+      <p class="govuk-body">{{ task.description }}</p>
+      <p class="govuk-body-s app-regulator-todo__received">
+        {{ task.received }}
+      </p>
+      {{ govukButton({ text: task.action, href: task.href, attributes: { "data-testid": "scheme-review-member-list" } }) }}
+    </div>
+  {% endif %}
+
+  <h2 class="govuk-heading-l">{{ labels.nextHeading }}</h2>
+  <div class="app-regulator-notes" data-testid="scheme-links">
+    <ul class="govuk-list govuk-!-margin-bottom-0">
+      {% for link in links %}
+        <li>
+          <a
+            class="govuk-link"
+            href="#"
+            data-testid="scheme-link-{{ link.key }}"
+            >{{ link.text }}</a
+          >
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

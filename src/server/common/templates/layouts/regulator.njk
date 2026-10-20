@@ -1,0 +1,92 @@
+{# Shared layout for regulator screens in the EPR packaging team's regulator
+   styling: white Defra header, service navigation, pale green hero band
+   (breadcrumb, H1, intro), off-white content and a green-topped footer.
+   Child templates set the content block, and may override the hero block. #}
+{% extends "govuk/template.njk" %}
+
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% block head %}
+  <link href="{{ getAssetPath('stylesheets/application.scss') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block pageTitle %}{{ pageTitle }} | {{ serviceName }}{% endblock %}
+
+{% block header %}
+  <header class="app-regulator-header" role="banner">
+    <div class="app-regulator-header__brand">
+      <div class="govuk-width-container">
+        <a class="app-regulator-header__logo-link" href="{{ serviceUrl }}">
+          <img class="app-regulator-header__logo" src="{{ assetPath }}/images/defra-logo-wide.svg" alt="{{ layout.logoAlt }}" width="289" height="34">
+        </a>
+      </div>
+    </div>
+    <div class="app-regulator-header__service">
+      <div class="govuk-width-container">
+        <nav class="app-regulator-nav" aria-label="{{ layout.navigationLabel }}">
+          <a class="app-regulator-nav__service-name" href="{{ serviceUrl }}">{{ serviceName }}</a>
+          <ul class="app-regulator-nav__list">
+            {% for item in navigation %}
+              <li class="app-regulator-nav__item{% if item.current %} app-regulator-nav__item--current{% endif %}">
+                <a class="app-regulator-nav__link" href="{{ item.href }}"{% if item.current %} aria-current="page"{% endif %} data-testid="regulator-nav-{{ item.key }}">{{ item.text }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+{% endblock %}
+
+{% block main %}
+  <div class="app-regulator-hero" data-testid="regulator-hero">
+    <div class="govuk-width-container">
+      {% block hero %}
+        {% if backLink %}
+          {{ govukBackLink({ text: backLink.text, href: backLink.href, classes: "app-regulator-back-link", attributes: { "data-testid": "back-link" } }) }}
+        {% endif %}
+        {% if breadcrumbs.length > 1 %}
+          {{ govukBreadcrumbs({ items: breadcrumbs, classes: "app-regulator-breadcrumbs" }) }}
+        {% endif %}
+        <h1 class="govuk-heading-xl app-regulator-hero__heading">
+          {{- heading -}}
+          {%- if headingTag %} {{ govukTag({ text: headingTag.text, classes: "govuk-tag--" + headingTag.colour + " app-regulator-hero__tag", attributes: { "data-testid": "heading-tag" } }) }}{% endif -%}
+        </h1>
+        {% if intro %}
+          <p class="govuk-body-l app-regulator-hero__intro">{{ intro }}</p>
+        {% endif %}
+      {% endblock %}
+    </div>
+  </div>
+  <div class="app-regulator-content">
+    <div class="govuk-width-container">
+      <main class="govuk-main-wrapper" id="main-content" role="main">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+{% endblock %}
+
+{% block footer %}
+  {{
+    govukFooter({
+      classes: "app-regulator-footer",
+      meta: {
+        items: [
+          { href: "/privacy-notice", text: "Privacy" },
+          { href: "/cookies", text: "Cookies" },
+          { href: "/accessibility-statement", text: "Accessibility statement" },
+          { href: "/terms", text: "Terms" },
+          { href: resetHref, text: layout.resetData, attributes: { "data-testid": "regulator-reset-data" } }
+        ]
+      }
+    })
+  }}
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="{{ getAssetPath('timeTravelShim.js') }}"></script>
+  <script type="module" src="{{ getAssetPath('application.js') }}"></script>
+{% endblock %}

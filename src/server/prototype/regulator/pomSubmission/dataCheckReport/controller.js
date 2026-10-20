@@ -5,52 +5,117 @@ import { paths, pathTo } from '../../../../../config/paths.js'
 import { prototypeRegulatorContent } from '../../../../../config/prototype-regulator-content.js'
 import {
   basePageModel,
-  SCHEMES_WITH_DETAIL_SCREENS_BUILT,
+  fill,
+  flagsFor,
   latestSubmissionFor,
-  filenameFor
+  SCHEMES_WITH_DETAIL_SCREENS_BUILT
 } from '../shared.js'
+import { getSubmissionNote, saveSubmissionNote } from '../store.js'
 
 const seedData = createRequire(import.meta.url)(
   '../../../../../client/javascripts/storage-seed.json'
 )
 
-export const dataCheckReportController = {
-  handler(request, h) {
-    const { schemeId } = request.params
+const view = 'prototype/regulator/pomSubmission/dataCheckReport/view'
 
-    if (!SCHEMES_WITH_DETAIL_SCREENS_BUILT.has(schemeId)) {
-      throw Boom.notFound()
-    }
+const locate = (schemeId) => {
+  if (!SCHEMES_WITH_DETAIL_SCREENS_BUILT.has(schemeId)) {
+    throw Boom.notFound()
+  }
+  const scheme = seedData.prototypeRegulatorSchemes.find(
+    (s) => s.id === schemeId
+  )
+  return { scheme, submission: latestSubmissionFor(schemeId) }
+}
 
-    const pageContent = prototypeRegulatorContent.dataCheckReport
-    const scheme = seedData.prototypeRegulatorSchemes.find(
-      (s) => s.id === schemeId
-    )
-    const submission = latestSubmissionFor(schemeId)
+const buildViewModel = (schemeId, { note, errors = {} } = {}) => {
+  const labels = prototypeRegulatorContent.dataCheckReport
+  const { scheme, submission } = locate(schemeId)
+  const flags = flagsFor(
+    schemeId,
+    submission.compliancePeriodYear,
+    submission.quarter
+  )
 
-    const findings = seedData.prototypeRegulatorDataCheckFindings
-      .filter((f) => f.schemeId === schemeId)
-      .map((finding) => ({
-        member: finding.member,
-        issue: finding.issue,
-        typeLabel: pageContent.typeLabels[finding.type],
-        typeColour: pageContent.typeColours[finding.type]
-      }))
-
-    return h.view('prototype/regulator/pomSubmission/dataCheckReport/view', {
-      ...basePageModel(
-        pageContent,
-        paths.prototypeRegulatorPomSubmissionDashboard
+  return {
+    ...basePageModel(
+      {
+        ...labels,
+        intro: fill(labels.intro, {
+          count: flags.length,
+          producers: new Set(flags.map((flag) => flag.producer)).size,
+          scheme: scheme.name,
+          period: submission.periodLabel
+        })
+      },
+      {
+        backLink: {
+          href: paths.prototypeRegulatorPomSubmissionDashboard,
+          text: labels.backLink
+        }
+      }
+    ),
+    flags: flags.map((flag) => ({
+      producer: flag.producer,
+      description: flag.description,
+      type: labels.types[flag.type]
+    })),
+    note:
+      note ??
+      getSubmissionNote(
+        schemeId,
+        submission.compliancePeriodYear,
+        submission.quarter
       ),
-      backLink: pathTo(paths.prototypeRegulatorPomSubmissionSchemeHome, {
-        schemeId
-      }),
-      intro: `${submission.issuesFound} issues found in ${filenameFor(scheme, submission)}. Review the automated findings below, add any observations of your own, then decide how to proceed.`,
-      findings,
-      continueHref: pathTo(
-        paths.prototypeRegulatorPomSubmissionBatterySalesDataSubmission,
-        { schemeId }
-      )
+    errors,
+    errorSummary: Object.entries(errors).map(([field, text]) => ({
+      text,
+      href: `#${field}`
+    })),
+    action: pathTo(paths.prototypeRegulatorPomSubmissionDataCheckReport, {
+      schemeId
     })
+  }
+}
+
+export const dataCheckReportController = {
+  get: {
+    handler(request, h) {
+      return h.view(view, buildViewModel(request.params.schemeId))
+    }
+  },
+
+  // Saves the regulator's private notes, then moves on to the producer
+  // figures. Notes never go to the scheme.
+  post: {
+    handler(request, h) {
+      const { schemeId } = request.params
+      const labels = prototypeRegulatorContent.dataCheckReport
+      const { submission } = locate(schemeId)
+      const note = (request.payload.notes ?? '').trim()
+
+      if (note.length > labels.notesMax) {
+        return h.view(
+          view,
+          buildViewModel(schemeId, {
+            note: request.payload.notes,
+            errors: { notes: labels.errors.notesTooLong }
+          })
+        )
+      }
+
+      saveSubmissionNote(
+        schemeId,
+        submission.compliancePeriodYear,
+        submission.quarter,
+        note
+      )
+      return h.redirect(
+        pathTo(
+          paths.prototypeRegulatorPomSubmissionBatterySalesDataSubmission,
+          { schemeId }
+        )
+      )
+    }
   }
 }

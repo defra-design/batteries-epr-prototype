@@ -6,7 +6,12 @@ export const dataCheckReport = {
     {
       method: 'GET',
       path: paths.prototypeRegulatorPomSubmissionDataCheckReport,
-      ...dataCheckReportController
+      ...dataCheckReportController.get
+    },
+    {
+      method: 'POST',
+      path: paths.prototypeRegulatorPomSubmissionDataCheckReport,
+      ...dataCheckReportController.post
     }
   ]
 }

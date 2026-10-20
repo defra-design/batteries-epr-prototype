@@ -1,5 +1,4 @@
-{% extends 'layouts/page.njk' %}
-
+{% extends 'layouts/regulator.njk' %}
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
@@ -8,152 +7,124 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      <h1 class="govuk-heading-xl">{{ heading }}</h1>
+  {# Producer figures #}
+  {%- set producerRows = [] -%}
+  {%- for row in producerFigures.rows -%}
+    {%- set draftHtml -%}
+      {%- if row.draft -%}{{ row.draft.text }}{%- endif -%}
+    {%- endset -%}
+    {%- set actionHtml -%}
+      {%- if row.draft -%}
+        <a class="govuk-link" href="#" data-testid="producer-figures-edit-{{ row.draft.id }}">{{ labels.producerFigures.edit }}<span class="govuk-visually-hidden"> query for {{ row.producer }}</span></a>
+        <span aria-hidden="true">·</span>
+        <form method="post" action="{{ removeAction(row.draft.id) }}" class="app-regulator-inline-form" data-testid="producer-figures-remove-form-{{ row.draft.id }}">
+          <button type="submit" class="app-regulator-link-button" data-testid="producer-figures-remove-{{ row.draft.id }}">{{ labels.producerFigures.remove }}<span class="govuk-visually-hidden"> query for {{ row.producer }}</span></button>
+        </form>
+      {%- else -%}
+        <a class="govuk-link" href="#" data-testid="producer-figures-raise-{{ row.producer | lower | replace(' ', '-') | replace('&', 'and') }}">{{ labels.producerFigures.raise }}<span class="govuk-visually-hidden"> for {{ row.producer }}</span></a>
+      {%- endif -%}
+    {%- endset -%}
+    {%- set producerRows = (producerRows.push([
+      { text: row.producer },
+      { text: row.chemistry },
+      { text: row.figure },
+      { html: govukTag({ text: row.change.text, classes: "govuk-tag--" + row.change.colour }) },
+      { html: draftHtml },
+      { html: actionHtml }
+    ]), producerRows) -%}
+  {%- endfor -%}
 
-      {%- set memberFiguresPanelHtml -%}
-        <h2 class="govuk-heading-l">{{ labels.panelHeading }}</h2>
-        <p class="govuk-body" data-testid="battery-sales-data-submission-intro">{{ intro }}</p>
-
-        {% set figureRows = [] %}
-        {% for figure in memberFigures %}
-          {% set actionCellHtml %}
-            {% if figure.queried %}
-              <a class="govuk-link" href="#" data-testid="battery-sales-data-submission-edit-query-{{ figure.member | lower | replace(' ', '-') | replace('&', 'and') }}">{{ labels.editQueryLink }}</a>
-            {% else %}
-              <a class="govuk-link" href="#" data-testid="battery-sales-data-submission-query-{{ figure.member | lower | replace(' ', '-') | replace('&', 'and') }}">{{ labels.queryAction }}</a>
-              ·
-              <a class="govuk-link" href="#" data-testid="battery-sales-data-submission-reject-{{ figure.member | lower | replace(' ', '-') | replace('&', 'and') }}">{{ labels.rejectAction }}</a>
-            {% endif %}
-          {% endset %}
-          {% set figureRows = (figureRows.push([
-            { text: figure.member },
-            { text: figure.chemistry },
-            { text: figure.figureTonnes },
-            { html: govukTag({ text: figure.statusLabel, classes: "govuk-tag--" + figure.statusColour }) | safe },
-            { text: figure.reason if figure.reason else "" },
-            { html: actionCellHtml }
-          ]), figureRows) %}
-        {% endfor %}
-
-        {{ govukTable({
-          head: [
-            { text: labels.columns.member },
-            { text: labels.columns.chemistry },
-            { text: labels.columns.figure },
-            { text: labels.columns.status },
-            { text: labels.columns.reason },
-            { text: labels.columns.action }
-          ],
-          rows: figureRows,
-          attributes: { "data-testid": "battery-sales-data-submission-table" }
-        }) }}
-      {%- endset -%}
-
-      {%- set compareReturnsPanelHtml -%}
-        <h2 class="govuk-heading-l">{{ labels.compareReturns.heading }} — {{ scheme.name }}</h2>
-        <p class="govuk-body" data-testid="battery-sales-data-submission-compare-returns-intro">{{ labels.compareReturns.intro }}</p>
-
-        {{ govukInput({
-          id: "swing-alert-level",
-          name: "swingAlertLevel",
-          label: { text: labels.compareReturns.alertLevelLabel, classes: "govuk-label--m" },
-          classes: "govuk-input--width-3",
-          value: compareReturns.alertLevelPercent,
-          attributes: { "data-testid": "battery-sales-data-submission-alert-level" }
-        }) }}
-
-        {% set compareRows = [] %}
-        {% for category in compareReturns.categories %}
-          {% set compareActionCellHtml %}
-            {% if category.hasReason %}
-              <a class="govuk-link" href="#" data-testid="battery-sales-data-submission-view-reason-{{ category.category | lower | replace(' ', '-') | replace('&', 'and') }}">{{ labels.compareReturns.viewReasonLink }}</a>
-            {% endif %}
-          {% endset %}
-          {% set compareRows = (compareRows.push([
-            { text: category.category },
-            { text: category.thisQuarterTonnes },
-            { text: category.lastQuarterTonnes },
-            { html: govukTag({ text: category.swingText, classes: "govuk-tag--" + category.swingColour }) | safe },
-            { text: category.sameQuarterLastYearTonnes },
-            { html: compareActionCellHtml }
-          ]), compareRows) %}
-        {% endfor %}
-        {% set compareRows = (compareRows.push([
-          { text: compareReturns.totals.label },
-          { text: compareReturns.totals.thisQuarterTonnes },
-          { text: compareReturns.totals.lastQuarterTonnes },
-          { html: govukTag({ text: compareReturns.totals.swingText, classes: "govuk-tag--" + compareReturns.totals.swingColour }) | safe },
-          { text: compareReturns.totals.sameQuarterLastYearTonnes },
-          { html: "" }
-        ]), compareRows) %}
-
-        {{ govukTable({
-          head: [
-            { text: labels.compareReturns.columns.category },
-            { text: labels.compareReturns.columns.thisQuarter },
-            { text: labels.compareReturns.columns.lastQuarter },
-            { text: labels.compareReturns.columns.swing },
-            { text: labels.compareReturns.columns.sameQuarterLastYear },
-            { text: labels.compareReturns.columns.action }
-          ],
-          rows: compareRows,
-          attributes: { "data-testid": "battery-sales-data-submission-compare-returns-table" }
-        }) }}
-      {%- endset -%}
-
-      {%- set indicativeObligationPanelHtml -%}
-        <h2 class="govuk-heading-l">{{ labels.indicativeObligation.heading }} — {{ scheme.name }}</h2>
-        <p class="govuk-body" data-testid="battery-sales-data-submission-indicative-obligation-intro">{{ labels.indicativeObligation.intro }}</p>
-
-        {{ govukSummaryList({
-          rows: [
-            { key: { text: labels.indicativeObligation.summaryLabels.placedOnMarket2024 }, value: { text: indicativeObligation.placedOnMarket2024 } },
-            { key: { text: labels.indicativeObligation.summaryLabels.placedOnMarket2025 }, value: { text: indicativeObligation.placedOnMarket2025 } },
-            { key: { text: labels.indicativeObligation.summaryLabels.placedOnMarket2026SoFar }, value: { text: indicativeObligation.placedOnMarket2026SoFar } },
-            { key: { text: labels.indicativeObligation.summaryLabels.rollingAverage }, value: { text: indicativeObligation.rollingAverage } },
-            { key: { text: labels.indicativeObligation.summaryLabels.obligationRate }, value: { text: indicativeObligation.obligationRate } },
-            { key: { text: labels.indicativeObligation.summaryLabels.indicativeObligation | replace("{year}", indicativeObligation.indicativeObligationYear | string) }, value: { text: indicativeObligation.indicativeObligation } }
-          ],
-          attributes: { "data-testid": "battery-sales-data-submission-indicative-obligation-summary" }
-        }) }}
-
-        {% if indicativeObligation.verified %}
-          {{ govukTag({ text: labels.indicativeObligation.verifiedTag, classes: "govuk-tag--green", attributes: { "data-testid": "battery-sales-data-submission-indicative-obligation-verified" } }) }}
-        {% endif %}
-      {%- endset -%}
-
-      {{ govukTabs({
-        idPrefix: "battery-sales-data-submission",
-        attributes: { "aria-label": labels.tabsLabel, "data-testid": "battery-sales-data-submission-tabs" },
-        items: [
-          {
-            label: tabs[0].text,
-            id: tabs[0].id,
-            panel: { html: memberFiguresPanelHtml },
-            attributes: { "data-testid": "battery-sales-data-submission-tab-" + tabs[0].id }
-          },
-          {
-            label: tabs[1].text,
-            id: tabs[1].id,
-            panel: { html: compareReturnsPanelHtml },
-            attributes: { "data-testid": "battery-sales-data-submission-tab-" + tabs[1].id }
-          },
-          {
-            label: tabs[2].text,
-            id: tabs[2].id,
-            panel: { html: indicativeObligationPanelHtml },
-            attributes: { "data-testid": "battery-sales-data-submission-tab-" + tabs[2].id }
-          }
-        ]
+  {%- set producerPanel -%}
+    <h2 class="govuk-heading-l">{{ labels.producerFigures.heading }}</h2>
+    <p class="govuk-body">{{ producerIntro }}</p>
+    <p class="govuk-body" data-testid="producer-figures-filters">
+      {{ labels.producerFigures.showLabel }}
+      {% for filter in producerFigures.filters %}
+        {% if filter.current %}<strong>{{ filter.text }}</strong>{% else %}<a class="govuk-link" href="{{ filter.href }}" data-testid="producer-figures-filter-{{ filter.key }}">{{ filter.text }}</a>{% endif %}{% if not loop.last %} · {% endif %}
+      {% endfor %}
+    </p>
+    <form method="get" action="{{ figuresAction }}#producer-figures" role="search" data-testid="producer-figures-search">
+      <input type="hidden" name="show" value="{{ producerFigures.show }}">
+      {{ govukInput({
+        id: "producer",
+        name: "producer",
+        classes: "govuk-input--width-20",
+        label: { text: labels.producerFigures.searchLabel, classes: "govuk-label--s" },
+        value: producerFigures.search
       }) }}
-
-      {{ govukButton({
-        text: labels.continueAction,
-        href: continueHref,
-        attributes: { "data-testid": "battery-sales-data-submission-continue" }
+      {{ govukButton({ text: labels.producerFigures.searchAction, classes: "govuk-button--secondary" }) }}
+    </form>
+    {% if producerRows.length %}
+      {{ govukTable({
+        head: [
+          { text: labels.producerFigures.columns.producer },
+          { text: labels.producerFigures.columns.chemistry },
+          { text: labels.producerFigures.columns.figure },
+          { text: labels.producerFigures.columns.change },
+          { text: labels.producerFigures.columns.draftQuery },
+          { text: labels.producerFigures.columns.action }
+        ],
+        rows: producerRows,
+        attributes: { "data-testid": "producer-figures-table" }
       }) }}
-    </div>
-  </div>
+    {% else %}
+      <p class="govuk-body" data-testid="producer-figures-empty">{{ labels.producerFigures.empty }}</p>
+    {% endif %}
+  {%- endset -%}
+
+  {# Compare returns #}
+  {%- set compareRows = [] -%}
+  {%- for row in compareReturns.rows -%}
+    {%- set compareRows = (compareRows.push([
+      { text: row.producer },
+      { text: row.thisQuarter },
+      { text: row.lastQuarter },
+      { html: govukTag({ text: row.change.text, classes: "govuk-tag--" + row.change.colour }) },
+      { text: row.lastYear }
+    ]), compareRows) -%}
+  {%- endfor -%}
+  {%- set compareRows = (compareRows.push([
+    { text: labels.compareReturns.total },
+    { text: compareReturns.total.thisQuarter },
+    { text: compareReturns.total.lastQuarter },
+    { html: govukTag({ text: compareReturns.total.change, classes: "govuk-tag--grey" }) },
+    { text: compareReturns.total.lastYear }
+  ]), compareRows) -%}
+
+  {%- set comparePanel -%}
+    <h2 class="govuk-heading-l">{{ labels.compareReturns.heading }}</h2>
+    <p class="govuk-body">{{ labels.compareReturns.intro }}</p>
+    <h3 class="govuk-heading-m">{{ labels.compareReturns.thresholdHeading }}</h3>
+    <p class="govuk-body app-regulator-threshold" data-testid="compare-returns-threshold">{{ compareReturns.threshold }}</p>
+    {{ govukTable({
+      head: [
+        { text: labels.compareReturns.columns.producer },
+        { text: labels.compareReturns.columns.thisQuarter },
+        { text: labels.compareReturns.columns.lastQuarter },
+        { text: labels.compareReturns.columns.change },
+        { text: labels.compareReturns.columns.lastYear }
+      ],
+      rows: compareRows,
+      attributes: { "data-testid": "compare-returns-table" }
+    }) }}
+  {%- endset -%}
+
+  {# Indicative obligation #}
+  {%- set obligationPanel -%}
+    <h2 class="govuk-heading-l">{{ labels.indicativeObligation.heading }}</h2>
+    <p class="govuk-body">{{ obligationIntro }}</p>
+    {{ govukSummaryList({ rows: obligationRows, attributes: { "data-testid": "indicative-obligation-list" } }) }}
+  {%- endset -%}
+
+  {{ govukTabs({
+    idPrefix: "figures",
+    attributes: { "data-testid": "battery-sales-tabs" },
+    items: [
+      { label: tabs[0].text, id: tabs[0].id, panel: { html: producerPanel } },
+      { label: tabs[1].text, id: tabs[1].id, panel: { html: comparePanel } },
+      { label: tabs[2].text, id: tabs[2].id, panel: { html: obligationPanel } }
+    ]
+  }) }}
+
+  {{ govukButton({ text: labels.continueAction, href: continueHref, attributes: { "data-testid": "battery-sales-continue" } }) }}
 {% endblock %}

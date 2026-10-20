@@ -86,4 +86,62 @@ describe('runPrototypeComplianceSchemeStep', () => {
     runPrototypeComplianceSchemeStep(document, { assign: vi.fn() }, wait)
     expect(wait).toHaveBeenCalledWith(expect.any(Function), 1000)
   })
+
+  describe('single-member details hydration', () => {
+    const members = [
+      { id: 'm1', name: 'One Ltd', bprn: 'BPRN-111111', schemeRef: 'NPWD1' },
+      { id: 'm2', name: 'Two Ltd', bprn: 'BPRN-222222', schemeRef: 'NPWD1' }
+    ]
+    const setDetailsBody = () => {
+      document.body.innerHTML = `
+        <select id="memberId"><option value=""></option><option value="m1">One</option><option value="m2">Two</option></select>
+        <input id="bprn" />
+        <script id="page-payload" type="application/json">${JSON.stringify({
+          target: 'hydrate',
+          step: 'singleMemberDetails',
+          year: 2026,
+          quarter: 2,
+          members
+        })}</script>`
+    }
+
+    test('does nothing when the BPRN field is missing', () => {
+      document.body.innerHTML = `
+        <select id="memberId"></select>
+        <script id="page-payload" type="application/json">${JSON.stringify({
+          target: 'hydrate',
+          step: 'singleMemberDetails',
+          year: 2026,
+          quarter: 2,
+          members
+        })}</script>`
+
+      expect(runPrototypeComplianceSchemeStep(document)).toBe('no-op')
+    })
+
+    test('restores the saved member and its BPRN from the draft', () => {
+      storage.savePrototypeComplianceSchemeSubmissionDraft(2026, 2, {
+        memberId: 'm2'
+      })
+      setDetailsBody()
+
+      expect(runPrototypeComplianceSchemeStep(document)).toBe('hydrated')
+      expect(document.getElementById('memberId').value).toBe('m2')
+      expect(document.getElementById('bprn').value).toBe('BPRN-222222')
+    })
+
+    test('fills the BPRN when the member selection changes', () => {
+      setDetailsBody()
+      runPrototypeComplianceSchemeStep(document)
+
+      const select = document.getElementById('memberId')
+      select.value = 'm1'
+      select.dispatchEvent(new Event('change'))
+      expect(document.getElementById('bprn').value).toBe('BPRN-111111')
+
+      select.value = ''
+      select.dispatchEvent(new Event('change'))
+      expect(document.getElementById('bprn').value).toBe('')
+    })
+  })
 })
